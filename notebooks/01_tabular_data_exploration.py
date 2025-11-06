@@ -4,6 +4,7 @@
 
 # First, let's import the necessary libraries and load the dataset.
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 from skrub import TableReport
 from sklearn.datasets import fetch_openml
 # Load the Adult Census dataset from OpenML
@@ -55,7 +56,10 @@ TableReport(data)
 # skewed, such as "workclass", "race", and "native-country": this is important 
 # information to keep track of, because these columns may require special handling
 # during data preprocessing or modeling.
-
+#
+# Additionally, the "Distributions" tab allows so select columns manually, so that
+# they can be added to a script and selected for further analysis or modeling.
+#
 
 # %%
 # ### The "Associations" tab
@@ -87,37 +91,104 @@ TableReport(target)
 # # Building a simple model to predict income level
 # Finally, let's build a simple model to predict whether an individual's income
 # exceeds $50K per year based on the other features in the dataset.
+# To do so, we need to import a few additional libraries from scikit-learn.
+# We use a Logistic Regression classifier for this example, without hyperparameter tuning.
+# We use the `StandardScaler` to standardize the numerical features,
+# and we use a pipeline to combine the scaler and the classifier.
+# Additionally, we import the `train_test_split` function to split the dataset into training and testing sets,
+# and the `classification_report` function to evaluate the model's performance.
+# 
+# As a reminder, to avoid data leakage, we should be training only on the training set
+# and evaluating only on the test set, which is why we use `train_test_split` to create
+# these splits.
+
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
+
 # Split the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, random_state=42)
 
-# %%
-# For simplicity, we will use a Random Forest classifier without any hyperparameter tuning. 
-# We wiill use the skrub `TableVectorizer` to preprocess all the features in the dataset.
-# The `TableVectorizer` performs a number of preprocessing steps and encoding
-# automatically, allowing to quickly build a model without having to manually
-# preprocess the data.
-# The `TableReport` will be explained in more detail in a later notebook.
-from skrub import TableVectorizer
-# Create a TableVectorizer to preprocess the data
-vectorizer = TableVectorizer()
-# Fit and transform the training data, and transform the test data
-X_train = vectorizer.fit_transform(X_train)
-X_test = vectorizer.transform(X_test)
-# %%
+# %% 
+# ## First attempt: using only numerical features
+# As a first attempt, let's build a model using only the numerical features in the dataset.
+# We can select the numerical columns using the `TableReport`, by clicking on the 
+# drop-down menu next to "Associations" and selecting "Numeric". Then, we can 
+# click on "Select all" to add all column names to the form, and then click on
+# the Copy button to copy the list of column names to the clipboard.
 
-# Create and train the Random Forest classifier
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
-clf.fit(X_train, y_train)
+numerical_columns = ['age', 'fnlwgt', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week']
+# Select only the numerical columns for training and testing
+X_train_num = X_train[numerical_columns]
+X_test_num = X_test[numerical_columns]
+
+# Create the scaler
+scaler = StandardScaler()
+# Create and train the Logistic Regression classifier
+clf_num = LogisticRegression(max_iter=1000)
+
+# Create a pipeline that first scales the data, then fits the classifier
+clf_num = make_pipeline(scaler, clf_num)
+# Fit the model on the training data
+clf_num.fit(X_train_num, y_train)
 # Make predictions on the test set
-y_pred = clf.predict(X_test)
+y_pred_num = clf_num.predict(X_test_num)
 # Evaluate the model's performance
-print(classification_report(y_test, y_pred))
+print(classification_report(y_test, y_pred_num))
+
 # %%
 # From the classification report, we can see that the model performs reasonably well
 # on the majority class, but has lower precision and recall for the minority class.
-# This is expected and likely due to the class imbalance in the dataset.
-# In a real-world scenario, we would want to explore techniques to address this imbalance,
-# such as resampling or using different evaluation metrics.
+# We can likely improve the model's performance by including the categorical features
+# in the dataset, which we will do next.
+
+# %%
+# ## Second attempt: using all features with skrub's TableVectorizer
+# We will use the skrub `TableVectorizer` to preprocess all the features in the dataset.
+# The `TableVectorizer` is intended to work out-of-the-box with minimal configuration,
+# and can handle both numerical and categorical features automatically, although
+# it is also possible to customize its behavior if needed. 
+# We will use the default settings for this example, and explore its capabilities in more detail
+# in a later notebook.
+
+from skrub import TableVectorizer
+# Create a TableVectorizer to preprocess the data
+vectorizer = TableVectorizer()
+# %% 
+# The `TableVectorizer` follows the scikit-learn convention of having `fit` and `transform` methods.
+# We will fit the vectorizer on the training data, and then transform both the training
+# and testing data.
+#
+
+# %%
+# We can inspect the transformed data to see how the categorical features
+# have been encoded. The `TableVectorizer` uses different encoders for different
+# types of categorical features, based on their cardinality.
+X_transformed = vectorizer.fit_transform(X_train)
+TableReport(X_transformed)
+# %%
+# Now, we can scale features, then create and train the Logistic Regression classifier using the preprocessed data.
+
+# Create the scaler
+scaler = StandardScaler()
+# 
+# Create and train the Logistic Regression classifier
+clf = LogisticRegression(max_iter=1000)
+
+# Once again, we build a pipeliine that combines each step of the preprocessing and modeling process.
+
+pipeline = make_pipeline(vectorizer, scaler, clf)
+
+X_train = pipeline.fit(X_train, y_train)
+# Make predictions on the test set
+y_pred = pipeline.predict(X_test)
+# Evaluate the model's performance
+print(classification_report(y_test, y_pred))
+# %%
+# We can observe that the model's performance has improved for both classes, with
+# the precision and recall for the minority class increasing significantly.
+# In a real-world scenario, we would want to explore techniques to address the class imbalance,
+# such as resampling or using different evaluation metrics; however, this is beyond the scope of this notebook.
+# %%
