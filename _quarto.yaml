@@ -1,0 +1,15 @@
+project:
+    type: book
+    output-dir: _book
+
+book:
+    title: "Skrub tutorials"
+    author: "Riccardo Cappuzzo"
+    chapters:
+        - index.qmd
+        - chapters/01_exploring_data.qmd
+
+format:
+    html:
+        theme: cosmo
+        toc: true

@@ -1,0 +1,62 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Skrub tutorials",
+    "section": "",
+    "text": "1 Welcome\nWelcome to my Quarto book! This is the introduction.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>My Quarto Book</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html",
+    "href": "chapters/01_exploring_data.html",
+    "title": "2  Exploring dataframes with skrub",
+    "section": "",
+    "text": "2.1 Exploring data with Pandas tools\nIn this notebook, we will show how we use the skrub TableReport to explore tabular data. We will use the Adult Census dataset as our example table.\nFirst, let’s import the necessary libraries and load the dataset.\nNow that we have a dataframe we can work with, we need to do some exploratory analysis to get an idea of the characteristics of the data. Among others, we would like to find out:\nFor the sake of the example, let’s first explore the data using Pandas only.\nWe can get an idea of the content of the table by printing the first few lines, which gives an idea of the datatypes and the columns we are dealing with.\ndata.head(5)\n\n\n\n\n\n\n\n\nage\nworkclass\nfnlwgt\neducation\neducation-num\nmarital-status\noccupation\nrelationship\nrace\nsex\ncapital-gain\ncapital-loss\nhours-per-week\nnative-country\n\n\n\n\n0\n25\nPrivate\n226802\n11th\n7\nNever-married\nMachine-op-inspct\nOwn-child\nBlack\nMale\n0\n0\n40\nUnited-States\n\n\n1\n38\nPrivate\n89814\nHS-grad\n9\nMarried-civ-spouse\nFarming-fishing\nHusband\nWhite\nMale\n0\n0\n50\nUnited-States\n\n\n2\n28\nLocal-gov\n336951\nAssoc-acdm\n12\nMarried-civ-spouse\nProtective-serv\nHusband\nWhite\nMale\n0\n0\n40\nUnited-States\n\n\n3\n44\nPrivate\n160323\nSome-college\n10\nMarried-civ-spouse\nMachine-op-inspct\nHusband\nBlack\nMale\n7688\n0\n40\nUnited-States\n\n\n4\n18\nNaN\n103497\nSome-college\n10\nNever-married\nNaN\nOwn-child\nWhite\nFemale\n0\n0\n30\nUnited-States\nIf we want to have a simpler view of the datatypes in the dataframe, we must use data.info():\ndata.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 48842 entries, 0 to 48841\nData columns (total 14 columns):\n #   Column          Non-Null Count  Dtype   \n---  ------          --------------  -----   \n 0   age             48842 non-null  int64   \n 1   workclass       46043 non-null  category\n 2   fnlwgt          48842 non-null  int64   \n 3   education       48842 non-null  category\n 4   education-num   48842 non-null  int64   \n 5   marital-status  48842 non-null  category\n 6   occupation      46033 non-null  category\n 7   relationship    48842 non-null  category\n 8   race            48842 non-null  category\n 9   sex             48842 non-null  category\n 10  capital-gain    48842 non-null  int64   \n 11  capital-loss    48842 non-null  int64   \n 12  hours-per-week  48842 non-null  int64   \n 13  native-country  47985 non-null  category\ndtypes: category(8), int64(6)\nmemory usage: 2.6 MB\nWith .info() we can find out the shape of the dataframe (the number of rows and columns), the datatype and the number of non-null values for each column.\nWe can also get a richer summary of the data with the .describe() method:\ndata.describe(include=\"all\")\n\n\n\n\n\n\n\n\nage\nworkclass\nfnlwgt\neducation\neducation-num\nmarital-status\noccupation\nrelationship\nrace\nsex\ncapital-gain\ncapital-loss\nhours-per-week\nnative-country\n\n\n\n\ncount\n48842.000000\n46043\n4.884200e+04\n48842\n48842.000000\n48842\n46033\n48842\n48842\n48842\n48842.000000\n48842.000000\n48842.000000\n47985\n\n\nunique\nNaN\n8\nNaN\n16\nNaN\n7\n14\n6\n5\n2\nNaN\nNaN\nNaN\n41\n\n\ntop\nNaN\nPrivate\nNaN\nHS-grad\nNaN\nMarried-civ-spouse\nProf-specialty\nHusband\nWhite\nMale\nNaN\nNaN\nNaN\nUnited-States\n\n\nfreq\nNaN\n33906\nNaN\n15784\nNaN\n22379\n6172\n19716\n41762\n32650\nNaN\nNaN\nNaN\n43832\n\n\nmean\n38.643585\nNaN\n1.896641e+05\nNaN\n10.078089\nNaN\nNaN\nNaN\nNaN\nNaN\n1079.067626\n87.502314\n40.422382\nNaN\n\n\nstd\n13.710510\nNaN\n1.056040e+05\nNaN\n2.570973\nNaN\nNaN\nNaN\nNaN\nNaN\n7452.019058\n403.004552\n12.391444\nNaN\n\n\nmin\n17.000000\nNaN\n1.228500e+04\nNaN\n1.000000\nNaN\nNaN\nNaN\nNaN\nNaN\n0.000000\n0.000000\n1.000000\nNaN\n\n\n25%\n28.000000\nNaN\n1.175505e+05\nNaN\n9.000000\nNaN\nNaN\nNaN\nNaN\nNaN\n0.000000\n0.000000\n40.000000\nNaN\n\n\n50%\n37.000000\nNaN\n1.781445e+05\nNaN\n10.000000\nNaN\nNaN\nNaN\nNaN\nNaN\n0.000000\n0.000000\n40.000000\nNaN\n\n\n75%\n48.000000\nNaN\n2.376420e+05\nNaN\n12.000000\nNaN\nNaN\nNaN\nNaN\nNaN\n0.000000\n0.000000\n45.000000\nNaN\n\n\nmax\n90.000000\nNaN\n1.490400e+06\nNaN\n16.000000\nNaN\nNaN\nNaN\nNaN\nNaN\n99999.000000\n4356.000000\n99.000000\nNaN\nThis gives us useful information about all the features in the dataset. Among others, we can find the number of unique values in each column, various statistics for the numerical columns and the number of null values.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Exploring dataframes with skrub</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#exploring-data-with-the-tablereport",
+    "href": "chapters/01_exploring_data.html#exploring-data-with-the-tablereport",
+    "title": "2  Exploring dataframes with skrub",
+    "section": "2.2 Exploring data with the TableReport",
+    "text": "2.2 Exploring data with the TableReport\nNow, let’s create a TableReport to explore the dataset.\n\nTableReport(data)\n\nProcessing column   1 / 14Processing column   2 / 14Processing column   3 / 14Processing column   4 / 14Processing column   5 / 14Processing column   6 / 14Processing column   7 / 14Processing column   8 / 14Processing column   9 / 14Processing column  10 / 14Processing column  11 / 14Processing column  12 / 14Processing column  13 / 14Processing column  14 / 14\n\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\n\n2.2.1 Default view of the TableReport\nThe TableReport gives us a comprehensive overview of the dataset. The default view shows all the columns in the dataset, and allows to select and copy the content of the cells shown in the preview.\nThe TableReport is intended to show a preview of the data, so it does not contain all the rows in the dataset, rather it shows only the first and last few rows by default.\n\n\n2.2.2 The “Stats” tab\nThe “Stats” tab provides a variety of descriptive statistics for each column in the dataset. This includes: - The column name - The detected data type of the column - Whether the column is sorted or not - The number of null values in the column, as well as the percentage - The number of unique values in the column\nFor numerical columns, additional statistics are provided: - Mean - Standard deviation - Minimum and maximum values - Median\n\n\n2.2.3 The “Distributions” tab\nThe “Distributions” tab provides visualizations of the distributions of values in each column. This includes histograms for numerical columns and bar plots for categorical columns.\nThe “Distributions” tab helps with detecting potential issues in the data, such as: - Skewed distributions - Outliers - Unexpected value frequencies\nFor example, in this dataset we can see that some columns are heavily skewed, such as “workclass”, “race”, and “native-country”: this is important information to keep track of, because these columns may require special handling during data preprocessing or modeling.\nAdditionally, the “Distributions” tab allows so select columns manually, so that they can be added to a script and selected for further analysis or modeling.\n\n\n2.2.4 The “Associations” tab\nThe “Associations” tab provides insights into the relationships between different columns in the dataset. It shows Pearson’s correlation coefficients for numerical columns, as well as Cramér’s V for all columns.\nWhile this is a somewhat rough measure of association, it can help identify potential relationships worth exploring further during the analysis, and highlights highly correlated columns: depending on the modeling technique used, these may need to be handled specially to avoid issues with multicollinearity.\nIn this example, we can see that “education-num” and “education” have perfect correlation, which means that one of the two columns can be dropped without losing information.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Exploring dataframes with skrub</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#exploring-the-target-variable",
+    "href": "chapters/01_exploring_data.html#exploring-the-target-variable",
+    "title": "2  Exploring dataframes with skrub",
+    "section": "2.3 Exploring the target variable",
+    "text": "2.3 Exploring the target variable\nLet’s take a closer look at the target variable, which indicates whether an individual’s income exceeds $50K per year. We can create a separate TableReport for the target variable to explore its distribution:\n\n# TableReport(target)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Exploring dataframes with skrub</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#configuring-and-saving-the-tablereport",
+    "href": "chapters/01_exploring_data.html#configuring-and-saving-the-tablereport",
+    "title": "2  Exploring dataframes with skrub",
+    "section": "2.4 Configuring and saving the TableReport",
+    "text": "2.4 Configuring and saving the TableReport",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Exploring dataframes with skrub</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#exercise-exploring-a-new-table",
+    "href": "chapters/01_exploring_data.html#exercise-exploring-a-new-table",
+    "title": "2  Exploring dataframes with skrub",
+    "section": "2.5 Exercise: exploring a new table",
+    "text": "2.5 Exercise: exploring a new table\nFor this exercise, we will use the employee_salaries dataframe to answer some questions.\nRun the following code to import the dataframe:\n\nfrom skrub.datasets import fetch_employee_salaries\n\nemployee_salaries = fetch_employee_salaries()\ndata = employee_salaries.X\n\nNow use the skrub TableReport and answer the following questions:\n\nQuestionsSolution\n\n\n\nWhat’s the size of the dataframe? (columns and rows)\nHow many columns have object/numerical/datetime\nAre there columns with a large number of missing values?\nAre there columns that have a high cardinality (&gt;40 unique values)?\nWere datetime columns parsed correctly?\nWhich columns have outliers?\nWhich columns have an imbalanced distribution?\nWhich columns are strongly correlated with each other?\n\n\n\n\nWhat’s the size of the dataframe? (columns and rows)\n\n9228 rows × 8 columns\n\nHow many columns have object/numerical/datetime\n\nNo datetime columns, one integer column (year_first_hired), all other columns are objects.\n\nAre there columns with a large number of missing values?\n\nNo, only the gender column contains a small fraction (0.2%) of missing values.\n\nAre there columns that have a high cardinality?\n\nYes, division, employee_position_title, date_first_hired have a cardinality larger than 40.\n\nWere datetime columns parsed correctly?\n\nNo, the date_first_hired column has dtype Object.\n\nWhich columns have outliers?\n\nNo columns seem to include outliers.\n\nWhich columns have an imbalanced distribution?\n\nassignment_category has an unbalanced distribution.\n\nWhich columns are strongly correlated with each other?\n\ndepartment and department_name have a Cramer’s V of 1, so they are very strongly correlated.\n\n\n\n\n\n\n\n\n\n\n\nWhat do I need to open a saved TableReport?\n\nA python console\nAn internet browser\nA Jupyter notebook\n\n\n\n\n\nSolution: An internet browser is enough.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Exploring dataframes with skrub</span>"
+    ]
+  }
+]
