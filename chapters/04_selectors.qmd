@@ -30,6 +30,7 @@ import skrub.selectors as s
 ```
 
 Selectors allow to filter columns by data type:
+
 - `.float`: floating-point columns
 - `.integer`: integer columns
 - `.any_date`: date or datetime columns
@@ -39,12 +40,14 @@ Selectors allow to filter columns by data type:
 - `.numeric`: numeric (either integer or float) columns
 
 Additional conditions include:
+
 - `.all`: select all columns
 - `.cardinality_below`: select all columns with a number of unique values lower
 than the given `threshold`
 - `.has_nulls`: select all columns that include at least one null value
 
 Various selectors allow to choose columns based on their name: 
+
 - `.cols`: choose the provided column name (or list of names)
 - `.glob`: use Unix shell style `glob` to select column names
 - `.regex`: select columns using regular expressions

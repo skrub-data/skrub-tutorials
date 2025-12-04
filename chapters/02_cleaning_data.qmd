@@ -35,6 +35,7 @@ automatically. It is designed to work out-of-the-box with minimal configuration,
 although it is also possible to customize its behavior if needed.
 
 Given a dataframe, the `Cleaner` applies a sequence of transformers to each column:
+
 1. It replaces common strings used to represent missing values (e.g., `NULL`, `?`)
 with NA markers. 
 2. It uses the `DropUninformative` transformer to decide whether a column is 
@@ -73,6 +74,7 @@ default and can be turned on by setting `drop_if_unique` to `True`.
 
 ## Exercise
 Given the following dataframe, use skrub's `Cleaner` to clean the data so that:
+
 - Constant columns are removed
 - All columns with more than 50% missing values are removed
 

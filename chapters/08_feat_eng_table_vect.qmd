@@ -29,6 +29,7 @@ import skrub.selectors as s
 ```
 
 Notes on the implementation: 
+
 - In the first step, the TableVectorizer cleans the data to parse datetimes and other
 dtypes.
 - Numeric features are left untouched, i.e., they use a Passthrough transformer. 
