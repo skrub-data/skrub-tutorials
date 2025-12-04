@@ -1,13 +1,23 @@
 project:
     type: book
     output-dir: _book
-
+execute:
+    freeze: auto    
 book:
     title: "Skrub tutorials"
     author: "Riccardo Cappuzzo"
     chapters:
         - index.qmd
+        - chapters/00_intro.qmd
         - chapters/01_exploring_data.qmd
+        - chapters/02_cleaning_data.qmd
+        - chapters/03_feat_eng_apply.qmd
+        - chapters/04_selectors.qmd
+        - chapters/05_feat_eng_numerical.qmd
+        - chapters/06_feat_eng_datetimes.qmd
+        - chapters/07_feat_eng_categorical.qmd
+        - chapters/08_feat_eng_table_vect.qmd
+        - chapters/09_tabular_pipeline.qmd
 
 format:
     html:

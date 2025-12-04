@@ -6,15 +6,18 @@ platforms = ["osx-arm64"]
 version = "0.1.0"
 
 [tasks]
+render = "quarto render"
 
 [dependencies]
 pandas = ">=2.3.3,<3"
 polars = ">=1.35.1,<2"
 scikit-learn = ">=1.7.2,<2"
 seaborn = ">=0.13.2,<0.14"
-skrub = ">=0.6.2,<0.7"
 pyarrow = ">=22.0.0,<23"
 ipython = ">=9.7.0,<10"
 jupyter = ">=1.1.1,<2"
 jupyterquiz = ">=2.9.6.2,<3"
 jupytext = ">=1.18.1,<2"
+
+[pypi-dependencies]
+skrub = { git = "https://github.com/skrub-data/skrub.git"}
