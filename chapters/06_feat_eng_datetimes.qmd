@@ -1,0 +1,16 @@
+---
+title: "Encoding datetime features with `DatetimeEncoder`"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+1. With pandas/polars
+2. Specifying the datetime format
+3. DatetimeEncoder default 
+4. DatetimeEncoder additional parameters
+5. Periodic encoders

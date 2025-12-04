@@ -1,0 +1,116 @@
+---
+title: "Preprocessing data with skrub"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+1. No cleaner
+2. Cleaner
+3. DropUninformative
+
+
+In this chapter, we will show how we can quickly pre-process and sanitize 
+data using skrub's `Cleaner`, and compare it to traditional methods using pandas.
+
+
+## Cleaning data with Pandas
+
+```{python}
+from sklearn.datasets import fetch_openml
+data = fetch_openml(data_id=42074)
+```
+
+
+## Using the skrub `Cleaner`
+
+
+The `Cleaner` is intended to be a first step in preparing tabular data for 
+analysis or modeling, and can handle a variety of common data cleaning tasks
+automatically. It is designed to work out-of-the-box with minimal configuration,
+although it is also possible to customize its behavior if needed.
+
+Given a dataframe, the `Cleaner` applies a sequence of transformers to each column:
+1. It replaces common strings used to represent missing values (e.g., `NULL`, `?`)
+with NA markers. 
+2. It uses the `DropUninformative` transformer to decide whether a column is 
+"uninformative", that is, it is not likely to bring information useful to train
+a ML model. For example, empty columns are uninformative. 
+3. It tries to parse datetime columns using common formats, or a user-provided
+`datetime_format`. 
+4. It processes categorical columns to ensure consistent typing depending on the 
+dataframe library in use. 
+5. It converts columns to string, unless they have a data type that carries more 
+information, such as numerical, datetime, and categorial columns.
+6. Finally, it can convert numerical columns to `np.float32` dtype. This ensures 
+a consistent representation of numbers and missing values, and helps reducing 
+the memory footprint. This is useful if the Cleaner is used as the first step in
+a machine learning pipeline. 
+
+## Under the hood: `DropUninformative`
+When the cleaner is fitted on a dataframe, it checks whether the dataframe includes
+uninformative columns, that is columns that could be dropped as they do not bring
+useful information for training a ML model. 
+
+This is done by the `DropUninformative` transformer, which is a standalone transformer
+that the `Cleaner` leverages to sanitize data. 
+`DropUninformative` marks a columns as "uninformative" if it satisfies one of these 
+conditions:
+
+- The fraction of missing values is larger than the threshold provided by the user
+with `drop_null_fraction`. By default, this threshold is 1.0, i.e., only columns
+that contain only missing values are dropped. 
+- It contains only one value, and no missing values. This is controlled by the 
+`drop_if_constant` flag, which is `False` by default.. 
+- All values in the column are distinct. This may be the case if the column contains
+UIDs, but it can also happen when the column contains text. This check is off by
+default and can be turned on by setting `drop_if_unique` to `True`. 
+
+
+## Exercise
+Given the following dataframe, use skrub's `Cleaner` to clean the data so that:
+- Constant columns are removed
+- All columns with more than 50% missing values are removed
+
+```{python}
+import pandas as pd
+df = pd.read_csv("../data/synthetic_data.csv")
+```
+
+Let's first examine the dataset before cleaning:
+
+```{python}
+from skrub import TableReport
+TableReport(df)
+```
+
+Now, let's use the `Cleaner` to clean the data:
+
+```{python}
+from skrub import Cleaner
+
+# Configure the Cleaner to:
+# - Remove constant columns (drop_if_constant=True)
+# - Remove columns with more than 50% missing values (drop_null_fraction=0.5)
+cleaner = Cleaner(drop_if_constant=True, drop_null_fraction=0.5)
+
+# Apply the cleaning
+df_cleaned = cleaner.fit_transform(df)
+
+# Display the cleaned dataframe
+TableReport(df_cleaned)
+```
+
+We can inspect which columns were dropped and what transformations were applied:
+
+```{python}
+print(f"Original shape: {df.shape}")
+print(f"Cleaned shape: {df_cleaned.shape}")
+print(
+    f"\nColumns dropped: {[col for col in df.columns if col not in cleaner.all_outputs_]}"
+)
+```

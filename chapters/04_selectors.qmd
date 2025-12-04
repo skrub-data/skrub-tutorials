@@ -1,0 +1,118 @@
+---
+title: "Choose your column: selectors"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+1. Better column control in Apply*, Select
+2. Overview of the selectors
+3. Combining selectors
+4. Custom filters 
+
+Very often, column selection is more complex than simply passing a list of column
+names to a transformer: it may be necessary to select all columns that have a
+specific data type, or based on some other characteristic (presence of nulls,
+column cardinality etc.).
+
+The skrub `selectors` implement a number of selection strategies that can be 
+combined in various ways to build complex filtering conditions that can then be 
+employed by `ApplyToCols`, `ApplyToFrame`, `SelectCols` and `DropCols`. 
+
+## Skrub selectors
+Selectors are available from the `skrub.selectors` namespace:
+```{python}
+import skrub.selectors as s
+```
+
+Selectors allow to filter columns by data type:
+- `.float`: floating-point columns
+- `.integer`: integer columns
+- `.any_date`: date or datetime columns
+- `.boolean`: boolean columns
+- `.string`: columns with a String data type
+- `.categorical`: columns with a Categorical data type
+- `.numeric`: numeric (either integer or float) columns
+
+Additional conditions include:
+- `.all`: select all columns
+- `.cardinality_below`: select all columns with a number of unique values lower
+than the given `threshold`
+- `.has_nulls`: select all columns that include at least one null value
+
+Various selectors allow to choose columns based on their name: 
+- `.cols`: choose the provided column name (or list of names)
+- `.glob`: use Unix shell style `glob` to select column names
+- `.regex`: select columns using regular expressions
+
+## Combining selectors
+
+Selectors can be inverted using `.inv` or the logical operator `~` to
+select all _other_ columns, and they can be combined using the `&` and `|`
+logical operators. It is also possible to remove from a selection with `-`:
+
+```{python}
+
+```
+
+## Designing custom filters
+Finally, it is possible to define function-based selectors using `.filter` and 
+`.filter_names`. 
+
+`.filter` selects columns for which the `predicate` evaluated by a user-defined
+function is `True`. 
+For example,  it is possible to select columns that include a certain amount of 
+nulls by defining a function like the following:
+
+```{python}
+import pandas as pd
+import skrub.selectors as s
+from skrub import DropCols
+
+df = pd.DataFrame({"a": [None, None, None, 1], "b": [1,2,3,4]})
+
+def more_nulls_than(col, threshold=.5):
+    return col.isnull().sum()/len(col) > threshold
+
+DropCols(cols=s.filter(more_nulls_than, threshold=0.5)).fit_transform(df)
+```
+
+`.filter_names` is similar to `.filter` in the sense that it takes a function that
+returns a predicate, but in this case the function is evaluated over the column
+names. 
+
+If we define this example dataframe:
+```{python}
+from skrub import selectors as s
+import pandas as pd
+df = pd.DataFrame(
+    {
+        "height_mm": [297.0, 420.0],
+        "width_mm": [210.0, 297.0],
+        "kind": ["A4", "A3"],
+        "ID": [4, 3],
+    }
+)
+df
+```
+
+We can select all the columns that end with `"_mm"` as follows: 
+```{python}
+selector = s.filter_names(lambda name: name.endswith('_mm'))
+s.select(df, selector)
+```
+
+## Exercise: using selectors together with `ApplyToCols`
+
+1. define dataframe
+    - some numeric metrics 
+    - a numerical id column
+    - a string id column
+    - some text column
+2. apply standardscaler to specific numerical columns, onehotencoder to specific (not all) string columns 
+3. drop the id columns
+

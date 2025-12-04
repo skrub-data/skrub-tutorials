@@ -1,0 +1,13 @@
+---
+title: "Building a tabular pipeline"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+1. pipeline with `TableVectorizer`
+2. pipeline with `tabular_pipeline`
