@@ -84,6 +84,7 @@ few rows by default.
 ### The "Stats" tab
 The "Stats" tab provides a variety of descriptive statistics for each column in the dataset.
 This includes:
+
 - The column name
 - The detected data type of the column
 - Whether the column is sorted or not 
@@ -91,6 +92,7 @@ This includes:
 - The number of unique values in the column
 
 For numerical columns, additional statistics are provided:
+
 - Mean
 - Standard deviation
 - Minimum and maximum values
@@ -101,6 +103,7 @@ The "Distributions" tab provides visualizations of the distributions of values
 in each column. This includes histograms for numerical columns and bar plots for categorical columns.
 
 The "Distributions" tab helps with detecting potential issues in the data, such as:
+
 - Skewed distributions
 - Outliers
 - Unexpected value frequencies
@@ -218,19 +221,4 @@ Now use the skrub `TableReport` and answer the following questions:
 - Which columns are strongly correlated with each other?
     - `department` and `department_name` have a Cramer's V of 1, so they are 
     very strongly correlated. 
-:::
-
-
-::: {.callout}
-
-What do I need to open a saved `TableReport`?
-
-- [ ] A python console
-- [ ] An internet browser
-- [ ] A Jupyter notebook
-:::
-
-
-::: {.collapse}
-Solution: An internet browser is enough. 
 :::
