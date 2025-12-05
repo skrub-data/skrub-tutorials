@@ -82,6 +82,11 @@ contain all the rows in the dataset, rather it shows only the first and last
 few rows by default. 
 
 ### The "Stats" tab
+
+```{python}
+TableReport(data, open_tab="stats")
+```
+
 The "Stats" tab provides a variety of descriptive statistics for each column in the dataset.
 This includes:
 
@@ -99,6 +104,11 @@ For numerical columns, additional statistics are provided:
 - Median
 
 ### The "Distributions" tab
+
+```{python}
+TableReport(data, open_tab="distributions")
+```
+
 The "Distributions" tab provides visualizations of the distributions of values 
 in each column. This includes histograms for numerical columns and bar plots for categorical columns.
 
@@ -117,6 +127,11 @@ Additionally, the "Distributions" tab allows so select columns manually, so that
 they can be added to a script and selected for further analysis or modeling.
 
 ### The "Associations" tab
+
+```{python}
+TableReport(data, open_tab="associations")
+```
+
 The "Associations" tab provides insights into the relationships between different
 columns in the dataset.
 It shows Pearson's correlation coefficients for numerical columns, as well as

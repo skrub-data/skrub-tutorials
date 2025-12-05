@@ -26,6 +26,8 @@ import skrub.selectors as s
 We will use this example dataframe to test some of the selectors: 
 ```{python}
 import pandas as pd
+import datetime
+
 data = {
     "int": [15, 56, 63, 12, 44],
     "float": [5.2, 2.4, 6.2, 10.45, 9.0],

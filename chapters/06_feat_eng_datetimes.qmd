@@ -60,7 +60,7 @@ data = {
 }
 df = pd.DataFrame(data)
 
-ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
 ```
 
 **`to_datetime`** works similarly to 
@@ -77,19 +77,6 @@ Finally, the standard `Cleaner` can be used for parsing datetimes, as it uses
 `ToDatetime` under the hood, and can take the `datetime_format`. As the `Cleaner`
 is a transformer, it guarantees consistency between `fit_transform` and `transform`. 
 
-```{python}
-data = {
-    "dates": [
-        "2023-01-03",
-        "2023-02-15",
-        "2023-03-27",
-        "2023-04-10",
-    ]
-}
-df = pd.DataFrame(data)
-
-df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
-```
 ## Encoding datetime features
 Datetimes cannot be used "as-is" for training ML models, and must instead be 
 converted to numerical features. Typically, this is done by "splitting" the 
@@ -116,6 +103,8 @@ Skrub's `DatetimeEncoder` allows to add the same features with a simpler interfa
 As the `DatetimeEncoder` is a single column transformer, we use again `ApplyToCols`. 
 
 ```{python}
+from skrub import DatetimeEncoder
+
 df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
 
 de = DatetimeEncoder(add_total_seconds=True, add_weekday=True, add_day_of_year=True)
@@ -137,6 +126,10 @@ generalize and make accurate predictions.
 This can be done manually with dataframe libraries. For example, circular encoding
 (a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:
 ```{python}
+import numpy as np 
+
+df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+
 df_enc["day_of_year"] = df_enc["dates"].dt.day_of_year
 df_enc["day_of_year_sin"] = np.sin(2 * np.pi * df_enc["day_of_year"] / 365)
 df_enc["day_of_year_cos"] = np.cos(2 * np.pi * df_enc["day_of_year"] / 365)
