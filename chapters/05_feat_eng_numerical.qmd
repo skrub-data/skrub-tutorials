@@ -16,3 +16,15 @@ the selectors, it is time to s
 1. Numerical features with outliers
 2. Regular scalers
 3. SquashingScaler
+    - SquashingScaler can't invert the transformation
+
+
+## Exercise: comparing scalers
+Scale the following data with the scikit-learn StandardScaler and RobustScaler,
+and then with the SquashingScaler.
+
+Answer the following questions:
+- Mean/std of the transformed data
+- Max/min of the transformed data
+- Mean/std of the inliers (use provided iqr function)
+
