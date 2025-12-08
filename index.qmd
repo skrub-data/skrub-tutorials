@@ -1,8 +1,32 @@
 ---
-title: "My Quarto Book"
-author: "Author Name"
+title: "Inria Academy - skrub like a pro"
+author: "Riccardo Cappuzzo"
 ---
 
-# Welcome
+This online book contains the material used for the Inria Academy course on the
+[skrub package](https://skrub-data.org/stable/). 
 
-Welcome to my Quarto book! This is the introduction.
+Each chapter of the book includes a theoretical section that describes a specific
+aspect of the library, and one or more exercises that are intended to put into 
+practice what has been explained.
+
+Quiz sections split the major sections of the code. 
+
+
+## Prepration and setup
+The easiest way to work with the notebooks provided here is by installing and
+using [pixi](https://pixi.sh/latest/installation/).
+
+Then, it is possible to run
+
+```sh
+pixi install
+```
+
+to create the environment, followed by 
+
+```sh
+pixi shell
+``` 
+
+to create a shell that allows to run the exercises. 

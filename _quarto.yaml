@@ -8,16 +8,16 @@ book:
     author: "Riccardo Cappuzzo"
     chapters:
         - index.qmd
-        - chapters/00_intro.qmd
-        - chapters/01_exploring_data.qmd
-        - chapters/02_cleaning_data.qmd
-        - chapters/03_feat_eng_apply.qmd
-        - chapters/04_selectors.qmd
-        - chapters/05_feat_eng_numerical.qmd
-        - chapters/06_feat_eng_datetimes.qmd
-        - chapters/07_feat_eng_categorical.qmd
-        - chapters/08_feat_eng_table_vect.qmd
-        - chapters/09_tabular_pipeline.qmd
+        - content/chapters/00_intro.qmd
+        - content/chapters/01_exploring_data.qmd
+        - content/chapters/02_cleaning_data.qmd
+        - content/chapters/03_feat_eng_apply.qmd
+        - content/chapters/04_selectors.qmd
+        - content/chapters/05_feat_eng_numerical.qmd
+        - content/chapters/06_feat_eng_datetimes.qmd
+        - content/chapters/07_feat_eng_categorical.qmd
+        - content/chapters/08_feat_eng_table_vect.qmd
+        - content/chapters/09_tabular_pipeline.qmd
 
 format:
     html:

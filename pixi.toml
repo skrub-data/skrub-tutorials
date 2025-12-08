@@ -6,7 +6,6 @@ platforms = ["osx-arm64"]
 version = "0.1.0"
 
 [tasks]
-render = "quarto render"
 
 [dependencies]
 pandas = ">=2.3.3,<3"
@@ -14,10 +13,41 @@ polars = ">=1.35.1,<2"
 scikit-learn = ">=1.7.2,<2"
 seaborn = ">=0.13.2,<0.14"
 pyarrow = ">=22.0.0,<23"
-ipython = ">=9.7.0,<10"
-jupyter = ">=1.1.1,<2"
-jupyterquiz = ">=2.9.6.2,<3"
-jupytext = ">=1.18.1,<2"
 
 [pypi-dependencies]
 skrub = { git = "https://github.com/skrub-data/skrub.git"}
+
+[environments]
+lint = ["lint"]
+doc = ["doc"]
+dev = ["dev", "doc", "lint"]
+
+[feature.dev.dependencies]
+ipykernel = "*"
+ipython = ">=9.7.0,<10"
+
+[feature.lint.dependencies]
+ruff = "*"
+black = "*"
+jupyter = ">=1.1.1,<2"
+
+[feature.doc.dependencies]
+jupyter-book = "*"
+jupyterlite = "*"
+jupyterlite-pyodide-kernel = "*"
+python-libarchive-c = "*"
+quarto = "*"
+jupytext = ">=1.18.1,<2"
+jupyterquiz = ">=2.9.6.2,<3"
+
+[feature.doc.tasks]
+render = "quarto render"
+publish = "quarto publish gh-pages"
+create-notebooks-dir = { cmd = "mkdir -p ./content/notebooks" }
+convert-to-notebooks = { cmd = "jupytext --to notebook ./content/chapters/*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
+convert-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/chapters/*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
+build-book = { cmd = "jupyter-book build book", depends-on = ["convert-to-notebooks"]}
+copy-data = { cmd = "cp -r ./data ./content/", depends-on = [] }
+build-jupyterlite = { cmd = "jupyter lite build --contents content --output-dir dist", cwd = "jupyterlite", depends-on = ["convert-to-notebooks", "copy-data"] }
+serve-jupyterlite = { cmd = "python -m http.server", cwd = "jupyterlite/dist", depends-on = ["build-jupyterlite"] }
+build-slides = { cmd = "quarto render", cwd = "content/slides"}
