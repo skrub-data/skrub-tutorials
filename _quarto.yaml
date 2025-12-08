@@ -1,6 +1,6 @@
 project:
     type: book
-    output-dir: _book
+    output-dir: _build
 execute:
     freeze: auto    
 book:

@@ -42,5 +42,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./book/_build/html
+          publish_dir: ./_build/html
           commit_message: "[ci skip] ${{ github.event.head_commit.message }}"

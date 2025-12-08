@@ -50,4 +50,5 @@ build-book = { cmd = "jupyter-book build book", depends-on = ["convert-to-notebo
 copy-data = { cmd = "cp -r ./data ./content/", depends-on = [] }
 build-jupyterlite = { cmd = "jupyter lite build --contents content --output-dir dist", cwd = "jupyterlite", depends-on = ["convert-to-notebooks", "copy-data"] }
 serve-jupyterlite = { cmd = "python -m http.server", cwd = "jupyterlite/dist", depends-on = ["build-jupyterlite"] }
+copy-jupyterlite = { cmd = "mkdir -p ./_build/html/jupyterlite && cp -r jupyterlite/dist ./_build/html/jupyterlite", depends-on = ["build-jupyterlite"] }
 build-slides = { cmd = "quarto render", cwd = "content/slides"}
