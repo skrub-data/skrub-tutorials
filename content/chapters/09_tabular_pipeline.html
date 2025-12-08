@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-3778d3e438078121318a23701f9f68bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -133,9 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Skrub tutorials</a> 
     </div>
@@ -223,7 +221,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link active" data-scroll-target="#exercise"><span class="header-section-number">11.1</span> Exercise:</a></li>
+  <li><a href="#introduction-from-raw-data-to-predictions" id="toc-introduction-from-raw-data-to-predictions" class="nav-link active" data-scroll-target="#introduction-from-raw-data-to-predictions"><span class="header-section-number">11.1</span> Introduction: From Raw Data to Predictions</a></li>
+  <li><a href="#manual-pipeline-construction-with-tablevectorizer" id="toc-manual-pipeline-construction-with-tablevectorizer" class="nav-link" data-scroll-target="#manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">11.2</span> Manual Pipeline Construction with TableVectorizer</a></li>
+  <li><a href="#the-tabular_pipeline-function" id="toc-the-tabular_pipeline-function" class="nav-link" data-scroll-target="#the-tabular_pipeline-function"><span class="header-section-number">11.3</span> The <code>tabular_pipeline</code> function</a></li>
+  <li><a href="#how-tabular_pipeline-adapts-to-different-estimators" id="toc-how-tabular_pipeline-adapts-to-different-estimators" class="nav-link" data-scroll-target="#how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">11.4</span> How tabular_pipeline Adapts to Different Estimators</a>
+  <ul class="collapse">
+  <li><a href="#for-linear-models-e.g.-logisticregression-ridge" id="toc-for-linear-models-e.g.-logisticregression-ridge" class="nav-link" data-scroll-target="#for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">11.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</a></li>
+  <li><a href="#for-tree-based-ensemble-models-randomforest-histgradientboosting" id="toc-for-tree-based-ensemble-models-randomforest-histgradientboosting" class="nav-link" data-scroll-target="#for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">11.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</a></li>
+  </ul></li>
+  <li><a href="#key-advantages-of-tabular_pipeline" id="toc-key-advantages-of-tabular_pipeline" class="nav-link" data-scroll-target="#key-advantages-of-tabular_pipeline"><span class="header-section-number">11.5</span> Key Advantages of tabular_pipeline</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">11.6</span> Exercise:</a></li>
   </ul>
 </nav>
     </div>
@@ -249,40 +256,116 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="introduction-from-raw-data-to-predictions" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="introduction-from-raw-data-to-predictions"><span class="header-section-number">11.1</span> Introduction: From Raw Data to Predictions</h2>
+<p>Up until now we have covered how to clean data with the <code>Cleaner</code>, extract features from different column types, and handle categorical features with specialized encoders. In this section we will show how we can combine all these preprocessing techniques into a complete machine learning pipeline.</p>
+<p>A pipeline ensures that: - Data transformations are applied consistently across training and test sets - Data leakage is avoided by fitting transformers only on training data - The workflow is reproducible and deployable - Preprocessing steps are properly chained together</p>
+<p>In this chapter, we explore two approaches: building custom pipelines with <code>TableVectorizer</code>, and using the <code>tabular_pipeline</code> function for quick, well-tuned baselines.</p>
+</section>
+<section id="manual-pipeline-construction-with-tablevectorizer" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">11.2</span> Manual Pipeline Construction with TableVectorizer</h2>
+<p>The <code>TableVectorizer</code> can be the foundation of a custom scikit-learn pipeline. We combine it with other preprocessing steps and a final estimator:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> make_pipeline(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    TableVectorizer(),           <span class="co"># Feature engineering</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    SimpleImputer(),             <span class="co"># Handle missing values</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    StandardScaler(),            <span class="co"># Normalize features</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    LogisticRegression()         <span class="co"># Final estimator</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This approach gives complete control over which preprocessing steps to use and in what order. We can customize the <code>TableVectorizer</code> parameters (cardinality threshold, custom encoders, etc.) and add additional preprocessing steps as needed.</p>
+<p>In the case of the example we used <code>LogisticRegression</code> as our estimator, but if we used a different estimator, such as the <code>HistogramGradientBoostingClassifier</code>, the scaling and imputation steps could have been avoided.</p>
+</section>
+<section id="the-tabular_pipeline-function" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="the-tabular_pipeline-function"><span class="header-section-number">11.3</span> The <code>tabular_pipeline</code> function</h2>
+<p>For most common use cases, we can skip the manual pipeline construction and use the <code>tabular_pipeline</code> function. This function automatically creates an appropriate pipeline based on the estimator we provide:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a complete pipeline for a specific estimator</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tabular_pipeline(LogisticRegression())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Or, we can use a string to get a pre-configured pipeline with a default estimator:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Classification with HistGradientBoostingClassifier</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tabular_pipeline(<span class="st">'classification'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Regression with HistGradientBoostingRegressor</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tabular_pipeline(<span class="st">'regression'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="how-tabular_pipeline-adapts-to-different-estimators" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">11.4</span> How tabular_pipeline Adapts to Different Estimators</h2>
+<p>The <code>tabular_pipeline</code> function intelligently configures the preprocessing pipeline based on the estimator type:</p>
+<section id="for-linear-models-e.g.-logisticregression-ridge" class="level3" data-number="11.4.1">
+<h3 data-number="11.4.1" class="anchored" data-anchor-id="for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">11.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</h3>
+<ul>
+<li><strong>TableVectorizer</strong>: Uses the default configuration, except for the addition of spline-encoded datetime features by the <code>DatetimeEncoder</code></li>
+<li><strong>SimpleImputer</strong>: Added because linear models cannot handle missing values</li>
+<li><strong>SquashingScaler</strong>: Normalizes numeric features to improve convergence and performance</li>
+<li><strong>Estimator</strong>: The provided linear model</li>
+</ul>
+<p>This configuration ensures numeric features are properly scaled and missing values are handled appropriately.</p>
+</section>
+<section id="for-tree-based-ensemble-models-randomforest-histgradientboosting" class="level3" data-number="11.4.2">
+<h3 data-number="11.4.2" class="anchored" data-anchor-id="for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">11.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</h3>
+<ul>
+<li><strong>TableVectorizer</strong>: Configured specifically for tree models
+<ul>
+<li>Low-cardinality categorical features: Either kept as categorical (HistGradientBoosting) or ordinal encoded (RandomForest)</li>
+<li>High-cardinality features: StringEncoder for robust feature extraction</li>
+<li>Datetime features: No spline encoding (unnecessary for trees)</li>
+</ul></li>
+<li><strong>SimpleImputer</strong>: Only added for older scikit-learn versions (&lt; 1.4) without native missing value support</li>
+<li><strong>Scaler</strong>: Not added (unnecessary for tree-based models)</li>
+<li><strong>Estimator</strong>: The provided tree-based estimator</li>
+</ul>
+<p>This configuration leverages the native capabilities of tree models while still providing effective feature engineering through the <code>StringEncoder</code>.</p>
+</section>
+</section>
+<section id="key-advantages-of-tabular_pipeline" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="key-advantages-of-tabular_pipeline"><span class="header-section-number">11.5</span> Key Advantages of tabular_pipeline</h2>
 <ol type="1">
-<li>pipeline with <code>TableVectorizer</code></li>
-<li>pipeline with <code>tabular_pipeline</code></li>
+<li><strong>Smart Configuration</strong>: Automatically selects preprocessing parameters appropriate for the estimator</li>
+<li><strong>Simplicity</strong>: One-line creation of a complete, well-tuned baseline</li>
+<li><strong>Robustness</strong>: Handles edge cases like missing values and mixed data types automatically</li>
 </ol>
-<p>We can now put data cleaning and feature engineering together to build a full machine learning pipeline.</p>
-<section id="exercise" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="exercise"><span class="header-section-number">11.1</span> Exercise:</h2>
-<div id="517a958a" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub.datasets <span class="im">import</span> fetch_employee_salaries</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>adult <span class="op">=</span> fetch_openml(<span class="st">"adult"</span>, version<span class="op">=</span><span class="dv">2</span>)  </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> adult.data</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> adult.target</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>Use <code>tabular_pipeline</code></strong> when you want a quick, well-tuned baseline to benchmark against or as a starting point</li>
+<li><strong>Build manual pipelines</strong> when you need fine-grained control over preprocessing steps or want to experiment with custom transformers</li>
+</ul>
+<p>Both approaches produce scikit-learn compatible pipelines that can be used with cross-validation, hyperparameter tuning, and other standard workflows.</p>
+</section>
+<section id="exercise" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="exercise"><span class="header-section-number">11.6</span> Exercise:</h2>
+<div id="8663bd3a" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub.datasets <span class="im">import</span> fetch_employee_salaries</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>adult <span class="op">=</span> fetch_openml(<span class="st">"adult"</span>, version<span class="op">=</span><span class="dv">2</span>)  </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> adult.data</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> adult.target</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="f7ff6709" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_selector <span class="im">as</span> selector</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_transformer</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>categorical_columns <span class="op">=</span> selector(dtype_include<span class="op">=</span><span class="st">"category"</span>)(X)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>numerical_columns <span class="op">=</span> selector(dtype_include<span class="op">=</span><span class="st">"number"</span>)(X)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> make_column_transformer(</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      (StandardScaler(),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>       numerical_columns),</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      (OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>),</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>       categorical_columns))</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>model_base <span class="op">=</span> make_pipeline(ct, SimpleImputer(), LogisticRegression())</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>model_base</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="392bd7c8" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_selector <span class="im">as</span> selector</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_transformer</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>categorical_columns <span class="op">=</span> selector(dtype_include<span class="op">=</span><span class="st">"category"</span>)(X)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>numerical_columns <span class="op">=</span> selector(dtype_include<span class="op">=</span><span class="st">"number"</span>)(X)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> make_column_transformer(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      (StandardScaler(),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>       numerical_columns),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      (OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>       categorical_columns))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>model_base <span class="op">=</span> make_pipeline(ct, SimpleImputer(), LogisticRegression())</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>model_base</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <style>#sk-container-id-1 {
   /* Definition of color scheme common for light and dark mode */
@@ -1114,13 +1197,13 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </script>
 </div>
 </div>
-<div id="5924077c" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>model_tv <span class="op">=</span> make_pipeline(tv, SimpleImputer(), StandardScaler(), LogisticRegression())</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>model_tv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="60db3cbe" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>model_tv <span class="op">=</span> make_pipeline(tv, SimpleImputer(), StandardScaler(), LogisticRegression())</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>model_tv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <style>#sk-container-id-2 {
   /* Definition of color scheme common for light and dark mode */
@@ -2033,11 +2116,11 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </script>
 
 
-<div id="1c7ba0ac" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>model_tp <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>model_tp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c4ff862e" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>model_tp <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>model_tp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <style>#sk-container-id-3 {
   /* Definition of color scheme common for light and dark mode */
@@ -2946,9 +3029,9 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </script>
 
 
-<div id="13c4b57f" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model_hgb <span class="op">=</span> tabular_pipeline(<span class="st">"classification"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model_hgb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="899c3380" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model_hgb <span class="op">=</span> tabular_pipeline(<span class="st">"classification"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>model_hgb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <style>#sk-container-id-4 {
   /* Definition of color scheme common for light and dark mode */
@@ -3770,25 +3853,25 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </script>
 
 
-<div id="1688e66f" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>results_base <span class="op">=</span> cross_val_score(model_base, X, y)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Base model: </span><span class="sc">{</span>results_base<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>results_tv <span class="op">=</span> cross_val_score(model_tv, X, y)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TableVectorizer: </span><span class="sc">{</span>results_tv<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>results_tp <span class="op">=</span> cross_val_score(model_tp, X, y)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tabular pipeline: </span><span class="sc">{</span>results_tp<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>results_hgb <span class="op">=</span> cross_val_score(model_hgb, X, y)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"HGB model: </span><span class="sc">{</span>results_hgb<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d9c9acd5" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>results_base <span class="op">=</span> cross_val_score(model_base, X, y)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Base model: </span><span class="sc">{</span>results_base<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>results_tv <span class="op">=</span> cross_val_score(model_tv, X, y)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TableVectorizer: </span><span class="sc">{</span>results_tv<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>results_tp <span class="op">=</span> cross_val_score(model_tp, X, y)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tabular pipeline: </span><span class="sc">{</span>results_tp<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>results_hgb <span class="op">=</span> cross_val_score(model_hgb, X, y)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"HGB model: </span><span class="sc">{</span>results_hgb<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Base model: 0.8523
 TableVectorizer: 0.8523
-Tabular pipeline: 0.8527
-HGB model: 0.8729</code></pre>
+Tabular pipeline: 0.8528
+HGB model: 0.8731</code></pre>
 </div>
 </div>
 
