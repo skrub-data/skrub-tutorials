@@ -203,7 +203,7 @@ data = employee_salaries.X
 
 Now use the skrub `TableReport` and answer the following questions: 
 
-::: {.panel-tabset}
+
 # Questions
 - What's the size of the dataframe? (columns and rows)
 - How many columns have object/numerical/datetime
@@ -236,4 +236,3 @@ Now use the skrub `TableReport` and answer the following questions:
 - Which columns are strongly correlated with each other?
     - `department` and `department_name` have a Cramer's V of 1, so they are 
     very strongly correlated. 
-:::
