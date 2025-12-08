@@ -1,0 +1,195 @@
+---
+title: "Building a tabular pipeline"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+## Introduction: From Raw Data to Predictions
+
+Up until now we have covered how to clean data with the `Cleaner`, extract features 
+from different column types, and handle categorical features with specialized
+encoders. In this section we will show how we can combine all these preprocessing
+techniques into a complete machine learning pipeline.
+
+A pipeline ensures that:
+- Data transformations are applied consistently across training and test sets
+- Data leakage is avoided by fitting transformers only on training data
+- The workflow is reproducible and deployable
+- Preprocessing steps are properly chained together
+
+In this chapter, we explore two approaches: building custom pipelines with
+`TableVectorizer`, and using the `tabular_pipeline` function for quick,
+well-tuned baselines.
+
+## Manual Pipeline Construction with TableVectorizer
+
+The `TableVectorizer` can be the foundation of a custom scikit-learn pipeline.
+We combine it with other preprocessing steps and a final estimator:
+
+```python
+from sklearn.pipeline import make_pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
+from skrub import TableVectorizer
+
+model = make_pipeline(
+    TableVectorizer(),           # Feature engineering
+    SimpleImputer(),             # Handle missing values
+    StandardScaler(),            # Normalize features
+    LogisticRegression()         # Final estimator
+)
+```
+
+This approach gives complete control over which preprocessing steps to use and
+in what order. We can customize the `TableVectorizer` parameters (cardinality
+threshold, custom encoders, etc.) and add additional preprocessing steps as needed.
+
+In the case of the example we used `LogisticRegression` as our estimator, but if we
+used a different estimator, such as the `HistogramGradientBoostingClassifier`, 
+the scaling and imputation steps could have been avoided. 
+
+## The `tabular_pipeline` function
+
+For most common use cases, we can skip the manual pipeline construction and use
+the `tabular_pipeline` function. This function automatically creates an appropriate
+pipeline based on the estimator we provide:
+
+```python
+from skrub import tabular_pipeline
+from sklearn.linear_model import LogisticRegression
+
+# Create a complete pipeline for a specific estimator
+model = tabular_pipeline(LogisticRegression())
+```
+
+Or, we can use a string to get a pre-configured pipeline with a default estimator:
+
+```python
+# Classification with HistGradientBoostingClassifier
+model = tabular_pipeline('classification')
+
+# Regression with HistGradientBoostingRegressor
+model = tabular_pipeline('regression')
+```
+
+## How tabular_pipeline Adapts to Different Estimators
+
+The `tabular_pipeline` function intelligently configures the preprocessing pipeline
+based on the estimator type:
+
+### For Linear Models (e.g., LogisticRegression, Ridge)
+
+- **TableVectorizer**: Uses the default configuration, except for the addition of 
+spline-encoded datetime features by the `DatetimeEncoder`
+- **SimpleImputer**: Added because linear models cannot handle missing values
+- **SquashingScaler**: Normalizes numeric features to improve convergence and
+performance
+- **Estimator**: The provided linear model
+
+This configuration ensures numeric features are properly scaled and missing
+values are handled appropriately.
+
+### For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)
+
+- **TableVectorizer**: Configured specifically for tree models
+  - Low-cardinality categorical features: Either kept as categorical
+  (HistGradientBoosting) or ordinal encoded (RandomForest)
+  - High-cardinality features: StringEncoder for robust feature extraction
+  - Datetime features: No spline encoding (unnecessary for trees)
+- **SimpleImputer**: Only added for older scikit-learn versions (< 1.4) without native missing value support
+- **Scaler**: Not added (unnecessary for tree-based models)
+- **Estimator**: The provided tree-based estimator
+
+This configuration leverages the native capabilities of tree models while still
+providing effective feature engineering through the `StringEncoder`.
+
+## Key Advantages of tabular_pipeline
+
+1. **Smart Configuration**: Automatically selects preprocessing parameters appropriate for the estimator
+2. **Simplicity**: One-line creation of a complete, well-tuned baseline
+3. **Robustness**: Handles edge cases like missing values and mixed data types
+automatically
+
+- **Use `tabular_pipeline`** when you want a quick, well-tuned baseline to benchmark against or as a starting point
+- **Build manual pipelines** when you need fine-grained control over preprocessing steps or want to experiment with custom transformers
+
+Both approaches produce scikit-learn compatible pipelines that can be used with cross-validation, hyperparameter tuning, and other standard workflows.
+
+## Exercise: 
+
+```{python}
+from skrub.datasets import fetch_employee_salaries
+from sklearn.datasets import fetch_openml
+
+adult = fetch_openml("adult", version=2)  
+X = adult.data
+y = adult.target
+```
+
+
+```{python}
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import make_column_selector as selector
+from sklearn.compose import make_column_transformer
+
+categorical_columns = selector(dtype_include="category")(X)
+numerical_columns = selector(dtype_include="number")(X)
+
+ct = make_column_transformer(
+      (StandardScaler(),
+       numerical_columns),
+      (OneHotEncoder(handle_unknown="ignore"),
+       categorical_columns))
+
+model_base = make_pipeline(ct, SimpleImputer(), LogisticRegression())
+model_base
+```
+
+```{python}
+from skrub import TableVectorizer
+
+tv = TableVectorizer()
+
+model_tv = make_pipeline(tv, SimpleImputer(), StandardScaler(), LogisticRegression())
+model_tv
+```
+
+
+
+```{python}
+from skrub import tabular_pipeline
+
+model_tp = tabular_pipeline(LogisticRegression())
+model_tp
+```
+
+```{python}
+model_hgb = tabular_pipeline("classification")
+model_hgb
+```
+
+
+```{python}
+from sklearn.model_selection import cross_val_score
+
+results_base = cross_val_score(model_base, X, y)
+print(f"Base model: {results_base.mean():.4f}")
+
+results_tv = cross_val_score(model_tv, X, y)
+print(f"TableVectorizer: {results_tv.mean():.4f}")
+
+results_tp = cross_val_score(model_tp, X, y)
+print(f"Tabular pipeline: {results_tp.mean():.4f}")
+
+results_hgb = cross_val_score(model_hgb, X, y)
+print(f"HGB model: {results_hgb.mean():.4f}")
+```

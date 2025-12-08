@@ -1,0 +1,262 @@
+---
+title: "All the pre-processing in one place: `TableVectorizer`"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+## What is the TableVectorizer?
+
+Machine learning models typically require numeric input features. When working
+with real-world datasets, we often have a mix of data types: numbers, text,
+dates, and categorical values. The `TableVectorizer` automates the entire process
+of converting a heterogeneous dataframe into a matrix of numeric features ready
+for machine learning.
+
+Instead of manually specifying how to handle each column, the `TableVectorizer`
+automatically detects the data type of each column and applies the appropriate
+transformation to encode the column using numerical features. 
+
+## How does the TableVectorizer work?
+
+The `TableVectorizer` operates in two phases:
+
+### Phase 1: Data Cleaning and Type Detection
+
+First, it runs a `Cleaner` on the input data to:
+- Detect and parse datetime columns (possibly, with custom datetime formats)
+- Handle missing values represented as strings (e.g., "N/A")
+- Clean up categorical columns to have consistent typing
+- Remove uninformative columns (those with only nulls, constant values, or all
+unique values)
+- Finally, convert all numerical features to `float32` to reduce the computational
+cost. 
+
+This ensures that each column has the correct data type before encoding.
+
+### Phase 2: Column Dispatch and Encoding
+
+After cleaning, the `TableVectorizer` categorizes columns and dispatches them
+to the appropriate transformer based on their data type and cardinality.
+
+The `TableVectorizer` uses the following default transformers for each column type:
+
+- **Numeric columns**: Left untouched (passthrough) - they're already in the
+right format
+- **Datetime columns**: Transformed by `DatetimeEncoder` to extract meaningful
+temporal features
+- **Low-cardinality categorical/string columns**: Transformed with `OneHotEncoder`
+to create binary indicator variables
+- **High-cardinality categorical/string columns**: Transformed with `StringEncoder`
+to create dense numeric representations
+
+## Key Parameters
+
+### Cardinality Threshold
+
+By default, columns with 40 or fewer unique values are considered "low-cardinality"
+and one-hot encoded, while those with more unique values are "high-cardinality"
+and encoded with `StringEncoder`. We can change this threshold:
+
+```{python}
+from skrub import TableVectorizer
+
+tv = TableVectorizer(cardinality_threshold=30)  # Adjust the threshold
+```
+
+### Data Cleaning Parameters
+
+The `TableVectorizer` forwards several parameters to the internal `Cleaner`:
+
+- `drop_null_fraction`: Fraction of nulls above which a column is dropped (default: `1.0`)
+- `drop_if_constant`: Drop columns with only one unique value (default: `False`)
+- `drop_if_unique`: Drop string/categorical columns where all values are unique 
+(default: `False`) 
+- `datetime_format`: Format string for parsing dates
+
+Note that for `drop_if_constant` null values count as one additional distinct value.
+`drop_if_unique` should be used with care when working with free-flowing text,
+as in this case it is quite likely that all strings will be different, but the
+column is not uninformative. 
+
+```{python}
+tv = TableVectorizer(
+    drop_null_fraction=0.9,  # Drop columns that are 90% null
+    drop_if_constant=True,
+    datetime_format="%Y-%m-%d"
+)
+```
+
+### Specifying Custom Transformers
+
+The `TableVectorizer` applies whatever transformer is provided to each of the 
+`numeric`, `datetime`, `high_cardinality`, and `low_cardinality` paramters. To
+tweak the default parameters of the transformers a new transformer should be 
+provided: 
+
+```{python}
+from skrub import TableVectorizer, DatetimeEncoder, StringEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+# Create custom transformers
+datetime_enc = DatetimeEncoder(periodic_encoding="circular")
+string_enc = StringEncoder(n_components=10)
+
+# Pass them to TableVectorizer
+tv = TableVectorizer(
+    datetime=datetime_enc,
+    high_cardinality=string_enc,
+    low_cardinality=OneHotEncoder(sparse_output=False)
+)
+```
+
+This allows to, for example, change the neumber of parameters in the `StringEncoder`, 
+or provide a custom datetime format for the `DatetimeEncoder`. 
+
+
+## Using `specific_transformers` for Column-Specific Control
+
+For fine-grained control, we can specify transformers for specific columns using
+the `specific_transformers` parameter. This is useful when we want to override
+the default behavior for particular columns:
+
+```{python}
+from sklearn.preprocessing import OrdinalEncoder
+import pandas as pd
+
+df = pd.DataFrame({
+    "occupation": ["engineer", "teacher", "doctor"],
+    "salary": [100000, 50000, 150000]
+})
+
+# Create a custom transformer for the 'occupation' column
+specific_transformers = [(OrdinalEncoder(), ["occupation"])]
+
+tv = TableVectorizer(specific_transformers=specific_transformers)
+result = tv.fit_transform(df)
+```
+
+Important notes about `specific_transformers`:
+
+- Columns specified here bypass the default categorization logic
+- The transformer receives the column as-is, without any preprocessing
+- The transformer must be able to handle the column's current data type and values
+- For more complex transformations, consider using `ApplyToCols` and the selectors API
+(explained in the previous chapters), or the skrub
+[Data Ops](https://skrub-data.org/stable/auto_examples/data_ops/11_data_ops_intro.html).
+
+## Exercise
+Replicate the behavior of a `TableVectorizer` using `ApplyToCols`, the skrub 
+selectors, and the given transformers. 
+
+```{python}
+from skrub import Cleaner, ApplyToCols, StringEncoder, DatetimeEncoder
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.pipeline import make_pipeline
+import skrub.selectors as s
+```
+
+Notes on the implementation: 
+
+- In the first step, the TableVectorizer cleans the data to parse datetimes and other
+dtypes.
+- Numeric features are left untouched, i.e., they use a Passthrough transformer. 
+- String and categorical feature are split into high and low cardinality features. 
+- For this exercise, set the the cardinality `threshold` to 4. 
+- High cardinality features are transformed with a `StringEncoder`. In this exercise,
+set `n_components` to 2. 
+- Low cardinality features are transformed with a `OneHotEncoder`, and the first 
+category in binary features is dropped (hint: check the docs of the `OneHotEncoder`
+for the `drop` parameter). Set `sparse_output=True`.
+- Remember  `cardinality_below` is one of the skrub selectors. 
+- Datetimes are transformed by a default `DatetimeEncoder`. 
+- Everything should be wrapped in a scikit-learn `Pipeline`. 
+
+
+Use the following dataframe to test the result. 
+```{python}
+import pandas as pd
+import datetime
+
+data = {
+    "int": [15, 56, 63, 12, 44],
+    "float": [5.2, 2.4, 6.2, 10.45, 9.0],
+    "str1": ["public", "private", "private", "private", "public"],
+    "str2": ["officer", "manager", "lawyer", "chef", "teacher"],
+    "bool": [True, False, True, False, True],
+    "datetime-col": [
+            "2020-02-03T12:30:05",
+            "2021-03-15T00:37:15",
+            "2022-02-13T17:03:25",
+            "2023-05-22T08:45:55",
+    ]
+    + [None],
+}
+df = pd.DataFrame(data)
+df
+```
+
+Use the following `PassThrough` transformer where needed. 
+```{python}
+from skrub._apply_to_cols import SingleColumnTransformer
+class PassThrough(SingleColumnTransformer):
+    def fit_transform(self, column, y=None):
+        return column
+
+    def transform(self, column):
+        return column
+```
+
+You can test the correctness of your solution by comparing it with the equivalent
+`TableVectorizer`:
+
+```{python}
+from skrub import TableVectorizer
+
+tv = TableVectorizer(
+    high_cardinality=StringEncoder(n_components=2), cardinality_threshold=4
+)
+tv.fit_transform(df)
+```
+
+
+```{python}
+# Write your code here
+#
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+```
+
+```{python}
+# Solution
+cleaner = ApplyToCols(Cleaner())
+high_cardinality = ApplyToCols(
+    StringEncoder(n_components=2), cols=~s.cardinality_below(4) & (s.string())
+)
+low_cardinality = ApplyToCols(
+    OneHotEncoder(sparse_output=False, drop="if_binary"),
+    cols=s.cardinality_below(4) & s.string(),
+)
+numeric = ApplyToCols(PassThrough(), cols=s.numeric())
+datetime = ApplyToCols(DatetimeEncoder(), cols=s.any_date())
+
+my_table_vectorizer = make_pipeline(
+    cleaner, numeric, high_cardinality, low_cardinality, datetime
+)
+
+my_table_vectorizer.fit_transform(df)
+
+```

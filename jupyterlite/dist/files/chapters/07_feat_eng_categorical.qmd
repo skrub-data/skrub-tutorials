@@ -1,0 +1,176 @@
+---
+title: "Mixed data: dealing with categories"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+## Introduction: The Challenge of Categorical Features
+
+Real-world datasets rarely contain only numeric values. We frequently encounter
+categorical features—values that belong to discrete categories, such as names,
+occupations, geographic locations, or clothing sizes. Text data also falls into
+this category, since each unique string can be considered a categorical value.
+
+The challenge is that machine learning models require numeric input. How do we
+convert these categorical values into numeric features that preserve their
+information and enable our models to make good predictions?
+
+This chapter explores the various strategies and tools available in skrub to
+encode categorical features, helping us choose the right approach for our specific
+use case.
+
+## Why Categorical Encoders Matter
+
+The way we encode categorical features significantly impacts our machine learning
+pipeline:
+
+- **Performance**: The encoding choice directly affects how well our model learns
+from categorical information
+- **Efficiency**: Some encodings create many features (potentially thousands), 
+which increases computation time and memory usage
+- **Interpretability**: Different encoders provide varying levels of transparency
+in what features represent
+- **Scalability**: Not all methods scale well to high-cardinality features (those
+with many unique values)
+
+Using the appropriate encoder ensures we're making the best use of categorical
+information while keeping our model efficient and interpretable.
+
+## Categorical Encoders: Pros and Cons
+
+### One-Hot Encoding and Ordinal Encoding (scikit-learn)
+
+**`OneHotEncoder`**: Creates a binary indicator column for each unique category, 
+where `1` denotes the presence of the category and `0` its absence.
+
+**Pros:**
+- Straightforward and intuitive
+- Works well for low-cardinality features (few unique values)
+- Produces sparse matrices that can save memory
+
+**Cons:**
+- Becomes impractical with high-cardinality features (creates hundreds or
+thousands of columns)
+- Results in mostly zero-valued sparse matrices when dense, which is the situation
+when working with dataframes
+- Increases overfitting risk and computational overhead
+
+The `OneHotEncoder` is used by default by the skrub `TableVectorizer` for categorical
+features with fewer than 40 unique values. 
+
+**`OrdinalEncoder`**: Assigns each category a numerical value (0, 1, 2, ...).
+
+**Pros:**
+- Very memory-efficient
+- Creates only one output column per input column
+- Fast to compute
+
+**Cons:**
+- Introduces artificial ordering among categories that may not exist in reality
+- Can mislead models into thinking some categories are "greater than" others
+
+### Categorical encoders in skrub
+All the categorical encoders in skrub are designed to encode any number of unique
+values using a fixed number of components:  this number is controlled by the parameter
+`n_components` in each transformer. 
+
+### StringEncoder
+
+**Approach**: Applies term frequency-inverse document frequency (tf-idf) vectorization
+to character n-grams, followed by truncated singular value decomposition (SVD)
+for dimensionality reduction. This method is also known as 
+[Latent Semantic Analysis](https://en.wikipedia.org/wiki/Latent_semantic_analysis). 
+
+**Pros:**
+- **The best all-rounder**: Performs well on both categorical and text data
+- Fast training time
+- Robust and generalizes well across different datasets
+- No artificial ordering introduced
+
+**Cons:**
+- Less interpretable than one-hot encoding or ordinal encoding
+- May not capture semantic relationships as well as language model-based approaches
+- Performance depends on the nature of the categorical data
+
+### TextEncoder
+
+**Approach**: Uses pretrained language models from HuggingFace Hub to generate
+dense vector representations of text.
+
+**Pros:**
+- Exceptional performance on free-flowing text and natural language
+- Captures semantic meaning and context
+- Leverages knowledge from large-scale language model pretraining
+- Can excel on datasets where domain-specific information aligns with pretraining data
+
+**Cons:**
+- **Very computationally expensive**: Significantly slower than other methods
+- Requires heavy dependencies (PyTorch, transformers)
+- Models are large and require downloading
+- Impractical for CPU-only environments
+- Performance on traditional categorical data (non-text, such as IDs) is not much
+better than simpler methods
+
+### MinHashEncoder
+
+**Approach**: Decomposes strings into n-grams and applies the MinHash algorithm
+for quick dimension reduction.
+
+**Pros:**
+- Very fast training time
+- Simple and lightweight
+- Minimal memory overhead
+- Good for quick prototyping or very large-scale datasets
+
+**Cons:**
+- Performance generally lags behind `StringEncoder` and `TextEncoder`
+- Less nuanced feature representation
+- Less robust across different types of data
+
+### GapEncoder
+
+**Approach**: Estimates latent categories by finding common n-gram patterns
+across values, then encodes these patterns as numeric features.
+
+**Pros:**
+- Interpretable: Column names reflect the estimated categories
+- Can group similar strings intelligently
+- Good for exploratory data analysis
+- Reasonable performance across datasets
+
+**Cons:**
+- Slower training time compared to `StringEncoder` and `MinHashEncoder`
+- Interpretability comes at the cost of training speed
+- May require more computational resources for large datasets
+
+## Conclusion
+
+Encoding categorical features is a critical step in preparing data for machine
+learning. The skrub library provides multiple encoders to handle different scenarios:
+
+- **Start with `StringEncoder`** as a default for high-cardinality categorical
+features. It offers the best balance of speed, performance, and robustness across
+diverse datasets.
+- **Use `OneHotEncoder`** for low-cardinality features (< 40 unique values) to
+keep the feature space manageable.
+- **Choose `TextEncoder`** if you're working with true textual data (reviews,
+comments, descriptions) and have sufficient computational resources.
+- **Consider `GapEncoder`** when interpretability is important and 
+the additional training time can be dealt with. 
+- **Use `MinHashEncoder`** when you need maximum speed and are working with very
+large datasets.
+
+The `TableVectorizer` integrates these encoders automatically, dispatching columns
+to the appropriate encoder based on their data type and cardinality. This automation
+makes it easy to process mixed-type datasets efficiently while still allowing
+fine-grained control when needed. By default, the `TableVectorizer` uses the 
+`OneHotEncoder` for categorical features with cardinality <= 40, and `StringEncoder`
+for categorical features with cardinality > 40. 
+
+For a comprehensive empirical comparison of these methods, refer to the
+[categorical encoders benchmark](https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html).
