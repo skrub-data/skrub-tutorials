@@ -35,7 +35,7 @@ jobs:
 
       - name: Copy jupyterlite site under the book directory
         run: |
-          cp -r jupyterlite/dist _build/html/jupyterlite
+          pixi run -e doc copy-jupyterlite
 
       - name: Update the main gh-page website
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
