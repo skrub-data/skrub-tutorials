@@ -31,11 +31,11 @@ jobs:
           pixi run -e doc build-jupyterlite
 
       - name: Build and publish the book
-        run: pixi run -e doc build-book
+        run: pixi run -e doc render
 
       - name: Copy jupyterlite site under the book directory
         run: |
-          cp -r jupyterlite/dist book/_build/html/jupyterlite
+          cp -r jupyterlite/dist _build/html/jupyterlite
 
       - name: Update the main gh-page website
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}

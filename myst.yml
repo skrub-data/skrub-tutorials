@@ -1,0 +1,15 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: b15c2d3f-80a1-4b74-8c95-977b2e79119b
+  # title:
+  # description:
+  # keywords: []
+  # authors: []
+  github: https://github.com/skrub-data/skrub-tutorials
+  # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
+site:
+  template: book-theme
+  # options:
+  #   favicon: favicon.ico
+  #   logo: site_logo.png

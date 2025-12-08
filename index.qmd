@@ -13,6 +13,8 @@ practice what has been explained.
 Quiz sections split the major sections of the code. 
 
 
+[JupyterLite](https://skrub-data.org/skrub-tutorials/jupyterlite/lab)
+
 ## Prepration and setup
 The easiest way to work with the notebooks provided here is by installing and
 using [pixi](https://pixi.sh/latest/installation/).
