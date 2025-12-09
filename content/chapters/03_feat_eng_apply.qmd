@@ -132,6 +132,6 @@ features from the original table. This can be done with `SelectCols` and `DropCo
 which work as their name suggests, and can take a `cols` parameter to choose
 which columns to select or drop respectively.
 
-## Exercise: putting everything together in a scikit-learn pipeline
+# Exercise: putting everything together in a scikit-learn pipeline
 
  

@@ -6,11 +6,14 @@ This script allows you to create a Polars DataFrame with:
 - Both numeric and categorical (text) features
 - Columns with specified fractions of null values
 - Columns with single constant values
+- Datetime columns with custom formats
+- Add missing values to existing columns
 """
 
 import polars as pl
 import random
-from typing import Optional
+from typing import Optional, List, Dict
+from datetime import datetime, timedelta
 
 
 # Sample data for categorical features
@@ -70,7 +73,11 @@ def generate_synthetic_dataframe(
     n_null_columns: int = 0,
     null_fraction: float = 0.3,
     n_constant_columns: int = 0,
+    constant_column_name: str = "constant",
     constant_value: str = "CONSTANT",
+    n_datetime_columns: int = 0,
+    datetime_format: str = "%Y-%m-%d",
+    columns_with_nulls: Optional[Dict[str, float]] = None,
     seed: Optional[int] = None
 ) -> pl.DataFrame:
     """
@@ -90,8 +97,18 @@ def generate_synthetic_dataframe(
         Fraction of null values in null columns (0.0 to 1.0)
     n_constant_columns : int, default=0
         Number of columns with a single constant value
+    constant_column_name : str, default="constant"
+        The name prefix for constant columns
     constant_value : str, default="CONSTANT"
         The constant value to use for constant columns
+    n_datetime_columns : int, default=0
+        Number of datetime columns to generate
+    datetime_format : str, default="%Y-%m-%d"
+        Format string for datetime columns (e.g., "%d-%b-%Y" for "01-Jan-2024")
+    columns_with_nulls : dict, optional
+        Dictionary mapping existing column names to null fractions.
+        For example: {"first_name": 0.1, "city": 0.2}
+        This adds missing values to existing columns after generation.
     seed : int, optional
         Random seed for reproducibility
         
@@ -105,7 +122,7 @@ def generate_synthetic_dataframe(
     >>> # Basic usage
     >>> df = generate_synthetic_dataframe(n_rows=100)
     >>> 
-    >>> # Custom configuration
+    >>> # Custom configuration with datetime columns
     >>> df = generate_synthetic_dataframe(
     ...     n_rows=500,
     ...     n_numeric=5,
@@ -113,6 +130,9 @@ def generate_synthetic_dataframe(
     ...     n_null_columns=2,
     ...     null_fraction=0.2,
     ...     n_constant_columns=1,
+    ...     n_datetime_columns=2,
+    ...     datetime_format="%d-%b-%Y",
+    ...     columns_with_nulls={"first_name": 0.1, "city": 0.15},
     ...     seed=42
     ... )
     """
@@ -148,8 +168,7 @@ def generate_synthetic_dataframe(
     for i in range(n_categorical):
         if i < len(categorical_sources):
             col_name, source_list = categorical_sources[i]
-            if i > 0:
-                col_name = f"{col_name}_{i+1}"
+            col_name = f"{col_name}"
         else:
             # Use a cycling pattern for additional categorical columns
             source_idx = i % len(categorical_sources)
@@ -171,10 +190,36 @@ def generate_synthetic_dataframe(
     
     # Generate constant columns
     for i in range(n_constant_columns):
-        col_name = f"constant_{i+1}"
+        col_name = f"{constant_column_name}_{i+1}"
         data[col_name] = [constant_value] * n_rows
     
-    return pl.DataFrame(data)
+    # Generate datetime columns
+    base_date = datetime(2020, 1, 1)
+    for i in range(n_datetime_columns):
+        col_name = f"date_{i+1}"
+        dates = []
+        for _ in range(n_rows):
+            days_offset = random.randint(0, 1461)  # ~4 years
+            date = base_date + timedelta(days=days_offset)
+            # Format the date as a string using the provided format
+            dates.append(date.strftime(datetime_format))
+        data[col_name] = dates
+    
+    # Convert to DataFrame
+    df = pl.DataFrame(data)
+    
+    # Add nulls to existing columns if specified
+    if columns_with_nulls:
+        for col_name, null_frac in columns_with_nulls.items():
+            if col_name in df.columns:
+                # Create a mask of null positions
+                mask = [random.random() < null_frac for _ in range(n_rows)]
+                # Replace values with None where mask is True
+                values = df[col_name].to_list()
+                values = [None if m else v for m, v in zip(mask, values)]
+                df = df.with_columns(pl.Series(col_name, values))
+    
+    return df
 
 
 def main():
@@ -183,11 +228,16 @@ def main():
     
     df = generate_synthetic_dataframe(
         n_rows=10000,
-        n_numeric=5,
+        n_numeric=3,
         n_categorical=5,
-        n_null_columns=2,
+        n_null_columns=1,
         null_fraction=0.75,
-        n_constant_columns=2,
+        n_constant_columns=1,
+        constant_column_name="contract_type",
+        constant_value="CONTRACT",
+        n_datetime_columns=2,
+        datetime_format="%d-%b-%Y",
+        columns_with_nulls={"first_name": 0.1, "city": 0.15},
         seed=123
     )
     

@@ -168,7 +168,7 @@ selector = s.filter_names(lambda name: name.endswith('_mm'))
 s.select(df, selector)
 ```
 
-## Exercise: using selectors together with `ApplyToCols`
+# Exercise: using selectors together with `ApplyToCols`
 Consider this example dataframe:
 
 ```{python}

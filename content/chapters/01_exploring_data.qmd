@@ -8,8 +8,10 @@ format:
         code-tools: true
 
 ---
+## Introduction
 In this notebook, we will show how we use the skrub `TableReport` to explore
-tabular data. We will use the Adult Census dataset as our example table. 
+tabular data. We will use the Adult Census dataset as our example table, and 
+perform some exploratory analysis to learn about the characteristics of the data. 
 
 First, let's import the necessary libraries and load the dataset.
 
@@ -24,9 +26,7 @@ data = adult.data
 target = adult.target
 ```
 
-Now that we have a dataframe we can work with, we need to do some exploratory
-analysis to get an idea of the characteristics of the data. Among others, we 
-would like to find out:
+Now that we have a dataframe we can work with, we would like to find out:
 
 - The size of the dataset. 
 - The data types and names of the columns. 
@@ -126,6 +126,13 @@ during data preprocessing or modeling.
 Additionally, the "Distributions" tab allows so select columns manually, so that
 they can be added to a script and selected for further analysis or modeling.
 
+::: {.callout-caution}
+The `TableReport` detects outliers using a simple interquartile test, marking 
+as outliers all values that are beyond the IQR. This is a simple heuristic, and 
+should not be treated as perfect. If your problem requires reliable outlier 
+detection, you should not rely exclusively on what the `TableReport` shows. 
+:::
+
 ### The "Associations" tab
 
 ```{python}
@@ -139,11 +146,12 @@ Cramér's V for all columns.
 
 While this is a somewhat rough measure of association, it can help identify potential
 relationships worth exploring further during the analysis, and highlights 
-highly correlated columns: depending on the modeling technique used, these may need to be
-handled specially to avoid issues with multicollinearity.
+highly correlated columns: depending on the modeling technique used, these may need 
+to be handled specially to avoid issues with multicollinearity.
 
 In this example, we can see that "education-num" and "education" have perfect 
-correlation, which means that one of the two columns can be dropped without losing information.
+correlation, which means that one of the two columns can be dropped without losing
+information.
 
 ## Exploring the target variable
 Let's take a closer look at the target variable, which indicates whether an individual's
@@ -189,7 +197,7 @@ TableReport(data, max_association_columns=3, max_plot_columns=3)
 When the number of columns is too large, an error message is shown in the respective
 tab instead of the plots or correlations. 
 
-## Exercise: exploring a new table
+# Exercise: exploring a new table
 For this exercise, we will use the `employee_salaries` dataframe to answer some 
 questions. 
 
@@ -203,8 +211,11 @@ data = employee_salaries.X
 
 Now use the skrub `TableReport` and answer the following questions: 
 
+```{python}
+TableReport(data)
+```
 
-# Questions
+## Questions
 - What's the size of the dataframe? (columns and rows)
 - How many columns have object/numerical/datetime
 - Are there columns with a large number of missing values?
@@ -215,7 +226,7 @@ Now use the skrub `TableReport` and answer the following questions:
 - Which columns are strongly correlated with each other?
 
 
-# Solution
+### Answers
 - What's the size of the dataframe? (columns and rows)
     - 9228 rows × 8 columns
 - How many columns have object/numerical/datetime

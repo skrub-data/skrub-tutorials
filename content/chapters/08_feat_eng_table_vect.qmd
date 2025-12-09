@@ -149,7 +149,7 @@ Important notes about `specific_transformers`:
 (explained in the previous chapters), or the skrub
 [Data Ops](https://skrub-data.org/stable/auto_examples/data_ops/11_data_ops_intro.html).
 
-## Exercise
+# Exercise: implementing a `TableVectorizer` from its components
 Replicate the behavior of a `TableVectorizer` using `ApplyToCols`, the skrub 
 selectors, and the given transformers. 
 

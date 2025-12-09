@@ -8,13 +8,6 @@ format:
         code-tools: true
 
 ---
-
-1. With pandas/polars
-2. Specifying the datetime format
-3. DatetimeEncoder default 
-4. DatetimeEncoder additional parameters
-5. Periodic encoders
-
 ## Introduction to Datetime Features
 
 Datetime features are very important for many data analysis and machine learning 
@@ -165,7 +158,7 @@ weekday, day of year, and total seconds since epoch. Additionally, we saw how
 periodic (circular) encoding can be used to capture cyclical patterns in
 time-based data.
 
-## Exercise
+# Exercise
 Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided
 dataframe to datetime dtype, then extract the following features: 
 - All parts of the datetime 
