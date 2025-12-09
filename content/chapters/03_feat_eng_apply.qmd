@@ -131,7 +131,3 @@ a dataframe: unlike `ApplyToCols` and `ApplyToFrame`, this means removing some
 features from the original table. This can be done with `SelectCols` and `DropCols`, 
 which work as their name suggests, and can take a `cols` parameter to choose
 which columns to select or drop respectively.
-
-# Exercise: putting everything together in a scikit-learn pipeline
-
- 

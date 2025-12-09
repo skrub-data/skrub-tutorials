@@ -121,8 +121,11 @@ automatically
 
 Both approaches produce scikit-learn compatible pipelines that can be used with cross-validation, hyperparameter tuning, and other standard workflows.
 
-## Exercise: 
+# Exercise 
+In this exercise we're going to use the `TableVectorizer` and `tabular_pipeline` 
+to replicate the behavior of a traditional scikit-learn pipeline. 
 
+First, let's load the dataset: 
 ```{python}
 from skrub.datasets import fetch_employee_salaries
 from sklearn.datasets import fetch_openml
@@ -132,6 +135,12 @@ X = adult.data
 y = adult.target
 ```
 
+This is the pipeline that needs to be replicated. 
+
+- It uses `LogisticRegression` as the classifier, i.e., a linear model. 
+- It scales numerical features using a `StandardScaler`.
+- Categorical features are one-hot-encoded.
+- Missing values are imputed using a `SimpleImputer`. 
 
 ```{python}
 from sklearn.linear_model import LogisticRegression
@@ -154,6 +163,25 @@ model_base = make_pipeline(ct, SimpleImputer(), LogisticRegression())
 model_base
 ```
 
+Use the `TableVectorizer` and `make_pipeline` to write a pipeline named 
+`model_tv`, which includes all the steps necessary for the `LogisticRegression` 
+to work. 
+
+```{python}
+from skrub import TableVectorizer
+# Write your code here
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+```
+
+
 ```{python}
 from skrub import TableVectorizer
 
@@ -163,7 +191,21 @@ model_tv = make_pipeline(tv, SimpleImputer(), StandardScaler(), LogisticRegressi
 model_tv
 ```
 
+Now use the `tabular_pipeline` to get a new pipeline named `model_tp`. 
 
+```{python}
+from skrub import tabular_pipeline
+# Write your code here
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+```
 
 ```{python}
 from skrub import tabular_pipeline
@@ -172,11 +214,16 @@ model_tp = tabular_pipeline(LogisticRegression())
 model_tp
 ```
 
+For reference, let's also create a pipeline that uses 
+`HistGradientBoostingClassifier`. This can be done by passing the string 
+"classification" to `tabular_pipeline`. 
+
 ```{python}
 model_hgb = tabular_pipeline("classification")
 model_hgb
 ```
 
+Finally, let's evaluate the different models and see how they perform: 
 
 ```{python}
 from sklearn.model_selection import cross_val_score
@@ -193,3 +240,6 @@ print(f"Tabular pipeline: {results_tp.mean():.4f}")
 results_hgb = cross_val_score(model_hgb, X, y)
 print(f"HGB model: {results_hgb.mean():.4f}")
 ```
+
+Unsurprisiingly, the model that uses HGB outperforms the other models, while
+being much slower to train. 
