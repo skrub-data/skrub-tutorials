@@ -9,6 +9,12 @@
     "federated_extensions": [
       {
         "extension": "./extension",
+        "load": "static/remoteEntry.7a71a85038a02ea552e8.js",
+        "name": "@jupyter-notebook/lab-extension",
+        "style": "./style"
+      },
+      {
+        "extension": "./extension",
         "load": "static/remoteEntry.a117bd216cefa0b341fe.js",
         "name": "@jupyterlite/pyodide-kernel-extension"
       },
