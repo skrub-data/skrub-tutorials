@@ -9,7 +9,7 @@ format:
 
 ---
 
-## Introductiono
+## Introduction
 In this chapter, we will show how we can quickly pre-process and sanitize 
 data using skrub's `Cleaner`. 
 
@@ -90,6 +90,7 @@ By default, the `Cleaner` applies various transformations that can sanitize many
 common use cases:
 
 ```{python}
+from skrub import Cleaner
 df_clean = Cleaner().fit_transform(df)
 df_clean
 ```
@@ -123,11 +124,9 @@ We can look back at the "wine" dataframe and clean it with a suitably configured
 `Cleaner`:
  
 ```{python}
-from skrub import Cleaner
-
 cleaner = Cleaner(drop_null_fraction=0.3, numeric_dtype="float32")
 
-cleaner.fit_transform(data)
+cleaner.fit_transform(wine)
 ```
 
 ## Under the hood: `DropUninformative`
