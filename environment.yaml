@@ -1,0 +1,16 @@
+name: skrub-tutorial
+channels:
+- conda-forge
+- nodefaults
+dependencies:
+- pandas >=2.3.3,<3
+- polars >=1.35.1,<2
+- scikit-learn >=1.7.2,<2
+- seaborn >=0.13.2,<0.14
+- pyarrow >=22.0.0,<23
+- jupyterlab >=4.5.0,<5
+- notebook >=7.5.0,<8
+- pip
+- pip:
+  - skrub @ git+https://github.com/skrub-data/skrub.git
+

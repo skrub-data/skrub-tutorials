@@ -1,6 +1,13 @@
 project:
     type: book
+    title: "Skrub tutorials"
     output-dir: _build
+    render:
+        - "**/*.qmd"
+        - "!pixi.toml"
+        - "!jupyterlite/**"
+        - "!data/**"
+        - "!content/chapters/helpers/**"
 execute:
     freeze: auto    
 book:
@@ -9,15 +16,24 @@ book:
     chapters:
         - index.qmd
         - content/chapters/00_intro.qmd
-        - content/chapters/01_exploring_data.qmd
-        - content/chapters/02_cleaning_data.qmd
-        - content/chapters/03_feat_eng_apply.qmd
-        - content/chapters/04_selectors.qmd
-        - content/chapters/05_feat_eng_numerical.qmd
-        - content/chapters/06_feat_eng_datetimes.qmd
-        - content/chapters/07_feat_eng_categorical.qmd
-        - content/chapters/08_feat_eng_table_vect.qmd
-        - content/chapters/09_tabular_pipeline.qmd
+        - part: "Exploring and sanitizing data"
+          chapters:
+            - content/chapters/01_exploring_data.qmd
+            - content/chapters/02_cleaning_data.qmd
+            - content/chapters/quiz_01.qmd
+        - part: "Column transformations"
+          chapters:
+            - content/chapters/03_feat_eng_apply.qmd
+            - content/chapters/04_selectors.qmd
+        - part: "Feature engineering"
+          chapters:
+            - content/chapters/05_feat_eng_numerical.qmd
+            - content/chapters/06_feat_eng_datetimes.qmd
+            - content/chapters/07_feat_eng_categorical.qmd
+        - part: "Putting it all together"
+          chapters:
+            - content/chapters/08_feat_eng_table_vect.qmd
+            - content/chapters/09_tabular_pipeline.qmd
 
 format:
     html:

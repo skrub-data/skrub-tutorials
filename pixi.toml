@@ -6,6 +6,8 @@ platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 version = "0.1.0"
 
 [tasks]
+lab = "jupyter lab --notebook-dir=./content/notebooks"
+notebook = "jupyter notebook --notebook-dir=./content/notebooks"
 
 [dependencies]
 pandas = ">=2.3.3,<3"
@@ -13,6 +15,8 @@ polars = ">=1.35.1,<2"
 scikit-learn = ">=1.7.2,<2"
 seaborn = ">=0.13.2,<0.14"
 pyarrow = ">=22.0.0,<23"
+jupyterlab = ">=4.5.0,<5"
+notebook = ">=7.5.0,<8"
 
 [pypi-dependencies]
 skrub = { git = "https://github.com/skrub-data/skrub.git"}
@@ -47,7 +51,7 @@ create-notebooks-dir = { cmd = "mkdir -p ./content/notebooks" }
 convert-to-notebooks = { cmd = "jupytext --to notebook ./content/chapters/*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
 convert-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/chapters/*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
 build-book = { cmd = "jupyter-book build book", depends-on = ["convert-to-notebooks"]}
-copy-data = { cmd = "cp -r ./data ./content/", depends-on = [] }
+copy-data = { cmd = "cp -r ./data ./content/ && cp -r ./content/chapters/helpers ./content/notebooks", depends-on = [] }
 build-jupyterlite = { cmd = "jupyter lite build --contents content --output-dir dist", cwd = "jupyterlite", depends-on = ["convert-to-notebooks", "copy-data"] }
 serve-jupyterlite = { cmd = "python -m http.server", cwd = "jupyterlite/dist", depends-on = ["build-jupyterlite"] }
 copy-jupyterlite = { cmd = "mkdir -p ./_build/html/jupyterlite && cp -r jupyterlite/dist ./_build/html/jupyterlite", depends-on = ["build-jupyterlite"] }
