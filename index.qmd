@@ -3,31 +3,72 @@ title: "Inria Academy - skrub like a pro"
 author: "Riccardo Cappuzzo"
 ---
 
-This website contains the material used for the Inria Academy course on the
-[skrub package](https://skrub-data.org/stable/). 
+# Introduction to the course
+This is the website for the Inria Academy
+[course](https://www.inria-academy.fr/formation/skrub-like-a-pro-clean-prepare-and-transform-your-data-faster/)
+on the [skrub package](https://skrub-data.org/stable/): it contains all the material
+used for the course, including the datasets and exercises used during the session. 
 
-Each chapter of the book includes a theoretical section that describes a specific
-aspect of the library, and, if appropriate, an exercise to evaluate the theory. 
+:::  {.callout-important}
+## Beta warning
+If you are reading this, then you will be attending the **Beta version** of this 
+course. As a **Beta version**, this is not the final version of the course and 
+it will be tweaked according to the feedback provided after the beta session. 
 
-Quiz sections split the major sections of the course. 
+Both the presentation and the content of the book are liable to be changed based
+on feedback. 
+:::
 
-## Prepration and setup
-The easiest way to work with the notebooks provided here is by installing and
-using [pixi](https://pixi.sh/latest/installation/).
+## Structure of the course
+The course covers the main features of skrub, from data exploration to pipeline 
+construction. Note that the skrub Data Ops are not covered in this course. 
 
-Then, it is possible to run
+Each chapter includes a section that describes how a specific feature may assist
+in building a machine learning pipeline, along with practical code examples. 
 
+Some chapters include exercises for the participants to work on with the assistance
+of the instructure. Exercises can be run in the provided Jupyter notebooks. 
+
+The content of the book is split in sections, and each section includes a "final 
+quiz" that covers the subjects covered up to that point. 
+
+
+
+# Prepration and setup
+
+
+First of all, clone the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
+of this book to have access to the exercises. In a future version, Jupyterlite 
+will be made available, so this step will not be necessary.
+
+## Setting up a local environment
+
+:::  {.callout-important}
+## Navigating the repository
+Depending on how you launch the instance of Jupyter lab, you might start it in 
+the root folder. 
+
+All notebooks used in the course are found in `content/notebooks`. 
+:::
+
+
+### Using pixi
+The easiest way to set up the environment is by installing and
+using [pixi](https://pixi.sh/latest/installation/). Follow the platform-specific 
+instructions in the link to install pixi, then open a terminal window. 
+
+Run 
 ```sh
 pixi install
 ```
 to create the environment, followed by 
 
 ```sh
-pixi run jupyter lab
+pixi run lab
 ``` 
-to start a jupyter lab instance. 
+to start a Jupyter lab instance. 
 
-### With conda
+### Using conda
 An `environment.yaml` file is provided to create a conda environment. 
 
 Create and activate the environment with
@@ -40,17 +81,24 @@ conda activate skrub-tutorial
 Then, start a jupyter lab instance:
 
 ```sh
-jupyter lab
+jupyter lab --notebook-dir=./content/notebooks
 ```
 
 
-### With `uv`
+### Using `uv`
+Create the environment using `pyproject.toml` as the requirement file. 
 
 ```sh
 uv venv 
 uv pip install -r pyproject.toml
 ```
 
+Activate the environment that was created in the folder. 
 ```sh
 source .venv/bin/activate
+```
+
+Start the Jupyter lab instance: 
+```sh
+jupyter lab --notebook-dir=./content/notebooks
 ```

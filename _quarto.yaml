@@ -1,6 +1,6 @@
 project:
     type: book
-    title: "Skrub tutorials"
+    title: "Inria Academy - Skrub like a pro"
     output-dir: _build
     render:
         - "**/*.qmd"
@@ -11,7 +11,7 @@ project:
 execute:
     freeze: auto    
 book:
-    title: "Skrub tutorials"
+    title: "Inria Academy - Skrub like a pro"
     author: "Riccardo Cappuzzo"
     chapters:
         - index.qmd
@@ -25,16 +25,18 @@ book:
           chapters:
             - content/chapters/03_feat_eng_apply.qmd
             - content/chapters/04_selectors.qmd
+            - content/chapters/quiz_02.qmd
         - part: "Feature engineering"
           chapters:
             - content/chapters/05_feat_eng_numerical.qmd
             - content/chapters/06_feat_eng_datetimes.qmd
             - content/chapters/07_feat_eng_categorical.qmd
+            - content/chapters/quiz_03.qmd
         - part: "Putting it all together"
           chapters:
             - content/chapters/08_feat_eng_table_vect.qmd
             - content/chapters/09_tabular_pipeline.qmd
-
+            - content/chapters/quiz_04.qmd
 format:
     html:
         theme: cosmo

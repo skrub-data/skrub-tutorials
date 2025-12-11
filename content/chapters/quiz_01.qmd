@@ -1,5 +1,5 @@
 ---
-title: "Exploring dataframes with skrub"
+title: "Quiz: Exploring and sanitizing dataframes with skrub"
 format:
     revealjs:
         slide-number: true
@@ -9,7 +9,7 @@ format:
 
 ---
 
-
+## Question 1
 ::: {.callout}
 
 What do I need to open a saved `TableReport`?
@@ -21,7 +21,158 @@ What do I need to open a saved `TableReport`?
 
 
 ::: {.callout-tip collapse="true"}
-## Solution
+### Solution
 An internet browser is enough. 
 :::
 
+
+## Question 2
+::: {.callout}
+
+Consider this dataframe and TableReport, then answer the question. 
+
+```{python}
+import pandas as pd
+from skrub import TableReport
+
+df = pd.DataFrame({
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],
+    'Age': [25, 30, 35, 40, 45],
+    'City': ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
+    'Salary': [70000, 80000, 90000, 100000, 110000],
+    'Department': ['HR', 'Finance', 'IT', 'Marketing', 'Sales']
+})
+
+TableReport(df, max_plot_columns=5, max_association_columns=3)
+
+```
+
+What does the "Distributions" tab show? What about the "Associations" tab?
+
+- [ ] Both tabs work as normal. 
+- [ ] The "Distribution" tab shows the plots, "Associations" are not shown.
+- [ ] Both tabs contain a message explaining their operation was skipped. 
+
+
+:::
+
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: B)
+
+The "Distribution" contains the usual distribution plots, while the computation
+of the associations was skipped because the number of columns in the dataframe
+was larger than `max_association_columns`. 
+:::
+
+
+## Question 3 
+
+::: {.callout}
+Does the `TableReport` parse datetimes or other data types? 
+
+- [ ] Yes, the `TableReport` automatically converts datetime strings to datetime 
+objects and strings that contain numbers into floats. 
+- [ ] No, the `TableReport` does not perform any conversion. 
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+
+Answer: No, the `TableReport` is generated on the basis of the datatypes found 
+in the supplied dataframe. Any datatype parsing must be done before generating the
+report, e.g., by using the `Cleaner`. 
+:::
+
+## Question 4
+
+::: {.callout}
+Which of these transformations is executed **by default** when the `Cleaner` is 
+fitted on a dataframe?  
+
+- [ ] A) Dropping constant columns
+- [ ] B) Dropping columns that contain only missing values
+- [ ] C) Dropping columns that contain more than 90% of missing values
+- [ ] D) Dropping columns where all values are distinct
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: B) 
+
+Columns that contain only missing values, i.e., where the fraction of missing 
+values is 1.0, are dropped. This is controlled by the `drop_null_fraction` parameter. 
+
+:::
+
+
+## Question 5 
+
+::: {.callout}
+Consider the following dataframe. 
+```{python}
+import pandas as pd
+medical_df = pd.DataFrame({
+    'Patient_ID': ['P001', 'P002', 'P003', 'P004', 'P005'],
+    'Visit_Date': ['10 Jan 2023', '15 Feb 2023', '20 Mar 2023', '25 Apr 2023', None],
+    'Blood_Pressure': [120.5, 130.2, 125.8, 140.0, 135.6],
+    'Diagnosis': ['Hypertension', '?', '?', 'Hypertension', 'Diabetes'],
+})
+
+medical_df
+```
+
+What is the output of this cleaner? 
+
+```{python}
+from skrub import Cleaner
+cleaner = Cleaner()
+df_clean = cleaner.fit_transform(medical_df)
+
+```
+
+- [ ] A)
+```{python}
+# | echo: false
+df_clean
+```
+
+- [ ] B)
+```{python}
+# | echo: false
+df = pd.DataFrame({
+    'Patient_ID': ['P001', 'P002', 'P003', 'P004', 'P005'],
+    'Visit_Date': ['10 Jan 2023', '15 Feb 2023', '20 Mar 2023', '25 Apr 2023', None],
+    'Blood_Pressure': [120.5, None, 125.8, 140.0, 135.6],
+    'Diagnosis': ['Hypertension', '?', '?', 'Hypertension', 'Diabetes'],
+})
+df
+```
+
+- [ ] C)
+
+```{python}
+# | echo: false
+df = pd.DataFrame({
+    'Patient_ID': ['P001', 'P002', 'P003', 'P004', 'P005'],
+    'Visit_Date': ['10 Jan 2023', '15 Feb 2023', '20 Mar 2023', '25 Apr 2023', None],
+    'Blood_Pressure': [120.5, None, 125.8, 140.0, 135.6],
+    'Diagnosis': ['Hypertension', None, None, 'Hypertension', 'Diabetes'],
+})
+df
+```
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: A)
+
+The `Cleaner` replaces strings that are commonly used to denote missing values 
+(such as "?"), and guesses most common datetime formats from their strings. 
+
+No empty columns are present, so no further transformations are made. 
+:::

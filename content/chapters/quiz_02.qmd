@@ -1,0 +1,127 @@
+---
+title: "Quiz: Column-level transformations"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---
+
+## Question 1
+
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+:::
+
+
+## Question 2
+
+::: {.callout}
+Is the following statement true or false?
+
+> The output of these two snippets is the same: 
+
+```{.python}
+encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+scale = ApplyToCols(StandardScaler(), cols=s.numeric())
+```
+```{.python}
+case_1 = make_pipeline(encode, scale)
+case_1.fit_transform(df)
+```
+
+```{.python}
+case_2 = make_pipeline(scale, encode)
+case_2.fit_transform(df)
+```
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: False. 
+
+The order of the operations matters, and a different order leads to different 
+results.
+
+
+```{python}
+import pandas as pd
+import numpy as np
+from sklearn.pipeline import make_pipeline
+from skrub import SelectCols, ApplyToCols, ApplyToFrame
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import skrub.selectors as s 
+
+n_patients = 5
+df = pd.DataFrame(
+    {
+        "patient_id": [f"P{i:03d}" for i in range(n_patients)],
+        "age": np.random.randint(18, 80, size=n_patients),
+        "sex": np.random.choice(["M", "F"], size=n_patients),
+    }
+)
+encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+scale = ApplyToCols(StandardScaler(), cols=s.numeric())
+```
+
+```{python}
+case_1 = make_pipeline(encode, scale)
+df_1 = case_1.fit_transform(df)
+df_1
+```
+
+```{python}
+case_2 = make_pipeline(scale, encode)
+df_2 = case_2.fit_transform(df)
+df_2
+```
+
+
+
+:::
+
+## Question 3
+
+::: {.callout}
+
+:::
+
+::: {.callout-tip}
+### Solution
+:::
+
+## Question 4
+
+::: {.callout}
+
+:::
+
+::: {.callout-tip}
+### Solution
+:::
+
+## Question 5
+
+::: {.callout}
+
+:::
+
+::: {.callout-tip}
+### Solution
+:::
+
+## Question 6
+
+::: {.callout}
+
+:::
+
+::: {.callout-tip}
+### Solution
+:::

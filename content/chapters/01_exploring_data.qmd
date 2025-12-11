@@ -182,20 +182,22 @@ data
 ```
 
 ## Working with big tables
-Plotting and measuring the column correlations are expensive operations, so when 
-the dataframe under study is large it may be more convenient to skip them, as 
-generating the Distributions and Associations tab may take a long time.
+Plotting and measuring the column correlations are expensive operations and may
+take a long time, so when the dataframe under study is large it may be more
+convenient to skip them.
 
 The `max_plot_columns` and `max_association_columns` parameters allow to set a 
 threshold on the number of columns: the `TableReport` will skip the respective
 task if the number of colums in the dataframe is larger than the threshold:
 
 ```{python}
-TableReport(data, max_association_columns=3, max_plot_columns=3)
+TableReport(
+    data, max_association_columns=3, max_plot_columns=3, open_tab="distributions"
+)
 ```
 
-When the number of columns is too large, an error message is shown in the respective
-tab instead of the plots or correlations. 
+When the number of columns is too large, an information message is shown in the 
+respective tab instead of the plots or correlations. 
 
 # Exercise: exploring a new table
 For this exercise, we will use the `employee_salaries` dataframe to answer some 

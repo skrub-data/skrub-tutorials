@@ -1,0 +1,10 @@
+---
+title: "Quiz: Column-level transformations"
+format:
+    revealjs:
+        slide-number: true
+        toc: true
+        code-fold: false
+        code-tools: true
+
+---

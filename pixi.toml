@@ -48,8 +48,8 @@ jupyterquiz = ">=2.9.6.2,<3"
 render = "quarto render"
 publish = "quarto publish gh-pages"
 create-notebooks-dir = { cmd = "mkdir -p ./content/notebooks" }
-convert-to-notebooks = { cmd = "jupytext --to notebook ./content/chapters/*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
-convert-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/chapters/*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
+convert-to-notebooks = { cmd = "jupytext --to notebook ./content/chapters/0*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
+convert-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/chapters/0*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
 build-book = { cmd = "jupyter-book build book", depends-on = ["convert-to-notebooks"]}
 copy-data = { cmd = "cp -r ./data ./content/ && cp -r ./content/chapters/helpers ./content/notebooks", depends-on = [] }
 build-jupyterlite = { cmd = "jupyter lite build --contents content --output-dir dist", cwd = "jupyterlite", depends-on = ["convert-to-notebooks", "copy-data"] }
