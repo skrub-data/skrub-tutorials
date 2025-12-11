@@ -9,7 +9,7 @@ format:
 
 ---
 ## Introduction
-In this notebook, we will show how we use the skrub `TableReport` to explore
+In this chapter, we will show how we use the skrub `TableReport` to explore
 tabular data. We will use the Adult Census dataset as our example table, and 
 perform some exploratory analysis to learn about the characteristics of the data. 
 

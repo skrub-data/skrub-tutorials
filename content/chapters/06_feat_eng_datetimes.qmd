@@ -16,9 +16,9 @@ trends. For instance, including as features the day of the week, time of day, or
 season can provide valuable insights for predictive modeling.
 
 However, working with datetime data can be difficult due to the variety of formats
-in which dates and times are represented. Typical formats include `"%Y-%m-%d"`, `"%d/%m/%Y"`, 
-and `"%d %B %Y"`, among others. Parsing these formats correctly is essential to 
-avoid errors and ensure accurate feature extraction. 
+in which dates and times are represented. Typical formats include `"%Y-%m-%d"`,
+`"%d/%m/%Y"`, and `"%d %B %Y"`, among others. Correct parsing of these and more
+exotic formats is essential to avoid errors and ensure accurate feature extraction. 
 
 In this section we are going to cover how skrub can help with dealing with 
 datetimes using `to_datetime`, `ToDatetime`, and the `DatetimeEncoder`. 
@@ -87,7 +87,9 @@ df_enc["month"] = df_enc["dates"].dt.month
 df_enc["day"] = df_enc["dates"].dt.day
 df_enc["weekday"] = df_enc["dates"].dt.weekday
 df_enc["day_of_year"] = df_enc["dates"].dt.day_of_year
-df_enc["total_seconds"] = (df_enc["dates"] - pd.Timestamp("1970-01-01")) // pd.Timedelta(seconds=1)
+df_enc["total_seconds"] = (
+    df_enc["dates"] - pd.Timestamp("1970-01-01")
+) // pd.Timedelta(seconds=1)
 
 df_enc
 ```

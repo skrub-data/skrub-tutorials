@@ -9,6 +9,7 @@ format:
 
 ---
 
+# Column transformers
 ## Question 1
 
 ::: {.callout}
@@ -123,7 +124,7 @@ df_2
 
 :::
 
-## Selectors
+# Selectors
 For the following questions, refer to this example dataframe: 
 
 ```{python}
@@ -182,7 +183,7 @@ t.fit_transform(df)
 
 :::
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 ### Solution
 Answer: B)
 ```{python}
@@ -211,7 +212,7 @@ end in "_title"
 
 :::
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 ### Solution
 Answer: C)
 
@@ -240,7 +241,7 @@ t = DropCols(cols=sel)
 - [ ] D) It selects string and categorical columns that contain nulls and have cardinality below 4 
 :::
 
-::: {.callout-tip}
+::: {.callout-tip collapse="true"}
 ### Solution
 Answer: C)
 

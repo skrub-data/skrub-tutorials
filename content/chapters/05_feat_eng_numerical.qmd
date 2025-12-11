@@ -8,13 +8,20 @@ format:
         code-tools: true
 
 ---
+## Introduction 
+Now that we can transform any column we want thanks to `ApplyToCols`, `ApplyToFrame` 
+and the selectors, we can start covering the feature engineering part of our 
+pipeline, beginning from numerical features. 
 
-Now that we can apply selections to any column we want thanks to `ApplyToCols` and
-the selectors, it is time to scale numerical features safely.
+Specifically, we will find out how to safely scale numerical features with the 
+skrub `SquashingScaler`.
 
 ## Numerical features with outliers
 
-When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.
+When dealing with numerical features that contain outliers (including infinite
+values), standard scaling methods can be problematic. Outliers can dramatically
+affect the centering and scaling of the entire dataset, causing the scaled inliers
+to be compressed into a narrow range.
 
 Consider this example:
 
@@ -46,7 +53,7 @@ instead of mean/std, which makes it more resistant to outliers. However, it
 doesn't bound the output values, so extreme outliers can still have very large
 scaled values.
 
-### SquashingScaler: A robust solution
+## SquashingScaler: A robust solution
 
 The `SquashingScaler` combines robust centering with smooth clipping to handle
 outliers effectively. It works in two stages:
@@ -65,7 +72,7 @@ $[-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]$ (default: 3)
 - Maps infinite values to the corresponding boundaries
 - Preserves NaN values unchanged
 
-### Key advantages of `SquashingScaler`
+### Advantages and disadvantages of `SquashingScaler`
 The `SquashingScaler` has various advantages over traditional scalers: 
 
 - It is **Outlier-resistant**: Outliers don't affect inlier scaling, unlike the
@@ -79,15 +86,20 @@ columns.
 A disadvantage of the `SquashingScaler` is that it is**Non-invertible**: 
 The soft clipping function is smooth but cannot be exactly inverted. 
 
-## Comparison with other scalers
+## Conclusion
 
 When compared on data with outliers:
+
 - **StandardScaler** compresses inliers due to large scaling factors
 - **RobustScaler** preserves relative scales but allows extreme outlier values
-- **SquashingScaler** keeps inliers in a reasonable range while smoothly bounding all values
+- **SquashingScaler** keeps inliers in a reasonable range while smoothly bounding
+all values
 
 If we plot the impact of each scaler on the result, this is what we can see: 
 ```{python}
 from helpers import scale_feature_and_plot
 scale_feature_and_plot(values)
 ```
+
+In this section we showed how the `SquashingScaler` can be a better answer than
+traditional scalers when a numeric feature includes outliers. 
