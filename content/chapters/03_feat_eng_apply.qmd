@@ -125,12 +125,59 @@ df_reduced = reduce.fit_transform(df)
 df_reduced.head()
 ```
 
+### The `allow_reject` parameter
+When `ApplyToCols` or `ApplyToFrame` are using a skrub transformer, they can use
+the `allow_reject` parameter for more flexibility. By setting `allow_reject` to 
+`True`, columns that cannot be treated by the current transformer will be ignored
+rather than raising an exception. 
+
+Consider this example. By default, `ToDatetime` raises a `RejectColumn` exception
+when it finds a column it cannot convert to datetime. 
+
+```{python}
+from skrub import ToDatetime
+df = pd.DataFrame({
+    "date": ["03 January 2023", "04 February 2023", "05 March 2023"],
+    "values": [10, 20, 30]
+})
+df
+```
+
+By setting `allow_reject=True`, the datetime column is converted properly and 
+the other column is passed through without issues. 
+```{python}
+with_reject = ApplyToCols(ToDatetime(), allow_reject=True)
+with_reject.fit_transform(df)
+```
+
 ## Selection operations in a scikit-learn pipeline
 In some situations, it may be necessary to select or remove specific columns from
 a dataframe: unlike `ApplyToCols` and `ApplyToFrame`, this means removing some 
 features from the original table. This can be done with `SelectCols` and `DropCols`, 
 which work as their name suggests, and can take a `cols` parameter to choose
 which columns to select or drop respectively.
+
+```{python}
+from skrub import ToDatetime
+df = pd.DataFrame({
+    "date": ["03 January 2023", "04 February 2023", "05 March 2023"],
+    "values": [10, 20, 30]
+})
+df
+```
+
+We can selectively choose or drop columns based on names, or more complex rules 
+(see the next chapter).
+```{python}
+from skrub import SelectCols
+SelectCols("date").fit_transform(df)
+```
+
+
+```{python}
+from skrub import DropCols
+DropCols("date").fit_transform(df)
+```
 
 ## Concatenating the skrub column transformers
 Skrub column transformers can be concatenated by using scikit-learn pipelines.
