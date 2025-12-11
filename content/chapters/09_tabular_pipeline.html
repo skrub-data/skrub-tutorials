@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Building a tabular pipeline – Skrub tutorials</title>
+<title>14&nbsp; Building a tabular pipeline – Skrub tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,6 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../content/chapters/quiz_04.html" rel="next">
 <link href="../../content/chapters/08_feat_eng_table_vect.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -117,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/09_tabular_pipeline.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/09_tabular_pipeline.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -178,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/quiz_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span></a>
   </div>
 </li>
       </ul>
@@ -204,6 +205,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -218,19 +225,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/05_feat_eng_numerical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/06_feat_eng_datetimes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/07_feat_eng_categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -247,13 +260,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/08_feat_eng_table_vect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/09_tabular_pipeline.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -268,25 +287,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction-from-raw-data-to-predictions" id="toc-introduction-from-raw-data-to-predictions" class="nav-link active" data-scroll-target="#introduction-from-raw-data-to-predictions"><span class="header-section-number">12.1</span> Introduction: From Raw Data to Predictions</a></li>
-  <li><a href="#manual-pipeline-construction-with-tablevectorizer" id="toc-manual-pipeline-construction-with-tablevectorizer" class="nav-link" data-scroll-target="#manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">12.2</span> Manual Pipeline Construction with TableVectorizer</a></li>
-  <li><a href="#the-tabular_pipeline-function" id="toc-the-tabular_pipeline-function" class="nav-link" data-scroll-target="#the-tabular_pipeline-function"><span class="header-section-number">12.3</span> The <code>tabular_pipeline</code> function</a></li>
-  <li><a href="#how-tabular_pipeline-adapts-to-different-estimators" id="toc-how-tabular_pipeline-adapts-to-different-estimators" class="nav-link" data-scroll-target="#how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">12.4</span> How tabular_pipeline Adapts to Different Estimators</a>
+  <li><a href="#introduction-from-raw-data-to-predictions" id="toc-introduction-from-raw-data-to-predictions" class="nav-link active" data-scroll-target="#introduction-from-raw-data-to-predictions"><span class="header-section-number">14.1</span> Introduction: From Raw Data to Predictions</a></li>
+  <li><a href="#manual-pipeline-construction-with-tablevectorizer" id="toc-manual-pipeline-construction-with-tablevectorizer" class="nav-link" data-scroll-target="#manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">14.2</span> Manual Pipeline Construction with TableVectorizer</a></li>
+  <li><a href="#the-tabular_pipeline-function" id="toc-the-tabular_pipeline-function" class="nav-link" data-scroll-target="#the-tabular_pipeline-function"><span class="header-section-number">14.3</span> The <code>tabular_pipeline</code> function</a></li>
+  <li><a href="#how-tabular_pipeline-adapts-to-different-estimators" id="toc-how-tabular_pipeline-adapts-to-different-estimators" class="nav-link" data-scroll-target="#how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">14.4</span> How tabular_pipeline Adapts to Different Estimators</a>
   <ul class="collapse">
-  <li><a href="#for-linear-models-e.g.-logisticregression-ridge" id="toc-for-linear-models-e.g.-logisticregression-ridge" class="nav-link" data-scroll-target="#for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">12.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</a></li>
-  <li><a href="#for-tree-based-ensemble-models-randomforest-histgradientboosting" id="toc-for-tree-based-ensemble-models-randomforest-histgradientboosting" class="nav-link" data-scroll-target="#for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">12.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</a></li>
+  <li><a href="#for-linear-models-e.g.-logisticregression-ridge" id="toc-for-linear-models-e.g.-logisticregression-ridge" class="nav-link" data-scroll-target="#for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">14.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</a></li>
+  <li><a href="#for-tree-based-ensemble-models-randomforest-histgradientboosting" id="toc-for-tree-based-ensemble-models-randomforest-histgradientboosting" class="nav-link" data-scroll-target="#for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">14.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</a></li>
   </ul></li>
-  <li><a href="#key-advantages-of-tabular_pipeline" id="toc-key-advantages-of-tabular_pipeline" class="nav-link" data-scroll-target="#key-advantages-of-tabular_pipeline"><span class="header-section-number">12.5</span> Key Advantages of tabular_pipeline</a></li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">13</span> Exercise</a></li>
+  <li><a href="#key-advantages-of-tabular_pipeline" id="toc-key-advantages-of-tabular_pipeline" class="nav-link" data-scroll-target="#key-advantages-of-tabular_pipeline"><span class="header-section-number">14.5</span> Key Advantages of tabular_pipeline</a></li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">15</span> Exercise</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/09_tabular_pipeline.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/09_tabular_pipeline.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></h1>
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></h1>
 </div>
 
 
@@ -303,14 +322,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction-from-raw-data-to-predictions" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="introduction-from-raw-data-to-predictions"><span class="header-section-number">12.1</span> Introduction: From Raw Data to Predictions</h2>
+<section id="introduction-from-raw-data-to-predictions" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="introduction-from-raw-data-to-predictions"><span class="header-section-number">14.1</span> Introduction: From Raw Data to Predictions</h2>
 <p>Up until now we have covered how to clean data with the <code>Cleaner</code>, extract features from different column types, and handle categorical features with specialized encoders. In this section we will show how we can combine all these preprocessing techniques into a complete machine learning pipeline.</p>
 <p>A pipeline ensures that: - Data transformations are applied consistently across training and test sets - Data leakage is avoided by fitting transformers only on training data - The workflow is reproducible and deployable - Preprocessing steps are properly chained together</p>
 <p>In this chapter, we explore two approaches: building custom pipelines with <code>TableVectorizer</code>, and using the <code>tabular_pipeline</code> function for quick, well-tuned baselines.</p>
 </section>
-<section id="manual-pipeline-construction-with-tablevectorizer" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">12.2</span> Manual Pipeline Construction with TableVectorizer</h2>
+<section id="manual-pipeline-construction-with-tablevectorizer" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">14.2</span> Manual Pipeline Construction with TableVectorizer</h2>
 <p>The <code>TableVectorizer</code> can be the foundation of a custom scikit-learn pipeline. We combine it with other preprocessing steps and a final estimator:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
@@ -327,8 +346,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This approach gives complete control over which preprocessing steps to use and in what order. We can customize the <code>TableVectorizer</code> parameters (cardinality threshold, custom encoders, etc.) and add additional preprocessing steps as needed.</p>
 <p>In the case of the example we used <code>LogisticRegression</code> as our estimator, but if we used a different estimator, such as the <code>HistogramGradientBoostingClassifier</code>, the scaling and imputation steps could have been avoided.</p>
 </section>
-<section id="the-tabular_pipeline-function" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="the-tabular_pipeline-function"><span class="header-section-number">12.3</span> The <code>tabular_pipeline</code> function</h2>
+<section id="the-tabular_pipeline-function" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="the-tabular_pipeline-function"><span class="header-section-number">14.3</span> The <code>tabular_pipeline</code> function</h2>
 <p>For most common use cases, we can skip the manual pipeline construction and use the <code>tabular_pipeline</code> function. This function automatically creates an appropriate pipeline based on the estimator we provide:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
@@ -342,11 +361,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Regression with HistGradientBoostingRegressor</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tabular_pipeline(<span class="st">'regression'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="how-tabular_pipeline-adapts-to-different-estimators" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">12.4</span> How tabular_pipeline Adapts to Different Estimators</h2>
+<section id="how-tabular_pipeline-adapts-to-different-estimators" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">14.4</span> How tabular_pipeline Adapts to Different Estimators</h2>
 <p>The <code>tabular_pipeline</code> function intelligently configures the preprocessing pipeline based on the estimator type:</p>
-<section id="for-linear-models-e.g.-logisticregression-ridge" class="level3" data-number="12.4.1">
-<h3 data-number="12.4.1" class="anchored" data-anchor-id="for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">12.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</h3>
+<section id="for-linear-models-e.g.-logisticregression-ridge" class="level3" data-number="14.4.1">
+<h3 data-number="14.4.1" class="anchored" data-anchor-id="for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">14.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</h3>
 <ul>
 <li><strong>TableVectorizer</strong>: Uses the default configuration, except for the addition of spline-encoded datetime features by the <code>DatetimeEncoder</code></li>
 <li><strong>SimpleImputer</strong>: Added because linear models cannot handle missing values</li>
@@ -355,8 +374,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This configuration ensures numeric features are properly scaled and missing values are handled appropriately.</p>
 </section>
-<section id="for-tree-based-ensemble-models-randomforest-histgradientboosting" class="level3" data-number="12.4.2">
-<h3 data-number="12.4.2" class="anchored" data-anchor-id="for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">12.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</h3>
+<section id="for-tree-based-ensemble-models-randomforest-histgradientboosting" class="level3" data-number="14.4.2">
+<h3 data-number="14.4.2" class="anchored" data-anchor-id="for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">14.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</h3>
 <ul>
 <li><strong>TableVectorizer</strong>: Configured specifically for tree models
 <ul>
@@ -371,8 +390,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This configuration leverages the native capabilities of tree models while still providing effective feature engineering through the <code>StringEncoder</code>.</p>
 </section>
 </section>
-<section id="key-advantages-of-tabular_pipeline" class="level2" data-number="12.5">
-<h2 data-number="12.5" class="anchored" data-anchor-id="key-advantages-of-tabular_pipeline"><span class="header-section-number">12.5</span> Key Advantages of tabular_pipeline</h2>
+<section id="key-advantages-of-tabular_pipeline" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="key-advantages-of-tabular_pipeline"><span class="header-section-number">14.5</span> Key Advantages of tabular_pipeline</h2>
 <ol type="1">
 <li><strong>Smart Configuration</strong>: Automatically selects preprocessing parameters appropriate for the estimator</li>
 <li><strong>Simplicity</strong>: One-line creation of a complete, well-tuned baseline</li>
@@ -384,8 +403,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Both approaches produce scikit-learn compatible pipelines that can be used with cross-validation, hyperparameter tuning, and other standard workflows.</p>
 </section>
-<section id="exercise" class="level1" data-number="13">
-<h1 data-number="13"><span class="header-section-number">13</span> Exercise</h1>
+<section id="exercise" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> Exercise</h1>
 <p>In this exercise we’re going to use the <code>TableVectorizer</code> and <code>tabular_pipeline</code> to replicate the behavior of a traditional scikit-learn pipeline.</p>
 <p>First, let’s load the dataset:</p>
 <div id="34f5befb" class="cell" data-execution_count="1">
@@ -901,10 +920,13 @@ HGB model: 0.8733</code></pre>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../content/chapters/08_feat_eng_table_vect.html" class="pagination-link" aria-label="All the pre-processing in one place: `TableVectorizer`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../../content/chapters/quiz_04.html" class="pagination-link" aria-label="Quiz: Column-level transformations">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Scaling numerical features safely – Skrub tutorials</title>
+<title>9&nbsp; Scaling numerical features safely – Skrub tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../content/chapters/06_feat_eng_datetimes.html" rel="next">
-<link href="../../content/chapters/04_selectors.html" rel="prev">
+<link href="../../content/chapters/quiz_02.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -147,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -208,7 +208,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/quiz_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span></a>
   </div>
 </li>
       </ul>
@@ -234,6 +234,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -248,19 +254,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/05_feat_eng_numerical.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/06_feat_eng_datetimes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/07_feat_eng_categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -277,13 +289,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/08_feat_eng_table_vect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/09_tabular_pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -298,24 +316,24 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#numerical-features-with-outliers" id="toc-numerical-features-with-outliers" class="nav-link active" data-scroll-target="#numerical-features-with-outliers"><span class="header-section-number">8.1</span> Numerical features with outliers</a>
+  <li><a href="#numerical-features-with-outliers" id="toc-numerical-features-with-outliers" class="nav-link active" data-scroll-target="#numerical-features-with-outliers"><span class="header-section-number">9.1</span> Numerical features with outliers</a>
   <ul class="collapse">
-  <li><a href="#regular-scalers-and-their-limitations" id="toc-regular-scalers-and-their-limitations" class="nav-link" data-scroll-target="#regular-scalers-and-their-limitations"><span class="header-section-number">8.1.1</span> Regular scalers and their limitations</a></li>
-  <li><a href="#squashingscaler-a-robust-solution" id="toc-squashingscaler-a-robust-solution" class="nav-link" data-scroll-target="#squashingscaler-a-robust-solution"><span class="header-section-number">8.1.2</span> SquashingScaler: A robust solution</a></li>
-  <li><a href="#stage-1-robust-scaling" id="toc-stage-1-robust-scaling" class="nav-link" data-scroll-target="#stage-1-robust-scaling"><span class="header-section-number">8.1.3</span> Stage 1: Robust Scaling</a></li>
-  <li><a href="#stage-2-soft-clipping" id="toc-stage-2-soft-clipping" class="nav-link" data-scroll-target="#stage-2-soft-clipping"><span class="header-section-number">8.1.4</span> Stage 2: Soft Clipping</a></li>
-  <li><a href="#key-advantages-of-squashingscaler" id="toc-key-advantages-of-squashingscaler" class="nav-link" data-scroll-target="#key-advantages-of-squashingscaler"><span class="header-section-number">8.1.5</span> Key advantages of <code>SquashingScaler</code></a></li>
+  <li><a href="#regular-scalers-and-their-limitations" id="toc-regular-scalers-and-their-limitations" class="nav-link" data-scroll-target="#regular-scalers-and-their-limitations"><span class="header-section-number">9.1.1</span> Regular scalers and their limitations</a></li>
+  <li><a href="#squashingscaler-a-robust-solution" id="toc-squashingscaler-a-robust-solution" class="nav-link" data-scroll-target="#squashingscaler-a-robust-solution"><span class="header-section-number">9.1.2</span> SquashingScaler: A robust solution</a></li>
+  <li><a href="#stage-1-robust-scaling" id="toc-stage-1-robust-scaling" class="nav-link" data-scroll-target="#stage-1-robust-scaling"><span class="header-section-number">9.1.3</span> Stage 1: Robust Scaling</a></li>
+  <li><a href="#stage-2-soft-clipping" id="toc-stage-2-soft-clipping" class="nav-link" data-scroll-target="#stage-2-soft-clipping"><span class="header-section-number">9.1.4</span> Stage 2: Soft Clipping</a></li>
+  <li><a href="#key-advantages-of-squashingscaler" id="toc-key-advantages-of-squashingscaler" class="nav-link" data-scroll-target="#key-advantages-of-squashingscaler"><span class="header-section-number">9.1.5</span> Key advantages of <code>SquashingScaler</code></a></li>
   </ul></li>
-  <li><a href="#comparison-with-other-scalers" id="toc-comparison-with-other-scalers" class="nav-link" data-scroll-target="#comparison-with-other-scalers"><span class="header-section-number">8.2</span> Comparison with other scalers</a></li>
+  <li><a href="#comparison-with-other-scalers" id="toc-comparison-with-other-scalers" class="nav-link" data-scroll-target="#comparison-with-other-scalers"><span class="header-section-number">9.2</span> Comparison with other scalers</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></h1>
 </div>
 
 
@@ -333,8 +351,8 @@ window.Quarto = {
 
 
 <p>Now that we can apply selections to any column we want thanks to <code>ApplyToCols</code> and the selectors, it is time to scale numerical features safely.</p>
-<section id="numerical-features-with-outliers" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="numerical-features-with-outliers"><span class="header-section-number">8.1</span> Numerical features with outliers</h2>
+<section id="numerical-features-with-outliers" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="numerical-features-with-outliers"><span class="header-section-number">9.1</span> Numerical features with outliers</h2>
 <p>When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.</p>
 <p>Consider this example:</p>
 <div id="cae6b762" class="cell" data-execution_count="1">
@@ -355,17 +373,17 @@ window.Quarto = {
 </div>
 </div>
 <p>In this case, most of the values are in the range <code>[-2, 2]</code>, but there are some large outliers in the range <code>[-40, 40]</code> that can cause issues when the feature needs to be scaled.</p>
-<section id="regular-scalers-and-their-limitations" class="level3" data-number="8.1.1">
-<h3 data-number="8.1.1" class="anchored" data-anchor-id="regular-scalers-and-their-limitations"><span class="header-section-number">8.1.1</span> Regular scalers and their limitations</h3>
+<section id="regular-scalers-and-their-limitations" class="level3" data-number="9.1.1">
+<h3 data-number="9.1.1" class="anchored" data-anchor-id="regular-scalers-and-their-limitations"><span class="header-section-number">9.1.1</span> Regular scalers and their limitations</h3>
 <p>The <strong>StandardScaler</strong> computes mean and standard deviation across all values. With outliers present, these statistics become unreliable, and the scaling factor can become too small, squashing inlier values.</p>
 <p>The <strong>RobustScaler</strong> uses quantiles (typically the 25th and 75th percentiles) instead of mean/std, which makes it more resistant to outliers. However, it doesn’t bound the output values, so extreme outliers can still have very large scaled values.</p>
 </section>
-<section id="squashingscaler-a-robust-solution" class="level3" data-number="8.1.2">
-<h3 data-number="8.1.2" class="anchored" data-anchor-id="squashingscaler-a-robust-solution"><span class="header-section-number">8.1.2</span> SquashingScaler: A robust solution</h3>
+<section id="squashingscaler-a-robust-solution" class="level3" data-number="9.1.2">
+<h3 data-number="9.1.2" class="anchored" data-anchor-id="squashingscaler-a-robust-solution"><span class="header-section-number">9.1.2</span> SquashingScaler: A robust solution</h3>
 <p>The <code>SquashingScaler</code> combines robust centering with smooth clipping to handle outliers effectively. It works in two stages:</p>
 </section>
-<section id="stage-1-robust-scaling" class="level3" data-number="8.1.3">
-<h3 data-number="8.1.3" class="anchored" data-anchor-id="stage-1-robust-scaling"><span class="header-section-number">8.1.3</span> Stage 1: Robust Scaling</h3>
+<section id="stage-1-robust-scaling" class="level3" data-number="9.1.3">
+<h3 data-number="9.1.3" class="anchored" data-anchor-id="stage-1-robust-scaling"><span class="header-section-number">9.1.3</span> Stage 1: Robust Scaling</h3>
 <ul>
 <li>Centers the median to zero</li>
 <li>Scales using quantile-based statistics (by default, the interquartile range)</li>
@@ -373,8 +391,8 @@ window.Quarto = {
 <li>For columns with constant values, fills with zeros</li>
 </ul>
 </section>
-<section id="stage-2-soft-clipping" class="level3" data-number="8.1.4">
-<h3 data-number="8.1.4" class="anchored" data-anchor-id="stage-2-soft-clipping"><span class="header-section-number">8.1.4</span> Stage 2: Soft Clipping</h3>
+<section id="stage-2-soft-clipping" class="level3" data-number="9.1.4">
+<h3 data-number="9.1.4" class="anchored" data-anchor-id="stage-2-soft-clipping"><span class="header-section-number">9.1.4</span> Stage 2: Soft Clipping</h3>
 <ul>
 <li>Applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
 <li>Constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
@@ -382,8 +400,8 @@ window.Quarto = {
 <li>Preserves NaN values unchanged</li>
 </ul>
 </section>
-<section id="key-advantages-of-squashingscaler" class="level3" data-number="8.1.5">
-<h3 data-number="8.1.5" class="anchored" data-anchor-id="key-advantages-of-squashingscaler"><span class="header-section-number">8.1.5</span> Key advantages of <code>SquashingScaler</code></h3>
+<section id="key-advantages-of-squashingscaler" class="level3" data-number="9.1.5">
+<h3 data-number="9.1.5" class="anchored" data-anchor-id="key-advantages-of-squashingscaler"><span class="header-section-number">9.1.5</span> Key advantages of <code>SquashingScaler</code></h3>
 <p>The <code>SquashingScaler</code> has various advantages over traditional scalers:</p>
 <ul>
 <li>It is <strong>Outlier-resistant</strong>: Outliers don’t affect inlier scaling, unlike the <code>StandardScaler</code>.</li>
@@ -394,8 +412,8 @@ window.Quarto = {
 <p>A disadvantage of the <code>SquashingScaler</code> is that it is<strong>Non-invertible</strong>: The soft clipping function is smooth but cannot be exactly inverted.</p>
 </section>
 </section>
-<section id="comparison-with-other-scalers" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="comparison-with-other-scalers"><span class="header-section-number">8.2</span> Comparison with other scalers</h2>
+<section id="comparison-with-other-scalers" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="comparison-with-other-scalers"><span class="header-section-number">9.2</span> Comparison with other scalers</h2>
 <p>When compared on data with outliers: - <strong>StandardScaler</strong> compresses inliers due to large scaling factors - <strong>RobustScaler</strong> preserves relative scales but allows extreme outlier values - <strong>SquashingScaler</strong> keeps inliers in a reasonable range while smoothly bounding all values</p>
 <p>If we plot the impact of each scaler on the result, this is what we can see:</p>
 <div id="d24185d6" class="cell" data-execution_count="2">
@@ -816,13 +834,13 @@ window.Quarto = {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/04_selectors.html" class="pagination-link" aria-label="Choose your column: selectors">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span>
+      <a href="../../content/chapters/quiz_02.html" class="pagination-link" aria-label="Quiz: Column-level transformations">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../content/chapters/06_feat_eng_datetimes.html" class="pagination-link" aria-label="Encoding datetime features with `DatetimeEncoder`">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; Mixed data: dealing with categories – Skrub tutorials</title>
+<title>11&nbsp; Mixed data: dealing with categories – Skrub tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/chapters/08_feat_eng_table_vect.html" rel="next">
+<link href="../../content/chapters/quiz_03.html" rel="next">
 <link href="../../content/chapters/06_feat_eng_datetimes.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/07_feat_eng_categorical.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/07_feat_eng_categorical.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -144,7 +144,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/quiz_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span></a>
   </div>
 </li>
       </ul>
@@ -170,6 +170,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -184,19 +190,25 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/05_feat_eng_numerical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/06_feat_eng_datetimes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/07_feat_eng_categorical.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -213,13 +225,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/08_feat_eng_table_vect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/09_tabular_pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -234,27 +252,27 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction-the-challenge-of-categorical-features" id="toc-introduction-the-challenge-of-categorical-features" class="nav-link active" data-scroll-target="#introduction-the-challenge-of-categorical-features"><span class="header-section-number">10.1</span> Introduction: The Challenge of Categorical Features</a></li>
-  <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter"><span class="header-section-number">10.2</span> Why Categorical Encoders Matter</a></li>
-  <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons"><span class="header-section-number">10.3</span> Categorical Encoders: Pros and Cons</a>
+  <li><a href="#introduction-the-challenge-of-categorical-features" id="toc-introduction-the-challenge-of-categorical-features" class="nav-link active" data-scroll-target="#introduction-the-challenge-of-categorical-features"><span class="header-section-number">11.1</span> Introduction: The Challenge of Categorical Features</a></li>
+  <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why Categorical Encoders Matter</a></li>
+  <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical Encoders: Pros and Cons</a>
   <ul class="collapse">
-  <li><a href="#one-hot-encoding-and-ordinal-encoding-scikit-learn" id="toc-one-hot-encoding-and-ordinal-encoding-scikit-learn" class="nav-link" data-scroll-target="#one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">10.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</a></li>
-  <li><a href="#categorical-encoders-in-skrub" id="toc-categorical-encoders-in-skrub" class="nav-link" data-scroll-target="#categorical-encoders-in-skrub"><span class="header-section-number">10.3.2</span> Categorical encoders in skrub</a></li>
-  <li><a href="#stringencoder" id="toc-stringencoder" class="nav-link" data-scroll-target="#stringencoder"><span class="header-section-number">10.3.3</span> StringEncoder</a></li>
-  <li><a href="#textencoder" id="toc-textencoder" class="nav-link" data-scroll-target="#textencoder"><span class="header-section-number">10.3.4</span> TextEncoder</a></li>
-  <li><a href="#minhashencoder" id="toc-minhashencoder" class="nav-link" data-scroll-target="#minhashencoder"><span class="header-section-number">10.3.5</span> MinHashEncoder</a></li>
-  <li><a href="#gapencoder" id="toc-gapencoder" class="nav-link" data-scroll-target="#gapencoder"><span class="header-section-number">10.3.6</span> GapEncoder</a></li>
+  <li><a href="#one-hot-encoding-and-ordinal-encoding-scikit-learn" id="toc-one-hot-encoding-and-ordinal-encoding-scikit-learn" class="nav-link" data-scroll-target="#one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">11.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</a></li>
+  <li><a href="#categorical-encoders-in-skrub" id="toc-categorical-encoders-in-skrub" class="nav-link" data-scroll-target="#categorical-encoders-in-skrub"><span class="header-section-number">11.3.2</span> Categorical encoders in skrub</a></li>
+  <li><a href="#stringencoder" id="toc-stringencoder" class="nav-link" data-scroll-target="#stringencoder"><span class="header-section-number">11.3.3</span> StringEncoder</a></li>
+  <li><a href="#textencoder" id="toc-textencoder" class="nav-link" data-scroll-target="#textencoder"><span class="header-section-number">11.3.4</span> TextEncoder</a></li>
+  <li><a href="#minhashencoder" id="toc-minhashencoder" class="nav-link" data-scroll-target="#minhashencoder"><span class="header-section-number">11.3.5</span> MinHashEncoder</a></li>
+  <li><a href="#gapencoder" id="toc-gapencoder" class="nav-link" data-scroll-target="#gapencoder"><span class="header-section-number">11.3.6</span> GapEncoder</a></li>
   </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">10.4</span> Conclusion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">11.4</span> Conclusion</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/07_feat_eng_categorical.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/05_feat_eng_numerical.html">Feature engineering</a></li><li class="breadcrumb-item"><a href="../../content/chapters/07_feat_eng_categorical.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></h1>
 </div>
 
 
@@ -271,14 +289,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction-the-challenge-of-categorical-features" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="introduction-the-challenge-of-categorical-features"><span class="header-section-number">10.1</span> Introduction: The Challenge of Categorical Features</h2>
+<section id="introduction-the-challenge-of-categorical-features" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="introduction-the-challenge-of-categorical-features"><span class="header-section-number">11.1</span> Introduction: The Challenge of Categorical Features</h2>
 <p>Real-world datasets rarely contain only numeric values. We frequently encounter categorical features—values that belong to discrete categories, such as names, occupations, geographic locations, or clothing sizes. Text data also falls into this category, since each unique string can be considered a categorical value.</p>
 <p>The challenge is that machine learning models require numeric input. How do we convert these categorical values into numeric features that preserve their information and enable our models to make good predictions?</p>
 <p>This chapter explores the various strategies and tools available in skrub to encode categorical features, helping us choose the right approach for our specific use case.</p>
 </section>
-<section id="why-categorical-encoders-matter" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="why-categorical-encoders-matter"><span class="header-section-number">10.2</span> Why Categorical Encoders Matter</h2>
+<section id="why-categorical-encoders-matter" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why Categorical Encoders Matter</h2>
 <p>The way we encode categorical features significantly impacts our machine learning pipeline:</p>
 <ul>
 <li><strong>Performance</strong>: The encoding choice directly affects how well our model learns from categorical information</li>
@@ -288,10 +306,10 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>Using the appropriate encoder ensures we’re making the best use of categorical information while keeping our model efficient and interpretable.</p>
 </section>
-<section id="categorical-encoders-pros-and-cons" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="categorical-encoders-pros-and-cons"><span class="header-section-number">10.3</span> Categorical Encoders: Pros and Cons</h2>
-<section id="one-hot-encoding-and-ordinal-encoding-scikit-learn" class="level3" data-number="10.3.1">
-<h3 data-number="10.3.1" class="anchored" data-anchor-id="one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">10.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</h3>
+<section id="categorical-encoders-pros-and-cons" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical Encoders: Pros and Cons</h2>
+<section id="one-hot-encoding-and-ordinal-encoding-scikit-learn" class="level3" data-number="11.3.1">
+<h3 data-number="11.3.1" class="anchored" data-anchor-id="one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">11.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</h3>
 <p><strong><code>OneHotEncoder</code></strong>: Creates a binary indicator column for each unique category, where <code>1</code> denotes the presence of the category and <code>0</code> its absence.</p>
 <p><strong>Pros:</strong> - Straightforward and intuitive - Works well for low-cardinality features (few unique values) - Produces sparse matrices that can save memory</p>
 <p><strong>Cons:</strong> - Becomes impractical with high-cardinality features (creates hundreds or thousands of columns) - Results in mostly zero-valued sparse matrices when dense, which is the situation when working with dataframes - Increases overfitting risk and computational overhead</p>
@@ -300,37 +318,37 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Pros:</strong> - Very memory-efficient - Creates only one output column per input column - Fast to compute</p>
 <p><strong>Cons:</strong> - Introduces artificial ordering among categories that may not exist in reality - Can mislead models into thinking some categories are “greater than” others</p>
 </section>
-<section id="categorical-encoders-in-skrub" class="level3" data-number="10.3.2">
-<h3 data-number="10.3.2" class="anchored" data-anchor-id="categorical-encoders-in-skrub"><span class="header-section-number">10.3.2</span> Categorical encoders in skrub</h3>
+<section id="categorical-encoders-in-skrub" class="level3" data-number="11.3.2">
+<h3 data-number="11.3.2" class="anchored" data-anchor-id="categorical-encoders-in-skrub"><span class="header-section-number">11.3.2</span> Categorical encoders in skrub</h3>
 <p>All the categorical encoders in skrub are designed to encode any number of unique values using a fixed number of components: this number is controlled by the parameter <code>n_components</code> in each transformer.</p>
 </section>
-<section id="stringencoder" class="level3" data-number="10.3.3">
-<h3 data-number="10.3.3" class="anchored" data-anchor-id="stringencoder"><span class="header-section-number">10.3.3</span> StringEncoder</h3>
+<section id="stringencoder" class="level3" data-number="11.3.3">
+<h3 data-number="11.3.3" class="anchored" data-anchor-id="stringencoder"><span class="header-section-number">11.3.3</span> StringEncoder</h3>
 <p><strong>Approach</strong>: Applies term frequency-inverse document frequency (tf-idf) vectorization to character n-grams, followed by truncated singular value decomposition (SVD) for dimensionality reduction. This method is also known as <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent Semantic Analysis</a>.</p>
 <p><strong>Pros:</strong> - <strong>The best all-rounder</strong>: Performs well on both categorical and text data - Fast training time - Robust and generalizes well across different datasets - No artificial ordering introduced</p>
 <p><strong>Cons:</strong> - Less interpretable than one-hot encoding or ordinal encoding - May not capture semantic relationships as well as language model-based approaches - Performance depends on the nature of the categorical data</p>
 </section>
-<section id="textencoder" class="level3" data-number="10.3.4">
-<h3 data-number="10.3.4" class="anchored" data-anchor-id="textencoder"><span class="header-section-number">10.3.4</span> TextEncoder</h3>
+<section id="textencoder" class="level3" data-number="11.3.4">
+<h3 data-number="11.3.4" class="anchored" data-anchor-id="textencoder"><span class="header-section-number">11.3.4</span> TextEncoder</h3>
 <p><strong>Approach</strong>: Uses pretrained language models from HuggingFace Hub to generate dense vector representations of text.</p>
 <p><strong>Pros:</strong> - Exceptional performance on free-flowing text and natural language - Captures semantic meaning and context - Leverages knowledge from large-scale language model pretraining - Can excel on datasets where domain-specific information aligns with pretraining data</p>
 <p><strong>Cons:</strong> - <strong>Very computationally expensive</strong>: Significantly slower than other methods - Requires heavy dependencies (PyTorch, transformers) - Models are large and require downloading - Impractical for CPU-only environments - Performance on traditional categorical data (non-text, such as IDs) is not much better than simpler methods</p>
 </section>
-<section id="minhashencoder" class="level3" data-number="10.3.5">
-<h3 data-number="10.3.5" class="anchored" data-anchor-id="minhashencoder"><span class="header-section-number">10.3.5</span> MinHashEncoder</h3>
+<section id="minhashencoder" class="level3" data-number="11.3.5">
+<h3 data-number="11.3.5" class="anchored" data-anchor-id="minhashencoder"><span class="header-section-number">11.3.5</span> MinHashEncoder</h3>
 <p><strong>Approach</strong>: Decomposes strings into n-grams and applies the MinHash algorithm for quick dimension reduction.</p>
 <p><strong>Pros:</strong> - Very fast training time - Simple and lightweight - Minimal memory overhead - Good for quick prototyping or very large-scale datasets</p>
 <p><strong>Cons:</strong> - Performance generally lags behind <code>StringEncoder</code> and <code>TextEncoder</code> - Less nuanced feature representation - Less robust across different types of data</p>
 </section>
-<section id="gapencoder" class="level3" data-number="10.3.6">
-<h3 data-number="10.3.6" class="anchored" data-anchor-id="gapencoder"><span class="header-section-number">10.3.6</span> GapEncoder</h3>
+<section id="gapencoder" class="level3" data-number="11.3.6">
+<h3 data-number="11.3.6" class="anchored" data-anchor-id="gapencoder"><span class="header-section-number">11.3.6</span> GapEncoder</h3>
 <p><strong>Approach</strong>: Estimates latent categories by finding common n-gram patterns across values, then encodes these patterns as numeric features.</p>
 <p><strong>Pros:</strong> - Interpretable: Column names reflect the estimated categories - Can group similar strings intelligently - Good for exploratory data analysis - Reasonable performance across datasets</p>
 <p><strong>Cons:</strong> - Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code> - Interpretability comes at the cost of training speed - May require more computational resources for large datasets</p>
 </section>
 </section>
-<section id="conclusion" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">10.4</span> Conclusion</h2>
+<section id="conclusion" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">11.4</span> Conclusion</h2>
 <p>Encoding categorical features is a critical step in preparing data for machine learning. The skrub library provides multiple encoders to handle different scenarios:</p>
 <ul>
 <li><strong>Start with <code>StringEncoder</code></strong> as a default for high-cardinality categorical features. It offers the best balance of speed, performance, and robustness across diverse datasets.</li>
@@ -749,12 +767,12 @@ ul.task-list li input[type="checkbox"] {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../content/chapters/06_feat_eng_datetimes.html" class="pagination-link" aria-label="Encoding datetime features with `DatetimeEncoder`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/08_feat_eng_table_vect.html" class="pagination-link" aria-label="All the pre-processing in one place: `TableVectorizer`">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/chapters/quiz_03.html" class="pagination-link" aria-label="Quiz: Column-level transformations">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

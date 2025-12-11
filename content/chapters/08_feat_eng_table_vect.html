@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11&nbsp; All the pre-processing in one place: TableVectorizer – Skrub tutorials</title>
+<title>13&nbsp; All the pre-processing in one place: TableVectorizer – Skrub tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../content/chapters/09_tabular_pipeline.html" rel="next">
-<link href="../../content/chapters/07_feat_eng_categorical.html" rel="prev">
+<link href="../../content/chapters/quiz_03.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/quiz_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span></a>
   </div>
 </li>
       </ul>
@@ -208,6 +208,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -222,19 +228,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/05_feat_eng_numerical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/06_feat_eng_datetimes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/07_feat_eng_categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -251,13 +263,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/08_feat_eng_table_vect.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/09_tabular_pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -272,29 +290,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-is-the-tablevectorizer" id="toc-what-is-the-tablevectorizer" class="nav-link active" data-scroll-target="#what-is-the-tablevectorizer"><span class="header-section-number">11.1</span> What is the TableVectorizer?</a></li>
-  <li><a href="#how-does-the-tablevectorizer-work" id="toc-how-does-the-tablevectorizer-work" class="nav-link" data-scroll-target="#how-does-the-tablevectorizer-work"><span class="header-section-number">11.2</span> How does the TableVectorizer work?</a>
+  <li><a href="#what-is-the-tablevectorizer" id="toc-what-is-the-tablevectorizer" class="nav-link active" data-scroll-target="#what-is-the-tablevectorizer"><span class="header-section-number">13.1</span> What is the TableVectorizer?</a></li>
+  <li><a href="#how-does-the-tablevectorizer-work" id="toc-how-does-the-tablevectorizer-work" class="nav-link" data-scroll-target="#how-does-the-tablevectorizer-work"><span class="header-section-number">13.2</span> How does the TableVectorizer work?</a>
   <ul class="collapse">
-  <li><a href="#phase-1-data-cleaning-and-type-detection" id="toc-phase-1-data-cleaning-and-type-detection" class="nav-link" data-scroll-target="#phase-1-data-cleaning-and-type-detection"><span class="header-section-number">11.2.1</span> Phase 1: Data Cleaning and Type Detection</a></li>
-  <li><a href="#phase-2-column-dispatch-and-encoding" id="toc-phase-2-column-dispatch-and-encoding" class="nav-link" data-scroll-target="#phase-2-column-dispatch-and-encoding"><span class="header-section-number">11.2.2</span> Phase 2: Column Dispatch and Encoding</a></li>
+  <li><a href="#phase-1-data-cleaning-and-type-detection" id="toc-phase-1-data-cleaning-and-type-detection" class="nav-link" data-scroll-target="#phase-1-data-cleaning-and-type-detection"><span class="header-section-number">13.2.1</span> Phase 1: Data Cleaning and Type Detection</a></li>
+  <li><a href="#phase-2-column-dispatch-and-encoding" id="toc-phase-2-column-dispatch-and-encoding" class="nav-link" data-scroll-target="#phase-2-column-dispatch-and-encoding"><span class="header-section-number">13.2.2</span> Phase 2: Column Dispatch and Encoding</a></li>
   </ul></li>
-  <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">11.3</span> Key Parameters</a>
+  <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">13.3</span> Key Parameters</a>
   <ul class="collapse">
-  <li><a href="#cardinality-threshold" id="toc-cardinality-threshold" class="nav-link" data-scroll-target="#cardinality-threshold"><span class="header-section-number">11.3.1</span> Cardinality Threshold</a></li>
-  <li><a href="#data-cleaning-parameters" id="toc-data-cleaning-parameters" class="nav-link" data-scroll-target="#data-cleaning-parameters"><span class="header-section-number">11.3.2</span> Data Cleaning Parameters</a></li>
-  <li><a href="#specifying-custom-transformers" id="toc-specifying-custom-transformers" class="nav-link" data-scroll-target="#specifying-custom-transformers"><span class="header-section-number">11.3.3</span> Specifying Custom Transformers</a></li>
+  <li><a href="#cardinality-threshold" id="toc-cardinality-threshold" class="nav-link" data-scroll-target="#cardinality-threshold"><span class="header-section-number">13.3.1</span> Cardinality Threshold</a></li>
+  <li><a href="#data-cleaning-parameters" id="toc-data-cleaning-parameters" class="nav-link" data-scroll-target="#data-cleaning-parameters"><span class="header-section-number">13.3.2</span> Data Cleaning Parameters</a></li>
+  <li><a href="#specifying-custom-transformers" id="toc-specifying-custom-transformers" class="nav-link" data-scroll-target="#specifying-custom-transformers"><span class="header-section-number">13.3.3</span> Specifying Custom Transformers</a></li>
   </ul></li>
-  <li><a href="#using-specific_transformers-for-column-specific-control" id="toc-using-specific_transformers-for-column-specific-control" class="nav-link" data-scroll-target="#using-specific_transformers-for-column-specific-control"><span class="header-section-number">11.4</span> Using <code>specific_transformers</code> for Column-Specific Control</a></li>
-  <li><a href="#exercise-implementing-a-tablevectorizer-from-its-components" id="toc-exercise-implementing-a-tablevectorizer-from-its-components" class="nav-link" data-scroll-target="#exercise-implementing-a-tablevectorizer-from-its-components"><span class="header-section-number">12</span> Exercise: implementing a <code>TableVectorizer</code> from its components</a></li>
+  <li><a href="#using-specific_transformers-for-column-specific-control" id="toc-using-specific_transformers-for-column-specific-control" class="nav-link" data-scroll-target="#using-specific_transformers-for-column-specific-control"><span class="header-section-number">13.4</span> Using <code>specific_transformers</code> for Column-Specific Control</a></li>
+  <li><a href="#exercise-implementing-a-tablevectorizer-from-its-components" id="toc-exercise-implementing-a-tablevectorizer-from-its-components" class="nav-link" data-scroll-target="#exercise-implementing-a-tablevectorizer-from-its-components"><span class="header-section-number">14</span> Exercise: implementing a <code>TableVectorizer</code> from its components</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html">Putting it all together</a></li><li class="breadcrumb-item"><a href="../../content/chapters/08_feat_eng_table_vect.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></h1>
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></h1>
 </div>
 
 
@@ -311,21 +329,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="what-is-the-tablevectorizer" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="what-is-the-tablevectorizer"><span class="header-section-number">11.1</span> What is the TableVectorizer?</h2>
+<section id="what-is-the-tablevectorizer" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="what-is-the-tablevectorizer"><span class="header-section-number">13.1</span> What is the TableVectorizer?</h2>
 <p>Machine learning models typically require numeric input features. When working with real-world datasets, we often have a mix of data types: numbers, text, dates, and categorical values. The <code>TableVectorizer</code> automates the entire process of converting a heterogeneous dataframe into a matrix of numeric features ready for machine learning.</p>
 <p>Instead of manually specifying how to handle each column, the <code>TableVectorizer</code> automatically detects the data type of each column and applies the appropriate transformation to encode the column using numerical features.</p>
 </section>
-<section id="how-does-the-tablevectorizer-work" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="how-does-the-tablevectorizer-work"><span class="header-section-number">11.2</span> How does the TableVectorizer work?</h2>
+<section id="how-does-the-tablevectorizer-work" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="how-does-the-tablevectorizer-work"><span class="header-section-number">13.2</span> How does the TableVectorizer work?</h2>
 <p>The <code>TableVectorizer</code> operates in two phases:</p>
-<section id="phase-1-data-cleaning-and-type-detection" class="level3" data-number="11.2.1">
-<h3 data-number="11.2.1" class="anchored" data-anchor-id="phase-1-data-cleaning-and-type-detection"><span class="header-section-number">11.2.1</span> Phase 1: Data Cleaning and Type Detection</h3>
+<section id="phase-1-data-cleaning-and-type-detection" class="level3" data-number="13.2.1">
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="phase-1-data-cleaning-and-type-detection"><span class="header-section-number">13.2.1</span> Phase 1: Data Cleaning and Type Detection</h3>
 <p>First, it runs a <code>Cleaner</code> on the input data to: - Detect and parse datetime columns (possibly, with custom datetime formats) - Handle missing values represented as strings (e.g., “N/A”) - Clean up categorical columns to have consistent typing - Remove uninformative columns (those with only nulls, constant values, or all unique values) - Finally, convert all numerical features to <code>float32</code> to reduce the computational cost.</p>
 <p>This ensures that each column has the correct data type before encoding.</p>
 </section>
-<section id="phase-2-column-dispatch-and-encoding" class="level3" data-number="11.2.2">
-<h3 data-number="11.2.2" class="anchored" data-anchor-id="phase-2-column-dispatch-and-encoding"><span class="header-section-number">11.2.2</span> Phase 2: Column Dispatch and Encoding</h3>
+<section id="phase-2-column-dispatch-and-encoding" class="level3" data-number="13.2.2">
+<h3 data-number="13.2.2" class="anchored" data-anchor-id="phase-2-column-dispatch-and-encoding"><span class="header-section-number">13.2.2</span> Phase 2: Column Dispatch and Encoding</h3>
 <p>After cleaning, the <code>TableVectorizer</code> categorizes columns and dispatches them to the appropriate transformer based on their data type and cardinality.</p>
 <p>The <code>TableVectorizer</code> uses the following default transformers for each column type:</p>
 <ul>
@@ -336,10 +354,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="key-parameters" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">11.3</span> Key Parameters</h2>
-<section id="cardinality-threshold" class="level3" data-number="11.3.1">
-<h3 data-number="11.3.1" class="anchored" data-anchor-id="cardinality-threshold"><span class="header-section-number">11.3.1</span> Cardinality Threshold</h3>
+<section id="key-parameters" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">13.3</span> Key Parameters</h2>
+<section id="cardinality-threshold" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="cardinality-threshold"><span class="header-section-number">13.3.1</span> Cardinality Threshold</h3>
 <p>By default, columns with 40 or fewer unique values are considered “low-cardinality” and one-hot encoded, while those with more unique values are “high-cardinality” and encoded with <code>StringEncoder</code>. We can change this threshold:</p>
 <div id="8df923eb" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
@@ -347,8 +365,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer(cardinality_threshold<span class="op">=</span><span class="dv">30</span>)  <span class="co"># Adjust the threshold</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="data-cleaning-parameters" class="level3" data-number="11.3.2">
-<h3 data-number="11.3.2" class="anchored" data-anchor-id="data-cleaning-parameters"><span class="header-section-number">11.3.2</span> Data Cleaning Parameters</h3>
+<section id="data-cleaning-parameters" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="data-cleaning-parameters"><span class="header-section-number">13.3.2</span> Data Cleaning Parameters</h3>
 <p>The <code>TableVectorizer</code> forwards several parameters to the internal <code>Cleaner</code>:</p>
 <ul>
 <li><code>drop_null_fraction</code>: Fraction of nulls above which a column is dropped (default: <code>1.0</code>)</li>
@@ -365,8 +383,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="specifying-custom-transformers" class="level3" data-number="11.3.3">
-<h3 data-number="11.3.3" class="anchored" data-anchor-id="specifying-custom-transformers"><span class="header-section-number">11.3.3</span> Specifying Custom Transformers</h3>
+<section id="specifying-custom-transformers" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="specifying-custom-transformers"><span class="header-section-number">13.3.3</span> Specifying Custom Transformers</h3>
 <p>The <code>TableVectorizer</code> applies whatever transformer is provided to each of the <code>numeric</code>, <code>datetime</code>, <code>high_cardinality</code>, and <code>low_cardinality</code> paramters. To tweak the default parameters of the transformers a new transformer should be provided:</p>
 <div id="a7c88f01" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer, DatetimeEncoder, StringEncoder</span>
@@ -386,8 +404,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This allows to, for example, change the neumber of parameters in the <code>StringEncoder</code>, or provide a custom datetime format for the <code>DatetimeEncoder</code>.</p>
 </section>
 </section>
-<section id="using-specific_transformers-for-column-specific-control" class="level2" data-number="11.4">
-<h2 data-number="11.4" class="anchored" data-anchor-id="using-specific_transformers-for-column-specific-control"><span class="header-section-number">11.4</span> Using <code>specific_transformers</code> for Column-Specific Control</h2>
+<section id="using-specific_transformers-for-column-specific-control" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="using-specific_transformers-for-column-specific-control"><span class="header-section-number">13.4</span> Using <code>specific_transformers</code> for Column-Specific Control</h2>
 <p>For fine-grained control, we can specify transformers for specific columns using the <code>specific_transformers</code> parameter. This is useful when we want to override the default behavior for particular columns:</p>
 <div id="6d8e1403" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
@@ -412,8 +430,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>For more complex transformations, consider using <code>ApplyToCols</code> and the selectors API (explained in the previous chapters), or the skrub <a href="https://skrub-data.org/stable/auto_examples/data_ops/11_data_ops_intro.html">Data Ops</a>.</li>
 </ul>
 </section>
-<section id="exercise-implementing-a-tablevectorizer-from-its-components" class="level1" data-number="12">
-<h1 data-number="12"><span class="header-section-number">12</span> Exercise: implementing a <code>TableVectorizer</code> from its components</h1>
+<section id="exercise-implementing-a-tablevectorizer-from-its-components" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Exercise: implementing a <code>TableVectorizer</code> from its components</h1>
 <p>Replicate the behavior of a <code>TableVectorizer</code> using <code>ApplyToCols</code>, the skrub selectors, and the given transformers.</p>
 <div id="6e507d2b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner, ApplyToCols, StringEncoder, DatetimeEncoder</span>
@@ -1176,13 +1194,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/07_feat_eng_categorical.html" class="pagination-link" aria-label="Mixed data: dealing with categories">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span>
+      <a href="../../content/chapters/quiz_03.html" class="pagination-link" aria-label="Quiz: Column-level transformations">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../content/chapters/09_tabular_pipeline.html" class="pagination-link" aria-label="Building a tabular pipeline">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

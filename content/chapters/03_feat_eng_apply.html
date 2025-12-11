@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/quiz_01.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span></a>
   </div>
 </li>
       </ul>
@@ -208,6 +208,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -222,19 +228,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/05_feat_eng_numerical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/06_feat_eng_datetimes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/07_feat_eng_categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -251,13 +263,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/08_feat_eng_table_vect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/chapters/09_tabular_pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/chapters/quiz_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
   </div>
 </li>
       </ul>
@@ -279,6 +297,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#applying-the-same-transformer-to-multiple-columns-at-once-applytoframe" id="toc-applying-the-same-transformer-to-multiple-columns-at-once-applytoframe" class="nav-link" data-scroll-target="#applying-the-same-transformer-to-multiple-columns-at-once-applytoframe"><span class="header-section-number">6.2.2</span> Applying the same transformer to multiple columns at once: <code>ApplyToFrame</code></a></li>
   </ul></li>
   <li><a href="#selection-operations-in-a-scikit-learn-pipeline" id="toc-selection-operations-in-a-scikit-learn-pipeline" class="nav-link" data-scroll-target="#selection-operations-in-a-scikit-learn-pipeline"><span class="header-section-number">6.3</span> Selection operations in a scikit-learn pipeline</a></li>
+  <li><a href="#concatenating-the-skrub-column-transformers" id="toc-concatenating-the-skrub-column-transformers" class="nav-link" data-scroll-target="#concatenating-the-skrub-column-transformers"><span class="header-section-number">6.4</span> Concatenating the skrub column transformers</a>
+  <ul class="collapse">
+  <li><a href="#the-order-of-column-transformations-is-important" id="toc-the-order-of-column-transformations-is-important" class="nav-link" data-scroll-target="#the-order-of-column-transformations-is-important"><span class="header-section-number">6.4.1</span> The order of column transformations is important</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -309,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Often, transformers need to be applied only to a subset of columns, rather than the entire dataframe.</p>
 <p>As an example, it does not make sense to apply a <code>StandardScaler</code> to a column that contains strings, and indeed doing so would raise an exception.</p>
 <p>Scikit-learn provides the <code>ColumnTransformer</code> to deal with this:</p>
-<div id="b7b36ebe" class="cell" data-execution_count="1">
+<div id="06bb95a0" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_selector <span class="im">as</span> selector</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_transformer</span>
@@ -342,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="applying-a-transformer-to-separate-columns-applytocols" class="level3" data-number="6.2.1">
 <h3 data-number="6.2.1" class="anchored" data-anchor-id="applying-a-transformer-to-separate-columns-applytocols"><span class="header-section-number">6.2.1</span> Applying a transformer to separate columns: <code>ApplyToCols</code></h3>
 <p>In many cases, <code>ApplyToCols</code> can be a direct replacememnt for the <code>ColumnTransformer</code>, like in the following example:</p>
-<div id="3185495f" class="cell" data-execution_count="2">
+<div id="56abbeea" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -415,7 +437,7 @@ Important
 <h3 data-number="6.2.2" class="anchored" data-anchor-id="applying-the-same-transformer-to-multiple-columns-at-once-applytoframe"><span class="header-section-number">6.2.2</span> Applying the same transformer to multiple columns at once: <code>ApplyToFrame</code></h3>
 <p>In some cases, it may be beneficial to apply the same transformer to a subset of columns in a dataframe.</p>
 <p>This example dataframe contains some patient information, and some (random) metrics.</p>
-<div id="797c5f37" class="cell" data-execution_count="3">
+<div id="4ed37253" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -519,7 +541,7 @@ Important
 </div>
 </div>
 <p>With <code>ApplyToFrame</code>, it is easy to apply a decomposition algorithm such as <code>PCA</code> to condense the <code>metric_*</code> columns into a smaller number of features:</p>
-<div id="f093a777" class="cell" data-execution_count="4">
+<div id="2103b0cc" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToFrame</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -600,8 +622,1202 @@ Important
 <section id="selection-operations-in-a-scikit-learn-pipeline" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="selection-operations-in-a-scikit-learn-pipeline"><span class="header-section-number">6.3</span> Selection operations in a scikit-learn pipeline</h2>
 <p>In some situations, it may be necessary to select or remove specific columns from a dataframe: unlike <code>ApplyToCols</code> and <code>ApplyToFrame</code>, this means removing some features from the original table. This can be done with <code>SelectCols</code> and <code>DropCols</code>, which work as their name suggests, and can take a <code>cols</code> parameter to choose which columns to select or drop respectively.</p>
+</section>
+<section id="concatenating-the-skrub-column-transformers" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="concatenating-the-skrub-column-transformers"><span class="header-section-number">6.4</span> Concatenating the skrub column transformers</h2>
+<p>Skrub column transformers can be concatenated by using scikit-learn pipelines. In the following example, we first select only the column <code>patiend_id</code>, then encode it using <code>OneHotEncoder</code> and finally use <code>PCA</code> to reduce the number of dimensions.</p>
+<p>This is done by wrapping the latter two steps in <code>ApplyToCols</code> and <code>ApplyToFrame</code> respectively, and then putting all transformers in order in a scikit-learn pipeline using <code>make_pipeline</code>.</p>
+<div id="b6dc3bb1" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"patient_id"</span>: [<span class="ss">f"P</span><span class="sc">{</span>i<span class="sc">:03d}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_patients)],</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: np.random.randint(<span class="dv">18</span>, <span class="dv">80</span>, size<span class="op">=</span>n_patients),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sex"</span>: np.random.choice([<span class="st">"M"</span>, <span class="st">"F"</span>], size<span class="op">=</span>n_patients),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>select <span class="op">=</span> SelectCols(<span class="st">"patient_id"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="bu">reduce</span> <span class="op">=</span> ApplyToFrame(PCA(n_components<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> make_pipeline(select, encode, <span class="bu">reduce</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>transform.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
 
 
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">pca0</th>
+<th data-quarto-table-cell-role="th">pca1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1.451188e-17</td>
+<td>9.393890e-18</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>-2.405452e-02</td>
+<td>9.397337e-01</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>-2.305851e-01</td>
+<td>9.374222e-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>-5.287468e-02</td>
+<td>9.374222e-03</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>-7.954573e-02</td>
+<td>-6.807817e-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>-1.389234e-01</td>
+<td>-6.807817e-03</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>3.552354e-02</td>
+<td>-6.807817e-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>-1.348056e-01</td>
+<td>-6.807817e-03</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>-8.659518e-02</td>
+<td>-6.807817e-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>4.327520e-01</td>
+<td>-6.807817e-03</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>4.851722e-02</td>
+<td>-2.298986e-02</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>6.623727e-01</td>
+<td>-3.917190e-02</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>-2.343924e-01</td>
+<td>-4.726292e-02</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>-7.687190e-03</td>
+<td>-5.535393e-02</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>3.137492e-01</td>
+<td>-7.153597e-02</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>-8.225316e-02</td>
+<td>-8.771801e-02</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>-2.682375e-01</td>
+<td>-9.580903e-02</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>2.893951e-02</td>
+<td>-1.119911e-01</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>-1.715547e-01</td>
+<td>-1.848102e-01</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>-1.034490e-02</td>
+<td>-2.009923e-01</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="the-order-of-column-transformations-is-important" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="the-order-of-column-transformations-is-important"><span class="header-section-number">6.4.1</span> The order of column transformations is important</h3>
+<p>Some care must be taken when concatenating columnn transformers, in particular when selection is done on datatypes. Consider this case:</p>
+<div id="54a5619f" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>In the first case, we encode and then scale, in the second case we instead scale first and then encode.</p>
+<div id="fcaefb5f" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>transform_1 <span class="op">=</span> make_pipeline(encode, scale)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>transform_1.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">patient_id_P000</th>
+<th data-quarto-table-cell-role="th">patient_id_P001</th>
+<th data-quarto-table-cell-role="th">patient_id_P002</th>
+<th data-quarto-table-cell-role="th">patient_id_P003</th>
+<th data-quarto-table-cell-role="th">patient_id_P004</th>
+<th data-quarto-table-cell-role="th">patient_id_P005</th>
+<th data-quarto-table-cell-role="th">patient_id_P006</th>
+<th data-quarto-table-cell-role="th">patient_id_P007</th>
+<th data-quarto-table-cell-role="th">patient_id_P008</th>
+<th data-quarto-table-cell-role="th">patient_id_P009</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">patient_id_P013</th>
+<th data-quarto-table-cell-role="th">patient_id_P014</th>
+<th data-quarto-table-cell-role="th">patient_id_P015</th>
+<th data-quarto-table-cell-role="th">patient_id_P016</th>
+<th data-quarto-table-cell-role="th">patient_id_P017</th>
+<th data-quarto-table-cell-role="th">patient_id_P018</th>
+<th data-quarto-table-cell-role="th">patient_id_P019</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sex_F</th>
+<th data-quarto-table-cell-role="th">sex_M</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-1.301570</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.709947</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>0.059162</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-1.479057</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.473298</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>1.893193</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>1.834031</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>0.473298</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.532460</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.118325</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-1.479057</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.532460</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.473298</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>0.236649</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-1.242408</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>1.419895</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>0.769110</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>0.295811</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>-0.229416</td>
+<td>0.709947</td>
+<td>-1.105542</td>
+<td>1.105542</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>...</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>-0.229416</td>
+<td>4.358899</td>
+<td>0.650785</td>
+<td>0.904534</td>
+<td>-0.904534</td>
+</tr>
+</tbody>
+</table>
+
+<p>20 rows × 23 columns</p>
+</div>
+</div>
+</div>
+<div id="ae2f6c2d" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>transform_2 <span class="op">=</span> make_pipeline(scale, encode)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>transform_2.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">patient_id_P000</th>
+<th data-quarto-table-cell-role="th">patient_id_P001</th>
+<th data-quarto-table-cell-role="th">patient_id_P002</th>
+<th data-quarto-table-cell-role="th">patient_id_P003</th>
+<th data-quarto-table-cell-role="th">patient_id_P004</th>
+<th data-quarto-table-cell-role="th">patient_id_P005</th>
+<th data-quarto-table-cell-role="th">patient_id_P006</th>
+<th data-quarto-table-cell-role="th">patient_id_P007</th>
+<th data-quarto-table-cell-role="th">patient_id_P008</th>
+<th data-quarto-table-cell-role="th">patient_id_P009</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">patient_id_P013</th>
+<th data-quarto-table-cell-role="th">patient_id_P014</th>
+<th data-quarto-table-cell-role="th">patient_id_P015</th>
+<th data-quarto-table-cell-role="th">patient_id_P016</th>
+<th data-quarto-table-cell-role="th">patient_id_P017</th>
+<th data-quarto-table-cell-role="th">patient_id_P018</th>
+<th data-quarto-table-cell-role="th">patient_id_P019</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">sex_F</th>
+<th data-quarto-table-cell-role="th">sex_M</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-1.301570</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-0.709947</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.059162</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-1.479057</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-0.473298</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.893193</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.834031</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.473298</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-0.532460</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-0.118325</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-1.479057</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-0.532460</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-0.473298</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.236649</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>-1.242408</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.419895</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.769110</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.295811</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.709947</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.650785</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>20 rows × 23 columns</p>
+</div>
+</div>
+</div>
+<p>The result of <code>transform_1</code> is that the features that have been generated by the <code>OneHotEncoder</code> are then scaled by the <code>StandardScaler</code>, because the new features are numeric and are therefore selected in the next step. In many cases, this behavior is not desired.</p>
+
+
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1007,8 +2223,8 @@ Important
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/quiz_01.html" class="pagination-link" aria-label="Exploring dataframes with skrub">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span>
+      <a href="../../content/chapters/quiz_01.html" class="pagination-link" aria-label="Quiz: Exploring and sanitizing dataframes with skrub">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
