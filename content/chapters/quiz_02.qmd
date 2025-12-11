@@ -237,7 +237,7 @@ t = DropCols(cols=sel)
 
 - [ ] A) It drops string and categorical columns that contain nulls and have cardinality above 4 
 - [ ] B) It selects string and categorical columns that contain nulls and have cardinality below 4 
-- [ ] C) It drops string and categorical columns that contain nulls or have cardinality below 4 
+- [ ] C) It drops string and categorical columns that contain nulls or have cardinality above 4 
 - [ ] D) It selects string and categorical columns that contain nulls and have cardinality below 4 
 :::
 

@@ -56,34 +56,31 @@ scaled values.
 ## SquashingScaler: A robust solution
 
 The `SquashingScaler` combines robust centering with smooth clipping to handle
-outliers effectively. It works in two stages:
+outliers effectively.
 
-### Stage 1: Robust Scaling
-- Centers the median to zero
-- Scales using quantile-based statistics (by default, the interquartile range)
-- For columns where quantiles are equal, uses a custom MinMaxScaler
-- For columns with constant values, fills with zeros
+It works as following:
 
-### Stage 2: Soft Clipping
-- Applies a smooth squashing function:
+- It centers the median to 0, then it scales using quantile-based statistics.
+- It fills constant columns with 0s.
+- Infinite values are mapped to the corresponding boundaries.
+- NaN values are kept unchanged.
+- It then applies a smooth squashing function:
 $x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}$
-- Constrains all values to the range
+- It constrains all values to the range
 $[-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]$ (default: 3)
-- Maps infinite values to the corresponding boundaries
-- Preserves NaN values unchanged
 
 ### Advantages and disadvantages of `SquashingScaler`
 The `SquashingScaler` has various advantages over traditional scalers: 
 
-- It is **Outlier-resistant**: Outliers don't affect inlier scaling, unlike the
+- It is **outlier-resistant**: Outliers don't affect inlier scaling, unlike the
 `StandardScaler`.
-- It has **Bounded output**: All values stay in a predictable range, ideal for 
+- It has **bounded output**: All values stay in a predictable range, ideal for 
 neural networks and linear models.
-- It **Handles edge cases**: The scaler works with infinite values and constant 
+- It **handles edge cases**: The scaler works with infinite values and constant 
 columns.
-- It **Preserves missing data**: NaN values are kept unchanged. 
+- It **preserves missing data**: NaN values are kept unchanged. 
 
-A disadvantage of the `SquashingScaler` is that it is**Non-invertible**: 
+A disadvantage of the `SquashingScaler` is that it is **non-invertible**: 
 The soft clipping function is smooth but cannot be exactly inverted. 
 
 ## Conclusion

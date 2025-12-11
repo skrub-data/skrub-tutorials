@@ -28,6 +28,7 @@ The `TableVectorizer` operates in two phases:
 ### Phase 1: Data Cleaning and Type Detection
 
 First, it runs a `Cleaner` on the input data to:
+
 - Detect and parse datetime columns (possibly, with custom datetime formats)
 - Handle missing values represented as strings (e.g., "N/A")
 - Clean up categorical columns to have consistent typing

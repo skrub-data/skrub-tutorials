@@ -163,6 +163,7 @@ time-based data.
 # Exercise
 Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided
 dataframe to datetime dtype, then extract the following features: 
+
 - All parts of the datetime 
 - The number of seconds from epoch
 - The day in the week

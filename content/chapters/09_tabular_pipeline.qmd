@@ -17,6 +17,7 @@ encoders. In this section we will show how we can combine all these preprocessin
 techniques into a complete machine learning pipeline.
 
 A pipeline ensures that:
+
 - Data transformations are applied consistently across training and test sets
 - Data leakage is avoided by fitting transformers only on training data
 - The workflow is reproducible and deployable
@@ -109,7 +110,7 @@ values are handled appropriately.
 This configuration leverages the native capabilities of tree models while still
 providing effective feature engineering through the `StringEncoder`.
 
-## Key Advantages of tabular_pipeline
+## Why tabular_pipeline is useful
 
 1. **Smart Configuration**: Automatically selects preprocessing parameters appropriate for the estimator
 2. **Simplicity**: One-line creation of a complete, well-tuned baseline

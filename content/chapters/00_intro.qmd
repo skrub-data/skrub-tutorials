@@ -19,7 +19,7 @@ from skrub.datasets import fetch_employee_salaries
 
 data = fetch_employee_salaries()
 X, y = data.X, data.y
-
+X
 ```
 
 Let's take a look at the target::

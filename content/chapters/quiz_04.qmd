@@ -8,3 +8,45 @@ format:
         code-tools: true
 
 ---
+# `TableVectorizer`
+
+## Question 1 
+::: {.callout}
+In this plot, which line shows numerical features scaled by the SquashingScaler? 
+:::
+
+::: {.callout-tip collapse="true"}
+Answer B) 
+
+Figure with legend
+
+:::
+
+## Question 2
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::
+
+# `tabular_pipeline`
+
+## Question 3
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::
+
+## Question 4
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::

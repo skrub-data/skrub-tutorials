@@ -176,6 +176,7 @@ TableReport(df)
 
 
 Then, use the `Cleaner` to sanitize the data so that:
+
 - Constant columns are removed
 - Datetimes are parsed properly (hint: use `"%d-%b-%Y"` as the datetime format)
 - All columns with more than 50% missing values are removed

@@ -8,3 +8,67 @@ format:
         code-tools: true
 
 ---
+
+# Feature engineering numerical features
+
+## Question 1 
+::: {.callout}
+In this plot, which line shows numerical features scaled by the SquashingScaler? 
+:::
+
+::: {.callout-tip collapse="true"}
+Answer B) 
+
+Figure with legend
+
+:::
+
+## Question 2
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::
+
+# Feature engineering datetime features
+
+## Question 3
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::
+
+## Question 4
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::
+
+
+# Feature engineering categorical features
+
+## Question 5
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::
+
+## Question 6
+::: {.callout}
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+:::

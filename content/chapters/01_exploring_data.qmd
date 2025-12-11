@@ -18,7 +18,6 @@ First, let's import the necessary libraries and load the dataset.
 ```{python}
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from skrub import TableReport
 from sklearn.datasets import fetch_openml
 # Load the Adult Census dataset from OpenML
 adult = fetch_openml(name='adult', version=2, as_frame=True)
@@ -69,6 +68,7 @@ for the numerical columns and the number of null values.
 
 Now, let's create a TableReport to explore the dataset.
 ```{python}
+from skrub import TableReport
 TableReport(data)
 ```
 
@@ -227,8 +227,20 @@ TableReport(data)
 - Which columns have an imbalanced distribution?
 - Which columns are strongly correlated with each other?
 
+```{.python}
+# PLACEHOLDER
+#
+#
+#
+#
+#
+#
+#
+#
+#
+```
 
-### Answers
+## Answers
 - What's the size of the dataframe? (columns and rows)
     - 9228 rows × 8 columns
 - How many columns have object/numerical/datetime
