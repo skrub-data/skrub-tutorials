@@ -9,7 +9,7 @@ format:
 
 ---
 
-# Feature engineering numerical features
+# Feature engineering
 
 ## Question 1 
 ::: {.callout}
@@ -25,50 +25,40 @@ Figure with legend
 
 ## Question 2
 ::: {.callout}
+Which of these is **not** a feature that can be added by the `DatetimeEncoder`? 
 
+- [ ] A) `is_holiday`: a boolean flag that checks whether a date is a holiday or not
+- [ ] B) `periodic_encoding`: a flag that can be `None`, `"circular"` or `"spline"` 
+and that adds the respective periodic encoding
+- [ ] C) `add_weekday`: a boolean flag that indicates the day of the week
+- [ ] D) `add_total_seconds`: a boolean flag that adds the number of seconds since
+epoch
 :::
 
 ::: {.callout-tip collapse="true"}
+Answer: A)
+
+All other parameters are available to the `DatetimeEncoder`. 
 
 :::
 
-# Feature engineering datetime features
 
 ## Question 3
 ::: {.callout}
+Which categorical encoder is the most balanced in both runtime and downstream
+performance? 
 
+- [ ] A) The `StringEncoder`
+- [ ] B) The `MinHashEncoder`
+- [ ] C) The `TextEncoder`
+- [ ] D) The `GapEncoder`
 :::
 
 ::: {.callout-tip collapse="true"}
+Answer: A)
 
-:::
-
-## Question 4
-::: {.callout}
-
-:::
-
-::: {.callout-tip collapse="true"}
-
-:::
-
-
-# Feature engineering categorical features
-
-## Question 5
-::: {.callout}
-
-:::
-
-::: {.callout-tip collapse="true"}
-
-:::
-
-## Question 6
-::: {.callout}
-
-:::
-
-::: {.callout-tip collapse="true"}
-
+The `StringEncoder` is always one of the fastest encoders to fit, and produces 
+high quality encodings. The `MinHashEncoder` is faster, but it produces worse
+encodings. The `TextEncoder` can produce the best encodings for certain types of
+categorical data (mainly text), but is very slow to run. 
 :::

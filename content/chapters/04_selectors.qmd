@@ -100,6 +100,10 @@ Selectors can be inverted using `.inv` or the logical operator `~` to
 select all _other_ columns, and they can be combined using the `&` and `|`
 logical operators. It is also possible to remove from a selection with `-`:
 
+```{python}
+SelectCols(cols=s.all() - "datetime-col").fit_transform(df)
+```
+
 For example, to select all datetime columns OR all string columns that do not 
 contain nulls, we can do:
 ```{python}

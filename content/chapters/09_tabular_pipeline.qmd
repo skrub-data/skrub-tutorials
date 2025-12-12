@@ -9,7 +9,7 @@ format:
 
 ---
 
-## Introduction: From Raw Data to Predictions
+## Introduction
 
 Up until now we have covered how to clean data with the `Cleaner`, extract features 
 from different column types, and handle categorical features with specialized
@@ -27,9 +27,13 @@ In this chapter, we explore two approaches: building custom pipelines with
 `TableVectorizer`, and using the `tabular_pipeline` function for quick,
 well-tuned baselines.
 
-## Manual Pipeline Construction with TableVectorizer
+## Manual pipeline construction with `TableVectorizer`
 
-The `TableVectorizer` can be the foundation of a custom scikit-learn pipeline.
+The `TableVectorizer` can be the foundation of a custom scikit-learn pipeline, 
+where cleaning and feature engineering are dealt with by a single object. 
+Scaling and imputation are not required by all models, so they are not in 
+the `TableVectorizer`'s scope. 
+
 We combine it with other preprocessing steps and a final estimator:
 
 ```python
@@ -55,9 +59,9 @@ In the case of the example we used `LogisticRegression` as our estimator, but if
 used a different estimator, such as the `HistogramGradientBoostingClassifier`, 
 the scaling and imputation steps could have been avoided. 
 
-## The `tabular_pipeline` function
+## The `tabular_pipeline`
 
-For most common use cases, we can skip the manual pipeline construction and use
+For many common use cases, we can skip the manual pipeline construction and use
 the `tabular_pipeline` function. This function automatically creates an appropriate
 pipeline based on the estimator we provide:
 
@@ -79,12 +83,12 @@ model = tabular_pipeline('classification')
 model = tabular_pipeline('regression')
 ```
 
-## How tabular_pipeline Adapts to Different Estimators
+## How `tabular_pipeline` adapts to different estimators
 
 The `tabular_pipeline` function intelligently configures the preprocessing pipeline
 based on the estimator type:
 
-### For Linear Models (e.g., LogisticRegression, Ridge)
+### For linear models (e.g., LogisticRegression, Ridge)
 
 - **TableVectorizer**: Uses the default configuration, except for the addition of 
 spline-encoded datetime features by the `DatetimeEncoder`
@@ -96,31 +100,34 @@ performance
 This configuration ensures numeric features are properly scaled and missing
 values are handled appropriately.
 
-### For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)
+### For tree-based ensemble models (RandomForest, HistGradientBoosting)
 
 - **TableVectorizer**: Configured specifically for tree models
   - Low-cardinality categorical features: Either kept as categorical
   (HistGradientBoosting) or ordinal encoded (RandomForest)
   - High-cardinality features: StringEncoder for robust feature extraction
   - Datetime features: No spline encoding (unnecessary for trees)
-- **SimpleImputer**: Only added for older scikit-learn versions (< 1.4) without native missing value support
 - **Scaler**: Not added (unnecessary for tree-based models)
 - **Estimator**: The provided tree-based estimator
 
 This configuration leverages the native capabilities of tree models while still
 providing effective feature engineering through the `StringEncoder`.
 
-## Why tabular_pipeline is useful
+## Conclusions: why the `tabular_pipeline` is useful
 
-1. **Smart Configuration**: Automatically selects preprocessing parameters appropriate for the estimator
+1. **Smart Configuration**: Automatically selects preprocessing parameters
+appropriate for the estimator
 2. **Simplicity**: One-line creation of a complete, well-tuned baseline
 3. **Robustness**: Handles edge cases like missing values and mixed data types
 automatically
 
-- **Use `tabular_pipeline`** when you want a quick, well-tuned baseline to benchmark against or as a starting point
-- **Build manual pipelines** when you need fine-grained control over preprocessing steps or want to experiment with custom transformers
+- **Use `tabular_pipeline`** when you want a quick, well-tuned baseline to
+benchmark against or as a starting point
+- **Build manual pipelines** when you need fine-grained control over preprocessing
+steps or want to experiment with custom transformers
 
-Both approaches produce scikit-learn compatible pipelines that can be used with cross-validation, hyperparameter tuning, and other standard workflows.
+Both approaches produce scikit-learn compatible pipelines that can be used with
+cross-validation, hyperparameter tuning, and other standard workflows.
 
 # Exercise 
 In this exercise we're going to use the `TableVectorizer` and `tabular_pipeline` 
@@ -166,7 +173,7 @@ model_base = make_pipeline(ct, SimpleImputer(), LogisticRegression())
 
 Use the `TableVectorizer` and `make_pipeline` to write a pipeline named 
 `model_tv`, which includes all the steps necessary for the `LogisticRegression` 
-to work. 
+to work (i.e., scaling and imputing missing values).
 
 ```{python}
 from skrub import TableVectorizer
@@ -197,12 +204,6 @@ Now use the `tabular_pipeline` to get a new pipeline named `model_tp`.
 ```{python}
 from skrub import tabular_pipeline
 # Write your code here
-# 
-# 
-# 
-# 
-# 
-# 
 # 
 # 
 # 
@@ -242,5 +243,6 @@ results_hgb = cross_val_score(model_hgb, X, y)
 print(f"HGB model: {results_hgb.mean():.4f}")
 ```
 
-Unsurprisiingly, the model that uses HGB outperforms the other models, while
-being much slower to train. 
+Unsurprisingly, the model that uses HGB outperforms the other models, while
+being much slower to train. The other pipelines have very similar performance, 
+which is to be expected since they are very similar to each other. 

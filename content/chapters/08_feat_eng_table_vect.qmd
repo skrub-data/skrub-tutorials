@@ -9,7 +9,7 @@ format:
 
 ---
 
-## What is the TableVectorizer?
+## Introduction
 
 Machine learning models typically require numeric input features. When working
 with real-world datasets, we often have a mix of data types: numbers, text,
@@ -42,7 +42,11 @@ This ensures that each column has the correct data type before encoding.
 ### Phase 2: Column Dispatch and Encoding
 
 After cleaning, the `TableVectorizer` categorizes columns and dispatches them
-to the appropriate transformer based on their data type and cardinality.
+to the appropriate transformer based on their data type and cardinality. Categorical
+columns with a cardinality (i.e., number of unique values) larger than 40 (by
+default)) are 
+considered "high cardinality", while all other categorical columns are "low 
+cardinality".
 
 The `TableVectorizer` uses the following default transformers for each column type:
 
@@ -59,30 +63,25 @@ to create dense numeric representations
 
 ### Cardinality Threshold
 
-By default, columns with 40 or fewer unique values are considered "low-cardinality"
-and one-hot encoded, while those with more unique values are "high-cardinality"
-and encoded with `StringEncoder`. We can change this threshold:
+The cardinality threshold that splits columns in "high" and "low" cardinality
+can be changed by setting the relative parameter:
 
 ```{python}
 from skrub import TableVectorizer
 
-tv = TableVectorizer(cardinality_threshold=30)  # Adjust the threshold
+tv = TableVectorizer(cardinality_threshold=10)  # Adjust the threshold
 ```
 
 ### Data Cleaning Parameters
 
-The `TableVectorizer` forwards several parameters to the internal `Cleaner`:
+The `TableVectorizer` forwards several parameters to the internal `Cleaner`, 
+which behave in the same way:
 
 - `drop_null_fraction`: Fraction of nulls above which a column is dropped (default: `1.0`)
 - `drop_if_constant`: Drop columns with only one unique value (default: `False`)
 - `drop_if_unique`: Drop string/categorical columns where all values are unique 
 (default: `False`) 
 - `datetime_format`: Format string for parsing dates
-
-Note that for `drop_if_constant` null values count as one additional distinct value.
-`drop_if_unique` should be used with care when working with free-flowing text,
-as in this case it is quite likely that all strings will be different, but the
-column is not uninformative. 
 
 ```{python}
 tv = TableVectorizer(
@@ -92,7 +91,7 @@ tv = TableVectorizer(
 )
 ```
 
-### Specifying Custom Transformers
+### Specifying custom transformers
 
 The `TableVectorizer` applies whatever transformer is provided to each of the 
 `numeric`, `datetime`, `high_cardinality`, and `low_cardinality` paramters. To
@@ -111,15 +110,54 @@ string_enc = StringEncoder(n_components=10)
 tv = TableVectorizer(
     datetime=datetime_enc,
     high_cardinality=string_enc,
-    low_cardinality=OneHotEncoder(sparse_output=False)
 )
 ```
 
-This allows to, for example, change the neumber of parameters in the `StringEncoder`, 
-or provide a custom datetime format for the `DatetimeEncoder`. 
+This allows to, for example, change the number of parameters in the `StringEncoder`, 
+provide a custom datetime format for the `DatetimeEncoder`, or use a completely 
+different encoder such as the `TextEncoder`. 
 
+### Applying the `TableVectorizer` only to a subset of columns
+By default, the `TableVectorizer` is applied to all the columns in the given 
+dataframe. In some cases, it may be important to keep specific columns "as is", so
+that they are not modified by the transformer. 
 
-## Using `specific_transformers` for Column-Specific Control
+This can be done by wrapping the vectorizer into an `ApplyToCols` object. 
+
+For example, in this case we might want to avoid modifying the two `*_id` columns. 
+```{python}
+import pandas as pd
+from skrub import ApplyToCols
+import skrub.selectors as s
+
+df = pd.DataFrame(
+    {
+        "metric_1": [10.5, 20.3, 30.1, 40.2],
+        "metric_2": [5.1, 15.6, None, 35.8],
+        "metric_3": [1.1, 3.3, 2.6, .8],
+        "num_id": [101, 102, 103, 104],
+        "str_id": ["A101", "A102", "A103", "A104"],
+        "description": ["apple", None, "cherry", "date"],
+        "name": ["Alice", "Bob", "Charlie", "David"],
+    }
+)
+df
+```
+
+We can use `ApplyToCols` and the skrub selectors as follows: 
+```{python}
+tv = ApplyToCols(TableVectorizer(), cols=s.all()-s.glob("*_id"))
+df_enc = tv.fit_transform(df)
+
+print("Original")
+print(df[["num_id", "str_id"]])
+print("\nEncoded")
+print(df_enc[["num_id", "str_id"]])
+```
+
+The id strings are the same, while all other columns have been encoded as expected.
+
+### Using `specific_transformers` for more low-level control
 
 For fine-grained control, we can specify transformers for specific columns using
 the `specific_transformers` parameter. This is useful when we want to override
@@ -150,6 +188,20 @@ Important notes about `specific_transformers`:
 (explained in the previous chapters), or the skrub
 [Data Ops](https://skrub-data.org/stable/auto_examples/data_ops/11_data_ops_intro.html).
 
+## Conclusions
+The `TableVectorizer` is a self-contained feature engineering engine that 
+1. Cleans your data to have consistent representation of data types and null values, and
+2. Encodes all columns depending on their data type and characteristics using good
+defaults. 
+
+The idea behind the `TableVectorizer` is that you should be able to provide any 
+dataframe, and get a good feature matrix based on that dataframe as a result. 
+
+The `TableVectorizer` makes use of most of the objects that have been explained
+so far, and is an important part of the `tabular_pipeline` explained in the 
+next chapter. 
+
+
 # Exercise: implementing a `TableVectorizer` from its components
 Replicate the behavior of a `TableVectorizer` using `ApplyToCols`, the skrub 
 selectors, and the given transformers. 
@@ -164,7 +216,7 @@ import skrub.selectors as s
 Notes on the implementation: 
 
 - In the first step, the TableVectorizer cleans the data to parse datetimes and other
-dtypes.
+dtypes with a `Cleaner` that uses default parameters, except for `numeric_dtype="float32"`.
 - Numeric features are left untouched, i.e., they use a Passthrough transformer. 
 - String and categorical feature are split into high and low cardinality features. 
 - For this exercise, set the the cardinality `threshold` to 4. 
@@ -175,7 +227,8 @@ category in binary features is dropped (hint: check the docs of the `OneHotEncod
 for the `drop` parameter). Set `sparse_output=True`.
 - Remember  `cardinality_below` is one of the skrub selectors. 
 - Datetimes are transformed by a default `DatetimeEncoder`. 
-- Everything should be wrapped in a scikit-learn `Pipeline`. 
+- Everything should be wrapped in a scikit-learn `Pipeline` (or with `make_pipeline`).
+
 
 
 Use the following dataframe to test the result. 
@@ -190,10 +243,10 @@ data = {
     "str2": ["officer", "manager", "lawyer", "chef", "teacher"],
     "bool": [True, False, True, False, True],
     "datetime-col": [
-            "2020-02-03T12:30:05",
-            "2021-03-15T00:37:15",
-            "2022-02-13T17:03:25",
-            "2023-05-22T08:45:55",
+        "2020-02-03T12:30:05",
+        "2021-03-15T00:37:15",
+        "2022-02-13T17:03:25",
+        "2023-05-22T08:45:55",
     ]
     + [None],
 }
@@ -204,6 +257,8 @@ df
 Use the following `PassThrough` transformer where needed. 
 ```{python}
 from skrub._apply_to_cols import SingleColumnTransformer
+
+
 class PassThrough(SingleColumnTransformer):
     def fit_transform(self, column, y=None):
         return column

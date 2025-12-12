@@ -44,7 +44,8 @@ We need to:
 - Convert the column `date_first_hired` into numerical features.
 
 Once we have processed the data, we can train a machine learning model. For the sake
-of the example, we will use a linear model (`Ridge`), which means that we need to scale numerical features, besides imputing missing values. 
+of the example, we will use a linear model (`Ridge`), which means that we need to
+scale numerical features and impute missing values. 
 
 Finally, we want to evaluate the performance of the method across multiple 
 cross-validation splits.
@@ -64,7 +65,6 @@ X_processed = X.copy()
 X_processed['date_first_hired'] = pd.to_datetime(X_processed['date_first_hired'])
 
 # Extract numerical features from date
-X_processed['years_since_hired'] = (pd.Timestamp.now() - X_processed['date_first_hired']).dt.days / 365.25
 X_processed['hired_month'] = X_processed['date_first_hired'].dt.month
 X_processed['hired_year'] = X_processed['date_first_hired'].dt.year
 
@@ -132,17 +132,22 @@ import numpy as np
 ridge = Ridge(alpha=1.0)
 
 # Perform cross-validation (5-fold)
-cv_results = cross_validate(ridge, X_scaled, y, cv=5, 
-                            scoring=['r2', 'neg_mean_squared_error'],
-                            return_train_score=True)
+cv_results = cross_validate(
+    ridge,
+    X_scaled,
+    y,
+    cv=5,
+    scoring=["r2", "neg_mean_squared_error"],
+)
 
 # Convert MSE to RMSE
-train_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])
-test_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])
+test_rmse = np.sqrt(-cv_results["test_neg_mean_squared_error"])
 
 # Display results
 print("Cross-Validation Results:")
-print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})")
+print(
+    f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+)
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ``` 
 
@@ -154,7 +159,8 @@ It's what I did. Here are some of the issues I noticed:
 - The datetime feature was encoded as a categorical (i.e, with dummmies).
 - Too many print statements.
 - Cells could not be executed in order without proper debugging and re-prompting.
-
+- `pd.get_dummies` was executed on the full dataframe, rather than only on the 
+training split, leading to data leakage. 
 
 ## Waking up from a nightmare
 Thankfully, we live in a world where we can `import skrub`. Let's see what we can
