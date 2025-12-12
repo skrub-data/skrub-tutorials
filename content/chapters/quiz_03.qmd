@@ -13,13 +13,23 @@ format:
 
 ## Question 1 
 ::: {.callout}
+Consider this data with outliers. 
+![](images/squashing-scaler-quiz-outliers.png)
+
 In this plot, which line shows numerical features scaled by the SquashingScaler? 
+![](images/squashing-scaler-quiz-scaled.png)
+
+- [ ] A) The solid blue line
+- [ ] B) The dashed green line
+- [ ] C) The dotted purple line
+- [ ] D) The dash-dotted red line
 :::
-
 ::: {.callout-tip collapse="true"}
-Answer B) 
+Answer A) 
 
-Figure with legend
+The solid blue line
+
+![](images/squashing-scaler-quiz-legend.png)
 
 :::
 
