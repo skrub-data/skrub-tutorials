@@ -360,7 +360,7 @@ window.Quarto = {
 <h2 data-number="9.2" class="anchored" data-anchor-id="numerical-features-with-outliers"><span class="header-section-number">9.2</span> Numerical features with outliers</h2>
 <p>When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.</p>
 <p>Consider this example:</p>
-<div id="98dabeb1" class="cell" data-execution_count="1">
+<div id="95860843" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    generate_data_with_outliers,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    plot_feature_with_outliers</span>
@@ -389,12 +389,12 @@ window.Quarto = {
 <p>The <code>SquashingScaler</code> combines robust centering with smooth clipping to handle outliers effectively.</p>
 <p>It works as following:</p>
 <ul>
-<li>It centers the median to 0, then it scales using quantile-based statistics.</li>
+<li>It centers the median to 0, then it scales values using quantile-based statistics.</li>
 <li>It fills constant columns with 0s.</li>
+<li>It applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
+<li>It constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
 <li>Infinite values are mapped to the corresponding boundaries.</li>
 <li>NaN values are kept unchanged.</li>
-<li>It then applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
-<li>It constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
 </ul>
 <section id="advantages-and-disadvantages-of-squashingscaler" class="level3" data-number="9.3.1">
 <h3 data-number="9.3.1" class="anchored" data-anchor-id="advantages-and-disadvantages-of-squashingscaler"><span class="header-section-number">9.3.1</span> Advantages and disadvantages of <code>SquashingScaler</code></h3>
@@ -417,7 +417,7 @@ window.Quarto = {
 <li><strong>SquashingScaler</strong> keeps inliers in a reasonable range while smoothly bounding all values</li>
 </ul>
 <p>If we plot the impact of each scaler on the result, this is what we can see:</p>
-<div id="6799d9d2" class="cell" data-execution_count="2">
+<div id="3bedf600" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
@@ -428,7 +428,6 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>In this section we showed how the <code>SquashingScaler</code> can be a better answer than traditional scalers when a numeric feature includes outliers.</p>
 
 
 </section>

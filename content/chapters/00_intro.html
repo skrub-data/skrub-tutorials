@@ -301,6 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#just-ask-an-agent-to-write-the-code" id="toc-just-ask-an-agent-to-write-the-code" class="nav-link" data-scroll-target="#just-ask-an-agent-to-write-the-code"><span class="header-section-number">2.2.6</span> “Just ask an agent to write the code”</a></li>
   </ul></li>
   <li><a href="#waking-up-from-a-nightmare" id="toc-waking-up-from-a-nightmare" class="nav-link" data-scroll-target="#waking-up-from-a-nightmare"><span class="header-section-number">2.3</span> Waking up from a nightmare</a></li>
+  <li><a href="#roadmap-for-the-course" id="toc-roadmap-for-the-course" class="nav-link" data-scroll-target="#roadmap-for-the-course"><span class="header-section-number">2.4</span> Roadmap for the course</a></li>
   </ul>
 </nav>
     </div>
@@ -327,13 +328,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Let’s begin the lesson by imagining a world without skrub, where we can use only Pandas and scikit-learn to clean data and prepare a machine learning model.</p>
-<div id="3744448c" class="cell" data-execution_count="1">
+<div id="3a7b6bd6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.read_csv(<span class="st">"../data/employee_salaries/data.csv"</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> pd.read_csv(<span class="st">"../data/employee_salaries/target.csv"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>X</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>X.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
@@ -408,82 +409,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>03/05/2007</td>
 <td>2007</td>
 </tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">...</th>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9223</th>
-<td>F</td>
-<td>HHS</td>
-<td>Department of Health and Human Services</td>
-<td>School Based Health Centers</td>
-<td>Fulltime-Regular</td>
-<td>Community Health Nurse II</td>
-<td>11/03/2015</td>
-<td>2015</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">9224</th>
-<td>F</td>
-<td>FRS</td>
-<td>Fire and Rescue Services</td>
-<td>Human Resources Division</td>
-<td>Fulltime-Regular</td>
-<td>Fire/Rescue Division Chief</td>
-<td>11/28/1988</td>
-<td>1988</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9225</th>
-<td>M</td>
-<td>HHS</td>
-<td>Department of Health and Human Services</td>
-<td>Child and Adolescent Mental Health Clinic Serv...</td>
-<td>Parttime-Regular</td>
-<td>Medical Doctor IV - Psychiatrist</td>
-<td>04/30/2001</td>
-<td>2001</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">9226</th>
-<td>M</td>
-<td>CCL</td>
-<td>County Council</td>
-<td>Council Central Staff</td>
-<td>Fulltime-Regular</td>
-<td>Manager II</td>
-<td>09/05/2006</td>
-<td>2006</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9227</th>
-<td>M</td>
-<td>DLC</td>
-<td>Department of Liquor Control</td>
-<td>Licensure, Regulation and Education</td>
-<td>Fulltime-Regular</td>
-<td>Alcohol/Tobacco Enforcement Specialist II</td>
-<td>01/30/2012</td>
-<td>2012</td>
-</tr>
 </tbody>
 </table>
 
-<p>9228 rows × 8 columns</p>
 </div>
 </div>
 </div>
 <p>Let’s take a look at the target::</p>
-<div id="173685e0" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d55494ac" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -516,34 +450,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th data-quarto-table-cell-role="th">4</th>
 <td>93396.00</td>
 </tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">...</th>
-<td>...</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9223</th>
-<td>72094.53</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">9224</th>
-<td>169543.85</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9225</th>
-<td>102736.52</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">9226</th>
-<td>153747.50</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9227</th>
-<td>75484.08</td>
-</tr>
 </tbody>
 </table>
 
-<p>9228 rows × 1 columns</p>
 </div>
 </div>
 </div>
@@ -551,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="strategizing" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="strategizing"><span class="header-section-number">2.1</span> Strategizing</h2>
 <p>We can begin by exploring the dataframe with <code>.describe</code>, and then think of a plan for pre-processing our data.</p>
-<div id="f3f62a35" class="cell" data-execution_count="3">
+<div id="41886c84" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X.describe(include<span class="op">=</span><span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -714,7 +623,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-1-convert-date-features-to-numerical" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="step-1-convert-date-features-to-numerical"><span class="header-section-number">2.2.1</span> Step 1: Convert date features to numerical</h3>
 <p>Extract numerical features from the <code>date_first_hired</code> column.</p>
-<div id="b1d28e3f" class="cell" data-execution_count="4">
+<div id="02476a11" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a copy to work with</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X_processed <span class="op">=</span> X.copy()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -740,7 +649,7 @@ Shape: (9228, 9)</code></pre>
 <section id="step-2-encode-categorical-features" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="step-2-encode-categorical-features"><span class="header-section-number">2.2.2</span> Step 2: Encode categorical features</h3>
 <p>Encode only the non-numerical categorical features using one-hot encoding.</p>
-<div id="7fc6cf00" class="cell" data-execution_count="5">
+<div id="1eb28e2a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify only the non-numerical (truly categorical) columns</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> X_processed.select_dtypes(include<span class="op">=</span>[<span class="st">'object'</span>]).columns.tolist()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Categorical columns to encode:"</span>, categorical_cols)</span>
@@ -758,7 +667,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-3-impute-missing-values" class="level3" data-number="2.2.3">
 <h3 data-number="2.2.3" class="anchored" data-anchor-id="step-3-impute-missing-values"><span class="header-section-number">2.2.3</span> Step 3: Impute missing values</h3>
 <p>We’ll impute missing values in the <code>gender</code> column using the most frequent strategy.</p>
-<div id="97fb0566" class="cell" data-execution_count="6">
+<div id="0d98d5f2" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute missing values with most frequent value</span></span>
@@ -772,7 +681,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-4-scale-numerical-features" class="level3" data-number="2.2.4">
 <h3 data-number="2.2.4" class="anchored" data-anchor-id="step-4-scale-numerical-features"><span class="header-section-number">2.2.4</span> Step 4: Scale numerical features</h3>
 <p>Scale numerical features for the Ridge regression model.</p>
-<div id="0e834c84" class="cell" data-execution_count="7">
+<div id="6fbfd810" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the scaler</span></span>
@@ -786,7 +695,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-5-train-ridge-model-with-cross-validation" class="level3" data-number="2.2.5">
 <h3 data-number="2.2.5" class="anchored" data-anchor-id="step-5-train-ridge-model-with-cross-validation"><span class="header-section-number">2.2.5</span> Step 5: Train Ridge model with cross-validation</h3>
 <p>Train a Ridge regression model and evaluate with cross-validation.</p>
-<div id="869e6680" class="cell" data-execution_count="8">
+<div id="2dabecdf" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, cross_validate</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -826,16 +735,16 @@ Mean test RMSE: 10367.1206 (+/- 1403.4322)</code></pre>
 <li>Operations in the wrong order.</li>
 <li>Trying to impute categorical features without encoding them as numerical values.</li>
 <li>The datetime feature was encoded as a categorical (i.e, with dummmies).</li>
-<li>Too many print statements.</li>
 <li>Cells could not be executed in order without proper debugging and re-prompting.</li>
 <li><code>pd.get_dummies</code> was executed on the full dataframe, rather than only on the training split, leading to data leakage.</li>
 </ul>
+<p>This means that I had to spend time re-prompting the model to get it to run, and that’s (intentionally) without removing the leakage.</p>
 </section>
 </section>
 <section id="waking-up-from-a-nightmare" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="waking-up-from-a-nightmare"><span class="header-section-number">2.3</span> Waking up from a nightmare</h2>
 <p>Thankfully, we live in a world where we can <code>import skrub</code>. Let’s see what we can get if we use <code>skrub.tabular_pipeline</code>.</p>
-<div id="76efcf0b" class="cell" data-execution_count="9">
+<div id="ddb9dfc8" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform cross-validation (5-fold)</span></span>
@@ -865,12 +774,23 @@ Mean test RMSE: 10367.1206 (+/- 1403.4322)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cross-Validation Results:
-Mean test R²: 0.9096 (+/- 0.0164)
-Mean test RMSE: 8737.3000 (+/- 1063.4129)</code></pre>
+Mean test R²: 0.9083 (+/- 0.0162)
+Mean test RMSE: 8804.3443 (+/- 1054.0937)</code></pre>
 </div>
 </div>
 <p>All the code from before, the tokens and the debugging are replaced by a single import that gives better results.</p>
-<p>Throughout the tutorial, we will see how each step can be simplified, replaced, or improved using skrub features.</p>
+<p>Throughout the tutorial, we will see how each step can be simplified, replaced, or improved using skrub features, going through the various features until we get to the <code>tabular_pipeline</code>.</p>
+</section>
+<section id="roadmap-for-the-course" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="roadmap-for-the-course"><span class="header-section-number">2.4</span> Roadmap for the course</h2>
+<p>We are going to build what could be a typicial pre-processing pipeline:</p>
+<ol type="1">
+<li>We will explore the data to identify possible problems and figure out what needs to be cleaned.</li>
+<li>We will then sanitize the data to address some common problems.</li>
+<li>There will be an intermission on various skrub features that simplify.</li>
+<li>Then, we will show how to perform feature engineering using various skrub encoders.</li>
+<li>Finally, we will show how we can put everything together.</li>
+</ol>
 
 
 </section>

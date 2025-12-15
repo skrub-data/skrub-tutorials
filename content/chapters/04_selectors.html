@@ -290,11 +290,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#skrub-selectors" id="toc-skrub-selectors" class="nav-link active" data-scroll-target="#skrub-selectors"><span class="header-section-number">7.1</span> Skrub selectors</a></li>
-  <li><a href="#combining-selectors" id="toc-combining-selectors" class="nav-link" data-scroll-target="#combining-selectors"><span class="header-section-number">7.2</span> Combining selectors</a></li>
-  <li><a href="#extracting-selected-columns" id="toc-extracting-selected-columns" class="nav-link" data-scroll-target="#extracting-selected-columns"><span class="header-section-number">7.3</span> Extracting selected columns</a></li>
-  <li><a href="#designing-custom-filters" id="toc-designing-custom-filters" class="nav-link" data-scroll-target="#designing-custom-filters"><span class="header-section-number">7.4</span> Designing custom filters</a></li>
-  <li><a href="#exercise-using-selectors-together-with-applytocols" id="toc-exercise-using-selectors-together-with-applytocols" class="nav-link" data-scroll-target="#exercise-using-selectors-together-with-applytocols"><span class="header-section-number">8</span> Exercise: using selectors together with <code>ApplyToCols</code></a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">8</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#skrub-selectors" id="toc-skrub-selectors" class="nav-link" data-scroll-target="#skrub-selectors"><span class="header-section-number">8.1</span> Skrub selectors</a></li>
+  <li><a href="#combining-selectors" id="toc-combining-selectors" class="nav-link" data-scroll-target="#combining-selectors"><span class="header-section-number">8.2</span> Combining selectors</a></li>
+  <li><a href="#extracting-selected-columns" id="toc-extracting-selected-columns" class="nav-link" data-scroll-target="#extracting-selected-columns"><span class="header-section-number">8.3</span> Extracting selected columns</a></li>
+  <li><a href="#designing-custom-filters" id="toc-designing-custom-filters" class="nav-link" data-scroll-target="#designing-custom-filters"><span class="header-section-number">8.4</span> Designing custom filters</a></li>
+  </ul></li>
+  <li><a href="#exercise-using-selectors-together-with-applytocols" id="toc-exercise-using-selectors-together-with-applytocols" class="nav-link" data-scroll-target="#exercise-using-selectors-together-with-applytocols"><span class="header-section-number">9</span> Exercise: using selectors together with <code>ApplyToCols</code></a></li>
   </ul>
 </nav>
     </div>
@@ -320,16 +323,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Very often, column selection is more complex than simply passing a list of column names to a transformer: it may be necessary to select all columns that have a specific data type, or based on some other characteristic (presence of nulls, column cardinality etc.).</p>
+<section id="introduction" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Introduction</h1>
+<p>Very often, column selection is more complex than simply passing a list of column names to a transformer: it may be necessary to select all columns that have a specific data type, or based on some other characteristic (presence of nulls, column cardinality, etc.).</p>
 <p>The skrub <code>selectors</code> implement a number of selection strategies that can be combined in various ways to build complex filtering conditions that can then be employed by <code>ApplyToCols</code>, <code>ApplyToFrame</code>, <code>SelectCols</code> and <code>DropCols</code>.</p>
-<section id="skrub-selectors" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="skrub-selectors"><span class="header-section-number">7.1</span> Skrub selectors</h2>
+<section id="skrub-selectors" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="skrub-selectors"><span class="header-section-number">8.1</span> Skrub selectors</h2>
 <p>Selectors are available from the <code>skrub.selectors</code> namespace:</p>
-<div id="623a87c2" class="cell" data-execution_count="1">
+<div id="16c2b984" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We will use this example dataframe to test some of the selectors:</p>
-<div id="8f4abca2" class="cell" data-execution_count="2">
+<div id="21679102" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -444,7 +449,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>.categorical</code>: columns with a Categorical data type</li>
 <li><code>.numeric</code>: numeric (either integer or float) columns</li>
 </ul>
-<div id="680f4caa" class="cell" data-execution_count="3">
+<div id="b7bac324" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>string_selector <span class="op">=</span> s.string()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -499,7 +504,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>.cardinality_below</code>: select all columns with a number of unique values lower than the given <code>threshold</code></li>
 <li><code>.has_nulls</code>: select all columns that include at least one null value</li>
 </ul>
-<div id="636750cb" class="cell" data-execution_count="4">
+<div id="6efc7513" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SelectCols(cols<span class="op">=</span>s.has_nulls()).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
@@ -560,7 +565,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>.glob</code>: use Unix shell style <code>glob</code> to select column names</li>
 <li><code>.regex</code>: select columns using regular expressions</li>
 </ul>
-<div id="98a04171" class="cell" data-execution_count="5">
+<div id="f44efdda" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SelectCols(cols<span class="op">=</span>s.glob(<span class="st">"cat*"</span>)).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -607,10 +612,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="combining-selectors" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="combining-selectors"><span class="header-section-number">7.2</span> Combining selectors</h2>
-<p>Selectors can be inverted using <code>.inv</code> or the logical operator <code>~</code> to select all <em>other</em> columns, and they can be combined using the <code>&amp;</code> and <code>|</code> logical operators. It is also possible to remove from a selection with <code>-</code>:</p>
-<div id="dbe4e85d" class="cell" data-execution_count="6">
+<section id="combining-selectors" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="combining-selectors"><span class="header-section-number">8.2</span> Combining selectors</h2>
+<p>Selectors can be inverted using <code>.inv</code> or the logical operator <code>~</code> to select all <em>other</em> columns, and they can be combined using the <code>&amp;</code> and <code>|</code> logical operators. It is also possible to remove from a selection with <code>-</code>; for example to select all columns except for “datetime-col”, one would write:</p>
+<div id="12d29dd9" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>SelectCols(cols<span class="op">=</span>s.<span class="bu">all</span>() <span class="op">-</span> <span class="st">"datetime-col"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
@@ -686,8 +691,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>For example, to select all datetime columns OR all string columns that do not contain nulls, we can do:</p>
-<div id="87dfb6e5" class="cell" data-execution_count="7">
+<p>To select all datetime columns OR all string columns that do not contain nulls, we can do:</p>
+<div id="3ad1cb2e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>SelectCols(cols<span class="op">=</span>(s.any_date() <span class="op">|</span> (s.string()) <span class="op">&amp;</span> (<span class="op">~</span>s.has_nulls()))).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
@@ -734,10 +739,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="extracting-selected-columns" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="extracting-selected-columns"><span class="header-section-number">7.3</span> Extracting selected columns</h2>
+<section id="extracting-selected-columns" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="extracting-selected-columns"><span class="header-section-number">8.3</span> Extracting selected columns</h2>
 <p>Selectors can use the <code>expand</code> and <code>expand_index</code> methods to extract the columns that have been selected:</p>
-<div id="3a686e4e" class="cell" data-execution_count="8">
+<div id="f1f84ce3" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>has_nulls <span class="op">=</span> s.has_nulls()</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>has_nulls.expand(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
@@ -745,7 +750,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>This can be used, for example, to pass a list of columns to a dataframe library.</p>
-<div id="2e3555a6" class="cell" data-execution_count="9">
+<div id="b4a4d99b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df.drop(columns<span class="op">=</span>has_nulls.expand(df))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <div>
@@ -810,11 +815,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="designing-custom-filters" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="designing-custom-filters"><span class="header-section-number">7.4</span> Designing custom filters</h2>
+<section id="designing-custom-filters" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="designing-custom-filters"><span class="header-section-number">8.4</span> Designing custom filters</h2>
 <p>Finally, it is possible to define function-based selectors using <code>.filter</code> and <code>.filter_names</code>.</p>
-<p><code>.filter</code> selects columns for which the <code>predicate</code> evaluated by a user-defined function is <code>True</code>. For example, it is possible to select columns that include a certain amount of nulls by defining a function like the following:</p>
-<div id="96e025b8" class="cell" data-execution_count="10">
+<p><code>.filter</code> selects columns for which the <code>predicate</code> evaluated by a user-defined function on the given column is <code>True</code>. It is also possible to pass arguments to the function to further tweak the conditions. For example, it is possible to select columns that include a certain amount of nulls by defining a function like the following:</p>
+<div id="a41ef68f" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
@@ -861,7 +866,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><code>.filter_names</code> is similar to <code>.filter</code> in the sense that it takes a function that returns a predicate, but in this case the function is evaluated over the column names.</p>
 <p>If we define this example dataframe:</p>
-<div id="0dd57653" class="cell" data-execution_count="11">
+<div id="9a5fdeff" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> selectors <span class="im">as</span> s</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
@@ -909,7 +914,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can select all the columns that end with <code>"_mm"</code> as follows:</p>
-<div id="01ed017a" class="cell" data-execution_count="12">
+<div id="161df5a4" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>selector <span class="op">=</span> s.filter_names(<span class="kw">lambda</span> name: name.endswith(<span class="st">'_mm'</span>))</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>s.select(df, selector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -942,10 +947,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="exercise-using-selectors-together-with-applytocols" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Exercise: using selectors together with <code>ApplyToCols</code></h1>
+</section>
+<section id="exercise-using-selectors-together-with-applytocols" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Exercise: using selectors together with <code>ApplyToCols</code></h1>
+<p><strong>Path to the exercise</strong>: <code>content/exercises/04_selectors.ipynb</code></p>
 <p>Consider this example dataframe:</p>
-<div id="2853e268" class="cell" data-execution_count="13">
+<div id="37fe9715" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
@@ -1029,7 +1036,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Apply the <code>StandardScaler</code> to numeric columns, except <code>"num_id"</code>.</li>
 <li>Apply a <code>OneHotEncoder</code> with <code>sparse_output=False</code> on all string columns except <code>"str_id"</code>.</li>
 </ul>
-<div id="49bdf039" class="cell" data-execution_count="14">
+<div id="cfd6ce02" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -1046,7 +1053,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="5d5e715f" class="cell" data-execution_count="15">
+<div id="2e92681d" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -1153,7 +1160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Given the same dataframe and using selectors, drop only string columns that contain nulls.</p>
-<div id="c09ce02b" class="cell" data-execution_count="16">
+<div id="22741188" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
@@ -1165,7 +1172,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="32c2c4d2" class="cell" data-execution_count="17">
+<div id="7b5575a3" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>DropCols(cols<span class="op">=</span>s.has_nulls() <span class="op">&amp;</span> s.string()).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1229,7 +1236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now write a custom function that selects columns where all values are lower than <code>10.0</code>.</p>
-<div id="74c31435" class="cell" data-execution_count="18">
+<div id="55ce83f1" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
@@ -1241,7 +1248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="190ef6ad" class="cell" data-execution_count="19">
+<div id="4c91882d" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lower_than(col):</span>
