@@ -257,6 +257,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">13.1</span> Question 1</a></li>
   <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">13.2</span> Question 2</a></li>
   <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">13.3</span> Question 3</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">13.4</span> Question 4</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -391,6 +392,44 @@ Tip
 <div class="callout-body-container callout-body">
 <p>Answer: A)</p>
 <p>The <code>StringEncoder</code> is always one of the fastest encoders to fit, and produces high quality encodings. The <code>MinHashEncoder</code> is faster, but it produces worse encodings. The <code>TextEncoder</code> can produce the best encodings for certain types of categorical data (mainly text), but is very slow to run.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="question-4" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="question-4"><span class="header-section-number">13.4</span> Question 4</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>You need to do feature engineering on a dataset that includes user reviews as part of its features. You are working in an environment that has access to good computational resources, including a GPU. Which of the following encoders would be the best choice in such a scenario?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) <code>OneHotEncoder</code></label></li>
+<li><label><input type="checkbox">B) <code>TextEncoder</code></label></li>
+<li><label><input type="checkbox">C) <code>OrdinalEncoder</code></label></li>
+<li><label><input type="checkbox">D) <code>MinHashEncoder</code></label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: B)</p>
+<p>The <code>TextEncoder</code> works best when it is applied to free-flowing text, or columns whose content may find additional context in the training set of the language model used by the encoder. User reviews fall in this category.</p>
+<p>The <code>OneHotEncoder</code> would likely generate a very large number of uninformative features, and the features prepared by the <code>OrdinalEncoder</code> are unlikely to be informative.</p>
+<p>The <code>MinHashEncoder</code> would generate a fixed number of encoded features, but the quality of the embeddings is lower than that of the <code>TextEncoder</code>. In a situation where computational resources are limited, it may be beneficial, but even in that case the <code>StringEncoder</code> may produce better results.</p>
 </div>
 </div>
 </div>

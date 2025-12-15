@@ -435,7 +435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <p>Answer: False.</p>
 <p>The order of the operations matters, and a different order leads to different results.</p>
-<div id="29f60553" class="cell" data-execution_count="1">
+<div id="a1a60839" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -454,10 +454,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8592159e" class="cell" data-execution_count="2">
+<div id="ea45d658" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>case_1 <span class="op">=</span> make_pipeline(encode, scale)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_1 <span class="op">=</span> case_1.fit_transform(df)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_1.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -484,9 +484,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>-0.5</td>
 <td>-0.5</td>
-<td>0.576172</td>
-<td>-1.224745</td>
-<td>1.224745</td>
+<td>-0.368230</td>
+<td>0.5</td>
+<td>-0.5</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
@@ -495,9 +495,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>-0.5</td>
 <td>-0.5</td>
-<td>1.640836</td>
-<td>0.816497</td>
-<td>-0.816497</td>
+<td>-1.657034</td>
+<td>0.5</td>
+<td>-0.5</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
@@ -506,9 +506,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>2.0</td>
 <td>-0.5</td>
 <td>-0.5</td>
-<td>-0.676375</td>
-<td>0.816497</td>
-<td>-0.816497</td>
+<td>0.368230</td>
+<td>-2.0</td>
+<td>2.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
@@ -517,9 +517,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>2.0</td>
 <td>-0.5</td>
-<td>-1.177394</td>
-<td>0.816497</td>
-<td>-0.816497</td>
+<td>1.380862</td>
+<td>0.5</td>
+<td>-0.5</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
@@ -528,9 +528,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>-0.5</td>
 <td>2.0</td>
-<td>-0.363239</td>
-<td>-1.224745</td>
-<td>1.224745</td>
+<td>0.276172</td>
+<td>0.5</td>
+<td>-0.5</td>
 </tr>
 </tbody>
 </table>
@@ -538,10 +538,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="0c5ed444" class="cell" data-execution_count="3">
+<div id="26738758" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>case_2 <span class="op">=</span> make_pipeline(scale, encode)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_2 <span class="op">=</span> case_2.fit_transform(df)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_2.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -568,9 +568,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>0.576172</td>
-<td>0.0</td>
+<td>-0.368230</td>
 <td>1.0</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
@@ -579,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>1.640836</td>
+<td>-1.657034</td>
 <td>1.0</td>
 <td>0.0</td>
 </tr>
@@ -590,9 +590,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>1.0</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>-0.676375</td>
-<td>1.0</td>
+<td>0.368230</td>
 <td>0.0</td>
+<td>1.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
@@ -601,7 +601,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>1.0</td>
 <td>0.0</td>
-<td>-1.177394</td>
+<td>1.380862</td>
 <td>1.0</td>
 <td>0.0</td>
 </tr>
@@ -612,9 +612,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>0.0</td>
 <td>1.0</td>
-<td>-0.363239</td>
-<td>0.0</td>
+<td>0.276172</td>
 <td>1.0</td>
+<td>0.0</td>
 </tr>
 </tbody>
 </table>
@@ -630,7 +630,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="selectors" class="level1" data-number="10">
 <h1 data-number="10"><span class="header-section-number">10</span> Selectors</h1>
 <p>For the following questions, refer to this example dataframe:</p>
-<div id="9ec6597b" class="cell" data-execution_count="4">
+<div id="d4b6c1b4" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -752,7 +752,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container">
 <p>What does this selector do?</p>
-<div id="cbfb2777" class="cell" data-execution_count="5">
+<div id="5f51e9d5" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -823,7 +823,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Answer: B)</p>
-<div id="e3e4e501" class="cell" data-execution_count="6">
+<div id="8566590c" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>t.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
@@ -876,7 +876,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container">
 <p>What does this selector do?</p>
-<div id="9a45d597" class="cell" data-execution_count="7">
+<div id="157ea175" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sel <span class="op">=</span> s.cols(<span class="st">"salary"</span>) <span class="op">|</span> s.filter_names(<span class="kw">lambda</span> name: name.endswith(<span class="st">"_title"</span>))</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> SelectCols(cols<span class="op">=</span>sel)</span>
@@ -953,7 +953,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Answer: C)</p>
-<div id="012eea1f" class="cell" data-execution_count="8">
+<div id="78aa6172" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>t.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
