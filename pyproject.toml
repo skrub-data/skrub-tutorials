@@ -1,5 +1,5 @@
 [project]
-name = "skrub-tutorials"
+name = "inria-academy-skrub"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies= [
@@ -9,5 +9,6 @@ dependencies= [
     "seaborn>=0.13.2,<0.14",
     "pyarrow>=22.0.0,<23",
     "jupyterlab>=4.5.0,<5",
-    "notebook>=7.5.0,<8"
+    "notebook>=7.5.0,<8",
+    "skrub>=0.7.0" 
 ]
