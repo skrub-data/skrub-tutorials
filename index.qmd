@@ -84,7 +84,6 @@ Then, start a jupyter lab instance:
 jupyter lab --notebook-dir=./content/notebooks
 ```
 
-
 ### Using `uv`
 Create the environment using `pyproject.toml` as the requirement file. 
 
