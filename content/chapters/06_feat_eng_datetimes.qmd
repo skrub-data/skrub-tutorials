@@ -161,6 +161,9 @@ periodic (circular) encoding can be used to capture cyclical patterns in
 time-based data.
 
 # Exercise
+
+**Path to the exercise**: `content/exercises/06_feat_eng_datetimes.ipynb`
+
 Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided
 dataframe to datetime dtype, then extract the following features: 
 

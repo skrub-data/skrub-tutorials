@@ -203,6 +203,9 @@ next chapter.
 
 
 # Exercise: implementing a `TableVectorizer` from its components
+
+**Path to the exercise**: `content/exercises/08_feat_eng_table_vect.ipynb`
+
 Replicate the behavior of a `TableVectorizer` using `ApplyToCols`, the skrub 
 selectors, and the given transformers. 
 

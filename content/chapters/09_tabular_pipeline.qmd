@@ -130,6 +130,9 @@ Both approaches produce scikit-learn compatible pipelines that can be used with
 cross-validation, hyperparameter tuning, and other standard workflows.
 
 # Exercise 
+
+**Path to the exercise**: `content/exercises/09_tabular_pipeline.ipynb`
+
 In this exercise we're going to use the `TableVectorizer` and `tabular_pipeline` 
 to replicate the behavior of a traditional scikit-learn pipeline. 
 

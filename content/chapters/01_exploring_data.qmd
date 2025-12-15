@@ -200,6 +200,9 @@ When the number of columns is too large, an information message is shown in the
 respective tab instead of the plots or correlations. 
 
 # Exercise: exploring a new table
+
+**Path to the exercise**: `content/exercises/01_exploring_data.ipynb`
+
 For this exercise, we will use the `employee_salaries` dataframe to answer some 
 questions. 
 

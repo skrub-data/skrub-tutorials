@@ -18,12 +18,12 @@ import numpy as np
 
 X = pd.read_csv("../data/employee_salaries/data.csv")
 y = pd.read_csv("../data/employee_salaries/target.csv")
-X
+X.head(5)
 ```
 
 Let's take a look at the target::
 ```{python}
-y
+y.head(5)
 ```
 
 This is a numerical column, and our task is predicting the value of `current_annual_salary`.

@@ -156,6 +156,7 @@ with `drop_null_fraction`.
 
 
 # Exercise: clean a dataframe using the `Cleaner` 
+**Path to the exercise**: `content/exercises/02_cleaning_data.ipynb`
 Load the given dataframe. 
 
 ```{python}

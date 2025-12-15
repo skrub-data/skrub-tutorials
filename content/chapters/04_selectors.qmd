@@ -173,6 +173,9 @@ s.select(df, selector)
 ```
 
 # Exercise: using selectors together with `ApplyToCols`
+
+**Path to the exercise**: `content/exercises/04_selectors.ipynb`
+
 Consider this example dataframe:
 
 ```{python}
