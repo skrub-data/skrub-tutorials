@@ -311,12 +311,31 @@ ul.task-list li input[type="checkbox"] {
 <section id="one-hot-encoding-and-ordinal-encoding-scikit-learn" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">11.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</h3>
 <p><strong><code>OneHotEncoder</code></strong>: Creates a binary indicator column for each unique category, where <code>1</code> denotes the presence of the category and <code>0</code> its absence.</p>
-<p><strong>Pros:</strong> - Straightforward and intuitive - Works well for low-cardinality features (few unique values) - Produces sparse matrices that can save memory</p>
-<p><strong>Cons:</strong> - Becomes impractical with high-cardinality features (creates hundreds or thousands of columns) - Results in mostly zero-valued sparse matrices when dense, which is the situation when working with dataframes - Increases overfitting risk and computational overhead</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Straightforward and intuitive</li>
+<li>Works well for low-cardinality features (few unique values)</li>
+<li>Produces sparse matrices that can save memory</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Becomes impractical with high-cardinality features (creates hundreds or thousands of columns)</li>
+<li>Results in mostly zero-valued sparse matrices when dense, which is the situation when working with dataframes</li>
+<li>Increases overfitting risk and computational overhead</li>
+</ul>
 <p>The <code>OneHotEncoder</code> is used by default by the skrub <code>TableVectorizer</code> for categorical features with fewer than 40 unique values.</p>
 <p><strong><code>OrdinalEncoder</code></strong>: Assigns each category a numerical value (0, 1, 2, …).</p>
-<p><strong>Pros:</strong> - Very memory-efficient - Creates only one output column per input column - Fast to compute</p>
-<p><strong>Cons:</strong> - Introduces artificial ordering among categories that may not exist in reality - Can mislead models into thinking some categories are “greater than” others</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Very memory-efficient</li>
+<li>Creates only one output column per input column</li>
+<li>Fast to compute</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Introduces artificial ordering among categories that may not exist in reality</li>
+<li>Can mislead models into thinking some categories are “greater than” others</li>
+</ul>
 </section>
 <section id="categorical-encoders-in-skrub" class="level3" data-number="11.3.2">
 <h3 data-number="11.3.2" class="anchored" data-anchor-id="categorical-encoders-in-skrub"><span class="header-section-number">11.3.2</span> Categorical encoders in skrub</h3>
@@ -325,26 +344,72 @@ ul.task-list li input[type="checkbox"] {
 <section id="stringencoder" class="level3" data-number="11.3.3">
 <h3 data-number="11.3.3" class="anchored" data-anchor-id="stringencoder"><span class="header-section-number">11.3.3</span> StringEncoder</h3>
 <p><strong>Approach</strong>: Applies term frequency-inverse document frequency (tf-idf) vectorization to character n-grams, followed by truncated singular value decomposition (SVD) for dimensionality reduction. This method is also known as <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent Semantic Analysis</a>.</p>
-<p><strong>Pros:</strong> - <strong>The best all-rounder</strong>: Performs well on both categorical and text data - Fast training time - Robust and generalizes well across different datasets - No artificial ordering introduced</p>
-<p><strong>Cons:</strong> - Less interpretable than one-hot encoding or ordinal encoding - May not capture semantic relationships as well as language model-based approaches - Performance depends on the nature of the categorical data</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li><strong>The best all-rounder</strong>: Performs well on both categorical and text data</li>
+<li>Fast training time</li>
+<li>Robust and generalizes well across different datasets</li>
+<li>No artificial ordering introduced</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Less interpretable than one-hot encoding or ordinal encoding</li>
+<li>May not capture semantic relationships as well as language model-based approaches</li>
+<li>Performance depends on the nature of the categorical data</li>
+</ul>
 </section>
 <section id="textencoder" class="level3" data-number="11.3.4">
 <h3 data-number="11.3.4" class="anchored" data-anchor-id="textencoder"><span class="header-section-number">11.3.4</span> TextEncoder</h3>
 <p><strong>Approach</strong>: Uses pretrained language models from HuggingFace Hub to generate dense vector representations of text.</p>
-<p><strong>Pros:</strong> - Exceptional performance on free-flowing text and natural language - Captures semantic meaning and context - Leverages knowledge from large-scale language model pretraining - Can excel on datasets where domain-specific information aligns with pretraining data</p>
-<p><strong>Cons:</strong> - <strong>Very computationally expensive</strong>: Significantly slower than other methods - Requires heavy dependencies (PyTorch, transformers) - Models are large and require downloading - Impractical for CPU-only environments - Performance on traditional categorical data (non-text, such as IDs) is not much better than simpler methods</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Exceptional performance on free-flowing text and natural language</li>
+<li>Captures semantic meaning and context</li>
+<li>Leverages knowledge from large-scale language model pretraining</li>
+<li>Can excel on datasets where domain-specific information aligns with pretraining data</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li><strong>Very computationally expensive</strong>: Significantly slower than other methods</li>
+<li>Requires heavy dependencies (PyTorch, transformers)</li>
+<li>Models are large and require downloading</li>
+<li>Impractical for CPU-only environments</li>
+<li>Performance on traditional categorical data (non-text, such as IDs) is not much better than simpler methods</li>
+</ul>
 </section>
 <section id="minhashencoder" class="level3" data-number="11.3.5">
 <h3 data-number="11.3.5" class="anchored" data-anchor-id="minhashencoder"><span class="header-section-number">11.3.5</span> MinHashEncoder</h3>
 <p><strong>Approach</strong>: Decomposes strings into n-grams and applies the MinHash algorithm for quick dimension reduction.</p>
-<p><strong>Pros:</strong> - Very fast training time - Simple and lightweight - Minimal memory overhead - Good for quick prototyping or very large-scale datasets</p>
-<p><strong>Cons:</strong> - Performance generally lags behind <code>StringEncoder</code> and <code>TextEncoder</code> - Less nuanced feature representation - Less robust across different types of data</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Very fast training time</li>
+<li>Simple and lightweight</li>
+<li>Minimal memory overhead</li>
+<li>Good for quick prototyping or very large-scale datasets</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Performance generally lags behind <code>StringEncoder</code> and <code>TextEncoder</code></li>
+<li>Less nuanced feature representation</li>
+<li>Less robust across different types of data</li>
+</ul>
 </section>
 <section id="gapencoder" class="level3" data-number="11.3.6">
 <h3 data-number="11.3.6" class="anchored" data-anchor-id="gapencoder"><span class="header-section-number">11.3.6</span> GapEncoder</h3>
 <p><strong>Approach</strong>: Estimates latent categories by finding common n-gram patterns across values, then encodes these patterns as numeric features.</p>
-<p><strong>Pros:</strong> - Interpretable: Column names reflect the estimated categories - Can group similar strings intelligently - Reasonable performance across datasets</p>
-<p><strong>Cons:</strong> - Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code> - Performance is on par with or slightly worse than the faster <code>StringEncoder</code> - Interpretability comes at the cost of training speed - May require more computational resources for large datasets</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Interpretable: Column names reflect the estimated categories</li>
+<li>Can group similar strings intelligently</li>
+<li>Reasonable performance across datasets</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code></li>
+<li>Performance is on par with or slightly worse than the faster <code>StringEncoder</code></li>
+<li>Interpretability comes at the cost of training speed</li>
+<li>May require more computational resources for large datasets</li>
+</ul>
 </section>
 </section>
 <section id="conclusion" class="level2" data-number="11.4">
