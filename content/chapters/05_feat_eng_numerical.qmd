@@ -60,14 +60,14 @@ outliers effectively.
 
 It works as following:
 
-- It centers the median to 0, then it scales using quantile-based statistics.
+- It centers the median to 0, then it scales values using quantile-based statistics.
 - It fills constant columns with 0s.
-- Infinite values are mapped to the corresponding boundaries.
-- NaN values are kept unchanged.
-- It then applies a smooth squashing function:
+- It applies a smooth squashing function:
 $x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}$
 - It constrains all values to the range
 $[-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]$ (default: 3)
+- Infinite values are mapped to the corresponding boundaries.
+- NaN values are kept unchanged.
 
 ### Advantages and disadvantages of `SquashingScaler`
 The `SquashingScaler` has various advantages over traditional scalers: 
@@ -97,6 +97,3 @@ If we plot the impact of each scaler on the result, this is what we can see:
 from helpers import scale_feature_and_plot
 scale_feature_and_plot(values)
 ```
-
-In this section we showed how the `SquashingScaler` can be a better answer than
-traditional scalers when a numeric feature includes outliers. 

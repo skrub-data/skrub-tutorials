@@ -190,6 +190,7 @@ Important notes about `specific_transformers`:
 
 ## Conclusions
 The `TableVectorizer` is a self-contained feature engineering engine that 
+
 1. Cleans your data to have consistent representation of data types and null values, and
 2. Encodes all columns depending on their data type and characteristics using good
 defaults. 

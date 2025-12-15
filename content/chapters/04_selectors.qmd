@@ -8,10 +8,11 @@ format:
         code-tools: true
 
 ---
+# Introduction
 Very often, column selection is more complex than simply passing a list of column
 names to a transformer: it may be necessary to select all columns that have a
 specific data type, or based on some other characteristic (presence of nulls,
-column cardinality etc.).
+column cardinality, etc.).
 
 The skrub `selectors` implement a number of selection strategies that can be 
 combined in various ways to build complex filtering conditions that can then be 
@@ -98,14 +99,15 @@ SelectCols(cols=s.glob("cat*")).fit_transform(df)
 
 Selectors can be inverted using `.inv` or the logical operator `~` to
 select all _other_ columns, and they can be combined using the `&` and `|`
-logical operators. It is also possible to remove from a selection with `-`:
+logical operators. It is also possible to remove from a selection with `-`; 
+for example to select all columns except for "datetime-col", one would write:
 
 ```{python}
 SelectCols(cols=s.all() - "datetime-col").fit_transform(df)
 ```
 
-For example, to select all datetime columns OR all string columns that do not 
-contain nulls, we can do:
+To select all datetime columns OR all string columns that do not contain nulls, 
+we can do:
 ```{python}
 SelectCols(cols=(s.any_date() | (s.string()) & (~s.has_nulls()))).fit_transform(df)
 ```
@@ -124,14 +126,14 @@ This can be used, for example, to pass a list of columns to a dataframe library.
 df.drop(columns=has_nulls.expand(df))
 ```
 
-
 ## Designing custom filters
 Finally, it is possible to define function-based selectors using `.filter` and 
 `.filter_names`. 
 
 `.filter` selects columns for which the `predicate` evaluated by a user-defined
-function is `True`. 
-For example,  it is possible to select columns that include a certain amount of 
+function on the given column is `True`. It is also possible to pass arguments to
+the function to further tweak the conditions. 
+For example, it is possible to select columns that include a certain amount of 
 nulls by defining a function like the following:
 
 ```{python}

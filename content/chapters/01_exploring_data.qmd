@@ -20,7 +20,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import fetch_openml
 
-# Load the Adult Census dataset from OpenML
+# Load the Adult Census dataset
 data =  pd.read_csv("../data/adult_census/data.csv")
 target =  pd.read_csv("../data/adult_census/target.csv")
 ```
@@ -87,7 +87,8 @@ few rows by default.
 TableReport(data, open_tab="stats")
 ```
 
-The "Stats" tab provides a variety of descriptive statistics for each column in the dataset.
+The "Stats" tab provides a variety of descriptive statistics for each column in
+the dataset.
 This includes:
 
 - The column name
@@ -141,8 +142,9 @@ TableReport(data, open_tab="associations")
 
 The "Associations" tab provides insights into the relationships between different
 columns in the dataset.
-It shows Pearson's correlation coefficients for numerical columns, as well as
-Cramér's V for all columns. 
+It shows [Pearson's correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) 
+coefficient for numerical columns, as well as 
+[Cramér's V](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V) for all columns. 
 
 While this is a somewhat rough measure of association, it can help identify potential
 relationships worth exploring further during the analysis, and highlights 
@@ -162,6 +164,9 @@ to explore its distribution:
 TableReport(target)
 ```
 
+Besides handling dataframes, the `TableReport` handles series and bidimensional
+numpy arrays.
+
 ## Configuring and saving the `TableReport` 
 The `TableReport` can be saved on disk as an HTML. 
 ```{.python}
@@ -172,14 +177,42 @@ Then, the report can be opened using any internet browser, with no need to run
 a Jupyter notebok or a python interactive console. 
 
 It is possible to configure various parameters using the skrub global config. 
-For example, it is possible to replace the default Pandas or Polars dataframe display
-with the TableReport as follows:
+For example, it is possible to replace the default Pandas or Polars dataframe
+display with the TableReport by using `patch_display`  (and `unpatch_display`):
 
 ```{python}
+from skrub import patch_display, unpatch_display
+
+# replace the default pandas repr 
+patch_display()
+data
+```
+
+To disable, use `unpatch_display`:
+```{python}
+unpatch_display()
+data
+```
+
+This can also be done using the skrub global configuration as follows: 
+```{python}
 from skrub import set_config
+
+# replace the default pandas repr 
 set_config(use_table_report=True)
 data
 ```
+
+To disable, then switch off the same flag. 
+```{python}
+set_config(use_table_report=False)
+data
+
+```
+
+More detail on the skrub configuration is reported in the 
+[User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
+
 
 ## Working with big tables
 Plotting and measuring the column correlations are expensive operations and may
@@ -208,6 +241,7 @@ questions.
 
 Run the following code to import the dataframe:
 ```{python}
+import pandas as pd
 data = pd.read_csv("../data/employee_salaries/data.csv")
 ```
 

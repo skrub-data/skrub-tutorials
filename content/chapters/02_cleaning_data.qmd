@@ -86,6 +86,31 @@ been parsed as a string column. Finally, one of the columns is completely empty.
 df.info()
 ```
 
+### Using plain pandas
+Cleaning this dataset using plain pandas may require writing code like this:
+```{python}
+# Parse the datetime strings with a specific format
+df['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')
+
+# Drop columns with only a single unique value
+df_clean = df.loc[:, df.nunique(dropna=True) > 1]
+
+# Function to drop columns with only missing values or empty strings
+def drop_empty_columns(df):
+    # Drop columns with only missing values
+    df_clean = df.dropna(axis=1, how='all')
+    # Drop columns with only empty strings
+    empty_string_cols = df_clean.columns[df_clean.eq('').all()]
+    df_clean = df_clean.drop(columns=empty_string_cols)
+    return df_clean
+
+# Apply the function to the DataFrame
+df_clean = drop_empty_columns(df_clean)
+df_clean
+```
+
+### The alternative: `skrub.Cleaner`
+
 By default, the `Cleaner` applies various transformations that can sanitize many
 common use cases:
 
@@ -116,9 +141,9 @@ a ML model. For example, empty columns are uninformative.
 dataframe library in use. 
 5. It converts columns to string, unless they have a data type that carries more 
 information, such as numerical, datetime, and categorial columns.
-6. Finally, it can convert numerical columns to `np.float32` dtype. This ensures 
-a consistent representation of numbers and missing values, and helps reducing 
-the memory footprint. 
+6. Finally, it can convert numerical columns to `np.float32` dtype if called 
+with the parameter `numeric_dtype="float32"`. This ensures a consistent
+representation of numbers and missing values, and helps reducing the memory footprint. 
 
 We can look back at the "wine" dataframe and clean it with a suitably configured
 `Cleaner`:
@@ -157,6 +182,7 @@ with `drop_null_fraction`.
 
 # Exercise: clean a dataframe using the `Cleaner` 
 **Path to the exercise**: `content/exercises/02_cleaning_data.ipynb`
+
 Load the given dataframe. 
 
 ```{python}
