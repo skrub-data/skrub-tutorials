@@ -81,7 +81,7 @@ conda activate skrub-tutorial
 Then, start a jupyter lab instance:
 
 ```sh
-jupyter lab --notebook-dir=./content/notebooks
+jupyter lab
 ```
 
 ### Using `uv`
@@ -99,5 +99,19 @@ source .venv/bin/activate
 
 Start the Jupyter lab instance: 
 ```sh
-jupyter lab --notebook-dir=./content/notebooks
+jupyter lab
+```
+
+
+### Using `pip`
+Create the and activate the environment:
+
+```sh
+python -m venv skrub-tutorial
+source skrub-tutorial/bin/activate
+```
+
+Install the required dependencies using the `requirements.txt` file:
+```sh
+pip install -r requirements.txt
 ```
