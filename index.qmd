@@ -39,7 +39,7 @@ quiz" that covers the subjects covered up to that point.
 
 First of all, clone the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
 of this book to have access to the exercises. In a future version, Jupyterlite 
-will be made available, so this step will not be necessary.
+will be made available. 
 
 ## Setting up a local environment
 
