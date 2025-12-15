@@ -6,8 +6,8 @@ platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 version = "0.1.0"
 
 [tasks]
-lab = "jupyter lab --notebook-dir=./content/notebooks"
-notebook = "jupyter notebook --notebook-dir=./content/notebooks"
+lab = "jupyter lab"
+notebook = "jupyter notebook"
 
 [dependencies]
 pandas = ">=2.3.3,<3"

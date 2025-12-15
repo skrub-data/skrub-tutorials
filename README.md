@@ -31,6 +31,15 @@ of this book to have access to the exercises. In a future version, Jupyterlite
 will be made available. 
 
 ## Setting up a local environment
+
+### Finding the material
+Following any of the following commands should let you open a Jupyter lab or 
+notebook instance in the root of the folder. Then, you will find all the course 
+material as notebooks in `content/notebooks`, and only the exercises in 
+`content/exercises`. 
+
+All the datasets are made available to the notebooks by cloning the repo. 
+
 ### Using pixi
 The easiest way to set up the environment is by installing and
 using [pixi](https://pixi.sh/latest/installation/). Follow the platform-specific 
@@ -60,7 +69,7 @@ conda activate skrub-tutorial
 Then, start a jupyter lab instance:
 
 ```sh
-jupyter lab --notebook-dir=./content/notebooks
+jupyter lab
 ```
 
 ### Using `uv`
@@ -78,5 +87,18 @@ source .venv/bin/activate
 
 Start the Jupyter lab instance: 
 ```sh
-jupyter lab --notebook-dir=./content/notebooks
+jupyter lab 
+```
+
+### Using `pip`
+Create the and activate the environment:
+
+```sh
+python -m venv skrub-tutorial
+source skrub-tutorial/bin/activate
+```
+
+Install the required dependencies using the `requirements.txt` file:
+```sh
+pip install -r requirements.txt
 ```
