@@ -135,12 +135,11 @@ to replicate the behavior of a traditional scikit-learn pipeline.
 
 First, let's load the dataset: 
 ```{python}
-from skrub.datasets import fetch_employee_salaries
 from sklearn.datasets import fetch_openml
+import pandas as pd
 
-adult = fetch_openml("adult", version=2)  
-X = adult.data
-y = adult.target
+X = pd.read_csv("../data/adult_census/data.csv")
+y = pd.read_csv("../data/adult_census/target.csv")
 ```
 
 This is the pipeline that needs to be replicated. 

@@ -15,10 +15,9 @@ only Pandas and scikit-learn to clean data and prepare a machine learning model.
 ```{python}
 import pandas as pd
 import numpy as np
-from skrub.datasets import fetch_employee_salaries
 
-data = fetch_employee_salaries()
-X, y = data.X, data.y
+X = pd.read_csv("../data/employee_salaries/data.csv")
+y = pd.read_csv("../data/employee_salaries/target.csv")
 X
 ```
 

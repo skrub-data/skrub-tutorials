@@ -13,14 +13,14 @@ format:
 In this chapter, we will show how we can quickly pre-process and sanitize 
 data using skrub's `Cleaner`. 
 
-We first load the `wine` datasets from OpenML. 
+We first load the `wine` dataset from the local repository. This dataset is a 
+downsampled version of the OpenML dataset (id=42074).
 ```{python}
 from sklearn.datasets import fetch_openml
 from skrub import TableReport
 import pandas as pd
 
-data = fetch_openml(data_id=42074)
-wine = data.data
+wine = pd.read_csv("../data/wine/data.csv")
 ```
 
 We can explore it using the `TableReport`:
@@ -160,7 +160,7 @@ Load the given dataframe.
 
 ```{python}
 import pandas as pd
-df = pd.read_csv("../data/synthetic_data.csv")
+df = pd.read_csv("../data/cleaner_data.csv")
 ```
 
 Use the `TableReport` to answer the following questions: 
