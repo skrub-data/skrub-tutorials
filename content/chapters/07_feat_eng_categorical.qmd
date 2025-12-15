@@ -49,11 +49,13 @@ information while keeping our model efficient and interpretable.
 where `1` denotes the presence of the category and `0` its absence.
 
 **Pros:**
+
 - Straightforward and intuitive
 - Works well for low-cardinality features (few unique values)
 - Produces sparse matrices that can save memory
 
 **Cons:**
+
 - Becomes impractical with high-cardinality features (creates hundreds or
 thousands of columns)
 - Results in mostly zero-valued sparse matrices when dense, which is the situation
@@ -66,11 +68,13 @@ features with fewer than 40 unique values.
 **`OrdinalEncoder`**: Assigns each category a numerical value (0, 1, 2, ...).
 
 **Pros:**
+
 - Very memory-efficient
 - Creates only one output column per input column
 - Fast to compute
 
 **Cons:**
+
 - Introduces artificial ordering among categories that may not exist in reality
 - Can mislead models into thinking some categories are "greater than" others
 
@@ -87,12 +91,14 @@ for dimensionality reduction. This method is also known as
 [Latent Semantic Analysis](https://en.wikipedia.org/wiki/Latent_semantic_analysis). 
 
 **Pros:**
+
 - **The best all-rounder**: Performs well on both categorical and text data
 - Fast training time
 - Robust and generalizes well across different datasets
 - No artificial ordering introduced
 
 **Cons:**
+
 - Less interpretable than one-hot encoding or ordinal encoding
 - May not capture semantic relationships as well as language model-based approaches
 - Performance depends on the nature of the categorical data
@@ -103,12 +109,14 @@ for dimensionality reduction. This method is also known as
 dense vector representations of text.
 
 **Pros:**
+
 - Exceptional performance on free-flowing text and natural language
 - Captures semantic meaning and context
 - Leverages knowledge from large-scale language model pretraining
 - Can excel on datasets where domain-specific information aligns with pretraining data
 
 **Cons:**
+
 - **Very computationally expensive**: Significantly slower than other methods
 - Requires heavy dependencies (PyTorch, transformers)
 - Models are large and require downloading
@@ -122,12 +130,14 @@ better than simpler methods
 for quick dimension reduction.
 
 **Pros:**
+
 - Very fast training time
 - Simple and lightweight
 - Minimal memory overhead
 - Good for quick prototyping or very large-scale datasets
 
 **Cons:**
+
 - Performance generally lags behind `StringEncoder` and `TextEncoder`
 - Less nuanced feature representation
 - Less robust across different types of data
@@ -138,11 +148,13 @@ for quick dimension reduction.
 across values, then encodes these patterns as numeric features.
 
 **Pros:**
+
 - Interpretable: Column names reflect the estimated categories
 - Can group similar strings intelligently
 - Reasonable performance across datasets
 
 **Cons:**
+
 - Slower training time compared to `StringEncoder` and `MinHashEncoder`
 - Performance is on par with or slightly worse than the faster `StringEncoder`
 - Interpretability comes at the cost of training speed

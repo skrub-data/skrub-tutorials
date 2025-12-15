@@ -115,3 +115,8 @@ Install the required dependencies using the `requirements.txt` file:
 ```sh
 pip install -r requirements.txt
 ```
+
+Start the Jupyter lab instance: 
+```sh
+jupyter lab
+```
