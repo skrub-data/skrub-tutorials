@@ -137,7 +137,7 @@ df_clean = cleaner.fit_transform(medical_df)
 - [ ] A)
 ```{python}
 # | echo: false
-df_clean
+df_clean.head(5)
 ```
 
 - [ ] B)
@@ -149,7 +149,7 @@ df = pd.DataFrame({
     'Blood_Pressure': [120.5, None, 125.8, 140.0, 135.6],
     'Diagnosis': ['Hypertension', '?', '?', 'Hypertension', 'Diabetes'],
 })
-df
+df.head(5)
 ```
 
 - [ ] C)
@@ -162,7 +162,7 @@ df = pd.DataFrame({
     'Blood_Pressure': [120.5, None, 125.8, 140.0, 135.6],
     'Diagnosis': ['Hypertension', None, None, 'Hypertension', 'Diabetes'],
 })
-df
+df.head(5)
 ```
 
 :::

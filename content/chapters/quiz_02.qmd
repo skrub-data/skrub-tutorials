@@ -111,13 +111,13 @@ scale = ApplyToCols(StandardScaler(), cols=s.numeric())
 ```{python}
 case_1 = make_pipeline(encode, scale)
 df_1 = case_1.fit_transform(df)
-df_1
+df_1.head(5)
 ```
 
 ```{python}
 case_2 = make_pipeline(scale, encode)
 df_2 = case_2.fit_transform(df)
-df_2
+df_2.head(5)
 ```
 
 
