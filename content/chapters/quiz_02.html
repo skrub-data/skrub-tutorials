@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Quiz: Column-level transformations – Skrub tutorials</title>
+<title>8&nbsp; Quiz: Column-level transformations – Inria Academy - Skrub like a pro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -136,7 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Skrub tutorials</a> 
+      <a href="../../">Inria Academy - Skrub like a pro</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -290,12 +290,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#question-1" id="toc-question-1" class="nav-link active" data-scroll-target="#question-1"><span class="header-section-number">8.1</span> Question 1</a></li>
-  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">8.2</span> Question 2</a></li>
-  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">8.3</span> Question 3</a></li>
-  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">8.4</span> Question 4</a></li>
-  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">8.5</span> Question 5</a></li>
-  <li><a href="#question-6" id="toc-question-6" class="nav-link" data-scroll-target="#question-6"><span class="header-section-number">8.6</span> Question 6</a></li>
+  <li><a href="#column-transformers" id="toc-column-transformers" class="nav-link active" data-scroll-target="#column-transformers"><span class="header-section-number">9</span> Column transformers</a>
+  <ul class="collapse">
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">9.1</span> Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">9.2</span> Question 2</a></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">9.3</span> Question 3</a></li>
+  </ul></li>
+  <li><a href="#selectors" id="toc-selectors" class="nav-link" data-scroll-target="#selectors"><span class="header-section-number">10</span> Selectors</a>
+  <ul class="collapse">
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">10.1</span> Question 4</a></li>
+  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">10.2</span> Question 5</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -321,19 +326,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="question-1" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">8.1</span> Question 1</h2>
-<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
+<section id="column-transformers" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Column transformers</h1>
+<section id="question-1" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">9.1</span> Question 1</h2>
+<div class="callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
-
+<p>Consider this diagram. Which column transformer can replicate this behavior if it wraps a <code>OneHotEncoder</code>?</p>
+<p><img src="images/ex_ApplyToCols.png" class="img-fluid"></p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) <code>ApplyToCols</code></label></li>
+<li><label><input type="checkbox">B) <code>ApplyToFrame</code></label></li>
+<li><label><input type="checkbox">C) <code>DropCols</code></label></li>
+<li><label><input type="checkbox">D) <code>SelectCols</code></label></li>
+</ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-empty-content callout-titled">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
@@ -345,13 +359,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-
+<p>Answer: A) <code>ApplyToCols</code> takes a transformer, then clones it and applies it separately to each column under selection (in this case, <code>Name</code> and <code>Desc</code>). Columns that were not selected are left unchanged.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="question-2" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">8.2</span> Question 2</h2>
+<section id="question-2" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">9.2</span> Question 2</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Consider this diagram. Which column transformer can replicate this behavior if it wraps a <code>PCA</code>?</p>
+<p><img src="images/ex_ApplyToFrame.png" class="img-fluid"></p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) <code>ApplyToCols</code></label></li>
+<li><label><input type="checkbox">B) <code>ApplyToFrame</code></label></li>
+<li><label><input type="checkbox">C) <code>DropCols</code></label></li>
+<li><label><input type="checkbox">D) <code>SelectCols</code></label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: B) <code>ApplyToFrame</code> takes a transformer and a list of columns (usually, a subset of the columns in the dataframe), then applies the transformer to all the selected columns at once, replacing them with the output of the transfromer. Columns that were not selected are left unchanged.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="question-3" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">9.3</span> Question 3</h2>
 <div class="callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -372,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -381,11 +431,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Answer: False.</p>
 <p>The order of the operations matters, and a different order leads to different results.</p>
-<div id="e126d776" class="cell" data-execution_count="1">
+<div id="29f60553" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -404,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="cb4bb19c" class="cell" data-execution_count="2">
+<div id="8592159e" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>case_1 <span class="op">=</span> make_pipeline(encode, scale)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_1 <span class="op">=</span> case_1.fit_transform(df)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -434,9 +484,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>-0.5</td>
 <td>-0.5</td>
-<td>-1.189365</td>
-<td>0.816497</td>
-<td>-0.816497</td>
+<td>0.576172</td>
+<td>-1.224745</td>
+<td>1.224745</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
@@ -445,9 +495,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>-0.5</td>
 <td>-0.5</td>
-<td>-1.254714</td>
-<td>-1.224745</td>
-<td>1.224745</td>
+<td>1.640836</td>
+<td>0.816497</td>
+<td>-0.816497</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
@@ -456,9 +506,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>2.0</td>
 <td>-0.5</td>
 <td>-0.5</td>
-<td>0.901826</td>
-<td>-1.224745</td>
-<td>1.224745</td>
+<td>-0.676375</td>
+<td>0.816497</td>
+<td>-0.816497</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
@@ -467,7 +517,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>2.0</td>
 <td>-0.5</td>
-<td>0.836476</td>
+<td>-1.177394</td>
 <td>0.816497</td>
 <td>-0.816497</td>
 </tr>
@@ -478,9 +528,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>-0.5</td>
 <td>-0.5</td>
 <td>2.0</td>
-<td>0.705777</td>
-<td>0.816497</td>
-<td>-0.816497</td>
+<td>-0.363239</td>
+<td>-1.224745</td>
+<td>1.224745</td>
 </tr>
 </tbody>
 </table>
@@ -488,7 +538,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="22f1022a" class="cell" data-execution_count="3">
+<div id="0c5ed444" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>case_2 <span class="op">=</span> make_pipeline(scale, encode)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_2 <span class="op">=</span> case_2.fit_transform(df)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -518,9 +568,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>-1.189365</td>
-<td>1.0</td>
+<td>0.576172</td>
 <td>0.0</td>
+<td>1.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
@@ -529,9 +579,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>-1.254714</td>
-<td>0.0</td>
+<td>1.640836</td>
 <td>1.0</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
@@ -540,9 +590,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>1.0</td>
 <td>0.0</td>
 <td>0.0</td>
-<td>0.901826</td>
-<td>0.0</td>
+<td>-0.676375</td>
 <td>1.0</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
@@ -551,7 +601,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>1.0</td>
 <td>0.0</td>
-<td>0.836476</td>
+<td>-1.177394</td>
 <td>1.0</td>
 <td>0.0</td>
 </tr>
@@ -562,9 +612,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0.0</td>
 <td>0.0</td>
 <td>1.0</td>
-<td>0.705777</td>
-<td>1.0</td>
+<td>-0.363239</td>
 <td>0.0</td>
+<td>1.0</td>
 </tr>
 </tbody>
 </table>
@@ -576,111 +626,391 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="question-3" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">8.3</span> Question 3</h2>
-<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
+</section>
+<section id="selectors" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Selectors</h1>
+<p>For the following questions, refer to this example dataframe:</p>
+<div id="9ec6597b" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: [<span class="dv">25</span>, <span class="dv">34</span>, <span class="dv">29</span>, <span class="dv">42</span>, <span class="dv">31</span>],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"salary"</span>: [<span class="fl">45000.0</span>, <span class="fl">52000.0</span>, <span class="fl">61000.0</span>, <span class="va">None</span>, <span class="fl">48000.0</span>],</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"employment_type"</span>: [<span class="st">"full-time"</span>, <span class="st">"part-time"</span>, <span class="va">None</span>, <span class="st">"contract"</span>, <span class="st">"full-time"</span>],</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"job_title"</span>: [<span class="st">"engineer"</span>, <span class="st">"analyst"</span>, <span class="st">"consultant"</span>, <span class="st">"designer"</span>, <span class="st">"developer"</span>],</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"department_title"</span>: [<span class="st">"IT"</span>, <span class="st">"Finance"</span>, <span class="st">"Consulting"</span>, <span class="st">"Design"</span>, <span class="st">"Development"</span>],</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"is_remote"</span>: [<span class="va">False</span>, <span class="va">True</span>, <span class="va">False</span>, <span class="va">True</span>, <span class="va">False</span>],</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"performance_rating"</span>: pd.Categorical([<span class="st">"excellent"</span>, <span class="va">None</span>, <span class="st">"good"</span>, <span class="st">"excellent"</span>, <span class="st">"average"</span>]),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bonus_category"</span>: pd.Categorical([<span class="st">"5K+"</span>, <span class="st">"10K+"</span>, <span class="st">"15K+"</span>, <span class="st">"7K+"</span>, <span class="st">"12K+"</span>]),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"hire_date"</span>: [</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        datetime.datetime.fromisoformat(dt)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> dt <span class="kw">in</span> [</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2018-06-01T09:00:00"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2019-09-15T14:30:00"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2020-11-20T10:15:00"</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">"2021-04-10T16:45:00"</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> [<span class="va">None</span>],</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">salary</th>
+<th data-quarto-table-cell-role="th">employment_type</th>
+<th data-quarto-table-cell-role="th">job_title</th>
+<th data-quarto-table-cell-role="th">department_title</th>
+<th data-quarto-table-cell-role="th">is_remote</th>
+<th data-quarto-table-cell-role="th">performance_rating</th>
+<th data-quarto-table-cell-role="th">bonus_category</th>
+<th data-quarto-table-cell-role="th">hire_date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>25</td>
+<td>45000.0</td>
+<td>full-time</td>
+<td>engineer</td>
+<td>IT</td>
+<td>False</td>
+<td>excellent</td>
+<td>5K+</td>
+<td>2018-06-01 09:00:00</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>34</td>
+<td>52000.0</td>
+<td>part-time</td>
+<td>analyst</td>
+<td>Finance</td>
+<td>True</td>
+<td>NaN</td>
+<td>10K+</td>
+<td>2019-09-15 14:30:00</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>29</td>
+<td>61000.0</td>
+<td>None</td>
+<td>consultant</td>
+<td>Consulting</td>
+<td>False</td>
+<td>good</td>
+<td>15K+</td>
+<td>2020-11-20 10:15:00</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>42</td>
+<td>NaN</td>
+<td>contract</td>
+<td>designer</td>
+<td>Design</td>
+<td>True</td>
+<td>excellent</td>
+<td>7K+</td>
+<td>2021-04-10 16:45:00</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>31</td>
+<td>48000.0</td>
+<td>full-time</td>
+<td>developer</td>
+<td>Development</td>
+<td>False</td>
+<td>average</td>
+<td>12K+</td>
+<td>NaT</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="question-4" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="question-4"><span class="header-section-number">10.1</span> Question 4</h2>
+<div class="callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
+<p>What does this selector do?</p>
+<div id="cbfb2777" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fun(col):</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    mean <span class="op">=</span> col.mean()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mean <span class="op">&gt;</span> <span class="dv">40000</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>sel <span class="op">=</span> s.numeric() <span class="op">&amp;</span> s.<span class="bu">filter</span>(fun) </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> SelectCols(cols<span class="op">=</span>sel)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>t.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>45000.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>52000.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>61000.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>48000.0</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-empty-content callout-titled">
-<div class="callout-header d-flex align-content-center">
+<ul class="task-list">
+<li><label><input type="checkbox">A) It drops only numerical columns with mean &lt; 40000</label></li>
+<li><label><input type="checkbox">B) It selects only numerical column with mean &gt; 40000</label></li>
+<li><label><input type="checkbox">C) It selects non-numeric columns or numeric columns that have mean &gt; 40000</label></li>
+<li><label><input type="checkbox">D) It drops only numeric columns unless their mean is &lt; 40000</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Tip</span>Solution
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Answer: B)</p>
+<div id="e3e4e501" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>t.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
 
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>45000.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>52000.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>61000.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>48000.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </section>
-<section id="question-4" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="question-4"><span class="header-section-number">8.4</span> Question 4</h2>
-<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
+<section id="question-5" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="question-5"><span class="header-section-number">10.2</span> Question 5</h2>
+<div class="callout callout-style-simple callout-none no-icon">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
+<p>What does this selector do?</p>
+<div id="9a45d597" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sel <span class="op">=</span> s.cols(<span class="st">"salary"</span>) <span class="op">|</span> s.filter_names(<span class="kw">lambda</span> name: name.endswith(<span class="st">"_title"</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> SelectCols(cols<span class="op">=</span>sel)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>t.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">salary</th>
+<th data-quarto-table-cell-role="th">job_title</th>
+<th data-quarto-table-cell-role="th">department_title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>45000.0</td>
+<td>engineer</td>
+<td>IT</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>52000.0</td>
+<td>analyst</td>
+<td>Finance</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>61000.0</td>
+<td>consultant</td>
+<td>Consulting</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>NaN</td>
+<td>designer</td>
+<td>Design</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>48000.0</td>
+<td>developer</td>
+<td>Development</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-empty-content callout-titled">
-<div class="callout-header d-flex align-content-center">
+<ul class="task-list">
+<li><label><input type="checkbox">A) It selects the column “salary”, numerical columns, and columns that end in “_title”</label></li>
+<li><label><input type="checkbox">B) It drops all columns (including “salary”), except the columns that end in “_title”</label></li>
+<li><label><input type="checkbox">C) It selects the column “salary”, and columns whose name end in “_title”</label></li>
+<li><label><input type="checkbox">D) It drops the column “salary”, and columns whose name end in “_title”</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Tip</span>Solution
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Answer: C)</p>
+<div id="012eea1f" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>t.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">salary</th>
+<th data-quarto-table-cell-role="th">job_title</th>
+<th data-quarto-table-cell-role="th">department_title</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>45000.0</td>
+<td>engineer</td>
+<td>IT</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>52000.0</td>
+<td>analyst</td>
+<td>Finance</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>61000.0</td>
+<td>consultant</td>
+<td>Consulting</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>NaN</td>
+<td>designer</td>
+<td>Design</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>48000.0</td>
+<td>developer</td>
+<td>Development</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+
+
 </section>
-<section id="question-5" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="question-5"><span class="header-section-number">8.5</span> Question 5</h2>
-<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-empty-content callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-</section>
-<section id="question-6" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="question-6"><span class="header-section-number">8.6</span> Question 6</h2>
-<div class="callout callout-style-simple callout-none no-icon callout-empty-content">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-empty-content callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-
-
 </section>
 
 </main> <!-- /main -->

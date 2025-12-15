@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Quiz: Column-level transformations – Skrub tutorials</title>
+<title>12&nbsp; Quiz: Column-level transformations – Inria Academy - Skrub like a pro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Skrub tutorials</a> 
+      <a href="../../">Inria Academy - Skrub like a pro</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -247,8 +247,19 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link active" data-scroll-target="#feature-engineering"><span class="header-section-number">13</span> Feature engineering</a>
+  <ul class="collapse">
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">13.1</span> Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">13.2</span> Question 2</a></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">13.3</span> Question 3</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -272,8 +283,121 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="feature-engineering" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Feature engineering</h1>
+<section id="question-1" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">13.1</span> Question 1</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Consider this data with outliers. <img src="images/squashing-scaler-quiz-outliers.png" class="img-fluid"></p>
+<p>In this plot, which line shows numerical features scaled by the SquashingScaler? <img src="images/squashing-scaler-quiz-scaled.png" class="img-fluid"></p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) The solid blue line</label></li>
+<li><label><input type="checkbox">B) The dashed green line</label></li>
+<li><label><input type="checkbox">C) The dotted purple line</label></li>
+<li><label><input type="checkbox">D) The dash-dotted red line</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer A)</p>
+<p>The solid blue line</p>
+<p><img src="images/squashing-scaler-quiz-legend.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="question-2" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">13.2</span> Question 2</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Which of these is <strong>not</strong> a feature that can be added by the <code>DatetimeEncoder</code>?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) <code>is_holiday</code>: a boolean flag that checks whether a date is a holiday or not</label></li>
+<li><label><input type="checkbox">B) <code>periodic_encoding</code>: a flag that can be <code>None</code>, <code>"circular"</code> or <code>"spline"</code> and that adds the respective periodic encoding</label></li>
+<li><label><input type="checkbox">C) <code>add_weekday</code>: a boolean flag that indicates the day of the week</label></li>
+<li><label><input type="checkbox">D) <code>add_total_seconds</code>: a boolean flag that adds the number of seconds since epoch</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: A)</p>
+<p>All other parameters are available to the <code>DatetimeEncoder</code>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="question-3" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">13.3</span> Question 3</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Which categorical encoder is the most balanced in both runtime and downstream performance?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) The <code>StringEncoder</code></label></li>
+<li><label><input type="checkbox">B) The <code>MinHashEncoder</code></label></li>
+<li><label><input type="checkbox">C) The <code>TextEncoder</code></label></li>
+<li><label><input type="checkbox">D) The <code>GapEncoder</code></label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: A)</p>
+<p>The <code>StringEncoder</code> is always one of the fastest encoders to fit, and produces high quality encodings. The <code>MinHashEncoder</code> is faster, but it produces worse encodings. The <code>TextEncoder</code> can produce the best encodings for certain types of categorical data (mainly text), but is very slow to run.</p>
+</div>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

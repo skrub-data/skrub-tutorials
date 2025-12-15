@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>15&nbsp; Quiz: Column-level transformations – Skrub tutorials</title>
+<title>15&nbsp; Quiz: Column-level transformations – Inria Academy - Skrub like a pro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -97,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Skrub tutorials</a> 
+      <a href="../../">Inria Academy - Skrub like a pro</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -246,8 +281,23 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#tablevectorizer" id="toc-tablevectorizer" class="nav-link active" data-scroll-target="#tablevectorizer"><span class="header-section-number">16</span> <code>TableVectorizer</code></a>
+  <ul class="collapse">
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1"><span class="header-section-number">16.1</span> Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">16.2</span> Question 2</a></li>
+  </ul></li>
+  <li><a href="#tabular_pipeline" id="toc-tabular_pipeline" class="nav-link" data-scroll-target="#tabular_pipeline"><span class="header-section-number">17</span> <code>tabular_pipeline</code></a>
+  <ul class="collapse">
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">17.1</span> Question 3</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">17.2</span> Question 4</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -271,8 +321,164 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="tablevectorizer" class="level1" data-number="16">
+<h1 data-number="16"><span class="header-section-number">16</span> <code>TableVectorizer</code></h1>
+<section id="question-1" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">16.1</span> Question 1</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>What is the proper way of setting the number of components used by the high cardinality encoder in the <code>TableVectorizer</code>?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) By passing <code>n_components</code> as kwargs:</label></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>TableVectorizer(n_components<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul class="task-list">
+<li><label><input type="checkbox">B) By creating a new encoder with the specified parameter:</label></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>new_encoder <span class="op">=</span> StringEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>TableVectorizer(high_cardinality<span class="op">=</span>new_encoder)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul class="task-list">
+<li><label><input type="checkbox">C) Both A) and B) are correct</label></li>
+<li><label><input type="checkbox">D) None of the above</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: B)</p>
+</div>
+</div>
+</div>
+</section>
+<section id="question-2" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">16.2</span> Question 2</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The <code>TableVectorizer</code> categorizes columns based on their characteristics. What are the types of columns that it handles?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) Numeric, categorical, datetimes</label></li>
+<li><label><input type="checkbox">B) Numeric, datetimes, high cardinality categorical, low cardinality categorical</label></li>
+<li><label><input type="checkbox">C) Integer, float, string, categorical, datetimes</label></li>
+<li><label><input type="checkbox">D) Numeric, datetimes, high cardinality categorical, low cardinality categorical, and complex objects such as structs or lists</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: B)</p>
+<p>By default, the <code>TableVectorizer</code> converts complex objects to their string representation, before checking their cardinality. No special transformation is provided for columns that contain structs or lists.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="tabular_pipeline" class="level1" data-number="17">
+<h1 data-number="17"><span class="header-section-number">17</span> <code>tabular_pipeline</code></h1>
+<section id="question-3" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="question-3"><span class="header-section-number">17.1</span> Question 3</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>What are the default estimators used by the <code>tabular_pipeline</code> when it is called with <code>"regression"</code> and <code>"classification"</code> respectively?</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tabular_pipeline(<span class="st">"regression"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>tabular_pipeline(<span class="st">"classification"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul class="task-list">
+<li><label><input type="checkbox">A) <code>RidgeCV</code> and <code>ExtraTreeClassifier</code></label></li>
+<li><label><input type="checkbox">B) <code>HistGradientBoostingRegressor</code> and <code>LogisticRegression</code></label></li>
+<li><label><input type="checkbox">C) <code>RandomForestRegressor</code> and <code>RandomForestClassifier</code></label></li>
+<li><label><input type="checkbox">D) <code>HistGradientBoostingRegressor</code> and <code>HistGradientBoosting</code></label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: D)</p>
+</div>
+</div>
+</div>
+</section>
+<section id="question-4" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="question-4"><span class="header-section-number">17.2</span> Question 4</h2>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>How are linear models (<code>Ridge</code>, <code>LogisticRegression</code>) handled by the <code>tabular_pipeline</code>?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">A) The <code>TableVectorizer</code> uses default parameters, no other steps are added to the pipeline.</label></li>
+<li><label><input type="checkbox">B) The <code>TableVectorizer</code> uses default parameters, <code>SimpleImputer</code> and <code>StandardScaler</code> are added before the encoder.</label></li>
+<li><label><input type="checkbox">C) The <code>TableVectorizer</code> uses a datetime encoder that periodic encodings with splines, <code>SimpleImputer</code> and <code>StandardScaler</code> are added before the encoder.</label></li>
+<li><label><input type="checkbox">D) The <code>TableVectorizer</code> uses a datetime encoder that periodic encodings with splines, no other steps are added to the pipeline.</label></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answer: C)</p>
+</div>
+</div>
+</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>14&nbsp; Building a tabular pipeline – Skrub tutorials</title>
+<title>14&nbsp; Building a tabular pipeline – Inria Academy - Skrub like a pro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Skrub tutorials</a> 
+      <a href="../../">Inria Academy - Skrub like a pro</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -287,15 +287,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction-from-raw-data-to-predictions" id="toc-introduction-from-raw-data-to-predictions" class="nav-link active" data-scroll-target="#introduction-from-raw-data-to-predictions"><span class="header-section-number">14.1</span> Introduction: From Raw Data to Predictions</a></li>
-  <li><a href="#manual-pipeline-construction-with-tablevectorizer" id="toc-manual-pipeline-construction-with-tablevectorizer" class="nav-link" data-scroll-target="#manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">14.2</span> Manual Pipeline Construction with TableVectorizer</a></li>
-  <li><a href="#the-tabular_pipeline-function" id="toc-the-tabular_pipeline-function" class="nav-link" data-scroll-target="#the-tabular_pipeline-function"><span class="header-section-number">14.3</span> The <code>tabular_pipeline</code> function</a></li>
-  <li><a href="#how-tabular_pipeline-adapts-to-different-estimators" id="toc-how-tabular_pipeline-adapts-to-different-estimators" class="nav-link" data-scroll-target="#how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">14.4</span> How tabular_pipeline Adapts to Different Estimators</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">14.1</span> Introduction</a></li>
+  <li><a href="#manual-pipeline-construction-with-tablevectorizer" id="toc-manual-pipeline-construction-with-tablevectorizer" class="nav-link" data-scroll-target="#manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">14.2</span> Manual pipeline construction with <code>TableVectorizer</code></a></li>
+  <li><a href="#the-tabular_pipeline" id="toc-the-tabular_pipeline" class="nav-link" data-scroll-target="#the-tabular_pipeline"><span class="header-section-number">14.3</span> The <code>tabular_pipeline</code></a></li>
+  <li><a href="#how-tabular_pipeline-adapts-to-different-estimators" id="toc-how-tabular_pipeline-adapts-to-different-estimators" class="nav-link" data-scroll-target="#how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">14.4</span> How <code>tabular_pipeline</code> adapts to different estimators</a>
   <ul class="collapse">
-  <li><a href="#for-linear-models-e.g.-logisticregression-ridge" id="toc-for-linear-models-e.g.-logisticregression-ridge" class="nav-link" data-scroll-target="#for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">14.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</a></li>
-  <li><a href="#for-tree-based-ensemble-models-randomforest-histgradientboosting" id="toc-for-tree-based-ensemble-models-randomforest-histgradientboosting" class="nav-link" data-scroll-target="#for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">14.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</a></li>
+  <li><a href="#for-linear-models-e.g.-logisticregression-ridge" id="toc-for-linear-models-e.g.-logisticregression-ridge" class="nav-link" data-scroll-target="#for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">14.4.1</span> For linear models (e.g., LogisticRegression, Ridge)</a></li>
+  <li><a href="#for-tree-based-ensemble-models-randomforest-histgradientboosting" id="toc-for-tree-based-ensemble-models-randomforest-histgradientboosting" class="nav-link" data-scroll-target="#for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">14.4.2</span> For tree-based ensemble models (RandomForest, HistGradientBoosting)</a></li>
   </ul></li>
-  <li><a href="#key-advantages-of-tabular_pipeline" id="toc-key-advantages-of-tabular_pipeline" class="nav-link" data-scroll-target="#key-advantages-of-tabular_pipeline"><span class="header-section-number">14.5</span> Key Advantages of tabular_pipeline</a></li>
+  <li><a href="#conclusions-why-the-tabular_pipeline-is-useful" id="toc-conclusions-why-the-tabular_pipeline-is-useful" class="nav-link" data-scroll-target="#conclusions-why-the-tabular_pipeline-is-useful"><span class="header-section-number">14.5</span> Conclusions: why the <code>tabular_pipeline</code> is useful</a></li>
   <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise"><span class="header-section-number">15</span> Exercise</a></li>
   </ul>
 </nav>
@@ -322,15 +322,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction-from-raw-data-to-predictions" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="introduction-from-raw-data-to-predictions"><span class="header-section-number">14.1</span> Introduction: From Raw Data to Predictions</h2>
+<section id="introduction" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">14.1</span> Introduction</h2>
 <p>Up until now we have covered how to clean data with the <code>Cleaner</code>, extract features from different column types, and handle categorical features with specialized encoders. In this section we will show how we can combine all these preprocessing techniques into a complete machine learning pipeline.</p>
-<p>A pipeline ensures that: - Data transformations are applied consistently across training and test sets - Data leakage is avoided by fitting transformers only on training data - The workflow is reproducible and deployable - Preprocessing steps are properly chained together</p>
+<p>A pipeline ensures that:</p>
+<ul>
+<li>Data transformations are applied consistently across training and test sets</li>
+<li>Data leakage is avoided by fitting transformers only on training data</li>
+<li>The workflow is reproducible and deployable</li>
+<li>Preprocessing steps are properly chained together</li>
+</ul>
 <p>In this chapter, we explore two approaches: building custom pipelines with <code>TableVectorizer</code>, and using the <code>tabular_pipeline</code> function for quick, well-tuned baselines.</p>
 </section>
 <section id="manual-pipeline-construction-with-tablevectorizer" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">14.2</span> Manual Pipeline Construction with TableVectorizer</h2>
-<p>The <code>TableVectorizer</code> can be the foundation of a custom scikit-learn pipeline. We combine it with other preprocessing steps and a final estimator:</p>
+<h2 data-number="14.2" class="anchored" data-anchor-id="manual-pipeline-construction-with-tablevectorizer"><span class="header-section-number">14.2</span> Manual pipeline construction with <code>TableVectorizer</code></h2>
+<p>The <code>TableVectorizer</code> can be the foundation of a custom scikit-learn pipeline, where cleaning and feature engineering are dealt with by a single object. Scaling and imputation are not required by all models, so they are not in the <code>TableVectorizer</code>’s scope.</p>
+<p>We combine it with other preprocessing steps and a final estimator:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -346,9 +353,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This approach gives complete control over which preprocessing steps to use and in what order. We can customize the <code>TableVectorizer</code> parameters (cardinality threshold, custom encoders, etc.) and add additional preprocessing steps as needed.</p>
 <p>In the case of the example we used <code>LogisticRegression</code> as our estimator, but if we used a different estimator, such as the <code>HistogramGradientBoostingClassifier</code>, the scaling and imputation steps could have been avoided.</p>
 </section>
-<section id="the-tabular_pipeline-function" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="the-tabular_pipeline-function"><span class="header-section-number">14.3</span> The <code>tabular_pipeline</code> function</h2>
-<p>For most common use cases, we can skip the manual pipeline construction and use the <code>tabular_pipeline</code> function. This function automatically creates an appropriate pipeline based on the estimator we provide:</p>
+<section id="the-tabular_pipeline" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="the-tabular_pipeline"><span class="header-section-number">14.3</span> The <code>tabular_pipeline</code></h2>
+<p>For many common use cases, we can skip the manual pipeline construction and use the <code>tabular_pipeline</code> function. This function automatically creates an appropriate pipeline based on the estimator we provide:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -362,10 +369,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> tabular_pipeline(<span class="st">'regression'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="how-tabular_pipeline-adapts-to-different-estimators" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">14.4</span> How tabular_pipeline Adapts to Different Estimators</h2>
+<h2 data-number="14.4" class="anchored" data-anchor-id="how-tabular_pipeline-adapts-to-different-estimators"><span class="header-section-number">14.4</span> How <code>tabular_pipeline</code> adapts to different estimators</h2>
 <p>The <code>tabular_pipeline</code> function intelligently configures the preprocessing pipeline based on the estimator type:</p>
 <section id="for-linear-models-e.g.-logisticregression-ridge" class="level3" data-number="14.4.1">
-<h3 data-number="14.4.1" class="anchored" data-anchor-id="for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">14.4.1</span> For Linear Models (e.g., LogisticRegression, Ridge)</h3>
+<h3 data-number="14.4.1" class="anchored" data-anchor-id="for-linear-models-e.g.-logisticregression-ridge"><span class="header-section-number">14.4.1</span> For linear models (e.g., LogisticRegression, Ridge)</h3>
 <ul>
 <li><strong>TableVectorizer</strong>: Uses the default configuration, except for the addition of spline-encoded datetime features by the <code>DatetimeEncoder</code></li>
 <li><strong>SimpleImputer</strong>: Added because linear models cannot handle missing values</li>
@@ -375,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This configuration ensures numeric features are properly scaled and missing values are handled appropriately.</p>
 </section>
 <section id="for-tree-based-ensemble-models-randomforest-histgradientboosting" class="level3" data-number="14.4.2">
-<h3 data-number="14.4.2" class="anchored" data-anchor-id="for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">14.4.2</span> For Tree-Based Ensemble Models (RandomForest, HistGradientBoosting)</h3>
+<h3 data-number="14.4.2" class="anchored" data-anchor-id="for-tree-based-ensemble-models-randomforest-histgradientboosting"><span class="header-section-number">14.4.2</span> For tree-based ensemble models (RandomForest, HistGradientBoosting)</h3>
 <ul>
 <li><strong>TableVectorizer</strong>: Configured specifically for tree models
 <ul>
@@ -383,15 +390,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>High-cardinality features: StringEncoder for robust feature extraction</li>
 <li>Datetime features: No spline encoding (unnecessary for trees)</li>
 </ul></li>
-<li><strong>SimpleImputer</strong>: Only added for older scikit-learn versions (&lt; 1.4) without native missing value support</li>
 <li><strong>Scaler</strong>: Not added (unnecessary for tree-based models)</li>
 <li><strong>Estimator</strong>: The provided tree-based estimator</li>
 </ul>
 <p>This configuration leverages the native capabilities of tree models while still providing effective feature engineering through the <code>StringEncoder</code>.</p>
 </section>
 </section>
-<section id="key-advantages-of-tabular_pipeline" class="level2" data-number="14.5">
-<h2 data-number="14.5" class="anchored" data-anchor-id="key-advantages-of-tabular_pipeline"><span class="header-section-number">14.5</span> Key Advantages of tabular_pipeline</h2>
+<section id="conclusions-why-the-tabular_pipeline-is-useful" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="conclusions-why-the-tabular_pipeline-is-useful"><span class="header-section-number">14.5</span> Conclusions: why the <code>tabular_pipeline</code> is useful</h2>
 <ol type="1">
 <li><strong>Smart Configuration</strong>: Automatically selects preprocessing parameters appropriate for the estimator</li>
 <li><strong>Simplicity</strong>: One-line creation of a complete, well-tuned baseline</li>
@@ -407,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="15"><span class="header-section-number">15</span> Exercise</h1>
 <p>In this exercise we’re going to use the <code>TableVectorizer</code> and <code>tabular_pipeline</code> to replicate the behavior of a traditional scikit-learn pipeline.</p>
 <p>First, let’s load the dataset:</p>
-<div id="34f5befb" class="cell" data-execution_count="1">
+<div id="09860920" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub.datasets <span class="im">import</span> fetch_employee_salaries</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -422,7 +428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Categorical features are one-hot-encoded.</li>
 <li>Missing values are imputed using a <code>SimpleImputer</code>.</li>
 </ul>
-<div id="724022b3" class="cell" data-execution_count="2">
+<div id="92e1697f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
@@ -442,8 +448,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>model_base <span class="op">=</span> make_pipeline(ct, SimpleImputer(), LogisticRegression())</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># model_base</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Use the <code>TableVectorizer</code> and <code>make_pipeline</code> to write a pipeline named <code>model_tv</code>, which includes all the steps necessary for the <code>LogisticRegression</code> to work.</p>
-<div id="66372618" class="cell" data-execution_count="3">
+<p>Use the <code>TableVectorizer</code> and <code>make_pipeline</code> to write a pipeline named <code>model_tv</code>, which includes all the steps necessary for the <code>LogisticRegression</code> to work (i.e., scaling and imputing missing values).</p>
+<div id="8211b507" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your code here</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
@@ -456,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="d253f1ba" class="cell" data-execution_count="4">
+<div id="6a36f5ca" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer()</span>
@@ -465,32 +471,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># model_tv</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now use the <code>tabular_pipeline</code> to get a new pipeline named <code>model_tp</code>.</p>
-<div id="2765b7f7" class="cell" data-execution_count="5">
+<div id="ad4faa47" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your code here</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="63835c8e" class="cell" data-execution_count="6">
+<div id="4f23b44e" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model_tp <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model_tp</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>For reference, let’s also create a pipeline that uses <code>HistGradientBoostingClassifier</code>. This can be done by passing the string “classification” to <code>tabular_pipeline</code>.</p>
-<div id="31c91d23" class="cell" data-execution_count="7">
+<div id="593ceb44" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_hgb <span class="op">=</span> tabular_pipeline(<span class="st">"classification"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># model_hgb</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Finally, let’s evaluate the different models and see how they perform:</p>
-<div id="c2d88190" class="cell" data-execution_count="8">
+<div id="87a6a973" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>results_base <span class="op">=</span> cross_val_score(model_base, X, y)</span>
@@ -507,11 +507,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>Base model: 0.8523
 TableVectorizer: 0.8523
-Tabular pipeline: 0.8528
+Tabular pipeline: 0.8527
 HGB model: 0.8733</code></pre>
 </div>
 </div>
-<p>Unsurprisiingly, the model that uses HGB outperforms the other models, while being much slower to train.</p>
+<p>Unsurprisingly, the model that uses HGB outperforms the other models, while being much slower to train. The other pipelines have very similar performance, which is to be expected since they are very similar to each other.</p>
 
 
 </section>

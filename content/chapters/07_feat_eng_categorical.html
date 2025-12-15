@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>11&nbsp; Mixed data: dealing with categories – Skrub tutorials</title>
+<title>11&nbsp; Mixed data: dealing with categories – Inria Academy - Skrub like a pro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Skrub tutorials</a> 
+      <a href="../../">Inria Academy - Skrub like a pro</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -252,7 +252,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction-the-challenge-of-categorical-features" id="toc-introduction-the-challenge-of-categorical-features" class="nav-link active" data-scroll-target="#introduction-the-challenge-of-categorical-features"><span class="header-section-number">11.1</span> Introduction: The Challenge of Categorical Features</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">11.1</span> Introduction</a></li>
   <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why Categorical Encoders Matter</a></li>
   <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical Encoders: Pros and Cons</a>
   <ul class="collapse">
@@ -289,11 +289,11 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction-the-challenge-of-categorical-features" class="level2" data-number="11.1">
-<h2 data-number="11.1" class="anchored" data-anchor-id="introduction-the-challenge-of-categorical-features"><span class="header-section-number">11.1</span> Introduction: The Challenge of Categorical Features</h2>
+<section id="introduction" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">11.1</span> Introduction</h2>
 <p>Real-world datasets rarely contain only numeric values. We frequently encounter categorical features—values that belong to discrete categories, such as names, occupations, geographic locations, or clothing sizes. Text data also falls into this category, since each unique string can be considered a categorical value.</p>
 <p>The challenge is that machine learning models require numeric input. How do we convert these categorical values into numeric features that preserve their information and enable our models to make good predictions?</p>
-<p>This chapter explores the various strategies and tools available in skrub to encode categorical features, helping us choose the right approach for our specific use case.</p>
+<p>This chapter explores the various strategies and tools available in skrub to encode categorical features, with an eye on choosing the best method for our specific use case.</p>
 </section>
 <section id="why-categorical-encoders-matter" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why Categorical Encoders Matter</h2>
@@ -343,8 +343,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="gapencoder" class="level3" data-number="11.3.6">
 <h3 data-number="11.3.6" class="anchored" data-anchor-id="gapencoder"><span class="header-section-number">11.3.6</span> GapEncoder</h3>
 <p><strong>Approach</strong>: Estimates latent categories by finding common n-gram patterns across values, then encodes these patterns as numeric features.</p>
-<p><strong>Pros:</strong> - Interpretable: Column names reflect the estimated categories - Can group similar strings intelligently - Good for exploratory data analysis - Reasonable performance across datasets</p>
-<p><strong>Cons:</strong> - Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code> - Interpretability comes at the cost of training speed - May require more computational resources for large datasets</p>
+<p><strong>Pros:</strong> - Interpretable: Column names reflect the estimated categories - Can group similar strings intelligently - Reasonable performance across datasets</p>
+<p><strong>Cons:</strong> - Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code> - Performance is on par with or slightly worse than the faster <code>StringEncoder</code> - Interpretability comes at the cost of training speed - May require more computational resources for large datasets</p>
 </section>
 </section>
 <section id="conclusion" class="level2" data-number="11.4">
