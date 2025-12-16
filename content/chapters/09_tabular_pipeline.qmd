@@ -138,7 +138,6 @@ to replicate the behavior of a traditional scikit-learn pipeline.
 
 First, let's load the dataset: 
 ```{python}
-from sklearn.datasets import fetch_openml
 import pandas as pd
 
 X = pd.read_csv("../data/adult_census/data.csv")
