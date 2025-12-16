@@ -1,26 +1,27 @@
-# Inria Academy: Skrub like a pro
-This repository contains the material used for teaching the Inria Academy
-[course](https://www.inria-academy.fr/formation/skrub-like-a-pro-clean-prepare-and-transform-your-data-faster/)
+# Introduction to the course
+This is the website for the 
+[Inria Academy course](https://www.inria-academy.fr/formation/skrub-like-a-pro-clean-prepare-and-transform-your-data-faster/)
 on the [skrub package](https://skrub-data.org/stable/): it contains all the material
 used for the course, including the datasets and exercises used during the session. 
 
 ## Beta warning
 If you are reading this, then you will be attending the **Beta version** of this 
 course. As a **Beta version**, this is not the final version of the course and 
-it will be tweaked according to the feedback provided after the beta session. 
+it will be tweaked according to the feedback provided after the session. 
 
 Both the presentation and the content of the book are liable to be changed based
 on feedback. 
 
 ## Structure of the course
 The course covers the main features of skrub, from data exploration to pipeline 
-construction. Note that the skrub Data Ops are not covered in this course. 
+construction, with the notable exclusion of the Data Ops.
 
 Each chapter includes a section that describes how a specific feature may assist
 in building a machine learning pipeline, along with practical code examples. 
 
-Some chapters include exercises for the participants to work on with the assistance
-of the instructure. Exercises can be run in the provided Jupyter notebooks. 
+Some chapters include exercises for participants to work with the explained features.
+These exercises are made available in `content/exercises`, as well as at the end
+of the respective lesson in `content/notebooks`. 
 
 The content of the book is split in sections, and each section includes a "final 
 quiz" that covers the subjects covered up to that point. 
@@ -56,6 +57,24 @@ pixi run lab
 ``` 
 to start a Jupyter lab instance. 
 
+### Using `pip`
+Create the and activate the environment:
+
+```sh
+python -m venv skrub-tutorial
+source skrub-tutorial/bin/activate
+```
+
+Install the required dependencies using the `requirements.txt` file:
+```sh
+pip install -r requirements.txt
+```
+
+Start the Jupyter lab instance: 
+```sh
+jupyter lab
+```
+
 ### Using conda
 An `environment.yaml` file is provided to create a conda environment. 
 
@@ -88,17 +107,4 @@ source .venv/bin/activate
 Start the Jupyter lab instance: 
 ```sh
 jupyter lab 
-```
-
-### Using `pip`
-Create the and activate the environment:
-
-```sh
-python -m venv skrub-tutorial
-source skrub-tutorial/bin/activate
-```
-
-Install the required dependencies using the `requirements.txt` file:
-```sh
-pip install -r requirements.txt
 ```
