@@ -328,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Let’s begin the lesson by imagining a world without skrub, where we can use only Pandas and scikit-learn to clean data and prepare a machine learning model.</p>
-<div id="3a7b6bd6" class="cell" data-execution_count="1">
+<div id="f81fb684" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -416,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Let’s take a look at the target::</p>
-<div id="d55494ac" class="cell" data-execution_count="2">
+<div id="45758e02" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -460,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="strategizing" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="strategizing"><span class="header-section-number">2.1</span> Strategizing</h2>
 <p>We can begin by exploring the dataframe with <code>.describe</code>, and then think of a plan for pre-processing our data.</p>
-<div id="41886c84" class="cell" data-execution_count="3">
+<div id="cfe02c79" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X.describe(include<span class="op">=</span><span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -608,13 +608,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We need to:</p>
+<p>In this example we want to train a regression model to predict the salary, and we will be using a linear model (<code>Ridge</code>) to do so.</p>
+<p>Therefore, we need to:</p>
 <ul>
 <li>Impute some missing values in the <code>gender</code> column.</li>
 <li>Encode convert categorical features into numerical features.</li>
 <li>Convert the column <code>date_first_hired</code> into numerical features.</li>
+<li>Scale numerical features.</li>
 </ul>
-<p>Once we have processed the data, we can train a machine learning model. For the sake of the example, we will use a linear model (<code>Ridge</code>), which means that we need to scale numerical features and impute missing values.</p>
 <p>Finally, we want to evaluate the performance of the method across multiple cross-validation splits.</p>
 </section>
 <section id="building-a-traditional-pipeline" class="level2" data-number="2.2">
@@ -623,7 +624,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="step-1-convert-date-features-to-numerical" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="step-1-convert-date-features-to-numerical"><span class="header-section-number">2.2.1</span> Step 1: Convert date features to numerical</h3>
 <p>Extract numerical features from the <code>date_first_hired</code> column.</p>
-<div id="02476a11" class="cell" data-execution_count="4">
+<div id="fd033d13" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a copy to work with</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X_processed <span class="op">=</span> X.copy()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -649,7 +650,7 @@ Shape: (9228, 9)</code></pre>
 <section id="step-2-encode-categorical-features" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="step-2-encode-categorical-features"><span class="header-section-number">2.2.2</span> Step 2: Encode categorical features</h3>
 <p>Encode only the non-numerical categorical features using one-hot encoding.</p>
-<div id="1eb28e2a" class="cell" data-execution_count="5">
+<div id="59830daf" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify only the non-numerical (truly categorical) columns</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> X_processed.select_dtypes(include<span class="op">=</span>[<span class="st">'object'</span>]).columns.tolist()</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Categorical columns to encode:"</span>, categorical_cols)</span>
@@ -667,7 +668,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-3-impute-missing-values" class="level3" data-number="2.2.3">
 <h3 data-number="2.2.3" class="anchored" data-anchor-id="step-3-impute-missing-values"><span class="header-section-number">2.2.3</span> Step 3: Impute missing values</h3>
 <p>We’ll impute missing values in the <code>gender</code> column using the most frequent strategy.</p>
-<div id="0d98d5f2" class="cell" data-execution_count="6">
+<div id="88514cf4" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute missing values with most frequent value</span></span>
@@ -681,7 +682,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-4-scale-numerical-features" class="level3" data-number="2.2.4">
 <h3 data-number="2.2.4" class="anchored" data-anchor-id="step-4-scale-numerical-features"><span class="header-section-number">2.2.4</span> Step 4: Scale numerical features</h3>
 <p>Scale numerical features for the Ridge regression model.</p>
-<div id="6fbfd810" class="cell" data-execution_count="7">
+<div id="6a959e21" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the scaler</span></span>
@@ -694,8 +695,8 @@ Shape after encoding: (9228, 1218)</code></pre>
 </section>
 <section id="step-5-train-ridge-model-with-cross-validation" class="level3" data-number="2.2.5">
 <h3 data-number="2.2.5" class="anchored" data-anchor-id="step-5-train-ridge-model-with-cross-validation"><span class="header-section-number">2.2.5</span> Step 5: Train Ridge model with cross-validation</h3>
-<p>Train a Ridge regression model and evaluate with cross-validation.</p>
-<div id="2dabecdf" class="cell" data-execution_count="8">
+<p>Train a <code>Ridge</code> regression model and evaluate with cross-validation.</p>
+<div id="e4839768" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, cross_validate</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -744,7 +745,7 @@ Mean test RMSE: 10367.1206 (+/- 1403.4322)</code></pre>
 <section id="waking-up-from-a-nightmare" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="waking-up-from-a-nightmare"><span class="header-section-number">2.3</span> Waking up from a nightmare</h2>
 <p>Thankfully, we live in a world where we can <code>import skrub</code>. Let’s see what we can get if we use <code>skrub.tabular_pipeline</code>.</p>
-<div id="ddb9dfc8" class="cell" data-execution_count="9">
+<div id="269368ee" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform cross-validation (5-fold)</span></span>
@@ -761,21 +762,21 @@ Mean test RMSE: 10367.1206 (+/- 1403.4322)</code></pre>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean test R²: </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span>)</span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean test RMSE: </span><span class="sc">{</span>test_rmse<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>test_rmse<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/Users/rcap/work/skrub-tutorials/.pixi/envs/dev/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+<pre><code>/Users/rcap/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
   y = column_or_1d(y, warn=True)
-/Users/rcap/work/skrub-tutorials/.pixi/envs/dev/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+/Users/rcap/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
   y = column_or_1d(y, warn=True)
-/Users/rcap/work/skrub-tutorials/.pixi/envs/dev/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+/Users/rcap/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
   y = column_or_1d(y, warn=True)
-/Users/rcap/work/skrub-tutorials/.pixi/envs/dev/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+/Users/rcap/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
   y = column_or_1d(y, warn=True)
-/Users/rcap/work/skrub-tutorials/.pixi/envs/dev/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
+/Users/rcap/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/validation.py:1352: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples, ), for example using ravel().
   y = column_or_1d(y, warn=True)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cross-Validation Results:
-Mean test R²: 0.9083 (+/- 0.0162)
-Mean test RMSE: 8804.3443 (+/- 1054.0937)</code></pre>
+Mean test R²: 0.9105 (+/- 0.0160)
+Mean test RMSE: 8698.4600 (+/- 1053.9529)</code></pre>
 </div>
 </div>
 <p>All the code from before, the tokens and the debugging are replaced by a single import that gives better results.</p>

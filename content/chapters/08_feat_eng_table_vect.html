@@ -293,14 +293,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">13.1</span> Introduction</a></li>
   <li><a href="#how-does-the-tablevectorizer-work" id="toc-how-does-the-tablevectorizer-work" class="nav-link" data-scroll-target="#how-does-the-tablevectorizer-work"><span class="header-section-number">13.2</span> How does the TableVectorizer work?</a>
   <ul class="collapse">
-  <li><a href="#phase-1-data-cleaning-and-type-detection" id="toc-phase-1-data-cleaning-and-type-detection" class="nav-link" data-scroll-target="#phase-1-data-cleaning-and-type-detection"><span class="header-section-number">13.2.1</span> Phase 1: Data Cleaning and Type Detection</a></li>
-  <li><a href="#phase-2-column-dispatch-and-encoding" id="toc-phase-2-column-dispatch-and-encoding" class="nav-link" data-scroll-target="#phase-2-column-dispatch-and-encoding"><span class="header-section-number">13.2.2</span> Phase 2: Column Dispatch and Encoding</a></li>
+  <li><a href="#phase-1-data-cleaning-and-type-detection" id="toc-phase-1-data-cleaning-and-type-detection" class="nav-link" data-scroll-target="#phase-1-data-cleaning-and-type-detection"><span class="header-section-number">13.2.1</span> Phase 1: Data cleaning and type detection</a></li>
+  <li><a href="#phase-2-column-dispatch-and-encoding" id="toc-phase-2-column-dispatch-and-encoding" class="nav-link" data-scroll-target="#phase-2-column-dispatch-and-encoding"><span class="header-section-number">13.2.2</span> Phase 2: Column dispatch and encoding</a></li>
   </ul></li>
   <li><a href="#key-parameters" id="toc-key-parameters" class="nav-link" data-scroll-target="#key-parameters"><span class="header-section-number">13.3</span> Key Parameters</a>
   <ul class="collapse">
-  <li><a href="#cardinality-threshold" id="toc-cardinality-threshold" class="nav-link" data-scroll-target="#cardinality-threshold"><span class="header-section-number">13.3.1</span> Cardinality Threshold</a></li>
-  <li><a href="#data-cleaning-parameters" id="toc-data-cleaning-parameters" class="nav-link" data-scroll-target="#data-cleaning-parameters"><span class="header-section-number">13.3.2</span> Data Cleaning Parameters</a></li>
-  <li><a href="#specifying-custom-transformers" id="toc-specifying-custom-transformers" class="nav-link" data-scroll-target="#specifying-custom-transformers"><span class="header-section-number">13.3.3</span> Specifying custom transformers</a></li>
+  <li><a href="#cardinality-threshold" id="toc-cardinality-threshold" class="nav-link" data-scroll-target="#cardinality-threshold"><span class="header-section-number">13.3.1</span> Cardinality threshold</a></li>
+  <li><a href="#data-cleaning-parameters" id="toc-data-cleaning-parameters" class="nav-link" data-scroll-target="#data-cleaning-parameters"><span class="header-section-number">13.3.2</span> Data cleaning parameters</a></li>
+  <li><a href="#customizing-the-transformers-used-by-tablevectorizer" id="toc-customizing-the-transformers-used-by-tablevectorizer" class="nav-link" data-scroll-target="#customizing-the-transformers-used-by-tablevectorizer"><span class="header-section-number">13.3.3</span> Customizing the transformers used by <code>TableVectorizer</code></a></li>
   <li><a href="#applying-the-tablevectorizer-only-to-a-subset-of-columns" id="toc-applying-the-tablevectorizer-only-to-a-subset-of-columns" class="nav-link" data-scroll-target="#applying-the-tablevectorizer-only-to-a-subset-of-columns"><span class="header-section-number">13.3.4</span> Applying the <code>TableVectorizer</code> only to a subset of columns</a></li>
   <li><a href="#using-specific_transformers-for-more-low-level-control" id="toc-using-specific_transformers-for-more-low-level-control" class="nav-link" data-scroll-target="#using-specific_transformers-for-more-low-level-control"><span class="header-section-number">13.3.5</span> Using <code>specific_transformers</code> for more low-level control</a></li>
   </ul></li>
@@ -340,10 +340,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="13.2" class="anchored" data-anchor-id="how-does-the-tablevectorizer-work"><span class="header-section-number">13.2</span> How does the TableVectorizer work?</h2>
 <p>The <code>TableVectorizer</code> operates in two phases:</p>
 <section id="phase-1-data-cleaning-and-type-detection" class="level3" data-number="13.2.1">
-<h3 data-number="13.2.1" class="anchored" data-anchor-id="phase-1-data-cleaning-and-type-detection"><span class="header-section-number">13.2.1</span> Phase 1: Data Cleaning and Type Detection</h3>
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="phase-1-data-cleaning-and-type-detection"><span class="header-section-number">13.2.1</span> Phase 1: Data cleaning and type detection</h3>
 <p>First, it runs a <code>Cleaner</code> on the input data to:</p>
 <ul>
 <li>Detect and parse datetime columns (possibly, with custom datetime formats)</li>
+<li>Detect and parse numerical columns written as strings</li>
 <li>Handle missing values represented as strings (e.g., “N/A”)</li>
 <li>Clean up categorical columns to have consistent typing</li>
 <li>Remove uninformative columns (those with only nulls, constant values, or all unique values)</li>
@@ -352,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This ensures that each column has the correct data type before encoding.</p>
 </section>
 <section id="phase-2-column-dispatch-and-encoding" class="level3" data-number="13.2.2">
-<h3 data-number="13.2.2" class="anchored" data-anchor-id="phase-2-column-dispatch-and-encoding"><span class="header-section-number">13.2.2</span> Phase 2: Column Dispatch and Encoding</h3>
+<h3 data-number="13.2.2" class="anchored" data-anchor-id="phase-2-column-dispatch-and-encoding"><span class="header-section-number">13.2.2</span> Phase 2: Column dispatch and encoding</h3>
 <p>After cleaning, the <code>TableVectorizer</code> categorizes columns and dispatches them to the appropriate transformer based on their data type and cardinality. Categorical columns with a cardinality (i.e., number of unique values) larger than 40 (by default)) are considered “high cardinality”, while all other categorical columns are “low cardinality”.</p>
 <p>The <code>TableVectorizer</code> uses the following default transformers for each column type:</p>
 <ul>
@@ -366,16 +367,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="key-parameters" class="level2" data-number="13.3">
 <h2 data-number="13.3" class="anchored" data-anchor-id="key-parameters"><span class="header-section-number">13.3</span> Key Parameters</h2>
 <section id="cardinality-threshold" class="level3" data-number="13.3.1">
-<h3 data-number="13.3.1" class="anchored" data-anchor-id="cardinality-threshold"><span class="header-section-number">13.3.1</span> Cardinality Threshold</h3>
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="cardinality-threshold"><span class="header-section-number">13.3.1</span> Cardinality threshold</h3>
 <p>The cardinality threshold that splits columns in “high” and “low” cardinality can be changed by setting the relative parameter:</p>
-<div id="b1389305" class="cell" data-execution_count="1">
+<div id="00edead8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer(cardinality_threshold<span class="op">=</span><span class="dv">10</span>)  <span class="co"># Adjust the threshold</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="data-cleaning-parameters" class="level3" data-number="13.3.2">
-<h3 data-number="13.3.2" class="anchored" data-anchor-id="data-cleaning-parameters"><span class="header-section-number">13.3.2</span> Data Cleaning Parameters</h3>
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="data-cleaning-parameters"><span class="header-section-number">13.3.2</span> Data cleaning parameters</h3>
 <p>The <code>TableVectorizer</code> forwards several parameters to the internal <code>Cleaner</code>, which behave in the same way:</p>
 <ul>
 <li><code>drop_null_fraction</code>: Fraction of nulls above which a column is dropped (default: <code>1.0</code>)</li>
@@ -383,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>drop_if_unique</code>: Drop string/categorical columns where all values are unique (default: <code>False</code>)</li>
 <li><code>datetime_format</code>: Format string for parsing dates</li>
 </ul>
-<div id="3ae812ec" class="cell" data-execution_count="2">
+<div id="9d5c9a81" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    drop_null_fraction<span class="op">=</span><span class="fl">0.9</span>,  <span class="co"># Drop columns that are 90% null</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    drop_if_constant<span class="op">=</span><span class="va">True</span>,</span>
@@ -391,10 +392,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="specifying-custom-transformers" class="level3" data-number="13.3.3">
-<h3 data-number="13.3.3" class="anchored" data-anchor-id="specifying-custom-transformers"><span class="header-section-number">13.3.3</span> Specifying custom transformers</h3>
+<section id="customizing-the-transformers-used-by-tablevectorizer" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="customizing-the-transformers-used-by-tablevectorizer"><span class="header-section-number">13.3.3</span> Customizing the transformers used by <code>TableVectorizer</code></h3>
 <p>The <code>TableVectorizer</code> applies whatever transformer is provided to each of the <code>numeric</code>, <code>datetime</code>, <code>high_cardinality</code>, and <code>low_cardinality</code> paramters. To tweak the default parameters of the transformers a new transformer should be provided:</p>
-<div id="590ce2da" class="cell" data-execution_count="3">
+<div id="02089cd2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer, DatetimeEncoder, StringEncoder</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -415,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>By default, the <code>TableVectorizer</code> is applied to all the columns in the given dataframe. In some cases, it may be important to keep specific columns “as is”, so that they are not modified by the transformer.</p>
 <p>This can be done by wrapping the vectorizer into an <code>ApplyToCols</code> object.</p>
 <p>For example, in this case we might want to avoid modifying the two <code>*_id</code> columns.</p>
-<div id="11e481c1" class="cell" data-execution_count="4">
+<div id="edad01fa" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
@@ -497,7 +498,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can use <code>ApplyToCols</code> and the skrub selectors as follows:</p>
-<div id="4233a46f" class="cell" data-execution_count="5">
+<div id="5be9d9e6" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> ApplyToCols(TableVectorizer(), cols<span class="op">=</span>s.<span class="bu">all</span>()<span class="op">-</span>s.glob(<span class="st">"*_id"</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> tv.fit_transform(df)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -526,7 +527,7 @@ Encoded
 <section id="using-specific_transformers-for-more-low-level-control" class="level3" data-number="13.3.5">
 <h3 data-number="13.3.5" class="anchored" data-anchor-id="using-specific_transformers-for-more-low-level-control"><span class="header-section-number">13.3.5</span> Using <code>specific_transformers</code> for more low-level control</h3>
 <p>For fine-grained control, we can specify transformers for specific columns using the <code>specific_transformers</code> parameter. This is useful when we want to override the default behavior for particular columns:</p>
-<div id="acc327b2" class="cell" data-execution_count="6">
+<div id="9a12d204" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -564,7 +565,7 @@ Encoded
 <h1 data-number="14"><span class="header-section-number">14</span> Exercise: implementing a <code>TableVectorizer</code> from its components</h1>
 <p><strong>Path to the exercise</strong>: <code>content/exercises/08_feat_eng_table_vect.ipynb</code></p>
 <p>Replicate the behavior of a <code>TableVectorizer</code> using <code>ApplyToCols</code>, the skrub selectors, and the given transformers.</p>
-<div id="14d7842e" class="cell" data-execution_count="7">
+<div id="d60ded2d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner, ApplyToCols, StringEncoder, DatetimeEncoder</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -583,7 +584,7 @@ Encoded
 <li>Everything should be wrapped in a scikit-learn <code>Pipeline</code> (or with <code>make_pipeline</code>).</li>
 </ul>
 <p>Use the following dataframe to test the result.</p>
-<div id="62baff2f" class="cell" data-execution_count="8">
+<div id="e3f4b57b" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -672,7 +673,7 @@ Encoded
 </div>
 </div>
 <p>Use the following <code>PassThrough</code> transformer where needed.</p>
-<div id="ae7f552f" class="cell" data-execution_count="9">
+<div id="9ce7a10f" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub._apply_to_cols <span class="im">import</span> SingleColumnTransformer</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -684,7 +685,7 @@ Encoded
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> column</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You can test the correctness of your solution by comparing it with the equivalent <code>TableVectorizer</code>:</p>
-<div id="27805099" class="cell" data-execution_count="10">
+<div id="9b6b5dec" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>tv <span class="op">=</span> TableVectorizer(</span>
@@ -718,8 +719,8 @@ Encoded
 <td>15.0</td>
 <td>5.20</td>
 <td>1.0</td>
-<td>0.820967</td>
-<td>-0.926890</td>
+<td>0.820974</td>
+<td>-0.926883</td>
 <td>1.0</td>
 <td>2020.0</td>
 <td>2.0</td>
@@ -732,8 +733,8 @@ Encoded
 <td>56.0</td>
 <td>2.40</td>
 <td>0.0</td>
-<td>0.820968</td>
-<td>-0.926893</td>
+<td>0.820970</td>
+<td>-0.926897</td>
 <td>0.0</td>
 <td>2021.0</td>
 <td>3.0</td>
@@ -746,8 +747,8 @@ Encoded
 <td>63.0</td>
 <td>6.20</td>
 <td>0.0</td>
-<td>0.862893</td>
-<td>-0.936522</td>
+<td>0.862896</td>
+<td>-0.936519</td>
 <td>1.0</td>
 <td>2022.0</td>
 <td>2.0</td>
@@ -760,8 +761,8 @@ Encoded
 <td>12.0</td>
 <td>10.45</td>
 <td>0.0</td>
-<td>1.029679</td>
-<td>1.353003</td>
+<td>1.029678</td>
+<td>1.353008</td>
 <td>0.0</td>
 <td>2023.0</td>
 <td>5.0</td>
@@ -774,8 +775,8 @@ Encoded
 <td>44.0</td>
 <td>9.00</td>
 <td>1.0</td>
-<td>1.419120</td>
-<td>0.660169</td>
+<td>1.419116</td>
+<td>0.660171</td>
 <td>1.0</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -789,7 +790,7 @@ Encoded
 </div>
 </div>
 </div>
-<div id="c11c9fad" class="cell" data-execution_count="11">
+<div id="2d938969" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your code here</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
@@ -804,7 +805,7 @@ Encoded
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="ada3e851" class="cell" data-execution_count="12">
+<div id="95150fb0" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>cleaner <span class="op">=</span> ApplyToCols(Cleaner())</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>high_cardinality <span class="op">=</span> ApplyToCols(</span>
@@ -849,8 +850,8 @@ Encoded
 <td>15</td>
 <td>5.20</td>
 <td>1.0</td>
-<td>0.820963</td>
-<td>-0.926894</td>
+<td>0.820968</td>
+<td>-0.926893</td>
 <td>True</td>
 <td>2020.0</td>
 <td>2.0</td>
@@ -863,8 +864,8 @@ Encoded
 <td>56</td>
 <td>2.40</td>
 <td>0.0</td>
-<td>0.820964</td>
-<td>-0.926904</td>
+<td>0.820969</td>
+<td>-0.926902</td>
 <td>False</td>
 <td>2021.0</td>
 <td>3.0</td>
@@ -877,8 +878,8 @@ Encoded
 <td>63</td>
 <td>6.20</td>
 <td>0.0</td>
-<td>0.862889</td>
-<td>-0.936523</td>
+<td>0.862895</td>
+<td>-0.936510</td>
 <td>True</td>
 <td>2022.0</td>
 <td>2.0</td>
@@ -891,8 +892,8 @@ Encoded
 <td>12</td>
 <td>10.45</td>
 <td>0.0</td>
-<td>1.029688</td>
-<td>1.352998</td>
+<td>1.029677</td>
+<td>1.353003</td>
 <td>False</td>
 <td>2023.0</td>
 <td>5.0</td>
@@ -905,8 +906,8 @@ Encoded
 <td>44</td>
 <td>9.00</td>
 <td>1.0</td>
-<td>1.419121</td>
-<td>0.660161</td>
+<td>1.419119</td>
+<td>0.660171</td>
 <td>True</td>
 <td>NaN</td>
 <td>NaN</td>

@@ -290,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction-to-datetime-features" id="toc-introduction-to-datetime-features" class="nav-link active" data-scroll-target="#introduction-to-datetime-features"><span class="header-section-number">10.1</span> Introduction to Datetime Features</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">10.1</span> Introduction</a></li>
   <li><a href="#converting-datetime-strings-to-datetime-objects" id="toc-converting-datetime-strings-to-datetime-objects" class="nav-link" data-scroll-target="#converting-datetime-strings-to-datetime-objects"><span class="header-section-number">10.2</span> Converting datetime strings to datetime objects</a></li>
   <li><a href="#encoding-datetime-features" id="toc-encoding-datetime-features" class="nav-link" data-scroll-target="#encoding-datetime-features"><span class="header-section-number">10.3</span> Encoding datetime features</a></li>
   <li><a href="#periodic-features" id="toc-periodic-features" class="nav-link" data-scroll-target="#periodic-features"><span class="header-section-number">10.4</span> Periodic features</a></li>
@@ -321,8 +321,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction-to-datetime-features" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="introduction-to-datetime-features"><span class="header-section-number">10.1</span> Introduction to Datetime Features</h2>
+<section id="introduction" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">10.1</span> Introduction</h2>
 <p>Datetime features are very important for many data analysis and machine learning tasks, as they often carry significant information about temporal patterns and trends. For instance, including as features the day of the week, time of day, or season can provide valuable insights for predictive modeling.</p>
 <p>However, working with datetime data can be difficult due to the variety of formats in which dates and times are represented. Typical formats include <code>"%Y-%m-%d"</code>, <code>"%d/%m/%Y"</code>, and <code>"%d %B %Y"</code>, among others. Correct parsing of these and more exotic formats is essential to avoid errors and ensure accurate feature extraction.</p>
 <p>In this section we are going to cover how skrub can help with dealing with datetimes using <code>to_datetime</code>, <code>ToDatetime</code>, and the <code>DatetimeEncoder</code>.</p>
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Often, the first operation that must be done to work with datetime objects is converting the datetimes from a string representation to a proper datetime object. This is beneficial because using datetimes gives access to datetime-specific features, and allows to access the different parts of the datetime.</p>
 <p>Skrub provides different objects to deal with the conversion problem.</p>
 <p><strong><code>ToDatetime</code></strong> is a single column transformer that tries to conver the given column to datetime either by relying on a user-provided format, or by guessing common formats. Since this transformer must be applied to single columns (rather than dataframes), it is typically better to use it in conjunction with <code>ApplyToCols</code>. Additionally, the <code>allow_reject</code> parameter of <code>ApplyToCols</code> should be set to <code>True</code> to avoid raising exceptions for non-datetime columns:</p>
-<div id="8bbd6096" class="cell" data-execution_count="1">
+<div id="aae007c5" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -381,7 +381,7 @@ Warning
 <p>Datetimes cannot be used “as-is” for training ML models, and must instead be converted to numerical features. Typically, this is done by “splitting” the datetime parts (year, month, day etc.) into separate columns, so that each column contains only one number.</p>
 <p>Additional features may also be of interest, such as the number of seconds since epoch (which increases monotonically and gives an indication of the order of entries), whether a date is a weekday or weekend, or the day of the year.</p>
 <p>To achieve this with standard dataframe libraries, the code looks like this:</p>
-<div id="9282e477" class="cell" data-execution_count="2">
+<div id="c3f1108d" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.year</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"month"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.month</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day</span>
@@ -458,7 +458,7 @@ Warning
 </div>
 <p>Skrub’s <code>DatetimeEncoder</code> allows to add the same features with a simpler interface. As the <code>DatetimeEncoder</code> is a single column transformer, we use again <code>ApplyToCols</code>.</p>
 <p>The <code>DatetimeEncoder</code> includes various parameters to add more features to the transformed dataframe: - <code>add_total_seconds</code> adds the number of seconds since Epoch (1970-01-01) - <code>add_weekday</code> adds the day in the week (to highlight weekends, for example) - <code>add_day_of_year</code> adds the day in year of the datetime</p>
-<div id="acca33a4" class="cell" data-execution_count="3">
+<div id="85a5ecbb" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
@@ -529,9 +529,9 @@ Warning
 </section>
 <section id="periodic-features" class="level2" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="periodic-features"><span class="header-section-number">10.4</span> Periodic features</h2>
-<p>Periodic features are useful for training machine learning models because they capture the cyclical nature of certain data patterns. For example, time-related features such as hours in a day, days in a week, or months in a year often exhibit periodic behavior. By encoding these features periodically, models can better understand and predict patterns that repeat over time, such as daily traffic trends, or seasonal variations. This ensures that the model treats the start and end of a cycle as close neighbors, improving its ability to generalize and make accurate predictions.</p>
+<p>Periodic features are useful for training machine learning models because they capture the cyclical nature of certain data patterns. For example, features such as hours in a day or days in a week often exhibit periodic behavior. By encoding these features periodically, models can better understand and predict patterns that repeat over time, such as daily traffic trends, or seasonal variations. This ensures that the model treats the start and end of a cycle as close neighbors, improving its ability to generalize and make accurate predictions.</p>
 <p>This can be done manually with dataframe libraries. For example, circular encoding (a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:</p>
-<div id="8700acaf" class="cell" data-execution_count="4">
+<div id="a598c06b" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
@@ -610,7 +610,7 @@ Warning
 </div>
 </div>
 <p>Alternatively, the <code>DatetimeEncoder</code> can add periodic features using either circular or spline encoding through the <code>periodic_encoding</code> parameter:</p>
-<div id="c01dcab6" class="cell" data-execution_count="5">
+<div id="07b719ed" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
@@ -709,6 +709,7 @@ Warning
 <h2 data-number="10.5" class="anchored" data-anchor-id="conclusions"><span class="header-section-number">10.5</span> Conclusions</h2>
 <p>In this chapter, we explored the importance and challenges of working with datetime features. We covered how to convert string representations of dates to datetime objects using skrub’s <code>ToDatetime</code> transformer and the <code>Cleaner</code>, both of which can be integrated into pipelines for robust preprocessing.</p>
 <p>We also discussed the need to encode datetime features into numerical representations suitable for machine learning models. The <code>DatetimeEncoder</code> provides a convenient way to extract useful components such as year, month, day, weekday, day of year, and total seconds since epoch. Additionally, we saw how periodic (circular) encoding can be used to capture cyclical patterns in time-based data.</p>
+<p>In the next chapter, we will cover the final type of columns: categorical/string columns.</p>
 </section>
 <section id="exercise" class="level1" data-number="11">
 <h1 data-number="11"><span class="header-section-number">11</span> Exercise</h1>
@@ -721,7 +722,7 @@ Warning
 <li>The day of the year</li>
 </ul>
 <p><strong>Hint</strong>: use the format <code>"%d %B %Y"</code> for the datetime.</p>
-<div id="68998542" class="cell" data-execution_count="6">
+<div id="daec6169" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
@@ -745,7 +746,7 @@ Warning
 3     10 April 2023          104   52         Deceased</code></pre>
 </div>
 </div>
-<div id="b3a856c1" class="cell" data-execution_count="7">
+<div id="638d494d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
@@ -762,7 +763,7 @@ Warning
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="54b202ff" class="cell" data-execution_count="8">
+<div id="3483f1f9" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution with ApplyToCols and ToDatetime</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime, DatetimeEncoder</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -851,7 +852,7 @@ Warning
 </div>
 </div>
 </div>
-<div id="3b02de36" class="cell" data-execution_count="9">
+<div id="4b86dd79" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution with Cleaner</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -939,7 +940,7 @@ Warning
 </div>
 </div>
 <p>Modify the script so that the <code>DatetimeEncoder</code> adds periodic encoding with sine and cosine (aka circular encoding):</p>
-<div id="f348cb27" class="cell" data-execution_count="10">
+<div id="08c032cd" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
@@ -957,7 +958,7 @@ Warning
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now modify the script above to add spline features (<code>periodic_encoding="spline"</code>).</p>
-<div id="7a43fee4" class="cell" data-execution_count="11">
+<div id="25e3f5c8" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>

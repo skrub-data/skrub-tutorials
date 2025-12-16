@@ -253,8 +253,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">11.1</span> Introduction</a></li>
-  <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why Categorical Encoders Matter</a></li>
-  <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical Encoders: Pros and Cons</a>
+  <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why categorical encoders matter</a></li>
+  <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical encoders: pros and cons</a>
   <ul class="collapse">
   <li><a href="#one-hot-encoding-and-ordinal-encoding-scikit-learn" id="toc-one-hot-encoding-and-ordinal-encoding-scikit-learn" class="nav-link" data-scroll-target="#one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">11.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</a></li>
   <li><a href="#categorical-encoders-in-skrub" id="toc-categorical-encoders-in-skrub" class="nav-link" data-scroll-target="#categorical-encoders-in-skrub"><span class="header-section-number">11.3.2</span> Categorical encoders in skrub</a></li>
@@ -296,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
 <p>This chapter explores the various strategies and tools available in skrub to encode categorical features, with an eye on choosing the best method for our specific use case.</p>
 </section>
 <section id="why-categorical-encoders-matter" class="level2" data-number="11.2">
-<h2 data-number="11.2" class="anchored" data-anchor-id="why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why Categorical Encoders Matter</h2>
+<h2 data-number="11.2" class="anchored" data-anchor-id="why-categorical-encoders-matter"><span class="header-section-number">11.2</span> Why categorical encoders matter</h2>
 <p>The way we encode categorical features significantly impacts our machine learning pipeline:</p>
 <ul>
 <li><strong>Performance</strong>: The encoding choice directly affects how well our model learns from categorical information</li>
@@ -307,7 +307,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Using the appropriate encoder ensures we’re making the best use of categorical information while keeping our model efficient and interpretable.</p>
 </section>
 <section id="categorical-encoders-pros-and-cons" class="level2" data-number="11.3">
-<h2 data-number="11.3" class="anchored" data-anchor-id="categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical Encoders: Pros and Cons</h2>
+<h2 data-number="11.3" class="anchored" data-anchor-id="categorical-encoders-pros-and-cons"><span class="header-section-number">11.3</span> Categorical encoders: pros and cons</h2>
 <section id="one-hot-encoding-and-ordinal-encoding-scikit-learn" class="level3" data-number="11.3.1">
 <h3 data-number="11.3.1" class="anchored" data-anchor-id="one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">11.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</h3>
 <p><strong><code>OneHotEncoder</code></strong>: Creates a binary indicator column for each unique category, where <code>1</code> denotes the presence of the category and <code>0</code> its absence.</p>
@@ -424,6 +424,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>The <code>TableVectorizer</code> integrates these encoders automatically, dispatching columns to the appropriate encoder based on their data type and cardinality. This automation makes it easy to process mixed-type datasets efficiently while still allowing fine-grained control when needed. By default, the <code>TableVectorizer</code> uses the <code>OneHotEncoder</code> for categorical features with cardinality &lt;= 40, and <code>StringEncoder</code> for categorical features with cardinality &gt; 40.</p>
 <p>For a comprehensive empirical comparison of these methods, refer to the <a href="https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html">categorical encoders benchmark</a>.</p>
+<p>In the next chapter we will put all the encoders explained so far in a single object, the <code>TableVectorizer</code>.</p>
 
 
 </section>

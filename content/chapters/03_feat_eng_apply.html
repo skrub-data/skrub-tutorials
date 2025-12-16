@@ -302,6 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#the-order-of-column-transformations-is-important" id="toc-the-order-of-column-transformations-is-important" class="nav-link" data-scroll-target="#the-order-of-column-transformations-is-important"><span class="header-section-number">6.4.1</span> The order of column transformations is important</a></li>
   </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">6.5</span> Conclusions</a></li>
   </ul>
 </nav>
     </div>
@@ -330,9 +331,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">6.1</span> Introduction</h2>
 <p>Often, transformers need to be applied only to a subset of columns, rather than the entire dataframe.</p>
-<p>As an example, it does not make sense to apply a <code>StandardScaler</code> to a column that contains strings, and indeed doing so would raise an exception.</p>
+<p>As an example, it does not make sense to apply a <code>StandardScaler</code> to a column that contains strings, and indeed doing so would raise an exception. In other cases, specific columns may need particular treatment, and should therefore be ignored by the <code>Cleaner</code>.</p>
 <p>Scikit-learn provides the <code>ColumnTransformer</code> to deal with this:</p>
-<div id="741e8b80" class="cell" data-execution_count="1">
+<div id="d5b47573" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_selector <span class="im">as</span> selector</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_transformer</span>
@@ -362,8 +363,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="selection-operations-in-a-scikit-learn-pipeline" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="selection-operations-in-a-scikit-learn-pipeline"><span class="header-section-number">6.2</span> Selection operations in a scikit-learn pipeline</h2>
-<p>In some situations, it may be necessary to select or remove specific columns from a dataframe: this means removing some features from the original table. This can be done with <code>SelectCols</code> and <code>DropCols</code>, which work as their name suggests, and can take a <code>cols</code> parameter to choose which columns to select or drop respectively.</p>
-<div id="a51f9407" class="cell" data-execution_count="2">
+<p><code>SelectCols</code> and <code>DropCols</code> allow selecting or removing specific columns in a dataframe according to user-provided rules. For example, to remove columns that include null values, or to select only columns that have a specific dtype.</p>
+<p><code>SelectCols</code> and <code>DropCols</code> take a <code>cols</code> parameter to choose which columns to select or drop respectively.</p>
+<div id="0e4f4b05" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>, <span class="st">"05 March 2023"</span>],</span>
@@ -405,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We can selectively choose or drop columns based on names, or more complex rules (see the next chapter).</p>
-<div id="34956be9" class="cell" data-execution_count="3">
+<div id="07bf4218" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>SelectCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -438,7 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="2155623d" class="cell" data-execution_count="4">
+<div id="e6a9d7c0" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>DropCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -474,10 +476,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="applytocols-and-applytoframe" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="applytocols-and-applytoframe"><span class="header-section-number">6.3</span> <code>ApplyToCols</code> and <code>ApplyToFrame</code></h2>
+<p>Besides selecting and dropping columns, pre-processing pipelines are intended to <em>transform</em> specific columns in specific ways. To make this process easier, skrub provides the <code>ApplyToCols</code> and <code>ApplyToFrame</code> transformers.</p>
 <section id="applying-a-transformer-to-separate-columns-applytocols" class="level3" data-number="6.3.1">
 <h3 data-number="6.3.1" class="anchored" data-anchor-id="applying-a-transformer-to-separate-columns-applytocols"><span class="header-section-number">6.3.1</span> Applying a transformer to separate columns: <code>ApplyToCols</code></h3>
 <p>In many cases, <code>ApplyToCols</code> can be a direct replacememnt for the <code>ColumnTransformer</code>, like in the following example:</p>
-<div id="262ce390" class="cell" data-execution_count="5">
+<div id="0bf8cbac" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -545,12 +548,25 @@ Important
 </div>
 </div>
 <p>By passing through unselected columns without changes it is possible to chain several <code>ApplyToCols</code> together by putting them in a scikit-learn pipeline.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>ApplyToCols</code> is intended to work on dataframes, which are <strong>dense</strong>. As a result, transformers that produce sparse outputs (like the <code>OneHotEncoder</code>) must be set so that their output is dense.</p>
+</div>
+</div>
 </section>
 <section id="applying-the-same-transformer-to-multiple-columns-at-once-applytoframe" class="level3" data-number="6.3.2">
 <h3 data-number="6.3.2" class="anchored" data-anchor-id="applying-the-same-transformer-to-multiple-columns-at-once-applytoframe"><span class="header-section-number">6.3.2</span> Applying the same transformer to multiple columns at once: <code>ApplyToFrame</code></h3>
-<p>In some cases, it may be beneficial to apply the same transformer to a subset of columns in a dataframe.</p>
-<p>This example dataframe contains some patient information, and some (random) metrics.</p>
-<div id="050c9430" class="cell" data-execution_count="6">
+<p>In some cases, there may be a need to apply the same transformer only to a subset of columns in a dataframe.</p>
+<p>Consider this example dataframe, which some patient information, and some metrics.</p>
+<div id="5c7d0be8" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -654,7 +670,7 @@ Important
 </div>
 </div>
 <p>With <code>ApplyToFrame</code>, it is easy to apply a decomposition algorithm such as <code>PCA</code> to condense the <code>metric_*</code> columns into a smaller number of features:</p>
-<div id="9aa1ccaf" class="cell" data-execution_count="7">
+<div id="2c528443" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToFrame</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -735,7 +751,7 @@ Important
 <h3 data-number="6.3.3" class="anchored" data-anchor-id="the-allow_reject-parameter"><span class="header-section-number">6.3.3</span> The <code>allow_reject</code> parameter</h3>
 <p>When <code>ApplyToCols</code> or <code>ApplyToFrame</code> are using a skrub transformer, they can use the <code>allow_reject</code> parameter for more flexibility. By setting <code>allow_reject</code> to <code>True</code>, columns that cannot be treated by the current transformer will be ignored rather than raising an exception.</p>
 <p>Consider this example. By default, <code>ToDatetime</code> raises a <code>RejectColumn</code> exception when it finds a column it cannot convert to datetime.</p>
-<div id="9d64ee1d" class="cell" data-execution_count="8">
+<div id="6c964f31" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>, <span class="st">"05 March 2023"</span>],</span>
@@ -777,7 +793,7 @@ Important
 </div>
 </div>
 <p>By setting <code>allow_reject=True</code>, the datetime column is converted properly and the other column is passed through without issues.</p>
-<div id="10e85839" class="cell" data-execution_count="9">
+<div id="016e18f2" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -818,9 +834,9 @@ Important
 </section>
 <section id="concatenating-the-skrub-column-transformers" class="level2" data-number="6.4">
 <h2 data-number="6.4" class="anchored" data-anchor-id="concatenating-the-skrub-column-transformers"><span class="header-section-number">6.4</span> Concatenating the skrub column transformers</h2>
-<p>Skrub column transformers can be concatenated by using scikit-learn pipelines. In the following example, we first select only the column <code>patiend_id</code>, then encode it using <code>OneHotEncoder</code> and finally use <code>PCA</code> to reduce the number of dimensions.</p>
+<p>Skrub column transformers can be concatenated by using scikit-learn pipelines. In the following example, we first select only the column <code>patient_id</code>, then encode it using <code>OneHotEncoder</code> and finally use <code>PCA</code> to reduce the number of dimensions.</p>
 <p>This is done by wrapping the latter two steps in <code>ApplyToCols</code> and <code>ApplyToFrame</code> respectively, and then putting all transformers in order in a scikit-learn pipeline using <code>make_pipeline</code>.</p>
-<div id="87b2282c" class="cell" data-execution_count="10">
+<div id="2fe0246c" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -884,12 +900,12 @@ Important
 <section id="the-order-of-column-transformations-is-important" class="level3" data-number="6.4.1">
 <h3 data-number="6.4.1" class="anchored" data-anchor-id="the-order-of-column-transformations-is-important"><span class="header-section-number">6.4.1</span> The order of column transformations is important</h3>
 <p>Some care must be taken when concatenating columnn transformers, in particular when selection is done on datatypes. Consider this case:</p>
-<div id="4d46f14e" class="cell" data-execution_count="11">
+<div id="dd32b4af" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>scale <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In the first case, we encode and then scale, in the second case we instead scale first and then encode.</p>
-<div id="45716b94" class="cell" data-execution_count="12">
+<div id="ed9b78fd" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>transform_1 <span class="op">=</span> make_pipeline(encode, scale)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>dft <span class="op">=</span> transform_1.fit_transform(df)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>dft.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1052,7 +1068,7 @@ Important
 </div>
 </div>
 </div>
-<div id="9733e075" class="cell" data-execution_count="13">
+<div id="49300642" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>transform_2 <span class="op">=</span> make_pipeline(scale, encode)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>dft <span class="op">=</span> transform_2.fit_transform(df)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>dft.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1217,9 +1233,13 @@ Important
 </div>
 <p>The result of <code>transform_1</code> is that the features that have been generated by the <code>OneHotEncoder</code> are then scaled by the <code>StandardScaler</code>, because the new features are numeric and are therefore selected in the next step.</p>
 <p>In many cases, this behavior is not desired: while some model types may not be affected by the different ordering (such as tree-based models), linear models and NN-based models may produce worse results.</p>
-
-
 </section>
+</section>
+<section id="conclusions" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="conclusions"><span class="header-section-number">6.5</span> Conclusions</h2>
+<p>In this chapter we explored how skrub helps with selecting and transforming specific columns using various transformers. While these transformers can take simple lists of columns to work, they become far more flexible and powerful when they are combined with the skrub selectors, which is the subject of the next chapter.</p>
+
+
 </section>
 
 </main> <!-- /main -->
