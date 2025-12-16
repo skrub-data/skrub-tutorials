@@ -24,7 +24,7 @@ This chapter explores the various strategies and tools available in skrub to
 encode categorical features, with an eye on choosing the best method for our 
 specific use case.
 
-## Why Categorical Encoders Matter
+## Why categorical encoders matter
 
 The way we encode categorical features significantly impacts our machine learning
 pipeline:
@@ -41,7 +41,7 @@ with many unique values)
 Using the appropriate encoder ensures we're making the best use of categorical
 information while keeping our model efficient and interpretable.
 
-## Categorical Encoders: Pros and Cons
+## Categorical encoders: pros and cons
 
 ### One-Hot Encoding and Ordinal Encoding (scikit-learn)
 
@@ -186,3 +186,6 @@ for categorical features with cardinality > 40.
 
 For a comprehensive empirical comparison of these methods, refer to the
 [categorical encoders benchmark](https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html).
+
+In the next chapter we will put all the encoders explained so far in a single 
+object, the `TableVectorizer`. 

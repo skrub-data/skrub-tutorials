@@ -12,17 +12,23 @@ format:
 ## Question 1
 ::: {.callout}
 
-What do I need to open a saved `TableReport`?
+What do I need to open a `TableReport` saved with `.write_html("report.html")`?
 
-- [ ] A python console
-- [ ] An internet browser
-- [ ] A Jupyter notebook
+- [ ] A) A python console
+- [ ] B) An internet browser
+- [ ] C) A Jupyter notebook
 :::
 
 
 ::: {.callout-tip collapse="true"}
 ### Solution
-An internet browser is enough. 
+Answer: B) 
+
+After its generation, the `TableReport` can be persisted on disk as a HTML file.
+The file can be opened using a regular internet browswer.
+
+The `TableReport` is not updated dynamically, and is not connected to python consoles
+or running kernels.
 :::
 
 
@@ -49,9 +55,9 @@ TableReport(df, max_plot_columns=5, max_association_columns=3)
 
 What does the "Distributions" tab show? What about the "Associations" tab?
 
-- [ ] Both tabs work as normal. 
-- [ ] The "Distribution" tab shows the plots, "Associations" are not shown.
-- [ ] Both tabs contain a message explaining their operation was skipped. 
+- [ ] A) Both tabs work as normal. 
+- [ ] B) The "Distribution" tab shows the plots, "Associations" are not shown.
+- [ ] C) Both tabs contain a message explaining their operation was skipped. 
 
 
 :::
@@ -62,8 +68,8 @@ What does the "Distributions" tab show? What about the "Associations" tab?
 Answer: B)
 
 The "Distribution" contains the usual distribution plots, while the computation
-of the associations was skipped because the number of columns in the dataframe
-was larger than `max_association_columns`. 
+of the associations was skipped because the number of columns in the dataframe (5)
+was larger than `max_association_columns` (3). 
 :::
 
 
@@ -164,6 +170,8 @@ df = pd.DataFrame({
 })
 df.head(5)
 ```
+
+- [ ] D)
 
 :::
 

@@ -55,7 +55,6 @@ analysis or modeling, and can handle a variety of common data cleaning tasks
 automatically. It is designed to work out-of-the-box with minimal configuration,
 although it is also possible to customize its behavior if needed.
 
-
 Given a dataframe, the `Cleaner` applies a sequence of transformers to each column:
 
 Consider this example dataframe:
@@ -140,7 +139,9 @@ a ML model. For example, empty columns are uninformative.
 4. It processes categorical columns to ensure consistent typing depending on the 
 dataframe library in use. 
 5. It converts columns to string, unless they have a data type that carries more 
-information, such as numerical, datetime, and categorial columns.
+information, such as numerical, datetime, and categorial columns. 
+6. It automatically parses numbers written as strings ("1.324") to convert them 
+to actual numerical columns.
 6. Finally, it can convert numerical columns to `np.float32` dtype if called 
 with the parameter `numeric_dtype="float32"`. This ensures a consistent
 representation of numbers and missing values, and helps reducing the memory footprint. 
@@ -178,6 +179,15 @@ with `drop_null_fraction`.
     UIDs, but it can also happen when the column contains text. 
     - This check is off by default and can be turned on by setting 
     `drop_if_unique` to `True`. 
+
+## Conclusion
+In this chapter we have covered how the skrub `Cleaner` helps with sanitizing data
+by implementing a number of common transformations that need to be executed in 
+order to ensure that the data used by the pipeline are consistent and can be used
+as indended by ML models. 
+
+In the next chapter we will see how skrub helps with applying this and other 
+transformations to specific columns in the data.
 
 
 # Exercise: clean a dataframe using the `Cleaner` 

@@ -174,6 +174,13 @@ selector = s.filter_names(lambda name: name.endswith('_mm'))
 s.select(df, selector)
 ```
 
+## Conclusion
+In this chapter we covered the skrub selectors, how they allow to select specific
+columns either through simple conditions, or by combining different selectors. 
+More use cases of `ApplyToCols` and the selectors will be shown through the rest
+of the course, starting from the next chapter on feature engineering.
+
+
 # Exercise: using selectors together with `ApplyToCols`
 
 **Path to the exercise**: `content/exercises/04_selectors.ipynb`

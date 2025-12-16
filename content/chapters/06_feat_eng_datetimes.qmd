@@ -8,7 +8,7 @@ format:
         code-tools: true
 
 ---
-## Introduction to Datetime Features
+## Introduction
 
 Datetime features are very important for many data analysis and machine learning 
 tasks, as they often carry significant information about temporal patterns and 
@@ -117,13 +117,12 @@ df_enc
 
 ## Periodic features
 Periodic features are useful for training machine learning models because they
-capture the cyclical nature of certain data patterns. For example, time-related
-features such as hours in a day, days in a week, or months in a year often exhibit
-periodic behavior. By encoding these features periodically, models can better
-understand and predict patterns that repeat over time, such as daily traffic
-trends, or seasonal variations. This ensures that the model
-treats the start and end of a cycle as close neighbors, improving its ability to
-generalize and make accurate predictions.
+capture the cyclical nature of certain data patterns. For example, features such 
+as hours in a day or days in a week  often exhibit periodic behavior. 
+By encoding these features periodically, models can better understand and predict 
+patterns that repeat over time, such as daily traffic trends, or seasonal variations. 
+This ensures that the model treats the start and end of a cycle as close neighbors, 
+improving its ability to generalize and make accurate predictions.
 
 This can be done manually with dataframe libraries. For example, circular encoding
 (a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:
@@ -166,6 +165,9 @@ provides a convenient way to extract useful components such as year, month, day,
 weekday, day of year, and total seconds since epoch. Additionally, we saw how
 periodic (circular) encoding can be used to capture cyclical patterns in
 time-based data.
+
+In the next chapter, we will cover the final type of columns: categorical/string
+columns.
 
 # Exercise
 

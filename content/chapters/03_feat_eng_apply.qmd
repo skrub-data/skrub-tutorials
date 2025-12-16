@@ -15,6 +15,8 @@ the entire dataframe.
 
 As an example, it does not make sense to apply a `StandardScaler` to a column 
 that contains strings, and indeed doing so would raise an exception. 
+In other cases, specific columns may need particular treatment, and should therefore
+be ignored by the `Cleaner`. 
 
 Scikit-learn provides the `ColumnTransformer` to deal with this: 
 
@@ -53,11 +55,12 @@ pipeline to filter columns according to the selectors API, while `ApplyToCols` a
 and access to the selectors. 
 
 ## Selection operations in a scikit-learn pipeline
-In some situations, it may be necessary to select or remove specific columns from
-a dataframe:  this means removing some 
-features from the original table. This can be done with `SelectCols` and `DropCols`, 
-which work as their name suggests, and can take a `cols` parameter to choose
-which columns to select or drop respectively.
+`SelectCols` and `DropCols` allow selecting or removing specific columns in a 
+dataframe according to user-provided rules. For example, to remove columns that 
+include null values, or to select only columns that have a specific dtype. 
+
+`SelectCols` and `DropCols` take a `cols` parameter to choose which columns to 
+select or drop respectively.
 
 ```{python}
 from skrub import ToDatetime
@@ -75,13 +78,15 @@ from skrub import SelectCols
 SelectCols("date").fit_transform(df)
 ```
 
-
 ```{python}
 from skrub import DropCols
 DropCols("date").fit_transform(df)
 ```
 
 ## `ApplyToCols` and `ApplyToFrame`
+Besides selecting and dropping columns, pre-processing pipelines are intended to 
+_transform_ specific columns in specific ways. To make this process easier, skrub 
+provides the `ApplyToCols` and `ApplyToFrame` transformers.
 
 ### Applying a transformer to separate columns: `ApplyToCols`
 In many cases, `ApplyToCols` can be a direct replacememnt for the `ColumnTransformer`,
@@ -115,12 +120,18 @@ columns are not touched by the `numeric` transformer.
 By passing through unselected columns without changes it is possible to chain 
 several `ApplyToCols` together by putting them in a scikit-learn pipeline. 
 
-### Applying the same transformer to multiple columns at once: `ApplyToFrame`
-In some cases, it may be beneficial to apply the same transformer to a subset of 
-columns in a dataframe. 
+::: {.callout-important}
+`ApplyToCols` is intended to work on dataframes, which are **dense**. As a result,
+transformers that produce sparse outputs (like the `OneHotEncoder`) must be set 
+so that their output is dense. 
+:::
 
-This example dataframe contains some patient information, and some (random) 
-metrics. 
+
+### Applying the same transformer to multiple columns at once: `ApplyToFrame`
+In some cases, there may be a need to apply the same transformer only to a subset 
+of columns in a dataframe. 
+
+Consider this example dataframe, which some patient information, and some metrics. 
 
 ```{python}
 import pandas as pd
@@ -181,7 +192,7 @@ with_reject.fit_transform(df)
 
 ## Concatenating the skrub column transformers
 Skrub column transformers can be concatenated by using scikit-learn pipelines.
-In the following example, we first select only the column `patiend_id`, then encode
+In the following example, we first select only the column `patient_id`, then encode
 it using `OneHotEncoder` and finally use `PCA` to reduce the number of dimensions.
 
 This is done by wrapping the latter two steps in `ApplyToCols` and `ApplyToFrame` 
@@ -237,3 +248,10 @@ features are numeric and are therefore selected in the next step.
 In many cases, this behavior is not desired: while some model types may not be 
 affected by the different ordering (such as tree-based models), linear models
 and NN-based models may produce worse results.
+
+## Conclusions
+In this chapter we explored how skrub helps with selecting and transforming 
+specific columns using various transformers. While these transformers can take 
+simple lists of columns to work, they become far more flexible and powerful when
+they are combined with the skrub selectors, which is the subject of the next 
+chapter.

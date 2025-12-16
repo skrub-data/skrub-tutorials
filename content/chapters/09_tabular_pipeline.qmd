@@ -85,7 +85,7 @@ model = tabular_pipeline('regression')
 
 ## How `tabular_pipeline` adapts to different estimators
 
-The `tabular_pipeline` function intelligently configures the preprocessing pipeline
+The `tabular_pipeline` function configures the preprocessing pipeline
 based on the estimator type:
 
 ### For linear models (e.g., LogisticRegression, Ridge)

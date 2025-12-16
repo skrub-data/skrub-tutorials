@@ -25,7 +25,8 @@ data =  pd.read_csv("../data/adult_census/data.csv")
 target =  pd.read_csv("../data/adult_census/target.csv")
 ```
 
-Now that we have a dataframe we can work with, we would like to find out:
+Now that we have a dataframe we can work with, here is a list of features of the 
+data we would like to find out:
 
 - The size of the dataset. 
 - The data types and names of the columns. 
@@ -35,7 +36,7 @@ Now that we have a dataframe we can work with, we would like to find out:
 - Columns strongly correlated with each other. 
 
 ## Exploring data with Pandas tools
-For the sake of the example, let's first explore the data using Pandas only.
+Let's first explore the data using Pandas only.
 
 We can get an idea of the content of the table by printing the first few lines, 
 which gives an idea of the datatypes and the columns we are dealing with. 
@@ -62,10 +63,9 @@ data.describe(include="all")
 
 This gives us useful information about all the features in the dataset. Among 
 others, we can find the number of unique values in each column, various statistics
-for the numerical columns and the number of null values. 
+for the numerical columns and the number of null values.
 
 ## Exploring data with the `TableReport`
-
 Now, let's create a TableReport to explore the dataset.
 ```{python}
 from skrub import TableReport
@@ -79,7 +79,8 @@ of the cells shown in the preview.
 
 The `TableReport` is intended to show a preview of the data, so it does not 
 contain all the rows in the dataset, rather it shows only the first and last
-few rows by default. 
+few rows by default. Similarly, it stores only the top 10 most frequent values
+for each column, if column distributions are plotted.
 
 ### The "Stats" tab
 
@@ -104,14 +105,23 @@ For numerical columns, additional statistics are provided:
 - Minimum and maximum values
 - Median
 
-### The "Distributions" tab
+Stat columns can also be sorted, for example to quickly identify which columns 
+contain the most nulls, or have the largest cardinality (number of unique values).
 
+::: {.callout}
+### Filters
+Pre-made column filters are also available, allowing to select columns by dtype 
+or other characteristics. Filters are shared across tabs. 
+:::
+
+### The "Distributions" tab
 ```{python}
 TableReport(data, open_tab="distributions")
 ```
 
 The "Distributions" tab provides visualizations of the distributions of values 
-in each column. This includes histograms for numerical columns and bar plots for categorical columns.
+in each column. This includes histograms for numerical columns and bar plots for
+categorical columns.
 
 The "Distributions" tab helps with detecting potential issues in the data, such as:
 
@@ -124,10 +134,11 @@ skewed, such as "workclass", "race", and "native-country": this is important
 information to keep track of, because these columns may require special handling
 during data preprocessing or modeling.
 
-Additionally, the "Distributions" tab allows so select columns manually, so that
+Additionally, the "Distributions" tab allows to select columns manually, so that
 they can be added to a script and selected for further analysis or modeling.
 
 ::: {.callout-caution}
+#### Outlier detection
 The `TableReport` detects outliers using a simple interquartile test, marking 
 as outliers all values that are beyond the IQR. This is a simple heuristic, and 
 should not be treated as perfect. If your problem requires reliable outlier 
@@ -156,16 +167,16 @@ correlation, which means that one of the two columns can be dropped without losi
 information.
 
 ## Exploring the target variable
-Let's take a closer look at the target variable, which indicates whether an individual's
-income exceeds $50K per year. We can create a separate `TableReport` for the target variable
-to explore its distribution: 
+Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
+numpy arrays.
+
+So, let's take a closer look at the target variable, which indicates whether an
+individual's income exceeds $50K per year. We can create a separate `TableReport`
+for the target variable to explore its distribution: 
 
 ```{python}
 TableReport(target)
 ```
-
-Besides handling dataframes, the `TableReport` handles series and bidimensional
-numpy arrays.
 
 ## Configuring and saving the `TableReport` 
 The `TableReport` can be saved on disk as an HTML. 
@@ -194,7 +205,8 @@ unpatch_display()
 data
 ```
 
-This can also be done using the skrub global configuration as follows: 
+This can also be done using the skrub global configuration and changing the 
+`use_table_report` flag: 
 ```{python}
 from skrub import set_config
 
@@ -203,11 +215,9 @@ set_config(use_table_report=True)
 data
 ```
 
-To disable, then switch off the same flag. 
 ```{python}
+#| echo: false
 set_config(use_table_report=False)
-data
-
 ```
 
 More detail on the skrub configuration is reported in the 
@@ -217,7 +227,7 @@ More detail on the skrub configuration is reported in the
 ## Working with big tables
 Plotting and measuring the column correlations are expensive operations and may
 take a long time, so when the dataframe under study is large it may be more
-convenient to skip them.
+convenient to skip them for quicker development. 
 
 The `max_plot_columns` and `max_association_columns` parameters allow to set a 
 threshold on the number of columns: the `TableReport` will skip the respective
@@ -231,6 +241,13 @@ TableReport(
 
 When the number of columns is too large, an information message is shown in the 
 respective tab instead of the plots or correlations. 
+
+## Conclusions
+In this chapter we have learned how the `TableReport` can be used to speed up 
+data exploration, allowing us to find possible criticalities in the data. In the
+next chapter, we will find out how to address some of the possible problems using 
+the skrub `Cleaner`.
+
 
 # Exercise: exploring a new table
 

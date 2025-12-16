@@ -36,15 +36,15 @@ plan for pre-processing our data.
 X.describe(include="all")
 ```
 
-We need to:
+In this example we want to train a regression model to predict the salary, and we
+will be using a linear model (`Ridge`) to do so. 
+
+Therefore, we need to: 
 
 - Impute some missing values in the `gender` column.
 - Encode convert categorical features into numerical features. 
 - Convert the column `date_first_hired` into numerical features.
-
-Once we have processed the data, we can train a machine learning model. For the sake
-of the example, we will use a linear model (`Ridge`), which means that we need to
-scale numerical features and impute missing values. 
+- Scale numerical features. 
 
 Finally, we want to evaluate the performance of the method across multiple 
 cross-validation splits.
@@ -120,7 +120,7 @@ X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
 
 ### Step 5: Train Ridge model with cross-validation
 
-Train a Ridge regression model and evaluate with cross-validation.
+Train a `Ridge` regression model and evaluate with cross-validation.
 
 ```{python}
 from sklearn.linear_model import Ridge
