@@ -1,333 +1,222 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>5&nbsp; Quiz: Exploring and sanitizing dataframes with skrub – Inria Academy - Skrub like a pro</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-</style>
-
-
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../content/chapters/03_feat_eng_apply.html" rel="next">
-<link href="../../content/chapters/02_cleaning_data.html" rel="prev">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<html lang="en"><head>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-3778d3e438078121318a23701f9f68bb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
-<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.26">
 
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
-
+  <title>Inria Academy - Skrub like a pro – Quiz: Exploring and sanitizing dataframes with skrub</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-cea50a97bd1bf62732e69dd56e0c8687.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+  
+  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 </head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
 
-<body class="nav-sidebar floating quarto-light">
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Quiz: Exploring and sanitizing dataframes with skrub</h1>
 
-<div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/01_exploring_data.html">Exploring and sanitizing data</a></li><li class="breadcrumb-item"><a href="../../content/chapters/quiz_01.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
-<!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-    <div class="sidebar-title mb-0 py-0">
-      <a href="../../">Inria Academy - Skrub like a pro</a> 
-    </div>
-      </div>
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Inria Academy - skrub like a pro</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/00_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">A world without skrub</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Exploring and sanitizing data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/01_exploring_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/02_cleaning_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Preprocessing data with the skrub <code>Cleaner</code></span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/quiz_01.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Column transformations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/03_feat_eng_apply.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Applying transformers to columns</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/04_selectors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/quiz_02.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Feature engineering</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/05_feat_eng_numerical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Scaling numerical features safely</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/06_feat_eng_datetimes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Encoding datetime features with <code>DatetimeEncoder</code></span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/07_feat_eng_categorical.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Mixed data: dealing with categories</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/quiz_03.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Putting it all together</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/08_feat_eng_table_vect.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/09_tabular_pipeline.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../content/chapters/quiz_04.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Quiz: Column-level transformations</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#question-1" id="toc-question-1" class="nav-link active" data-scroll-target="#question-1"><span class="header-section-number">5.1</span> Question 1</a></li>
-  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2"><span class="header-section-number">5.2</span> Question 2</a></li>
-  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3"><span class="header-section-number">5.3</span> Question 3</a></li>
-  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">5.4</span> Question 4</a></li>
-  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">5.5</span> Question 5</a></li>
-  </ul>
-</nav>
-    </div>
-<!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/chapters/01_exploring_data.html">Exploring and sanitizing data</a></li><li class="breadcrumb-item"><a href="../../content/chapters/quiz_01.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Quiz: Exploring and sanitizing dataframes with skrub</span></h1>
+<div class="quarto-title-authors">
 </div>
 
-
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="question-1" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="question-1"><span class="header-section-number">5.1</span> Question 1</h2>
-<div class="callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
+</section><section id="TOC">
+<nav role="doc-toc"> 
+<h2 id="toc-title">Table of contents</h2>
+<ul>
+<li><a href="#/question-1" id="/toc-question-1">Question 1</a></li>
+<li><a href="#/question-2" id="/toc-question-2">Question 2</a></li>
+<li><a href="#/question-3" id="/toc-question-3">Question 3</a></li>
+<li><a href="#/question-4" id="/toc-question-4">Question 4</a></li>
+<li><a href="#/question-5" id="/toc-question-5">Question 5</a></li>
+</ul>
+</nav>
+</section>
+<section id="question-1" class="slide level2">
+<h2>Question 1</h2>
+<div class="callout callout-none no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
 <p>What do I need to open a <code>TableReport</code> saved with <code>.write_html("report.html")</code>?</p>
 <ul class="task-list">
 <li><label><input type="checkbox">A) A python console</label></li>
@@ -337,18 +226,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
+<p><strong>Solution</strong></p>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<div class="callout-content">
 <p>Answer: B)</p>
 <p>After its generation, the <code>TableReport</code> can be persisted on disk as a HTML file. The file can be opened using a regular internet browswer.</p>
 <p>The <code>TableReport</code> is not updated dynamically, and is not connected to python consoles or running kernels.</p>
@@ -356,34 +242,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="question-2" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="question-2"><span class="header-section-number">5.2</span> Question 2</h2>
-<div class="callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
+<section id="question-2" class="slide level2">
+<h2>Question 2</h2>
+<div class="callout callout-none no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
 <p>Consider this dataframe and TableReport, then answer the question.</p>
-<div id="43371c8a" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableReport</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Name'</span>: [<span class="st">'Alice'</span>, <span class="st">'Bob'</span>, <span class="st">'Charlie'</span>, <span class="st">'Diana'</span>, <span class="st">'Eve'</span>],</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Age'</span>: [<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>, <span class="dv">40</span>, <span class="dv">45</span>],</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'City'</span>: [<span class="st">'New York'</span>, <span class="st">'Los Angeles'</span>, <span class="st">'Chicago'</span>, <span class="st">'Houston'</span>, <span class="st">'Phoenix'</span>],</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Salary'</span>: [<span class="dv">70000</span>, <span class="dv">80000</span>, <span class="dv">90000</span>, <span class="dv">100000</span>, <span class="dv">110000</span>],</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Department'</span>: [<span class="st">'HR'</span>, <span class="st">'Finance'</span>, <span class="st">'IT'</span>, <span class="st">'Marketing'</span>, <span class="st">'Sales'</span>]</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>TableReport(df, max_plot_columns<span class="op">=</span><span class="dv">5</span>, max_association_columns<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="43146c96" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableReport</span>
+<span id="cb1-3"><a></a></span>
+<span id="cb1-4"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-5"><a></a>    <span class="st">'Name'</span>: [<span class="st">'Alice'</span>, <span class="st">'Bob'</span>, <span class="st">'Charlie'</span>, <span class="st">'Diana'</span>, <span class="st">'Eve'</span>],</span>
+<span id="cb1-6"><a></a>    <span class="st">'Age'</span>: [<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>, <span class="dv">40</span>, <span class="dv">45</span>],</span>
+<span id="cb1-7"><a></a>    <span class="st">'City'</span>: [<span class="st">'New York'</span>, <span class="st">'Los Angeles'</span>, <span class="st">'Chicago'</span>, <span class="st">'Houston'</span>, <span class="st">'Phoenix'</span>],</span>
+<span id="cb1-8"><a></a>    <span class="st">'Salary'</span>: [<span class="dv">70000</span>, <span class="dv">80000</span>, <span class="dv">90000</span>, <span class="dv">100000</span>, <span class="dv">110000</span>],</span>
+<span id="cb1-9"><a></a>    <span class="st">'Department'</span>: [<span class="st">'HR'</span>, <span class="st">'Finance'</span>, <span class="st">'IT'</span>, <span class="st">'Marketing'</span>, <span class="st">'Sales'</span>]</span>
+<span id="cb1-10"><a></a>})</span>
+<span id="cb1-11"><a></a></span>
+<span id="cb1-12"><a></a>TableReport(df, max_plot_columns<span class="op">=</span><span class="dv">5</span>, max_association_columns<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Processing column   1 / 5Processing column   2 / 5Processing column   3 / 5Processing column   4 / 5Processing column   5 / 5</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<div id="report_0e4c18f0-wrapper" hidden="">
-    <template id="report_0e4c18f0-template">
+<div id="report_6a89018d-wrapper" hidden="">
+    <template id="report_6a89018d-template">
         <style>
          /*!
 Pure v3.0.0
@@ -1756,56 +1639,56 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
 <table class="pure-table pure-table-striped table-with-selectable-cells caption-top" data-quarto-postprocess="true" data-manager="SampleTable" data-start-i="-2" data-stop-i="5" data-start-j="-1" data-stop-j="5">
 <thead>
 <tr class="header">
-<th rowspan="2" id="fb97a7ee" class="table-cell elided-short" data-quarto-table-cell-role="th" data-role="padding" data-i="-2" data-j="-1" data-spans__-2__-1="" data-spans__-1__-1="" data-value-repr="None" data-value-str="None"></th>
-<th rowspan="2" id="7624d71f" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="0" data-spans__-2__0="" data-spans__-1__0="" data-value-repr="'Name'" data-value-str="Name" data-column-idx="0">Name</th>
-<th rowspan="2" id="31194373" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="1" data-spans__-2__1="" data-spans__-1__1="" data-value-repr="'Age'" data-value-str="Age" data-column-idx="1">Age</th>
-<th rowspan="2" id="8a49dbf3" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="2" data-spans__-2__2="" data-spans__-1__2="" data-value-repr="'City'" data-value-str="City" data-column-idx="2">City</th>
-<th rowspan="2" id="5981310d" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="3" data-spans__-2__3="" data-spans__-1__3="" data-value-repr="'Salary'" data-value-str="Salary" data-column-idx="3">Salary</th>
-<th rowspan="2" id="f59a9277" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="4" data-spans__-2__4="" data-spans__-1__4="" data-value-repr="'Department'" data-value-str="Department" data-column-idx="4">Department</th>
+<th rowspan="2" id="274d8e48" class="table-cell elided-short" data-quarto-table-cell-role="th" data-role="padding" data-i="-2" data-j="-1" data-spans__-2__-1="" data-spans__-1__-1="" data-value-repr="None" data-value-str="None"></th>
+<th rowspan="2" id="7e01c51a" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="0" data-spans__-2__0="" data-spans__-1__0="" data-value-repr="'Name'" data-value-str="Name" data-column-idx="0">Name</th>
+<th rowspan="2" id="5bdc25eb" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="1" data-spans__-2__1="" data-spans__-1__1="" data-value-repr="'Age'" data-value-str="Age" data-column-idx="1">Age</th>
+<th rowspan="2" id="4dc5cb74" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="2" data-spans__-2__2="" data-spans__-1__2="" data-value-repr="'City'" data-value-str="City" data-column-idx="2">City</th>
+<th rowspan="2" id="c31c6d29" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="3" data-spans__-2__3="" data-spans__-1__3="" data-value-repr="'Salary'" data-value-str="Salary" data-column-idx="3">Salary</th>
+<th rowspan="2" id="629759d3" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="4" data-spans__-2__4="" data-spans__-1__4="" data-value-repr="'Department'" data-value-str="Department" data-column-idx="4">Department</th>
 </tr>
 <tr class="even">
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="9f7b9339" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="0" data-j="-1" data-spans__0__-1="" data-value-repr="0" data-value-str="0">0</td>
-<td id="e468cbf7" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="0" data-spans__0__0="" data-value-repr="'Alice'" data-value-str="Alice" data-column-idx="0">Alice</td>
-<td id="f30705e4" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="1" data-spans__0__1="" data-value-repr="25" data-value-str="25" data-column-idx="1">25</td>
-<td id="0c26568a" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="2" data-spans__0__2="" data-value-repr="'New York'" data-value-str="New York" data-column-idx="2">New York</td>
-<td id="327f3587" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="3" data-spans__0__3="" data-value-repr="70000" data-value-str="70000" data-column-idx="3">70,000</td>
-<td id="c419d0c5" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="4" data-spans__0__4="" data-value-repr="'HR'" data-value-str="HR" data-column-idx="4">HR</td>
+<td id="7f3a157c" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="0" data-j="-1" data-spans__0__-1="" data-value-repr="0" data-value-str="0">0</td>
+<td id="183233bc" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="0" data-spans__0__0="" data-value-repr="'Alice'" data-value-str="Alice" data-column-idx="0">Alice</td>
+<td id="e4205a56" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="1" data-spans__0__1="" data-value-repr="25" data-value-str="25" data-column-idx="1">25</td>
+<td id="e7693fd2" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="2" data-spans__0__2="" data-value-repr="'New York'" data-value-str="New York" data-column-idx="2">New York</td>
+<td id="197b8c0b" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="3" data-spans__0__3="" data-value-repr="70000" data-value-str="70000" data-column-idx="3">70,000</td>
+<td id="79ede452" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="4" data-spans__0__4="" data-value-repr="'HR'" data-value-str="HR" data-column-idx="4">HR</td>
 </tr>
 <tr class="even">
-<td id="251107fa" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="1" data-j="-1" data-spans__1__-1="" data-value-repr="1" data-value-str="1">1</td>
-<td id="68e67496" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="0" data-spans__1__0="" data-value-repr="'Bob'" data-value-str="Bob" data-column-idx="0">Bob</td>
-<td id="5d2a70a6" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="1" data-spans__1__1="" data-value-repr="30" data-value-str="30" data-column-idx="1">30</td>
-<td id="9ae033cd" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="2" data-spans__1__2="" data-value-repr="'Los Angeles'" data-value-str="Los Angeles" data-column-idx="2">Los Angeles</td>
-<td id="907edc83" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="3" data-spans__1__3="" data-value-repr="80000" data-value-str="80000" data-column-idx="3">80,000</td>
-<td id="f1a828b8" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="4" data-spans__1__4="" data-value-repr="'Finance'" data-value-str="Finance" data-column-idx="4">Finance</td>
+<td id="0abec2ae" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="1" data-j="-1" data-spans__1__-1="" data-value-repr="1" data-value-str="1">1</td>
+<td id="f6f2e411" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="0" data-spans__1__0="" data-value-repr="'Bob'" data-value-str="Bob" data-column-idx="0">Bob</td>
+<td id="5cd55484" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="1" data-spans__1__1="" data-value-repr="30" data-value-str="30" data-column-idx="1">30</td>
+<td id="0d853626" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="2" data-spans__1__2="" data-value-repr="'Los Angeles'" data-value-str="Los Angeles" data-column-idx="2">Los Angeles</td>
+<td id="68e82192" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="3" data-spans__1__3="" data-value-repr="80000" data-value-str="80000" data-column-idx="3">80,000</td>
+<td id="fb643211" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="4" data-spans__1__4="" data-value-repr="'Finance'" data-value-str="Finance" data-column-idx="4">Finance</td>
 </tr>
 <tr class="odd">
-<td id="04b48b8a" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="2" data-j="-1" data-spans__2__-1="" data-value-repr="2" data-value-str="2">2</td>
-<td id="6f4cefa4" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="0" data-spans__2__0="" data-value-repr="'Charlie'" data-value-str="Charlie" data-column-idx="0">Charlie</td>
-<td id="b6d6deff" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="1" data-spans__2__1="" data-value-repr="35" data-value-str="35" data-column-idx="1">35</td>
-<td id="3443dad0" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="2" data-spans__2__2="" data-value-repr="'Chicago'" data-value-str="Chicago" data-column-idx="2">Chicago</td>
-<td id="48afe550" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="3" data-spans__2__3="" data-value-repr="90000" data-value-str="90000" data-column-idx="3">90,000</td>
-<td id="0fddbc61" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="4" data-spans__2__4="" data-value-repr="'IT'" data-value-str="IT" data-column-idx="4">IT</td>
+<td id="0d61633e" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="2" data-j="-1" data-spans__2__-1="" data-value-repr="2" data-value-str="2">2</td>
+<td id="03c0f6e9" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="0" data-spans__2__0="" data-value-repr="'Charlie'" data-value-str="Charlie" data-column-idx="0">Charlie</td>
+<td id="a4cfdae3" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="1" data-spans__2__1="" data-value-repr="35" data-value-str="35" data-column-idx="1">35</td>
+<td id="f0ffc46f" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="2" data-spans__2__2="" data-value-repr="'Chicago'" data-value-str="Chicago" data-column-idx="2">Chicago</td>
+<td id="73679af9" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="3" data-spans__2__3="" data-value-repr="90000" data-value-str="90000" data-column-idx="3">90,000</td>
+<td id="2e7a279a" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="4" data-spans__2__4="" data-value-repr="'IT'" data-value-str="IT" data-column-idx="4">IT</td>
 </tr>
 <tr class="even">
-<td id="8fcfbb33" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="3" data-j="-1" data-spans__3__-1="" data-value-repr="3" data-value-str="3">3</td>
-<td id="b04638e7" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="0" data-spans__3__0="" data-value-repr="'Diana'" data-value-str="Diana" data-column-idx="0">Diana</td>
-<td id="ea80f634" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="1" data-spans__3__1="" data-value-repr="40" data-value-str="40" data-column-idx="1">40</td>
-<td id="afe48a8f" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="2" data-spans__3__2="" data-value-repr="'Houston'" data-value-str="Houston" data-column-idx="2">Houston</td>
-<td id="ff2d484a" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="3" data-spans__3__3="" data-value-repr="100000" data-value-str="100000" data-column-idx="3">100,000</td>
-<td id="4f8ad177" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="4" data-spans__3__4="" data-value-repr="'Marketing'" data-value-str="Marketing" data-column-idx="4">Marketing</td>
+<td id="31f770e6" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="3" data-j="-1" data-spans__3__-1="" data-value-repr="3" data-value-str="3">3</td>
+<td id="ba99b82c" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="0" data-spans__3__0="" data-value-repr="'Diana'" data-value-str="Diana" data-column-idx="0">Diana</td>
+<td id="ed159131" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="1" data-spans__3__1="" data-value-repr="40" data-value-str="40" data-column-idx="1">40</td>
+<td id="0a11cf17" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="2" data-spans__3__2="" data-value-repr="'Houston'" data-value-str="Houston" data-column-idx="2">Houston</td>
+<td id="659c34e4" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="3" data-spans__3__3="" data-value-repr="100000" data-value-str="100000" data-column-idx="3">100,000</td>
+<td id="f4b16e7d" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="3" data-j="4" data-spans__3__4="" data-value-repr="'Marketing'" data-value-str="Marketing" data-column-idx="4">Marketing</td>
 </tr>
 <tr class="odd">
-<td id="c33a286a" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="4" data-j="-1" data-spans__4__-1="" data-value-repr="4" data-value-str="4">4</td>
-<td id="c3441aa9" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="0" data-spans__4__0="" data-value-repr="'Eve'" data-value-str="Eve" data-column-idx="0">Eve</td>
-<td id="8cbf8ffd" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="1" data-spans__4__1="" data-value-repr="45" data-value-str="45" data-column-idx="1">45</td>
-<td id="0830f7d5" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="2" data-spans__4__2="" data-value-repr="'Phoenix'" data-value-str="Phoenix" data-column-idx="2">Phoenix</td>
-<td id="870f0fa7" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="3" data-spans__4__3="" data-value-repr="110000" data-value-str="110000" data-column-idx="3">110,000</td>
-<td id="d84bcfae" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="4" data-spans__4__4="" data-value-repr="'Sales'" data-value-str="Sales" data-column-idx="4">Sales</td>
+<td id="70a1a04c" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="4" data-j="-1" data-spans__4__-1="" data-value-repr="4" data-value-str="4">4</td>
+<td id="4ba9aed1" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="0" data-spans__4__0="" data-value-repr="'Eve'" data-value-str="Eve" data-column-idx="0">Eve</td>
+<td id="016876a7" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="1" data-spans__4__1="" data-value-repr="45" data-value-str="45" data-column-idx="1">45</td>
+<td id="d6c774f2" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="2" data-spans__4__2="" data-value-repr="'Phoenix'" data-value-str="Phoenix" data-column-idx="2">Phoenix</td>
+<td id="7599ee84" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="3" data-spans__4__3="" data-value-repr="110000" data-value-str="110000" data-column-idx="3">110,000</td>
+<td id="28f0e82f" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="4" data-j="4" data-spans__4__4="" data-value-repr="'Sales'" data-value-str="Sales" data-column-idx="4">Sales</td>
 </tr>
 </tbody>
 </table>
@@ -1900,7 +1783,7 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.488937</dc:date>
+    <dc:date>2026-01-14T14:18:02.034393</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -1930,7 +1813,7 @@ L 138.611607 75.927273
 L 138.611607 65.018182 
 L 49.46875 65.018182 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.46875 62.290909 
@@ -1938,7 +1821,7 @@ L 138.611607 62.290909
 L 138.611607 51.381818 
 L 49.46875 51.381818 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_4">
     <path d="M 49.46875 48.654545 
@@ -1946,7 +1829,7 @@ L 138.611607 48.654545
 L 138.611607 37.745455 
 L 49.46875 37.745455 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_5">
     <path d="M 49.46875 35.018182 
@@ -1954,7 +1837,7 @@ L 138.611607 35.018182
 L 138.611607 24.109091 
 L 49.46875 24.109091 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_6">
     <path d="M 49.46875 21.381818 
@@ -1962,18 +1845,18 @@ L 138.611607 21.381818
 L 138.611607 10.472727 
 L 49.46875 10.472727 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mf8d4b9ac55" d="M 0 0 
+       <path id="maf56d6ccb7" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mf8d4b9ac55" x="49.46875" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#maf56d6ccb7" x="49.46875" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -1983,7 +1866,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#mf8d4b9ac55" x="94.040179" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#maf56d6ccb7" x="94.040179" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -1993,7 +1876,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#mf8d4b9ac55" x="138.611607" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#maf56d6ccb7" x="138.611607" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -2005,12 +1888,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="m1e06725a8d" d="M 0 0 
+       <path id="mde4a68e7f8" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -2020,7 +1903,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -2030,7 +1913,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -2040,7 +1923,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_7">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -2050,7 +1933,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_8">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_8">
@@ -2130,7 +2013,7 @@ L 143.06875 79.2
   </g>
  </g>
  <defs>
-  <clippath id="p5481345bcf">
+  <clippath id="p39b7424e32">
    <rect x="49.46875" y="7.2" width="93.6" height="72"></rect>
   </clippath>
  </defs>
@@ -2326,7 +2209,7 @@ L 143.06875 79.2
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.507863</dc:date>
+    <dc:date>2026-01-14T14:18:02.053222</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -2356,7 +2239,7 @@ L 49.739489 79.570647
 L 49.739489 10.999219 
 L 36.64858 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570647 
@@ -2364,7 +2247,7 @@ L 62.830398 79.570647
 L 62.830398 79.570647 
 L 49.739489 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570647 
@@ -2372,7 +2255,7 @@ L 75.921307 79.570647
 L 75.921307 10.999219 
 L 62.830398 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570647 
@@ -2380,7 +2263,7 @@ L 89.012216 79.570647
 L 89.012216 79.570647 
 L 75.921307 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570647 
@@ -2388,7 +2271,7 @@ L 102.103125 79.570647
 L 102.103125 79.570647 
 L 89.012216 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570647 
@@ -2396,7 +2279,7 @@ L 115.194034 79.570647
 L 115.194034 10.999219 
 L 102.103125 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570647 
@@ -2404,7 +2287,7 @@ L 128.284943 79.570647
 L 128.284943 79.570647 
 L 115.194034 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570647 
@@ -2412,7 +2295,7 @@ L 141.375852 79.570647
 L 141.375852 10.999219 
 L 128.284943 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570647 
@@ -2420,7 +2303,7 @@ L 154.466761 79.570647
 L 154.466761 79.570647 
 L 141.375852 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570647 
@@ -2428,18 +2311,18 @@ L 167.55767 79.570647
 L 167.55767 10.999219 
 L 154.466761 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m746a14d140" d="M 0 0 
+       <path id="m4073ca4b78" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m746a14d140" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m4073ca4b78" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -2449,7 +2332,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m746a14d140" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m4073ca4b78" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -2461,12 +2344,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_3">
       <defs>
-       <path id="meef82b9644" d="M 0 0 
+       <path id="mbf47ce2319" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#meef82b9644" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbf47ce2319" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -2476,7 +2359,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_4">
       <g>
-       <use href="#meef82b9644" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbf47ce2319" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -2486,7 +2369,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_5">
       <g>
-       <use href="#meef82b9644" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbf47ce2319" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -2507,7 +2390,7 @@ L 174.103125 79.570647
   </g>
  </g>
  <defs>
-  <clippath id="p1d2f30982c">
+  <clippath id="p631686a846">
    <rect x="30.103125" y="7.570647" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -2574,7 +2457,7 @@ L 174.103125 79.570647
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.530091</dc:date>
+    <dc:date>2026-01-14T14:18:02.074959</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -2604,7 +2487,7 @@ L 163.066295 75.927273
 L 163.066295 65.018182 
 L 73.923438 65.018182 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_3">
     <path d="M 73.923438 62.290909 
@@ -2612,7 +2495,7 @@ L 163.066295 62.290909
 L 163.066295 51.381818 
 L 73.923438 51.381818 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_4">
     <path d="M 73.923438 48.654545 
@@ -2620,7 +2503,7 @@ L 163.066295 48.654545
 L 163.066295 37.745455 
 L 73.923438 37.745455 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_5">
     <path d="M 73.923438 35.018182 
@@ -2628,7 +2511,7 @@ L 163.066295 35.018182
 L 163.066295 24.109091 
 L 73.923438 24.109091 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_6">
     <path d="M 73.923438 21.381818 
@@ -2636,18 +2519,18 @@ L 163.066295 21.381818
 L 163.066295 10.472727 
 L 73.923438 10.472727 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m465dc3c2a6" d="M 0 0 
+       <path id="m6bbf8153f1" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m465dc3c2a6" x="73.923438" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6bbf8153f1" x="73.923438" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -2657,7 +2540,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m465dc3c2a6" x="118.494866" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6bbf8153f1" x="118.494866" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -2667,7 +2550,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#m465dc3c2a6" x="163.066295" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6bbf8153f1" x="163.066295" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -2679,12 +2562,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="mcfd5b2507d" d="M 0 0 
+       <path id="m1226006a50" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -2694,7 +2577,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -2704,7 +2587,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -2714,7 +2597,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_7">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -2724,7 +2607,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_8">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_8">
@@ -2804,7 +2687,7 @@ L 167.523437 79.2
   </g>
  </g>
  <defs>
-  <clippath id="p4c56c5a68c">
+  <clippath id="pdbae9ed91d">
    <rect x="73.923438" y="7.2" width="93.6" height="72"></rect>
   </clippath>
  </defs>
@@ -3000,7 +2883,7 @@ L 167.523437 79.2
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.548647</dc:date>
+    <dc:date>2026-01-14T14:18:02.093209</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -3030,7 +2913,7 @@ L 49.739489 79.570647
 L 49.739489 10.999219 
 L 36.64858 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570647 
@@ -3038,7 +2921,7 @@ L 62.830398 79.570647
 L 62.830398 79.570647 
 L 49.739489 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570647 
@@ -3046,7 +2929,7 @@ L 75.921307 79.570647
 L 75.921307 10.999219 
 L 62.830398 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570647 
@@ -3054,7 +2937,7 @@ L 89.012216 79.570647
 L 89.012216 79.570647 
 L 75.921307 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570647 
@@ -3062,7 +2945,7 @@ L 102.103125 79.570647
 L 102.103125 79.570647 
 L 89.012216 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570647 
@@ -3070,7 +2953,7 @@ L 115.194034 79.570647
 L 115.194034 10.999219 
 L 102.103125 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570647 
@@ -3078,7 +2961,7 @@ L 128.284943 79.570647
 L 128.284943 79.570647 
 L 115.194034 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570647 
@@ -3086,7 +2969,7 @@ L 141.375852 79.570647
 L 141.375852 10.999219 
 L 128.284943 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570647 
@@ -3094,7 +2977,7 @@ L 154.466761 79.570647
 L 154.466761 79.570647 
 L 141.375852 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570647 
@@ -3102,18 +2985,18 @@ L 167.55767 79.570647
 L 167.55767 10.999219 
 L 154.466761 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mab5ddd3fb5" d="M 0 0 
+       <path id="m0d8e0f3a0a" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mab5ddd3fb5" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m0d8e0f3a0a" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -3123,7 +3006,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#mab5ddd3fb5" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m0d8e0f3a0a" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -3135,12 +3018,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_3">
       <defs>
-       <path id="m7456ac60fa" d="M 0 0 
+       <path id="m6e5ec967fd" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m7456ac60fa" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6e5ec967fd" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -3150,7 +3033,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_4">
       <g>
-       <use href="#m7456ac60fa" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6e5ec967fd" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -3160,7 +3043,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_5">
       <g>
-       <use href="#m7456ac60fa" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6e5ec967fd" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -3181,7 +3064,7 @@ L 174.103125 79.570647
   </g>
  </g>
  <defs>
-  <clippath id="p0de36d39cb">
+  <clippath id="pf7445610be">
    <rect x="30.103125" y="7.570647" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -3248,7 +3131,7 @@ L 174.103125 79.570647
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.570354</dc:date>
+    <dc:date>2026-01-14T14:18:02.114378</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -3278,7 +3161,7 @@ L 153.17567 75.927273
 L 153.17567 65.018182 
 L 64.032813 65.018182 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_3">
     <path d="M 64.032813 62.290909 
@@ -3286,7 +3169,7 @@ L 153.17567 62.290909
 L 153.17567 51.381818 
 L 64.032813 51.381818 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_4">
     <path d="M 64.032813 48.654545 
@@ -3294,7 +3177,7 @@ L 153.17567 48.654545
 L 153.17567 37.745455 
 L 64.032813 37.745455 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_5">
     <path d="M 64.032813 35.018182 
@@ -3302,7 +3185,7 @@ L 153.17567 35.018182
 L 153.17567 24.109091 
 L 64.032813 24.109091 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_6">
     <path d="M 64.032813 21.381818 
@@ -3310,18 +3193,18 @@ L 153.17567 21.381818
 L 153.17567 10.472727 
 L 64.032813 10.472727 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="ma1fb6ac730" d="M 0 0 
+       <path id="m87bfe06193" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#ma1fb6ac730" x="64.032813" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m87bfe06193" x="64.032813" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -3331,7 +3214,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#ma1fb6ac730" x="108.604241" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m87bfe06193" x="108.604241" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -3341,7 +3224,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#ma1fb6ac730" x="153.17567" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m87bfe06193" x="153.17567" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -3353,12 +3236,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="m46afe18e82" d="M 0 0 
+       <path id="md080fd400a" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -3368,7 +3251,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -3378,7 +3261,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -3388,7 +3271,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_7">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -3398,7 +3281,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_8">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_8">
@@ -3478,7 +3361,7 @@ L 157.632812 79.2
   </g>
  </g>
  <defs>
-  <clippath id="p929edb3151">
+  <clippath id="pbce129023c">
    <rect x="64.032813" y="7.2" width="93.6" height="72"></rect>
   </clippath>
  </defs>
@@ -3951,7 +3834,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.488937</dc:date>
+    <dc:date>2026-01-14T14:18:02.034393</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -3981,7 +3864,7 @@ L 138.611607 75.927273
 L 138.611607 65.018182 
 L 49.46875 65.018182 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.46875 62.290909 
@@ -3989,7 +3872,7 @@ L 138.611607 62.290909
 L 138.611607 51.381818 
 L 49.46875 51.381818 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_4">
     <path d="M 49.46875 48.654545 
@@ -3997,7 +3880,7 @@ L 138.611607 48.654545
 L 138.611607 37.745455 
 L 49.46875 37.745455 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_5">
     <path d="M 49.46875 35.018182 
@@ -4005,7 +3888,7 @@ L 138.611607 35.018182
 L 138.611607 24.109091 
 L 49.46875 24.109091 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_6">
     <path d="M 49.46875 21.381818 
@@ -4013,18 +3896,18 @@ L 138.611607 21.381818
 L 138.611607 10.472727 
 L 49.46875 10.472727 
 z
-" clip-path="url(#p5481345bcf)" style="fill: #ee854a"></path>
+" clip-path="url(#p39b7424e32)" style="fill: #ee854a"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mf8d4b9ac55" d="M 0 0 
+       <path id="maf56d6ccb7" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mf8d4b9ac55" x="49.46875" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#maf56d6ccb7" x="49.46875" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -4034,7 +3917,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#mf8d4b9ac55" x="94.040179" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#maf56d6ccb7" x="94.040179" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -4044,7 +3927,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#mf8d4b9ac55" x="138.611607" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#maf56d6ccb7" x="138.611607" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -4056,12 +3939,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="m1e06725a8d" d="M 0 0 
+       <path id="mde4a68e7f8" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -4071,7 +3954,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -4081,7 +3964,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -4091,7 +3974,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_7">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -4101,7 +3984,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_8">
       <g>
-       <use href="#m1e06725a8d" x="49.46875" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mde4a68e7f8" x="49.46875" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_8">
@@ -4181,7 +4064,7 @@ L 143.06875 79.2
   </g>
  </g>
  <defs>
-  <clippath id="p5481345bcf">
+  <clippath id="p39b7424e32">
    <rect x="49.46875" y="7.2" width="93.6" height="72"></rect>
   </clippath>
  </defs>
@@ -4373,7 +4256,7 @@ L 143.06875 79.2
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.507863</dc:date>
+    <dc:date>2026-01-14T14:18:02.053222</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -4403,7 +4286,7 @@ L 49.739489 79.570647
 L 49.739489 10.999219 
 L 36.64858 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570647 
@@ -4411,7 +4294,7 @@ L 62.830398 79.570647
 L 62.830398 79.570647 
 L 49.739489 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570647 
@@ -4419,7 +4302,7 @@ L 75.921307 79.570647
 L 75.921307 10.999219 
 L 62.830398 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570647 
@@ -4427,7 +4310,7 @@ L 89.012216 79.570647
 L 89.012216 79.570647 
 L 75.921307 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570647 
@@ -4435,7 +4318,7 @@ L 102.103125 79.570647
 L 102.103125 79.570647 
 L 89.012216 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570647 
@@ -4443,7 +4326,7 @@ L 115.194034 79.570647
 L 115.194034 10.999219 
 L 102.103125 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570647 
@@ -4451,7 +4334,7 @@ L 128.284943 79.570647
 L 128.284943 79.570647 
 L 115.194034 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570647 
@@ -4459,7 +4342,7 @@ L 141.375852 79.570647
 L 141.375852 10.999219 
 L 128.284943 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570647 
@@ -4467,7 +4350,7 @@ L 154.466761 79.570647
 L 154.466761 79.570647 
 L 141.375852 79.570647 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570647 
@@ -4475,18 +4358,18 @@ L 167.55767 79.570647
 L 167.55767 10.999219 
 L 154.466761 10.999219 
 z
-" clip-path="url(#p1d2f30982c)" style="fill: #1f77b4"></path>
+" clip-path="url(#p631686a846)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m746a14d140" d="M 0 0 
+       <path id="m4073ca4b78" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m746a14d140" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m4073ca4b78" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -4496,7 +4379,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m746a14d140" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m4073ca4b78" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -4508,12 +4391,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_3">
       <defs>
-       <path id="meef82b9644" d="M 0 0 
+       <path id="mbf47ce2319" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#meef82b9644" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbf47ce2319" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -4523,7 +4406,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_4">
       <g>
-       <use href="#meef82b9644" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbf47ce2319" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -4533,7 +4416,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_5">
       <g>
-       <use href="#meef82b9644" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbf47ce2319" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -4554,7 +4437,7 @@ L 174.103125 79.570647
   </g>
  </g>
  <defs>
-  <clippath id="p1d2f30982c">
+  <clippath id="p631686a846">
    <rect x="30.103125" y="7.570647" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -4617,7 +4500,7 @@ L 174.103125 79.570647
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.530091</dc:date>
+    <dc:date>2026-01-14T14:18:02.074959</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -4647,7 +4530,7 @@ L 163.066295 75.927273
 L 163.066295 65.018182 
 L 73.923438 65.018182 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_3">
     <path d="M 73.923438 62.290909 
@@ -4655,7 +4538,7 @@ L 163.066295 62.290909
 L 163.066295 51.381818 
 L 73.923438 51.381818 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_4">
     <path d="M 73.923438 48.654545 
@@ -4663,7 +4546,7 @@ L 163.066295 48.654545
 L 163.066295 37.745455 
 L 73.923438 37.745455 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_5">
     <path d="M 73.923438 35.018182 
@@ -4671,7 +4554,7 @@ L 163.066295 35.018182
 L 163.066295 24.109091 
 L 73.923438 24.109091 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_6">
     <path d="M 73.923438 21.381818 
@@ -4679,18 +4562,18 @@ L 163.066295 21.381818
 L 163.066295 10.472727 
 L 73.923438 10.472727 
 z
-" clip-path="url(#p4c56c5a68c)" style="fill: #ee854a"></path>
+" clip-path="url(#pdbae9ed91d)" style="fill: #ee854a"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m465dc3c2a6" d="M 0 0 
+       <path id="m6bbf8153f1" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m465dc3c2a6" x="73.923438" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6bbf8153f1" x="73.923438" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -4700,7 +4583,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m465dc3c2a6" x="118.494866" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6bbf8153f1" x="118.494866" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -4710,7 +4593,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#m465dc3c2a6" x="163.066295" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6bbf8153f1" x="163.066295" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -4722,12 +4605,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="mcfd5b2507d" d="M 0 0 
+       <path id="m1226006a50" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -4737,7 +4620,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -4747,7 +4630,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -4757,7 +4640,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_7">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -4767,7 +4650,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_8">
       <g>
-       <use href="#mcfd5b2507d" x="73.923438" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m1226006a50" x="73.923438" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_8">
@@ -4847,7 +4730,7 @@ L 167.523437 79.2
   </g>
  </g>
  <defs>
-  <clippath id="p4c56c5a68c">
+  <clippath id="pdbae9ed91d">
    <rect x="73.923438" y="7.2" width="93.6" height="72"></rect>
   </clippath>
  </defs>
@@ -5039,7 +4922,7 @@ L 167.523437 79.2
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.548647</dc:date>
+    <dc:date>2026-01-14T14:18:02.093209</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -5069,7 +4952,7 @@ L 49.739489 79.570647
 L 49.739489 10.999219 
 L 36.64858 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570647 
@@ -5077,7 +4960,7 @@ L 62.830398 79.570647
 L 62.830398 79.570647 
 L 49.739489 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570647 
@@ -5085,7 +4968,7 @@ L 75.921307 79.570647
 L 75.921307 10.999219 
 L 62.830398 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570647 
@@ -5093,7 +4976,7 @@ L 89.012216 79.570647
 L 89.012216 79.570647 
 L 75.921307 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570647 
@@ -5101,7 +4984,7 @@ L 102.103125 79.570647
 L 102.103125 79.570647 
 L 89.012216 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570647 
@@ -5109,7 +4992,7 @@ L 115.194034 79.570647
 L 115.194034 10.999219 
 L 102.103125 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570647 
@@ -5117,7 +5000,7 @@ L 128.284943 79.570647
 L 128.284943 79.570647 
 L 115.194034 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570647 
@@ -5125,7 +5008,7 @@ L 141.375852 79.570647
 L 141.375852 10.999219 
 L 128.284943 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570647 
@@ -5133,7 +5016,7 @@ L 154.466761 79.570647
 L 154.466761 79.570647 
 L 141.375852 79.570647 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570647 
@@ -5141,18 +5024,18 @@ L 167.55767 79.570647
 L 167.55767 10.999219 
 L 154.466761 10.999219 
 z
-" clip-path="url(#p0de36d39cb)" style="fill: #1f77b4"></path>
+" clip-path="url(#pf7445610be)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mab5ddd3fb5" d="M 0 0 
+       <path id="m0d8e0f3a0a" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mab5ddd3fb5" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m0d8e0f3a0a" x="69.375852" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -5162,7 +5045,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#mab5ddd3fb5" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m0d8e0f3a0a" x="134.830398" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -5174,12 +5057,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_3">
       <defs>
-       <path id="m7456ac60fa" d="M 0 0 
+       <path id="m6e5ec967fd" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m7456ac60fa" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6e5ec967fd" x="30.103125" y="79.570647" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -5189,7 +5072,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_4">
       <g>
-       <use href="#m7456ac60fa" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6e5ec967fd" x="30.103125" y="45.284933" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -5199,7 +5082,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_5">
       <g>
-       <use href="#m7456ac60fa" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m6e5ec967fd" x="30.103125" y="10.999219" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -5220,7 +5103,7 @@ L 174.103125 79.570647
   </g>
  </g>
  <defs>
-  <clippath id="p0de36d39cb">
+  <clippath id="pf7445610be">
    <rect x="30.103125" y="7.570647" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -5283,7 +5166,7 @@ L 174.103125 79.570647
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2025-12-16T11:28:04.570354</dc:date>
+    <dc:date>2026-01-14T14:18:02.114378</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -5313,7 +5196,7 @@ L 153.17567 75.927273
 L 153.17567 65.018182 
 L 64.032813 65.018182 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_3">
     <path d="M 64.032813 62.290909 
@@ -5321,7 +5204,7 @@ L 153.17567 62.290909
 L 153.17567 51.381818 
 L 64.032813 51.381818 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_4">
     <path d="M 64.032813 48.654545 
@@ -5329,7 +5212,7 @@ L 153.17567 48.654545
 L 153.17567 37.745455 
 L 64.032813 37.745455 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_5">
     <path d="M 64.032813 35.018182 
@@ -5337,7 +5220,7 @@ L 153.17567 35.018182
 L 153.17567 24.109091 
 L 64.032813 24.109091 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="patch_6">
     <path d="M 64.032813 21.381818 
@@ -5345,18 +5228,18 @@ L 153.17567 21.381818
 L 153.17567 10.472727 
 L 64.032813 10.472727 
 z
-" clip-path="url(#p929edb3151)" style="fill: #ee854a"></path>
+" clip-path="url(#pbce129023c)" style="fill: #ee854a"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="ma1fb6ac730" d="M 0 0 
+       <path id="m87bfe06193" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#ma1fb6ac730" x="64.032813" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m87bfe06193" x="64.032813" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -5366,7 +5249,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#ma1fb6ac730" x="108.604241" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m87bfe06193" x="108.604241" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -5376,7 +5259,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#ma1fb6ac730" x="153.17567" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m87bfe06193" x="153.17567" y="79.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -5388,12 +5271,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="m46afe18e82" d="M 0 0 
+       <path id="md080fd400a" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="70.472727" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -5403,7 +5286,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="56.836364" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -5413,7 +5296,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="43.2" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -5423,7 +5306,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_7">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="29.563636" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -5433,7 +5316,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_8">
       <g>
-       <use href="#m46afe18e82" x="64.032813" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#md080fd400a" x="64.032813" y="15.927273" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_8">
@@ -5513,7 +5396,7 @@ L 157.632812 79.2
   </g>
  </g>
  <defs>
-  <clippath id="p929edb3151">
+  <clippath id="pbce129023c">
    <rect x="64.032813" y="7.2" width="93.6" height="72"></rect>
   </clippath>
  </defs>
@@ -5673,7 +5556,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
         </div>
     </template>
 
-    <skrub-table-report class="report" id="report_0e4c18f0">
+    <skrub-table-report class="report" id="report_6a89018d">
     </skrub-table-report>
 
     <script type="module">
@@ -6777,8 +6660,8 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
     </script>
 </div>
 
-<div id="report_0e4c18f0-wrapper-fallback">
-    <h2 class="anchored">Please enable javascript</h2>
+<div id="report_6a89018d-wrapper-fallback">
+    <h2>Please enable javascript</h2>
     <p>
         The skrub table reports need javascript to display correctly. If you are
         displaying a report in a Jupyter notebook and you see this message, you may need to
@@ -6788,8 +6671,8 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 
 <script>
- document.getElementById("report_0e4c18f0-wrapper").removeAttribute("hidden");
- document.getElementById("report_0e4c18f0-wrapper-fallback").setAttribute("hidden", "");
+ document.getElementById("report_6a89018d-wrapper").removeAttribute("hidden");
+ document.getElementById("report_6a89018d-wrapper-fallback").setAttribute("hidden", "");
 </script>
 </div>
 </div>
@@ -6802,32 +6685,26 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
+<p><strong>Solution</strong></p>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<div class="callout-content">
 <p>Answer: B)</p>
 <p>The “Distribution” contains the usual distribution plots, while the computation of the associations was skipped because the number of columns in the dataframe (5) was larger than <code>max_association_columns</code> (3).</p>
 </div>
 </div>
 </div>
 </section>
-<section id="question-3" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="question-3"><span class="header-section-number">5.3</span> Question 3</h2>
-<div class="callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
+<section id="question-3" class="slide level2">
+<h2>Question 3</h2>
+<div class="callout callout-none no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
 <p>Does the <code>TableReport</code> parse datetimes or other data types?</p>
 <ul class="task-list">
 <li><label><input type="checkbox">Yes, the <code>TableReport</code> automatically converts datetime strings to datetime objects and strings that contain numbers into floats.</label></li>
@@ -6836,31 +6713,25 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
+<p><strong>Solution</strong></p>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<div class="callout-content">
 <p>Answer: No, the <code>TableReport</code> is generated on the basis of the datatypes found in the supplied dataframe. Any datatype parsing must be done before generating the report, e.g., by using the <code>Cleaner</code>.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="question-4" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="question-4"><span class="header-section-number">5.4</span> Question 4</h2>
-<div class="callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
+<section id="question-4" class="slide level2">
+<h2>Question 4</h2>
+<div class="callout callout-none no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
 <p>Which of these transformations is executed <strong>by default</strong> when the <code>Cleaner</code> is fitted on a dataframe?</p>
 <ul class="task-list">
 <li><label><input type="checkbox">A) Dropping constant columns</label></li>
@@ -6871,50 +6742,56 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
+<p><strong>Solution</strong></p>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<div class="callout-content">
 <p>Answer: B)</p>
 <p>Columns that contain only missing values, i.e., where the fraction of missing values is 1.0, are dropped. This is controlled by the <code>drop_null_fraction</code> parameter.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="question-5" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="question-5"><span class="header-section-number">5.5</span> Question 5</h2>
-<div class="callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
+<section id="question-5" class="slide level2">
+<h2>Question 5</h2>
+<div class="callout callout-none no-icon callout-style-simple">
+<div class="callout-body">
+<div class="callout-content">
 <p>Consider the following dataframe.</p>
-<div id="aa3ca39e" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>medical_df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Patient_ID'</span>: [<span class="st">'P001'</span>, <span class="st">'P002'</span>, <span class="st">'P003'</span>, <span class="st">'P004'</span>, <span class="st">'P005'</span>],</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Visit_Date'</span>: [<span class="st">'10 Jan 2023'</span>, <span class="st">'15 Feb 2023'</span>, <span class="st">'20 Mar 2023'</span>, <span class="st">'25 Apr 2023'</span>, <span class="va">None</span>],</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Blood_Pressure'</span>: [<span class="fl">120.5</span>, <span class="fl">130.2</span>, <span class="fl">125.8</span>, <span class="fl">140.0</span>, <span class="fl">135.6</span>],</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Diagnosis'</span>: [<span class="st">'Hypertension'</span>, <span class="st">'?'</span>, <span class="st">'?'</span>, <span class="st">'Hypertension'</span>, <span class="st">'Diabetes'</span>],</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>medical_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="3be29461" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a></a>medical_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb3-3"><a></a>    <span class="st">'Patient_ID'</span>: [<span class="st">'P001'</span>, <span class="st">'P002'</span>, <span class="st">'P003'</span>, <span class="st">'P004'</span>, <span class="st">'P005'</span>],</span>
+<span id="cb3-4"><a></a>    <span class="st">'Visit_Date'</span>: [<span class="st">'10 Jan 2023'</span>, <span class="st">'15 Feb 2023'</span>, <span class="st">'20 Mar 2023'</span>, <span class="st">'25 Apr 2023'</span>, <span class="va">None</span>],</span>
+<span id="cb3-5"><a></a>    <span class="st">'Blood_Pressure'</span>: [<span class="fl">120.5</span>, <span class="fl">130.2</span>, <span class="fl">125.8</span>, <span class="fl">140.0</span>, <span class="fl">135.6</span>],</span>
+<span id="cb3-6"><a></a>    <span class="st">'Diagnosis'</span>: [<span class="st">'Hypertension'</span>, <span class="st">'?'</span>, <span class="st">'?'</span>, <span class="st">'Hypertension'</span>, <span class="st">'Diabetes'</span>],</span>
+<span id="cb3-7"><a></a>})</span>
+<span id="cb3-8"><a></a></span>
+<span id="cb3-9"><a></a>medical_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
+<tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">Patient_ID</th>
 <th data-quarto-table-cell-role="th">Visit_Date</th>
@@ -6965,22 +6842,34 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 </div>
 <p>What is the output of this cleaner?</p>
-<div id="dbb3ad92" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cleaner <span class="op">=</span> Cleaner()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> cleaner.fit_transform(medical_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cd1bc858" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb4-2"><a></a>cleaner <span class="op">=</span> Cleaner()</span>
+<span id="cb4-3"><a></a>df_clean <span class="op">=</span> cleaner.fit_transform(medical_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul class="task-list">
 <li><label><input type="checkbox">A)</label></li>
 </ul>
-<div id="51597fa3" class="cell" data-execution_count="4">
+<div id="ada9f554" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
+<tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">Patient_ID</th>
 <th data-quarto-table-cell-role="th">Visit_Date</th>
@@ -7033,14 +6922,26 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 <ul class="task-list">
 <li><label><input type="checkbox">B)</label></li>
 </ul>
-<div id="1659ad1f" class="cell" data-execution_count="5">
+<div id="1c635835" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
+<tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">Patient_ID</th>
 <th data-quarto-table-cell-role="th">Visit_Date</th>
@@ -7093,14 +6994,26 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 <ul class="task-list">
 <li><label><input type="checkbox">C)</label></li>
 </ul>
-<div id="6e58b1fb" class="cell" data-execution_count="6">
+<div id="ced874ef" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
 <thead>
-<tr class="header">
+<tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">Patient_ID</th>
 <th data-quarto-table-cell-role="th">Visit_Date</th>
@@ -7150,24 +7063,18 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 </div>
 </div>
-<ul class="task-list">
-<li><label><input type="checkbox">D)</label></li>
-</ul>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Solution
+<p><strong>Solution</strong></p>
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<div class="callout-content">
 <p>Answer: A)</p>
 <p>The <code>Cleaner</code> replaces strings that are commonly used to denote missing values (such as “?”), and guesses most common datetime formats from their strings.</p>
 <p>No empty columns are present, so no further transformations are made.</p>
@@ -7177,423 +7084,389 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 
 
 </section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
 
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-        }
-      }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
         },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
       });
-    }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
-        }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
             }
           }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
           }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
           }
-          return note.innerHTML;
+          return codeEl.innerText;
         }
-      } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/skrub-data\.github\.io\/skrub-tutorials\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
         }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
         }
-      }
-    }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
             }
           } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
             });
           }
-        } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
-            if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
         }
-      }, function(instance) {
       });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
-      } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
-            }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
-        });
-      }
-    }
-  });
-  </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../../content/chapters/02_cleaning_data.html" class="pagination-link" aria-label="Preprocessing data with the skrub `Cleaner`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Preprocessing data with the skrub <code>Cleaner</code></span></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../../content/chapters/03_feat_eng_apply.html" class="pagination-link" aria-label="Applying transformers to columns">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Applying transformers to columns</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
-</div> <!-- /content -->
-
-
-
+      </script>
+    
 
 </body></html>
