@@ -1,1 +1,0 @@
-Sitemap: https://skrub-data.github.io/skrub-tutorials/sitemap.xml

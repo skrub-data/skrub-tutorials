@@ -1,0 +1,71 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2026-01-14T15:41:03.450807Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-01-14T15:41:03.450807Z",
+      "mimetype": null,
+      "name": "wine",
+      "path": "data/wine",
+      "size": null,
+      "type": "directory",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2026-01-14T15:41:03.450807Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-01-14T15:41:03.450807Z",
+      "mimetype": null,
+      "name": "employee_salaries",
+      "path": "data/employee_salaries",
+      "size": null,
+      "type": "directory",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2026-01-14T15:41:03.444807Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-01-14T15:41:03.444807Z",
+      "mimetype": null,
+      "name": "adult_census",
+      "path": "data/adult_census",
+      "size": null,
+      "type": "directory",
+      "writable": true
+    },
+    {
+      "content": null,
+      "created": "2026-01-14T15:41:03.446807Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2026-01-14T15:41:01.241838Z",
+      "mimetype": "text/csv",
+      "name": "cleaner_data.csv",
+      "path": "data/cleaner_data.csv",
+      "size": 1152141,
+      "type": "file",
+      "writable": true
+    }
+  ],
+  "created": "2026-01-14T15:41:03.450807Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2026-01-14T15:41:03.450807Z",
+  "mimetype": null,
+  "name": "data",
+  "path": "data",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}
