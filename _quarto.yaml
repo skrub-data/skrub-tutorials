@@ -1,42 +1,38 @@
 project:
-    type: book
+    type: website
     title: "Inria Academy - Skrub like a pro"
     output-dir: _build
+    pre-render:
+       - jupytext --to notebook ./content/exercises/*.py
     render:
-        - "**/*.qmd"
-        - "!pixi.toml"
-        - "!jupyterlite/**"
-        - "!data/**"
-        - "!content/chapters/helpers/**"
+       - "**/*.qmd"
+       - "!pixi.toml"
+       - "!jupyterlite/**"
+       - "!data/**"
+       - "!content/chapters/helpers/**"
+
 execute:
     freeze: auto    
-book:
+website:
     title: "Inria Academy - Skrub like a pro"
-    author: "Riccardo Cappuzzo"
-    chapters:
-        - index.qmd
-        - content/chapters/00_intro.qmd
-        - part: "Exploring and sanitizing data"
-          chapters:
-            - content/chapters/01_exploring_data.qmd
-            - content/chapters/02_cleaning_data.qmd
-            - content/chapters/quiz_01.qmd
-        - part: "Column transformations"
-          chapters:
-            - content/chapters/03_feat_eng_apply.qmd
-            - content/chapters/04_selectors.qmd
-            - content/chapters/quiz_02.qmd
-        - part: "Feature engineering"
-          chapters:
-            - content/chapters/05_feat_eng_numerical.qmd
-            - content/chapters/06_feat_eng_datetimes.qmd
-            - content/chapters/07_feat_eng_categorical.qmd
-            - content/chapters/quiz_03.qmd
-        - part: "Putting it all together"
-          chapters:
-            - content/chapters/08_feat_eng_table_vect.qmd
-            - content/chapters/09_tabular_pipeline.qmd
-            - content/chapters/quiz_04.qmd
+    navbar:
+      left:
+          - text: "Home"
+            href: index.html
+          - text: "Book"
+            href: book/index.html
+          - text: "Slides"
+            href: slides/index.html
+          - text: "Exercises"
+            menu:
+              - text: "Exercise 1"
+                href: exercises/exercise_01.html
+              - text: "Exercise 2"
+                href: exercises/exercise_02.html
+              - text: "Exercise 3"
+                href: exercises/exercise_03.html
+              - text: "Exercise 4"
+                href: exercises/exercise_04.html
 format:
     html:
         theme: cosmo

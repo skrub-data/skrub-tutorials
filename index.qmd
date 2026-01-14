@@ -9,14 +9,28 @@ This is the website for the
 on the [skrub package](https://skrub-data.org/stable/): it contains all the material
 used for the course, including the datasets and exercises used during the session. 
 
-:::  {.callout-important}
-## Beta warning
-If you are reading this, then you will be attending the **Beta version** of this 
-course. As a **Beta version**, this is not the final version of the course and 
-it will be tweaked according to the feedback provided after the session. 
+Choose your learning format:
 
-Both the presentation and the content of the book may be changed based on feedback. 
+::: {.grid}
+
+::: {.g-col-6}
+## 📖 Book Format
+Complete course material in book format with detailed explanations.
+
+[Access the Book →](book/index.html){.btn .btn-primary}
 :::
+
+::: {.g-col-6}
+## 🎯 Presentation Slides
+Slide-based presentation for instructor-led sessions.
+
+[View Slides →](slides/index.html){.btn .btn-primary}
+:::
+
+:::
+
+## 💻 Exercises
+Hands-on Jupyter notebooks: [Browse Exercises](content/exercises/)
 
 ## Structure of the course
 The course covers the main features of skrub, from data exploration to pipeline 

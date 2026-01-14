@@ -1,0 +1,20 @@
+---
+title: "Skrub like a pro - Presentations"
+format: html
+---
+
+# Course Presentations
+
+## Part 1: Exploring and Sanitizing Data
+- [00. Introduction](../content/chapters/00_intro.html)
+- [01. Exploring Data](../content/chapters/01_exploring_data.html)
+- [02. Cleaning Data](../content/chapters/02_cleaning_data.html)
+- [Quiz 01](../content/chapters/quiz_01.html)
+- [Exercise 01](../content/exercises/01_exploring_data.ipynb)
+
+## Part 2: Column Transformations
+- [03. Apply Transformations](../content/chapters/03_feat_eng_apply.html)
+- [04. Selectors](../content/chapters/04_selectors.html)
+- [Quiz 02](../content/chapters/quiz_02.html)
+
+[Continue for all parts...]

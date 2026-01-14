@@ -1,0 +1,32 @@
+project:
+  type: book
+  title: "Inria Academy - Skrub like a pro (Book)"
+  output-dir: ../_build/book
+
+book:
+  title: "Skrub like a pro - Book"
+  author: "Riccardo Cappuzzo"
+  chapters:
+    - index.qmd
+    - ../content/chapters/00_intro.qmd
+    - part: "Exploring and sanitizing data"
+      chapters:
+        - ../content/chapters/01_exploring_data.qmd
+        - ../content/chapters/02_cleaning_data.qmd
+        - ../content/chapters/quiz_01.qmd
+    - part: "Column transformations"
+      chapters:
+        - ../content/chapters/03_feat_eng_apply.qmd
+        - ../content/chapters/04_selectors.qmd
+        - ../content/chapters/quiz_02.qmd
+    # ... rest of chapters
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: false
+    code-tools: true
+
+execute:
+  freeze: auto

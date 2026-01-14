@@ -1,0 +1,30 @@
+project:
+  type: website  # or use 'default' for collection of presentations
+  title: "Inria Academy - Skrub like a pro (Slides)"
+  output-dir: ../_build/slides
+
+website:
+  title: "Skrub Slides"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Chapters"
+        menu:
+          - text: "00. Introduction"
+            href: ../content/chapters/00_intro.html
+          - text: "01. Exploring Data"
+            href: ../content/chapters/01_exploring_data.html
+          # ... all chapters
+
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    transition: slide
+    code-fold: false
+    code-tools: true
+    footer: "Inria Academy - Skrub"
+
+execute:
+  freeze: auto
