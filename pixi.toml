@@ -47,11 +47,26 @@ jupyterquiz = ">=2.9.6.2,<3"
 render = "quarto render"
 publish = "quarto publish gh-pages"
 create-notebooks-dir = { cmd = "mkdir -p ./content/notebooks" }
-convert-to-notebooks = { cmd = "jupytext --to notebook ./content/chapters/0*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
-convert-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/chapters/0*.qmd && mv ./content/chapters/*.ipynb ./content/notebooks", depends-on = ["create-notebooks-dir"] }
-build-book = { cmd = "jupyter-book build book", depends-on = ["convert-to-notebooks"]}
-copy-data = { cmd = "cp -r ./data ./content/ && cp -r ./content/chapters/helpers ./content/notebooks", depends-on = [] }
-build-jupyterlite = { cmd = "jupyter lite build --contents content --output-dir dist", cwd = "jupyterlite", depends-on = ["convert-to-notebooks", "copy-data"] }
-serve-jupyterlite = { cmd = "python -m http.server", cwd = "jupyterlite/dist", depends-on = ["build-jupyterlite"] }
-copy-jupyterlite = { cmd = "mkdir -p ./_build/html/jupyterlite && cp -r jupyterlite/dist ./_build/html/jupyterlite", depends-on = ["build-jupyterlite"] }
-build-slides = { cmd = "quarto render", cwd = "content/slides"}
+convert-exercises-to-notebooks = { cmd = "jupytext --to notebook ./content/exercises/*.py && mv ./content/exercises/*.ipynb ./content/notebooks", depends-on = [
+    "create-notebooks-dir",
+] }
+convert-exercises-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/exercises/*.py && mv ./content/exercises/*.ipynb ./content/notebooks", depends-on = [
+    "create-notebooks-dir",
+] }
+build-book = { cmd = "jupyter-book build book", depends-on = [
+    "convert-exercises-to-notebooks",
+] }
+copy-data = { cmd = "cp -r ./data ./content/ && cp -r ./content/chapters/helpers ./content/notebooks", depends-on = [
+] }
+setup-jupyterlite-content = { cmd = "mkdir -p ./content/notebooks ./content/data && cp ../content/notebooks/*.ipynb ./content/notebooks && cp -r ../data/* ./content/data", cwd = "jupyterlite", depends-on = [
+    "convert-exercises-to-notebooks",
+] }
+build-jupyterlite = { cmd = "jupyter lite build --contents ./content --output-dir dist", cwd = "jupyterlite", depends-on = [
+    "setup-jupyterlite-content"
+] }
+copy-jupyterlite = { cmd = "mkdir -p ../_build/jupyterlite && cp -r dist/* ../_build/jupyterlite/", cwd = "jupyterlite", depends-on = [
+    "build-jupyterlite",
+] }
+serve = { cmd = "python -m http.server --directory _build 8000", depends-on = [
+    "render", "copy-jupyterlite"
+] }

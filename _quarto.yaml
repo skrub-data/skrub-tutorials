@@ -3,7 +3,7 @@ project:
     title: "Inria Academy - Skrub like a pro"
     output-dir: _build
     pre-render:
-       - jupytext --to notebook ./content/exercises/*.py
+       - "jupytext --to notebook ./content/exercises/*.py"
     render:
        - "**/*.qmd"
        - "!pixi.toml"

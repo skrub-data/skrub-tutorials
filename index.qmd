@@ -29,8 +29,10 @@ Slide-based presentation for instructor-led sessions.
 
 :::
 
-## 💻 Exercises
-Hands-on Jupyter notebooks: [Browse Exercises](content/exercises/)
+## 💻 Interactive Exercises
+Try the exercises in your browser with JupyterLite (no installation required).
+
+[Launch JupyterLite →](jupyterlite/lab/){.btn .btn-success}
 
 ## Structure of the course
 The course covers the main features of skrub, from data exploration to pipeline 

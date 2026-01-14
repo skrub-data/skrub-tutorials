@@ -1,0 +1,11 @@
+{
+  "federated_extensions": [],
+  "disabledExtensions": [],
+  "litePluginSettings": {},
+  "notebookStarterPaths": [
+    "notebooks/01_ex_explore_clean.ipynb",
+    "notebooks/02_ex_selectors.ipynb",
+    "notebooks/03_ex_feat_eng.ipynb",
+    "notebooks/04_ex_table_vec.ipynb"
+  ]
+}
