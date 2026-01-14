@@ -69,7 +69,7 @@ for the numerical columns and the number of null values.
 Now, let's create a TableReport to explore the dataset.
 ```{python}
 from skrub import TableReport
-TableReport(data)
+TableReport(data, verbose=0)
 ```
 
 ### Default view of the TableReport
@@ -205,20 +205,6 @@ unpatch_display()
 data
 ```
 
-This can also be done using the skrub global configuration and changing the 
-`use_table_report` flag: 
-```{python}
-from skrub import set_config
-
-# replace the default pandas repr 
-set_config(use_table_report=True)
-data
-```
-
-```{python}
-#| echo: false
-set_config(use_table_report=False)
-```
 
 More detail on the skrub configuration is reported in the 
 [User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
@@ -265,7 +251,7 @@ data = pd.read_csv("../data/employee_salaries/data.csv")
 Now use the skrub `TableReport` and answer the following questions: 
 
 ```{python}
-TableReport(data)
+TableReport(data, verbose=0)
 ```
 
 ## Questions

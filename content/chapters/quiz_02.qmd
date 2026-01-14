@@ -61,14 +61,15 @@ were not selected are left unchanged.
 ## Question 3
 
 ::: {.callout}
-Is the following statement true or false?
-
-> The output of these two snippets is the same: 
-
+Consider these transformers:
 ```{.python}
 encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
 scale = ApplyToCols(StandardScaler(), cols=s.numeric())
 ```
+
+Is the output of these two snippets the same? In other words, does the order of 
+the transformers matter? 
+
 ```{.python}
 case_1 = make_pipeline(encode, scale)
 case_1.fit_transform(df)
@@ -82,7 +83,7 @@ case_2.fit_transform(df)
 
 ::: {.callout-tip collapse="true"}
 ### Solution
-Answer: False. 
+Answer: No, the output is different. 
 
 The order of the operations matters, and a different order leads to different 
 results.
@@ -119,8 +120,6 @@ case_2 = make_pipeline(scale, encode)
 df_2 = case_2.fit_transform(df)
 df_2.head(5)
 ```
-
-
 
 :::
 
