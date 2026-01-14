@@ -3,7 +3,6 @@ title: "Inria Academy - skrub like a pro"
 author: "Riccardo Cappuzzo"
 ---
 
-# Introduction to the course
 This is the website for the 
 [Inria Academy course](https://www.inria-academy.fr/formation/skrub-like-a-pro-clean-prepare-and-transform-your-data-faster/)
 on the [skrub package](https://skrub-data.org/stable/): it contains all the material
