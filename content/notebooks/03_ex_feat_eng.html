@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Scaling numerical features safely – Inria Academy - Skrub like a pro</title>
+<title>Exercise – Inria Academy - Skrub like a pro</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,35 +104,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -255,29 +226,14 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#numerical-features-with-outliers" id="toc-numerical-features-with-outliers" class="nav-link" data-scroll-target="#numerical-features-with-outliers">Numerical features with outliers</a>
-  <ul class="collapse">
-  <li><a href="#regular-scalers-and-their-limitations" id="toc-regular-scalers-and-their-limitations" class="nav-link" data-scroll-target="#regular-scalers-and-their-limitations">Regular scalers and their limitations</a></li>
-  </ul></li>
-  <li><a href="#squashingscaler-a-robust-solution" id="toc-squashingscaler-a-robust-solution" class="nav-link" data-scroll-target="#squashingscaler-a-robust-solution">SquashingScaler: A robust solution</a>
-  <ul class="collapse">
-  <li><a href="#advantages-and-disadvantages-of-squashingscaler" id="toc-advantages-and-disadvantages-of-squashingscaler" class="nav-link" data-scroll-target="#advantages-and-disadvantages-of-squashingscaler">Advantages and disadvantages of <code>SquashingScaler</code></a></li>
-  </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="05_feat_eng_numerical.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
-    </div>
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="03_ex_feat_eng.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Scaling numerical features safely</h1>
+<h1 class="title">Exercise</h1>
 </div>
 
 
@@ -294,86 +250,112 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Now that we can transform any column we want thanks to <code>ApplyToCols</code>, <code>ApplyToFrame</code> and the selectors, we can start covering the feature engineering part of our pipeline, beginning from numerical features.</p>
-<p>Specifically, we will find out how to safely scale numerical features with the skrub <code>SquashingScaler</code>.</p>
-</section>
-<section id="numerical-features-with-outliers" class="level2">
-<h2 class="anchored" data-anchor-id="numerical-features-with-outliers">Numerical features with outliers</h2>
-<p>When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.</p>
-<p>Consider this example:</p>
-<div id="b2813537" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    generate_data_with_outliers,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    plot_feature_with_outliers</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> generate_data_with_outliers()</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plot_feature_with_outliers(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="05_feat_eng_numerical_files/figure-html/cell-2-output-1.png" width="587" height="395" class="figure-img"></p>
-</figure>
+<p>Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided dataframe to datetime dtype, then extract the following features: - All parts of the datetime - The number of seconds from epoch - The day in the week - The day of the year</p>
+<p><strong>Hint</strong>: use the format <code>"%d %B %Y"</code> for the datetime.</p>
+<div id="833e8376" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"admission_dates"</span>: [</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"03 January 2023"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"15 February 2023"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"27 March 2023"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"10 April 2023"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"patient_ids"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>],</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: [<span class="dv">25</span>, <span class="dv">34</span>, <span class="dv">45</span>, <span class="dv">52</span>],</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"outcome"</span>: [<span class="st">"Recovered"</span>, <span class="st">"Under Treatment"</span>, <span class="st">"Recovered"</span>, <span class="st">"Deceased"</span>],</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div id="c67d9a47" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div id="97f9c921" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution with ApplyToCols and ToDatetime</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime, DatetimeEncoder</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>to_datetime_encoder <span class="op">=</span> ApplyToCols(ToDatetime(<span class="bu">format</span><span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>), cols<span class="op">=</span><span class="st">"admission_dates"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>datetime_encoder <span class="op">=</span> ApplyToCols(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    cols<span class="op">=</span>s.any_date(),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> make_pipeline(to_datetime_encoder, datetime_encoder)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>encoder.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>In this case, most of the values are in the range <code>[-2, 2]</code>, but there are some large outliers in the range <code>[-40, 40]</code> that can cause issues when the feature needs to be scaled.</p>
-<section id="regular-scalers-and-their-limitations" class="level3">
-<h3 class="anchored" data-anchor-id="regular-scalers-and-their-limitations">Regular scalers and their limitations</h3>
-<p>The <strong>StandardScaler</strong> computes mean and standard deviation across all values. With outliers present, these statistics become unreliable, and the scaling factor can become too small, squashing inlier values.</p>
-<p>The <strong>RobustScaler</strong> uses quantiles (typically the 25th and 75th percentiles) instead of mean/std, which makes it more resistant to outliers. However, it doesn’t bound the output values, so extreme outliers can still have very large scaled values.</p>
-</section>
-</section>
-<section id="squashingscaler-a-robust-solution" class="level2">
-<h2 class="anchored" data-anchor-id="squashingscaler-a-robust-solution">SquashingScaler: A robust solution</h2>
-<p>The <code>SquashingScaler</code> combines robust centering with smooth clipping to handle outliers effectively.</p>
-<p>It works as following:</p>
-<ul>
-<li>It centers the median to 0, then it scales values using quantile-based statistics.</li>
-<li>It fills constant columns with 0s.</li>
-<li>It applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
-<li>It constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
-<li>Infinite values are mapped to the corresponding boundaries.</li>
-<li>NaN values are kept unchanged.</li>
-</ul>
-<section id="advantages-and-disadvantages-of-squashingscaler" class="level3">
-<h3 class="anchored" data-anchor-id="advantages-and-disadvantages-of-squashingscaler">Advantages and disadvantages of <code>SquashingScaler</code></h3>
-<p>The <code>SquashingScaler</code> has various advantages over traditional scalers:</p>
-<ul>
-<li>It is <strong>outlier-resistant</strong>: Outliers don’t affect inlier scaling, unlike the <code>StandardScaler</code>.</li>
-<li>It has <strong>bounded output</strong>: All values stay in a predictable range, ideal for neural networks and linear models.</li>
-<li>It <strong>handles edge cases</strong>: The scaler works with infinite values and constant columns.</li>
-<li>It <strong>preserves missing data</strong>: NaN values are kept unchanged.</li>
-</ul>
-<p>A disadvantage of the <code>SquashingScaler</code> is that it is <strong>non-invertible</strong>: The soft clipping function is smooth but cannot be exactly inverted.</p>
-</section>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>When compared on data with outliers:</p>
-<ul>
-<li><strong>StandardScaler</strong> compresses inliers due to large scaling factors</li>
-<li><strong>RobustScaler</strong> preserves relative scales but allows extreme outlier values</li>
-<li><strong>SquashingScaler</strong> keeps inliers in a reasonable range while smoothly bounding all values</li>
-</ul>
-<p>If we plot the impact of each scaler on the result, this is what we can see:</p>
-<div id="2247389a" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="05_feat_eng_numerical_files/figure-html/cell-3-output-1.png" width="815" height="491" class="figure-img"></p>
-</figure>
+<div id="96bc2ef2" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution with Cleaner</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>datetime_encoder <span class="op">=</span> ApplyToCols(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    cols<span class="op">=</span>s.any_date(),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> make_pipeline(Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>), datetime_encoder)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>encoder.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Modify the script so that the <code>DatetimeEncoder</code> adds periodic encoding with sine and cosine (aka circular encoding):</p>
+<div id="658fd405" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Now modify the script above to add spline features (<code>periodic_encoding="spline"</code>).</p>
+<div id="d4e7eb4d" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>datetime_encoder <span class="op">=</span> ApplyToCols(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    DatetimeEncoder(</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        periodic_encoding<span class="op">=</span><span class="st">"spline"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        add_total_seconds<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        add_weekday<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        add_day_of_year<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    cols<span class="op">=</span>s.any_date(),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> make_pipeline(Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>), datetime_encoder)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>encoder.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

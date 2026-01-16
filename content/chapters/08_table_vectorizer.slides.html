@@ -200,28 +200,6 @@
 <div class="quarto-title-authors">
 </div>
 
-</section><section id="TOC">
-<nav role="doc-toc"> 
-<h2 id="toc-title">Table of contents</h2>
-<ul>
-<li><a href="#/introduction" id="/toc-introduction">Introduction</a></li>
-<li><a href="#/how-does-the-tablevectorizer-work" id="/toc-how-does-the-tablevectorizer-work">How does the TableVectorizer work?</a>
-<ul>
-<li><a href="#/phase-1-data-cleaning-and-type-detection" id="/toc-phase-1-data-cleaning-and-type-detection">Phase 1: Data cleaning and type detection</a></li>
-<li><a href="#/phase-2-column-dispatch-and-encoding" id="/toc-phase-2-column-dispatch-and-encoding">Phase 2: Column dispatch and encoding</a></li>
-</ul></li>
-<li><a href="#/key-parameters" id="/toc-key-parameters">Key Parameters</a>
-<ul>
-<li><a href="#/cardinality-threshold" id="/toc-cardinality-threshold">Cardinality threshold</a></li>
-<li><a href="#/data-cleaning-parameters" id="/toc-data-cleaning-parameters">Data cleaning parameters</a></li>
-<li><a href="#/customizing-the-transformers-used-by-tablevectorizer" id="/toc-customizing-the-transformers-used-by-tablevectorizer">Customizing the transformers used by <code>TableVectorizer</code></a></li>
-<li><a href="#/applying-the-tablevectorizer-only-to-a-subset-of-columns" id="/toc-applying-the-tablevectorizer-only-to-a-subset-of-columns">Applying the <code>TableVectorizer</code> only to a subset of columns</a></li>
-<li><a href="#/using-specific_transformers-for-more-low-level-control" id="/toc-using-specific_transformers-for-more-low-level-control">Using <code>specific_transformers</code> for more low-level control</a></li>
-</ul></li>
-<li><a href="#/conclusions" id="/toc-conclusions">Conclusions</a></li>
-<li><a href="#/exercise-implementing-a-tablevectorizer-from-its-components" id="/toc-exercise-implementing-a-tablevectorizer-from-its-components">Exercise: implementing a <code>TableVectorizer</code> from its components</a></li>
-</ul>
-</nav>
 </section>
 <section id="introduction" class="slide level2">
 <h2>Introduction</h2>
@@ -256,7 +234,7 @@
 <h2>Key Parameters</h2>
 <h3 id="cardinality-threshold">Cardinality threshold</h3>
 <p>The cardinality threshold that splits columns in “high” and “low” cardinality can be changed by setting the relative parameter:</p>
-<div id="00edead8" class="cell" data-execution_count="1">
+<div id="f8dd172b" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb1-2"><a></a></span>
 <span id="cb1-3"><a></a>tv <span class="op">=</span> TableVectorizer(cardinality_threshold<span class="op">=</span><span class="dv">10</span>)  <span class="co"># Adjust the threshold</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -269,7 +247,7 @@
 <li><code>drop_if_unique</code>: Drop string/categorical columns where all values are unique (default: <code>False</code>)</li>
 <li><code>datetime_format</code>: Format string for parsing dates</li>
 </ul>
-<div id="9d5c9a81" class="cell" data-execution_count="2">
+<div id="7fbc187c" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>tv <span class="op">=</span> TableVectorizer(</span>
 <span id="cb2-2"><a></a>    drop_null_fraction<span class="op">=</span><span class="fl">0.9</span>,  <span class="co"># Drop columns that are 90% null</span></span>
 <span id="cb2-3"><a></a>    drop_if_constant<span class="op">=</span><span class="va">True</span>,</span>
@@ -278,7 +256,7 @@
 </div>
 <h3 id="customizing-the-transformers-used-by-tablevectorizer">Customizing the transformers used by <code>TableVectorizer</code></h3>
 <p>The <code>TableVectorizer</code> applies whatever transformer is provided to each of the <code>numeric</code>, <code>datetime</code>, <code>high_cardinality</code>, and <code>low_cardinality</code> paramters. To tweak the default parameters of the transformers a new transformer should be provided:</p>
-<div id="02089cd2" class="cell" data-execution_count="3">
+<div id="a4aa6f89" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer, DatetimeEncoder, StringEncoder</span>
 <span id="cb3-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb3-3"><a></a></span>
@@ -297,7 +275,7 @@
 <p>By default, the <code>TableVectorizer</code> is applied to all the columns in the given dataframe. In some cases, it may be important to keep specific columns “as is”, so that they are not modified by the transformer.</p>
 <p>This can be done by wrapping the vectorizer into an <code>ApplyToCols</code> object.</p>
 <p>For example, in this case we might want to avoid modifying the two <code>*_id</code> columns.</p>
-<div id="edad01fa" class="cell" data-execution_count="4">
+<div id="904f3274" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb4-3"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
@@ -391,7 +369,7 @@
 </div>
 </div>
 <p>We can use <code>ApplyToCols</code> and the skrub selectors as follows:</p>
-<div id="5be9d9e6" class="cell" data-execution_count="5">
+<div id="51cc86a2" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>tv <span class="op">=</span> ApplyToCols(TableVectorizer(), cols<span class="op">=</span>s.<span class="bu">all</span>()<span class="op">-</span>s.glob(<span class="st">"*_id"</span>))</span>
 <span id="cb5-2"><a></a>df_enc <span class="op">=</span> tv.fit_transform(df)</span>
 <span id="cb5-3"><a></a></span>
@@ -418,7 +396,7 @@ Encoded
 <p>The id strings are the same, while all other columns have been encoded as expected.</p>
 <h3 id="using-specific_transformers-for-more-low-level-control">Using <code>specific_transformers</code> for more low-level control</h3>
 <p>For fine-grained control, we can specify transformers for specific columns using the <code>specific_transformers</code> parameter. This is useful when we want to override the default behavior for particular columns:</p>
-<div id="9a12d204" class="cell" data-execution_count="6">
+<div id="a1cd730d" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
 <span id="cb7-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-3"><a></a></span>
@@ -455,7 +433,7 @@ Encoded
 <h1>Exercise: implementing a <code>TableVectorizer</code> from its components</h1>
 <p><strong>Path to the exercise</strong>: <code>content/exercises/08_feat_eng_table_vect.ipynb</code></p>
 <p>Replicate the behavior of a <code>TableVectorizer</code> using <code>ApplyToCols</code>, the skrub selectors, and the given transformers.</p>
-<div id="d60ded2d" class="cell" data-execution_count="7">
+<div id="183cbc0b" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner, ApplyToCols, StringEncoder, DatetimeEncoder</span>
 <span id="cb8-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb8-3"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -474,7 +452,7 @@ Encoded
 <li>Everything should be wrapped in a scikit-learn <code>Pipeline</code> (or with <code>make_pipeline</code>).</li>
 </ul>
 <p>Use the following dataframe to test the result.</p>
-<div id="e3f4b57b" class="cell" data-execution_count="8">
+<div id="85bbda88" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a></a><span class="im">import</span> datetime</span>
 <span id="cb9-3"><a></a></span>
@@ -575,7 +553,7 @@ Encoded
 </div>
 </div>
 <p>Use the following <code>PassThrough</code> transformer where needed.</p>
-<div id="9ce7a10f" class="cell" data-execution_count="9">
+<div id="c477f9c6" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> skrub._apply_to_cols <span class="im">import</span> SingleColumnTransformer</span>
 <span id="cb10-2"><a></a></span>
 <span id="cb10-3"><a></a></span>
@@ -587,7 +565,7 @@ Encoded
 <span id="cb10-9"><a></a>        <span class="cf">return</span> column</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You can test the correctness of your solution by comparing it with the equivalent <code>TableVectorizer</code>:</p>
-<div id="9b6b5dec" class="cell" data-execution_count="10">
+<div id="91ea477c" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb11-2"><a></a></span>
 <span id="cb11-3"><a></a>tv <span class="op">=</span> TableVectorizer(</span>
@@ -633,8 +611,8 @@ Encoded
 <td>15.0</td>
 <td>5.20</td>
 <td>1.0</td>
-<td>0.820974</td>
-<td>-0.926883</td>
+<td>0.820971</td>
+<td>-0.926895</td>
 <td>1.0</td>
 <td>2020.0</td>
 <td>2.0</td>
@@ -648,7 +626,7 @@ Encoded
 <td>2.40</td>
 <td>0.0</td>
 <td>0.820970</td>
-<td>-0.926897</td>
+<td>-0.926890</td>
 <td>0.0</td>
 <td>2021.0</td>
 <td>3.0</td>
@@ -661,8 +639,8 @@ Encoded
 <td>63.0</td>
 <td>6.20</td>
 <td>0.0</td>
-<td>0.862896</td>
-<td>-0.936519</td>
+<td>0.862892</td>
+<td>-0.936520</td>
 <td>1.0</td>
 <td>2022.0</td>
 <td>2.0</td>
@@ -675,8 +653,8 @@ Encoded
 <td>12.0</td>
 <td>10.45</td>
 <td>0.0</td>
-<td>1.029678</td>
-<td>1.353008</td>
+<td>1.029681</td>
+<td>1.353006</td>
 <td>0.0</td>
 <td>2023.0</td>
 <td>5.0</td>
@@ -689,8 +667,8 @@ Encoded
 <td>44.0</td>
 <td>9.00</td>
 <td>1.0</td>
-<td>1.419116</td>
-<td>0.660171</td>
+<td>1.419118</td>
+<td>0.660165</td>
 <td>1.0</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -704,7 +682,7 @@ Encoded
 </div>
 </div>
 </div>
-<div id="2d938969" class="cell" data-execution_count="11">
+<div id="fa4fe5f7" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="co"># Write your code here</span></span>
 <span id="cb12-2"><a></a><span class="co">#</span></span>
 <span id="cb12-3"><a></a><span class="co"># </span></span>
@@ -719,7 +697,7 @@ Encoded
 <span id="cb12-12"><a></a><span class="co"># </span></span>
 <span id="cb12-13"><a></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="95150fb0" class="cell" data-execution_count="12">
+<div id="7e29434c" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="co"># Solution</span></span>
 <span id="cb13-2"><a></a>cleaner <span class="op">=</span> ApplyToCols(Cleaner())</span>
 <span id="cb13-3"><a></a>high_cardinality <span class="op">=</span> ApplyToCols(</span>
@@ -776,7 +754,7 @@ Encoded
 <td>15</td>
 <td>5.20</td>
 <td>1.0</td>
-<td>0.820968</td>
+<td>0.820966</td>
 <td>-0.926893</td>
 <td>True</td>
 <td>2020.0</td>
@@ -790,8 +768,8 @@ Encoded
 <td>56</td>
 <td>2.40</td>
 <td>0.0</td>
-<td>0.820969</td>
-<td>-0.926902</td>
+<td>0.820965</td>
+<td>-0.926897</td>
 <td>False</td>
 <td>2021.0</td>
 <td>3.0</td>
@@ -804,8 +782,8 @@ Encoded
 <td>63</td>
 <td>6.20</td>
 <td>0.0</td>
-<td>0.862895</td>
-<td>-0.936510</td>
+<td>0.862891</td>
+<td>-0.936526</td>
 <td>True</td>
 <td>2022.0</td>
 <td>2.0</td>
@@ -818,8 +796,8 @@ Encoded
 <td>12</td>
 <td>10.45</td>
 <td>0.0</td>
-<td>1.029677</td>
-<td>1.353003</td>
+<td>1.029685</td>
+<td>1.352999</td>
 <td>False</td>
 <td>2023.0</td>
 <td>5.0</td>
@@ -832,8 +810,8 @@ Encoded
 <td>44</td>
 <td>9.00</td>
 <td>1.0</td>
-<td>1.419119</td>
-<td>0.660171</td>
+<td>1.419121</td>
+<td>0.660166</td>
 <td>True</td>
 <td>NaN</td>
 <td>NaN</td>
@@ -853,7 +831,7 @@ Encoded
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-
+<p><a href="../../slides/index.html">← Back to Slides Index</a></p>
 </div>
 </div></div>
 
