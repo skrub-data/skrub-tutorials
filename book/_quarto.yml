@@ -14,12 +14,23 @@ book:
         - ../content/chapters/01_exploring_data.qmd
         - ../content/chapters/02_cleaning_data.qmd
         - ../content/chapters/quiz_01.qmd
-    - part: "Column transformations"
+    - part: "Transforming columns"
       chapters:
         - ../content/chapters/03_feat_eng_apply.qmd
         - ../content/chapters/04_selectors.qmd
         - ../content/chapters/quiz_02.qmd
-    # ... rest of chapters
+    - part: "Feature Engineering with skrub"
+      chapters:
+        - ../content/chapters/05_feat_eng_numerical.qmd
+        - ../content/chapters/06_feat_eng_datetimes.qmd
+        - ../content/chapters/07_feat_eng_categorical.qmd
+        - ../content/chapters/quiz_03.qmd
+    - part: "Bringing it all together"
+      chapters:
+        - ../content/chapters/08_table_vectorizer.qmd
+        - ../content/chapters/09_tabular_pipeline.qmd
+        - ../content/chapters/quiz_04.qmd
+    - ../content/chapters/10_conclusion.qmd
 
 format:
   html:

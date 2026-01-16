@@ -1,12 +1,8 @@
 ---
 title: "Quiz: Exploring and sanitizing dataframes with skrub"
 format:
-    revealjs:
-        slide-number: true
-        toc: true
-        code-fold: false
+    html:
         code-tools: true
-
 ---
 
 ## Question 1

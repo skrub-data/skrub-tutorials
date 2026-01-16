@@ -6,15 +6,27 @@ format: html
 # Course Presentations
 
 ## Part 1: Exploring and Sanitizing Data
-- [00. Introduction](../content/chapters/00_intro.html)
-- [01. Exploring Data](../content/chapters/01_exploring_data.html)
-- [02. Cleaning Data](../content/chapters/02_cleaning_data.html)
-- [Quiz 01](../content/chapters/quiz_01.html)
-- [Exercise 01](../content/exercises/01_exploring_data.ipynb)
+- [00. Introduction](../content/chapters/00_intro.slides.html)
+- [01. Exploring Data](../content/chapters/01_exploring_data.slides.html)
+- [02. Cleaning Data](../content/chapters/02_cleaning_data.slides.html)
+- [Quiz 1](../content/chapters/quiz_01.slides.html)
+- [Exercise 1](../content/notebooks/01_ex_explore_clean.html)
 
 ## Part 2: Column Transformations
-- [03. Apply Transformations](../content/chapters/03_feat_eng_apply.html)
-- [04. Selectors](../content/chapters/04_selectors.html)
-- [Quiz 02](../content/chapters/quiz_02.html)
+- [03. Apply Transformations](../content/chapters/03_feat_eng_apply.slides.html)
+- [04. Selectors](../content/chapters/04_selectors.slides.html)
+- [Quiz 2](../content/chapters/quiz_02.slides.html)
+- [Exercise 2](../content/notebooks/02_ex_selectors.html)
 
-[Continue for all parts...]
+## Part 3: Feature Engineering
+- [05. Numerical Features](../content/chapters/05_feat_eng_numerical.slides.html)
+- [06. Datetime Features](../content/chapters/06_feat_eng_datetimes.slides.html)
+- [07. Categorical Features](../content/chapters/07_feat_eng_categorical.slides.html)
+- [Quiz 3](../content/chapters/quiz_03.slides.html)
+- [Exercise 3](../content/notebooks/03_ex_feat_eng.html)
+
+## Part 4: Building Pipelines
+- [08. Table Vectorization](../content/chapters/08_feat_eng_table_vect.slides.html)
+- [09. Tabular Pipelines](../content/chapters/09_tabular_pipeline.slides.html)
+- [Quiz 4](../content/chapters/quiz_04.slides.html)
+- [Exercise 4](../content/notebooks/04_ex_table_vec.html)

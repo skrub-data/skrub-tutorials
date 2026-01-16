@@ -1,12 +1,14 @@
 ---
 title: "Exploring dataframes with skrub"
 format:
+    html:
+        toc: true
     revealjs:
         slide-number: true
-        toc: true
+        toc: false
         code-fold: false
         code-tools: true
-
+        footer: "[← Back to Slides Index](../../slides/index.html)"
 ---
 ## Introduction
 In this chapter, we will show how we use the skrub `TableReport` to explore
@@ -72,6 +74,8 @@ from skrub import TableReport
 TableReport(data, verbose=0)
 ```
 
+::: {.content-hidden when-format="revealjs"}
+
 ### Default view of the TableReport
 The `TableReport` gives us a comprehensive overview of the dataset. The default
 view shows all the columns in the dataset, and allows to select and copy the content
@@ -82,11 +86,15 @@ contain all the rows in the dataset, rather it shows only the first and last
 few rows by default. Similarly, it stores only the top 10 most frequent values
 for each column, if column distributions are plotted.
 
+:::
+
 ### The "Stats" tab
 
 ```{python}
 TableReport(data, open_tab="stats")
 ```
+
+::: {.content-hidden when-format="revealjs"}
 
 The "Stats" tab provides a variety of descriptive statistics for each column in
 the dataset.
@@ -108,6 +116,8 @@ For numerical columns, additional statistics are provided:
 Stat columns can also be sorted, for example to quickly identify which columns 
 contain the most nulls, or have the largest cardinality (number of unique values).
 
+:::
+
 ::: {.callout}
 ### Filters
 Pre-made column filters are also available, allowing to select columns by dtype 
@@ -118,6 +128,8 @@ or other characteristics. Filters are shared across tabs.
 ```{python}
 TableReport(data, open_tab="distributions")
 ```
+
+::: {.content-hidden when-format="revealjs"}
 
 The "Distributions" tab provides visualizations of the distributions of values 
 in each column. This includes histograms for numerical columns and bar plots for
@@ -145,11 +157,16 @@ should not be treated as perfect. If your problem requires reliable outlier
 detection, you should not rely exclusively on what the `TableReport` shows. 
 :::
 
+
+:::
+
 ### The "Associations" tab
 
 ```{python}
 TableReport(data, open_tab="associations")
 ```
+
+::: {.content-hidden when-format="revealjs"}
 
 The "Associations" tab provides insights into the relationships between different
 columns in the dataset.
@@ -165,6 +182,9 @@ to be handled specially to avoid issues with multicollinearity.
 In this example, we can see that "education-num" and "education" have perfect 
 correlation, which means that one of the two columns can be dropped without losing
 information.
+
+
+:::
 
 ## Exploring the target variable
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
@@ -186,6 +206,9 @@ TableReport(data).write_html("report.html")
 
 Then, the report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
+
+::: {.content-hidden when-format="revealjs"}
+
 
 It is possible to configure various parameters using the skrub global config. 
 For example, it is possible to replace the default Pandas or Polars dataframe
@@ -210,7 +233,13 @@ More detail on the skrub configuration is reported in the
 [User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
 
 
+:::
+
 ## Working with big tables
+
+::: {.content-hidden when-format="revealjs"}
+
+
 Plotting and measuring the column correlations are expensive operations and may
 take a long time, so when the dataframe under study is large it may be more
 convenient to skip them for quicker development. 
@@ -219,82 +248,44 @@ The `max_plot_columns` and `max_association_columns` parameters allow to set a
 threshold on the number of columns: the `TableReport` will skip the respective
 task if the number of colums in the dataframe is larger than the threshold:
 
+When the number of columns is too large, an information message is shown in the 
+respective tab instead of the plots or correlations. 
+:::
+
 ```{python}
 TableReport(
     data, max_association_columns=3, max_plot_columns=3, open_tab="distributions"
 )
 ```
 
-When the number of columns is too large, an information message is shown in the 
-respective tab instead of the plots or correlations. 
 
 ## Conclusions
+
+::: {.content-hidden when-format="revealjs"}
+
+
 In this chapter we have learned how the `TableReport` can be used to speed up 
-data exploration, allowing us to find possible criticalities in the data. In the
+data exploration, allowing us to find possible criticalities in the data. 
+
+We covered:
+
+- Creating and configuring a `TableReport` for fast, interactive data exploration
+- Exploring column statistics, value distributions, and associations visually
+- Detecting nulls, outliers, and highly correlated columns at a glance
+- Filtering columns by type or characteristics using built-in filters
+- Saving and sharing interactive reports as standalone HTML files
+- Adjusting `TableReport` settings for large datasets to optimize performance
+
+In the
 next chapter, we will find out how to address some of the possible problems using 
 the skrub `Cleaner`.
 
+:::
 
-# Exercise: exploring a new table
-
-**Path to the exercise**: `content/exercises/01_exploring_data.ipynb`
-
-For this exercise, we will use the `employee_salaries` dataframe to answer some 
-questions. 
-
-Run the following code to import the dataframe:
-```{python}
-import pandas as pd
-data = pd.read_csv("../data/employee_salaries/data.csv")
-```
-
-Now use the skrub `TableReport` and answer the following questions: 
-
-```{python}
-TableReport(data, verbose=0)
-```
-
-## Questions
-- What's the size of the dataframe? (columns and rows)
-- How many columns have object/numerical/datetime
-- Are there columns with a large number of missing values?
-- Are there columns that have a high cardinality (>40 unique values)?
-- Were datetime columns parsed correctly?
-- Which columns have outliers?
-- Which columns have an imbalanced distribution?
-- Which columns are strongly correlated with each other?
-
-```{.python}
-# PLACEHOLDER
-#
-#
-#
-#
-#
-#
-#
-#
-#
-```
-
-## Answers
-- What's the size of the dataframe? (columns and rows)
-    - 9228 rows × 8 columns
-- How many columns have object/numerical/datetime
-    - No datetime columns, one integer column (`year_first_hired`), all other columns
-    are objects. 
-- Are there columns with a large number of missing values?
-    - No, only the `gender` column contains a small fraction (0.2%) of missing
-    values.
-- Are there columns that have a high cardinality?
-    - Yes, `division`, `employee_position_title`, `date_first_hired` have a 
-    cardinality larger than 40. 
-- Were datetime columns parsed correctly?
-    - No, the `date_first_hired` column has dtype Object. 
-- Which columns have outliers?
-    - No columns seem to include outliers. 
-- Which columns have an imbalanced distribution?
-    - `assignment_category` has an unbalanced distribution. 
-- Which columns are strongly correlated with each other?
-    - `department` and `department_name` have a Cramer's V of 1, so they are 
-    very strongly correlated. 
+::: {.content-visible when-format="revealjs"}
+- The `TableReport` is a powerful EDA tool
+- It shows a rich preview of the content of the dataframe
+- It provides precomputed statistics for all the columns
+- It prepares distribution plots for each column
+- It measures the association between columns
+:::

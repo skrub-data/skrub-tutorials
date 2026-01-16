@@ -1,9 +1,11 @@
 ---
 title: "Preprocessing data with the skrub `Cleaner`"
 format:
+    html:
+        toc: true
     revealjs:
         slide-number: true
-        toc: true
+        toc: false
         code-fold: false
         code-tools: true
 
@@ -13,41 +15,6 @@ format:
 In this chapter, we will show how we can quickly pre-process and sanitize 
 data using skrub's `Cleaner`. 
 
-We first load the `wine` dataset from the local repository. This dataset is a 
-downsampled version of the OpenML dataset (id=42074).
-```{python}
-from sklearn.datasets import fetch_openml
-from skrub import TableReport
-import pandas as pd
-
-wine = pd.read_csv("../data/wine/data.csv")
-```
-
-We can explore it using the `TableReport`:
-
-```{python}
-TableReport(wine)
-```
-
-We can notice that there are a few columns that contain a sizable amount of 
-missing values ("region_2" and "designation"). If we want to remove these columns
-programmatically using pandas, we have to do something like this: 
-```{python}
-wine.loc[:, wine.isnull().mean() <= 0.3]
-```
-
-It may also be beneficial to convert numerical features to `float32`, to reduce
-the computational cost: 
-```{python}
-wine.astype({col: "float32" for col in wine.select_dtypes(include="number").columns})
-```
-
-These operations are quite common in most cases (although the parameters and 
-requirements may vary by project), so writing the code that addresses them may 
-become repetitive.
-
-A simpler way of dealing with this preliminary preparation is to use the skrub
-`Cleaner`. 
 
 ## Using the skrub `Cleaner`
 The `Cleaner` is intended to be a first step in preparing tabular data for 
@@ -59,6 +26,9 @@ Given a dataframe, the `Cleaner` applies a sequence of transformers to each colu
 
 Consider this example dataframe:
 ```{python}
+import pandas as pd
+import numpy as np
+
 df = pd.DataFrame(
     {
         "numerical_1": [1, 2, 3, 4, 5],
@@ -94,6 +64,9 @@ df['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')
 # Drop columns with only a single unique value
 df_clean = df.loc[:, df.nunique(dropna=True) > 1]
 
+# Replace "?" with np.nan in all string columns
+df_clean = df_clean.replace("?", np.nan)
+
 # Function to drop columns with only missing values or empty strings
 def drop_empty_columns(df):
     # Drop columns with only missing values
@@ -126,6 +99,9 @@ correctly, and that the datetime column has been parsed accordingly:
 df_clean.info()
 ```
 
+
+::: {.content-hidden when-format="revealjs"}
+
 ### Cleaning steps performed by the `Cleaner` 
 In more detail, the `Cleaner` executes the following steps in order: 
 
@@ -146,14 +122,8 @@ to actual numerical columns.
 with the parameter `numeric_dtype="float32"`. This ensures a consistent
 representation of numbers and missing values, and helps reducing the memory footprint. 
 
-We can look back at the "wine" dataframe and clean it with a suitably configured
-`Cleaner`:
- 
-```{python}
-cleaner = Cleaner(drop_null_fraction=0.3, numeric_dtype="float32")
 
-cleaner.fit_transform(wine)
-```
+:::
 
 ## Under the hood: `DropUninformative`
 When the `Cleaner` is fitted on a dataframe, it checks whether the dataframe includes
@@ -180,84 +150,47 @@ with `drop_null_fraction`.
     - This check is off by default and can be turned on by setting 
     `drop_if_unique` to `True`. 
 
+```{python}
+import pandas as pd
+import numpy as np
+
+df2 = pd.DataFrame({
+    "id": [101, 102, 103, 104, 105],
+    "age": [34, 28, 45, 52, 39],
+    "salary": [70000, None, 85000, None, None], 
+    "department": ["HR", "Finance", "IT", "HR", "Finance"],
+    "constant_col": ["active"] * 5,  # single constant value
+})
+df2
+```
+
+```{python}
+from skrub import ApplyToCols, DropUninformative
+
+drop = ApplyToCols(DropUninformative(drop_if_constant=True, drop_null_fraction=0.5))
+drop.fit_transform(df2)
+```
+
+
 ## Conclusion
 In this chapter we have covered how the skrub `Cleaner` helps with sanitizing data
 by implementing a number of common transformations that need to be executed in 
 order to ensure that the data used by the pipeline are consistent and can be used
 as indended by ML models. 
 
+
+- The `Cleaner` object automates common data cleaning steps, making it easy to prepare tabular data for analysis or modeling with minimal configuration.
+- `Cleaner` leverages transformers like `DropUninformative` to automatically remove columns that are empty, constant, or contain mostly unique values (such as IDs), based on user-defined thresholds.
+- The `DropUninformative` transformer can also be used directly for fine-grained control over which columns to drop, according to missing value fraction, constant values, or uniqueness.
+- skrub objects are designed to work seamlessly with pandas DataFrames, streamlining the preprocessing workflow and reducing the need for manual data cleaning code.
+
+
+
+
 In the next chapter we will see how skrub helps with applying this and other 
 transformations to specific columns in the data.
 
 
-# Exercise: clean a dataframe using the `Cleaner` 
-**Path to the exercise**: `content/exercises/02_cleaning_data.ipynb`
+# Exercise
 
-Load the given dataframe. 
-
-```{python}
-import pandas as pd
-df = pd.read_csv("../data/cleaner_data.csv")
-```
-
-Use the `TableReport` to answer the following questions: 
-
-- Are there constant columns? 
-- Are there datetime columns? If so, were they parsed correctly? 
-- What is the dtype of the numerical features? 
-
-```{python}
-from skrub import TableReport
-TableReport(df)
-```
-
-
-Then, use the `Cleaner` to sanitize the data so that:
-
-- Constant columns are removed
-- Datetimes are parsed properly (hint: use `"%d-%b-%Y"` as the datetime format)
-- All columns with more than 50% missing values are removed
-- Numerical features are converted to `float32`
-
-```{python}
-from skrub import Cleaner
-
-# Write your answer here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-```
-
-
-```{python}
-# solution
-from skrub import Cleaner
-
-cleaner = Cleaner(
-    drop_if_constant=True,
-    drop_null_fraction=0.5,
-    numeric_dtype="float32",
-    datetime_format="%d-%b-%Y",
-)
-
-# Apply the cleaner
-df_cleaned = cleaner.fit_transform(df)
-
-# Display the cleaned dataframe
-TableReport(df_cleaned)
-```
-
-We can inspect which columns were dropped and what transformations were applied:
-
-```{python}
-print(f"Original shape: {df.shape}")
-print(f"Cleaned shape: {df_cleaned.shape}")
-print(
-    f"\nColumns dropped: {[col for col in df.columns if col not in cleaner.all_outputs_]}"
-)
-```
+**Path to the exercise**: `../notebooks/01_ex_explore_clean.html`

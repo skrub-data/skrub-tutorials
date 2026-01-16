@@ -6,6 +6,7 @@ project:
        - "jupytext --to notebook ./content/exercises/*.py"
     render:
        - "**/*.qmd"
+       - "**/*.ipynb"
        - "!pixi.toml"
        - "!jupyterlite/**"
        - "!data/**"
@@ -23,17 +24,46 @@ website:
             href: book/index.html
           - text: "Slides"
             href: slides/index.html
+          - text: "Chapters"
+            menu:
+              - text: "0. Introduction"
+                href: content/chapters/00_intro.html
+              - text: "1. Exploring Data"
+                href: content/chapters/01_exploring_data.html
+              - text: "2. Cleaning Data"
+                href: content/chapters/02_cleaning_data.html
+              - text: "3. Apply Transformations"
+                href: content/chapters/03_feat_eng_apply.html
+              - text: "4. Selectors"
+                href: content/chapters/04_selectors.html
+              - text: "5. Numerical Features"
+                href: content/chapters/05_feat_eng_numerical.html
+              - text: "6. Datetime Features"
+                href: content/chapters/06_feat_eng_datetimes.html
+              - text: "7. Categorical Features"
+                href: content/chapters/07_feat_eng_categorical.html
+              - text: "8. Table Vectorization"
+                href: content/chapters/08_table_vectorizer.html
+              - text: "9. Tabular Pipelines"
+                href: content/chapters/09_tabular_pipeline.html
+              - text: "10. Conclusions"
+                href: content/chapters/10_conclusion.html
           - text: "Exercises"
             menu:
               - text: "Exercise 1"
-                href: exercises/exercise_01.html
+                href: content/notebooks/01_ex_explore_clean.html
               - text: "Exercise 2"
-                href: exercises/exercise_02.html
+                href: content/notebooks/02_ex_selectors.html
               - text: "Exercise 3"
-                href: exercises/exercise_03.html
+                href: content/notebooks/03_ex_feat_eng.html
               - text: "Exercise 4"
-                href: exercises/exercise_04.html
+                href: content/notebooks/04_ex_table_vec.html
+          - text: "JupyterLite"
+            href: "jupyterlite/lab/"
 format:
     html:
-        theme: cosmo
+        theme: [cosmo, darkly]
         toc: true
+    revealjs:
+      output-ext: slides.html
+      footer: "[← Back to Slides Index](../../slides/index.html)"

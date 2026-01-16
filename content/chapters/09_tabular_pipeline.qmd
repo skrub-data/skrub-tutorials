@@ -1,9 +1,11 @@
 ---
 title: "Building a tabular pipeline"
 format:
+    html:
+        toc: true
     revealjs:
         slide-number: true
-        toc: true
+        toc: false
         code-fold: false
         code-tools: true
 

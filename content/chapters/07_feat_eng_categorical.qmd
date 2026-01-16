@@ -1,9 +1,11 @@
 ---
 title: "Mixed data: dealing with categories"
 format:
+    html:
+        toc: true
     revealjs:
         slide-number: true
-        toc: true
+        toc: false
         code-fold: false
         code-tools: true
 

@@ -1,9 +1,11 @@
 ---
 title: "Encoding datetime features with `DatetimeEncoder`"
 format:
+    html:
+        toc: true
     revealjs:
         slide-number: true
-        toc: true
+        toc: false
         code-fold: false
         code-tools: true
 
