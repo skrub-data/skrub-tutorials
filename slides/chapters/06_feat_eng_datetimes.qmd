@@ -1,1 +1,299 @@
-../../book/chapters/06_feat_eng_datetimes.qmd
+---
+title: "Encoding datetime features with `DatetimeEncoder`"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+
+---
+## Introduction
+
+Datetime features are very important for many data analysis and machine learning 
+tasks, as they often carry significant information about temporal patterns and 
+trends. For instance, including as features the day of the week, time of day, or 
+season can provide valuable insights for predictive modeling.
+
+However, working with datetime data can be difficult due to the variety of formats
+in which dates and times are represented. Typical formats include `"%Y-%m-%d"`,
+`"%d/%m/%Y"`, and `"%d %B %Y"`, among others. Correct parsing of these and more
+exotic formats is essential to avoid errors and ensure accurate feature extraction. 
+
+In this section we are going to cover how skrub can help with dealing with 
+datetimes using `to_datetime`, `ToDatetime`, and the `DatetimeEncoder`. 
+
+## Converting datetime strings to datetime objects
+Often, the first operation that must be done to work with datetime objects is 
+converting the datetimes from a string representation to a proper datetime object.
+This is beneficial because using datetimes gives access to datetime-specific 
+features, and allows to access the different parts of the datetime. 
+
+Skrub provides different objects to deal with the conversion problem.
+
+**`ToDatetime`** is a single column transformer that tries to conver the given
+column to datetime either by relying on a user-provided format, or by guessing
+common formats. Since this transformer must be applied to single columns (rather
+than dataframes), it is typically better to use it in conjunction with `ApplyToCols`. 
+Additionally, the `allow_reject` parameter of `ApplyToCols` should be set to `True` 
+to avoid raising exceptions for non-datetime columns:
+
+```{python}
+from skrub import ApplyToCols, ToDatetime
+
+import pandas as pd
+
+data = {
+    "dates": [
+        "2023-01-03",
+        "2023-02-15",
+        "2023-03-27",
+        "2023-04-10",
+    ]
+}
+df = pd.DataFrame(data)
+
+df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+df_enc.info()
+```
+
+**`to_datetime`** works similarly to 
+[pd.to_datetime](https://pandas.pydata.org/docs/reference/api/pandas.to_datetime.html#pandas.to_datetime), 
+or the example shown above with `ApplyToCols`. 
+
+::: {.callout-warning}
+`to_datetime` is a stateless function, so it should not be used in a pipeline, because
+it does not guarantee consistency between `fit_transform` and successive `transform`. 
+`ApplyToCols(ToDatetime(), allow_reject=True)` is a better solution for pipelines. 
+:::
+
+Finally, the standard `Cleaner` can be used for parsing datetimes, as it uses
+`ToDatetime` under the hood, and can take the `datetime_format`. As the `Cleaner`
+is a transformer, it guarantees consistency between `fit_transform` and `transform`. 
+
+## Encoding datetime features
+Datetimes cannot be used "as-is" for training ML models, and must instead be 
+converted to numerical features. Typically, this is done by "splitting" the 
+datetime parts (year, month, day etc.) into separate columns, so that each column
+contains only one number. 
+
+Additional features may also be of interest, such as the number of seconds since 
+epoch (which increases monotonically and gives an indication of the order of entries), 
+whether a date is a weekday or weekend, or the day of the year. 
+
+To achieve this with standard dataframe libraries, the code looks like this: 
+```{python}
+df_enc["year"] = df_enc["dates"].dt.year
+df_enc["month"] = df_enc["dates"].dt.month
+df_enc["day"] = df_enc["dates"].dt.day
+df_enc["weekday"] = df_enc["dates"].dt.weekday
+df_enc["day_of_year"] = df_enc["dates"].dt.day_of_year
+df_enc["total_seconds"] = (
+    df_enc["dates"] - pd.Timestamp("1970-01-01")
+) // pd.Timedelta(seconds=1)
+
+df_enc
+```
+
+Skrub's `DatetimeEncoder` allows to add the same features with a simpler interface.
+As the `DatetimeEncoder` is a single column transformer, we use again `ApplyToCols`. 
+
+The `DatetimeEncoder` includes various parameters to add more features to the 
+transformed dataframe:
+- `add_total_seconds` adds the number of seconds since Epoch (1970-01-01)
+- `add_weekday` adds the day in the week (to highlight weekends, for example)
+- `add_day_of_year` adds the day in year of the datetime
+
+```{python}
+from skrub import DatetimeEncoder
+
+df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+
+de = DatetimeEncoder(add_total_seconds=True, add_weekday=True, add_day_of_year=True)
+
+df_enc = ApplyToCols(de, cols="dates").fit_transform(df_enc)
+df_enc
+```
+
+## Periodic features
+Periodic features are useful for training machine learning models because they
+capture the cyclical nature of certain data patterns. For example, features such 
+as hours in a day or days in a week  often exhibit periodic behavior. 
+By encoding these features periodically, models can better understand and predict 
+patterns that repeat over time, such as daily traffic trends, or seasonal variations. 
+This ensures that the model treats the start and end of a cycle as close neighbors, 
+improving its ability to generalize and make accurate predictions.
+
+This can be done manually with dataframe libraries. For example, circular encoding
+(a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:
+```{python}
+import numpy as np 
+
+df_enc = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+
+df_enc["day_of_year"] = df_enc["dates"].dt.day_of_year
+df_enc["day_of_year_sin"] = np.sin(2 * np.pi * df_enc["day_of_year"] / 365)
+df_enc["day_of_year_cos"] = np.cos(2 * np.pi * df_enc["day_of_year"] / 365)
+
+df_enc["weekday"] = df_enc["dates"].dt.weekday
+df_enc["weekday_sin"] = np.sin(2 * np.pi * df_enc["weekday"] / 7)
+df_enc["weekday_cos"] = np.cos(2 * np.pi * df_enc["weekday"] / 7)
+
+df_enc
+```
+
+Alternatively, the `DatetimeEncoder` can add periodic features using either circular
+or spline encoding through the `periodic_encoding` parameter:
+
+```{python}
+de = DatetimeEncoder(periodic_encoding="circular")
+
+df_enc = ApplyToCols(de, cols="dates").fit_transform(df_enc)
+df_enc
+```
+
+## Conclusions
+
+In this chapter, we explored the importance and challenges of working with datetime
+features. We covered how to convert string representations of dates to datetime
+objects using skrub's `ToDatetime` transformer and the `Cleaner`, both of which
+can be integrated into pipelines for robust preprocessing.
+
+We also discussed the need to encode datetime features into numerical
+representations suitable for machine learning models. The `DatetimeEncoder`
+provides a convenient way to extract useful components such as year, month, day,
+weekday, day of year, and total seconds since epoch. Additionally, we saw how
+periodic (circular) encoding can be used to capture cyclical patterns in
+time-based data.
+
+In the next chapter, we will cover the final type of columns: categorical/string
+columns.
+
+# Exercise
+
+**Path to the exercise**: `content/exercises/06_feat_eng_datetimes.ipynb`
+
+Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided
+dataframe to datetime dtype, then extract the following features: 
+
+- All parts of the datetime 
+- The number of seconds from epoch
+- The day in the week
+- The day of the year
+
+**Hint**: use the format `"%d %B %Y"` for the datetime. 
+
+
+```{python}
+import pandas as pd
+
+data = {
+    "admission_dates": [
+        "03 January 2023",
+        "15 February 2023",
+        "27 March 2023",
+        "10 April 2023",
+    ],
+    "patient_ids": [101, 102, 103, 104],
+    "age": [25, 34, 45, 52],
+    "outcome": ["Recovered", "Under Treatment", "Recovered", "Deceased"],
+}
+df = pd.DataFrame(data)
+print(df)
+```
+
+```{python}
+# Write your solution here
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+```
+
+```{python}
+# Solution with ApplyToCols and ToDatetime
+from skrub import ApplyToCols, ToDatetime, DatetimeEncoder
+from sklearn.pipeline import make_pipeline
+import skrub.selectors as s
+
+to_datetime_encoder = ApplyToCols(ToDatetime(format="%d %B %Y"), cols="admission_dates")
+
+datetime_encoder = ApplyToCols(
+    DatetimeEncoder(add_total_seconds=True, add_weekday=True, add_day_of_year=True),
+    cols=s.any_date(),
+)
+
+encoder = make_pipeline(to_datetime_encoder, datetime_encoder)
+encoder.fit_transform(df)
+```
+
+```{python}
+# Solution with Cleaner
+from skrub import Cleaner
+from sklearn.pipeline import make_pipeline
+import skrub.selectors as s
+
+datetime_encoder = ApplyToCols(
+    DatetimeEncoder(add_total_seconds=True, add_weekday=True, add_day_of_year=True),
+    cols=s.any_date(),
+)
+
+encoder = make_pipeline(Cleaner(datetime_format="%d %B %Y"), datetime_encoder)
+encoder.fit_transform(df)
+```
+
+Modify the script so that the `DatetimeEncoder` adds periodic encoding with sine
+and cosine (aka circular encoding):
+
+```{python}
+# Write your solution here
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+```
+
+Now modify the script above to add spline features (`periodic_encoding="spline"`). 
+
+
+```{python}
+# Solution
+from skrub import Cleaner
+from sklearn.pipeline import make_pipeline
+import skrub.selectors as s
+
+datetime_encoder = ApplyToCols(
+    DatetimeEncoder(
+        periodic_encoding="spline",
+        add_total_seconds=True,
+        add_weekday=True,
+        add_day_of_year=True,
+    ),
+    cols=s.any_date(),
+)
+
+encoder = make_pipeline(Cleaner(datetime_format="%d %B %Y"), datetime_encoder)
+encoder.fit_transform(df)
+```

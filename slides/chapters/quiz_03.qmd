@@ -1,1 +1,103 @@
-../../book/chapters/quiz_03.qmd
+---
+title: "Quiz: Column-level transformations"
+format:
+    html:
+        code-tools: true
+
+---
+
+# Feature engineering
+
+## Question 1 
+::: {.callout}
+Consider this data with outliers. 
+![](images/squashing-scaler-quiz-outliers.png)
+
+In this plot, which line shows numerical features scaled by the SquashingScaler? 
+![](images/squashing-scaler-quiz-scaled.png)
+
+- [ ] A) The solid blue line
+- [ ] B) The dashed green line
+- [ ] C) The dotted purple line
+- [ ] D) The dash-dotted red line
+:::
+::: {.callout-tip collapse="true"}
+Answer A) 
+
+The solid blue line
+
+![](images/squashing-scaler-quiz-legend.png)
+
+:::
+
+## Question 2
+::: {.callout}
+Which of these is **not** a feature that can be added by the `DatetimeEncoder`? 
+
+- [ ] A) `is_holiday`: a boolean flag that checks whether a date is a holiday or not
+- [ ] B) `periodic_encoding`: a flag that can be `None`, `"circular"` or `"spline"` 
+and that adds the respective periodic encoding
+- [ ] C) `add_weekday`: a boolean flag that indicates the day of the week
+- [ ] D) `add_total_seconds`: a boolean flag that adds the number of seconds since
+epoch
+:::
+
+::: {.callout-tip collapse="true"}
+Answer: A)
+
+All other parameters are available to the `DatetimeEncoder`. 
+
+:::
+
+## Question 3
+::: {.callout}
+Which categorical encoder is the most balanced in both runtime and downstream
+performance? 
+
+- [ ] A) The `StringEncoder`
+- [ ] B) The `MinHashEncoder`
+- [ ] C) The `TextEncoder`
+- [ ] D) The `GapEncoder`
+:::
+
+::: {.callout-tip collapse="true"}
+Answer: A)
+
+The `StringEncoder` is always one of the fastest encoders to fit, and produces 
+high quality encodings. The `MinHashEncoder` is faster, but it produces worse
+encodings. The `TextEncoder` can produce the best encodings for certain types of
+categorical data (mainly text), but is very slow to run. 
+:::
+
+## Question 4
+::: {.callout}
+You need to do feature engineering on a dataset that includes user reviews as part
+of its features. You are working in an environment that has access to good computational
+resources, including a GPU. Which of the following encoders would be the best 
+choice in such a scenario? 
+
+- [ ] A) `OneHotEncoder`
+- [ ] B) `TextEncoder`
+- [ ] C) `OrdinalEncoder`
+- [ ] D) `MinHashEncoder`
+
+:::
+
+::: {.callout-tip collapse="true"}
+Answer: B)
+
+The `TextEncoder` works best when it is applied to free-flowing text, or columns 
+whose content may find additional context in the training set of the language 
+model used by the encoder. User reviews fall in this category.
+
+The `OneHotEncoder` would likely generate a very large number of uninformative 
+features, and the features prepared by the `OrdinalEncoder` are unlikely to be 
+informative. 
+
+The `MinHashEncoder` would generate a fixed number of encoded features, but the
+quality of the embeddings is lower than that of the `TextEncoder`. In a situation
+where computational resources are limited, it may be beneficial, but even in 
+that case the `StringEncoder` may produce better results.
+:::
+
+

@@ -1,1 +1,96 @@
-../../book/chapters/quiz_04.qmd
+---
+title: "Quiz: Column-level transformations"
+format:
+    html:
+        code-tools: true
+
+---
+# `TableVectorizer`
+
+## Question 1 
+::: {.callout}
+What is the proper way of setting the number of components used by the high 
+cardinality encoder in the `TableVectorizer`? 
+
+- [ ] A) By passing `n_components` as kwargs:
+```{.python}
+TableVectorizer(n_components=10)
+```
+- [ ] B) By creating a new encoder with the specified parameter:
+```{.python}
+new_encoder = StringEncoder(n_components=10)
+TableVectorizer(high_cardinality=new_encoder)
+```
+- [ ] C) Both A) and B) are correct
+- [ ] D) None of the above
+:::
+
+
+::: {.callout-tip collapse="true"}
+Answer: B)
+:::
+
+## Question 2
+::: {.callout}
+The `TableVectorizer` categorizes columns based on their characteristics. What 
+are the types of columns that it handles? 
+
+- [ ] A) Numeric, categorical, datetimes
+- [ ] B) Numeric, datetimes, high cardinality categorical, low cardinality categorical
+- [ ] C) Integer, float, string, categorical, datetimes
+- [ ] D) Numeric, datetimes, high cardinality categorical, low cardinality categorical, and 
+complex objects such as structs or lists
+
+:::
+
+::: {.callout-tip collapse="true"}
+Answer: B)
+
+By default, the `TableVectorizer` converts complex objects to their string representation, 
+before checking their cardinality. No special transformation is provided for columns
+that contain structs or lists. 
+
+:::
+
+# `tabular_pipeline`
+## Question 3
+::: {.callout}
+What are the default estimators used by the `tabular_pipeline` when it is called
+with `"regression"` and `"classification"` respectively? 
+
+```{.python}
+tabular_pipeline("regression")
+tabular_pipeline("classification")
+```
+
+- [ ] A) `RidgeCV` and `ExtraTreeClassifier`
+- [ ] B) `HistGradientBoostingRegressor` and `LogisticRegression`
+- [ ] C) `RandomForestRegressor` and `RandomForestClassifier`
+- [ ] D) `HistGradientBoostingRegressor` and `HistGradientBoosting`
+
+:::
+
+::: {.callout-tip collapse="true"}
+Answer: D)
+:::
+
+## Question 4
+::: {.callout}
+How are linear models (`Ridge`, `LogisticRegression`) handled by the `tabular_pipeline`? 
+
+- [ ] A) The `TableVectorizer` uses default parameters, no other steps are added
+to the pipeline.
+- [ ] B) The `TableVectorizer` uses default parameters, `SimpleImputer` and
+`StandardScaler` are added before the encoder.
+- [ ] C) The `TableVectorizer` uses a datetime encoder that periodic encodings 
+with splines, `SimpleImputer` and `StandardScaler` are added before the encoder.
+- [ ] D) The `TableVectorizer` uses a datetime encoder that periodic encodings 
+with splines, no other steps are added to the pipeline.
+
+
+:::
+
+::: {.callout-tip collapse="true"}
+Answer: C)
+:::
+

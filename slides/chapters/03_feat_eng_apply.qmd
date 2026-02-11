@@ -1,1 +1,259 @@
-../../book/chapters/03_feat_eng_apply.qmd
+---
+title: "Applying transformers to columns"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+
+---
+
+## Introduction
+Often, transformers need to be applied only to a subset of columns, rather than 
+the entire dataframe. 
+
+As an example, it does not make sense to apply a `StandardScaler` to a column 
+that contains strings, and indeed doing so would raise an exception. 
+In other cases, specific columns may need particular treatment, and should therefore
+be ignored by the `Cleaner`. 
+
+Scikit-learn provides the `ColumnTransformer` to deal with this: 
+
+```{python}
+#| echo: true
+import pandas as pd
+from sklearn.compose import make_column_selector as selector
+from sklearn.compose import make_column_transformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+
+df = pd.DataFrame({"text": ["foo", "bar", "baz"], "number": [1, 2, 3]})
+
+categorical_columns = selector(dtype_include=object)(df)
+numerical_columns = selector(dtype_exclude=object)(df)
+
+ct = make_column_transformer(
+      (StandardScaler(),
+       numerical_columns),
+      (OneHotEncoder(handle_unknown="ignore"),
+       categorical_columns))
+transformed = ct.fit_transform(df)
+transformed
+```
+
+`make_column_selector` allows to choose columns based on their datatype, or by 
+using regex to filter column names. In some cases, this degree of control is 
+not sufficient. 
+
+To address such situations, skrub implements different transformers that allow 
+to modify columns from within scikit-learn pipelines. Additionally, the selectors
+API allows to implement powerful, custom-made column selection filters. 
+
+`SelectCols` and `DropCols` are transformers that can be used as part of a 
+pipeline to filter columns according to the selectors API, while `ApplyToCols` and
+`ApplyToFrame` replicate the `ColumnTransformer` behavior with a different syntax
+and access to the selectors. 
+
+## Selection operations in a scikit-learn pipeline
+`SelectCols` and `DropCols` allow selecting or removing specific columns in a 
+dataframe according to user-provided rules. For example, to remove columns that 
+include null values, or to select only columns that have a specific dtype. 
+
+`SelectCols` and `DropCols` take a `cols` parameter to choose which columns to 
+select or drop respectively.
+
+```{python}
+from skrub import ToDatetime
+df = pd.DataFrame({
+    "date": ["03 January 2023", "04 February 2023", "05 March 2023"],
+    "values": [10, 20, 30]
+})
+df
+```
+
+We can selectively choose or drop columns based on names, or more complex rules 
+(see the next chapter).
+```{python}
+from skrub import SelectCols
+SelectCols("date").fit_transform(df)
+```
+
+```{python}
+from skrub import DropCols
+DropCols("date").fit_transform(df)
+```
+
+## `ApplyToCols` and `ApplyToFrame`
+Besides selecting and dropping columns, pre-processing pipelines are intended to 
+_transform_ specific columns in specific ways. To make this process easier, skrub 
+provides the `ApplyToCols` and `ApplyToFrame` transformers.
+
+### Applying a transformer to separate columns: `ApplyToCols`
+In many cases, `ApplyToCols` can be a direct replacememnt for the `ColumnTransformer`,
+like in the following example:
+
+```{python}
+#| echo: true
+import skrub.selectors as s
+from sklearn.pipeline import make_pipeline
+from skrub import ApplyToCols
+
+numeric = ApplyToCols(StandardScaler(), cols=s.numeric())
+string = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+
+transformed = make_pipeline(numeric, string).fit_transform(df)
+transformed
+```
+
+In this case, we are applying the `StandardScaler` only to numeric features using 
+`s.numeric()`, and `OneHotEncoder` with `s.string()`. 
+
+Under the hood, `ApplyToCol` selects all columns that satisfy the condition specified
+in `cols` (in this case, that the dtype is numeric), then clones and applies the
+specified transformer (`StandardScaler`) to each column _separately_. 
+
+::: {.callout-important}
+Columns that are not selected are passed through without any change, thus string
+columns are not touched by the `numeric` transformer. 
+:::
+
+By passing through unselected columns without changes it is possible to chain 
+several `ApplyToCols` together by putting them in a scikit-learn pipeline. 
+
+::: {.callout-important}
+`ApplyToCols` is intended to work on dataframes, which are **dense**. As a result,
+transformers that produce sparse outputs (like the `OneHotEncoder`) must be set 
+so that their output is dense. 
+:::
+
+
+### Applying the same transformer to multiple columns at once: `ApplyToFrame`
+In some cases, there may be a need to apply the same transformer only to a subset 
+of columns in a dataframe. 
+
+Consider this example dataframe, which some patient information, and some metrics. 
+
+```{python}
+import pandas as pd
+import numpy as np
+
+n_patients = 20
+np.random.seed(42)
+df = pd.DataFrame({
+    "patient_id": [f"P{i:03d}" for i in range(n_patients)],
+    "age": np.random.randint(18, 80, size=n_patients),
+    "sex": np.random.choice(["M", "F"], size=n_patients),
+})
+
+for i in range(5):
+    df[f"metric_{i}"] = np.random.normal(loc=50, scale=10, size=n_patients)
+
+df["diagnosis"] = np.random.choice(["A", "B", "C"], size=n_patients)
+df.head()
+```
+
+With `ApplyToFrame`, it is easy to apply a decomposition algorithm such as `PCA` 
+to condense the `metric_*` columns into a smaller number of features: 
+
+```{python}
+from skrub import ApplyToFrame
+from sklearn.decomposition import PCA
+
+reduce = ApplyToFrame(PCA(n_components=2), cols=s.glob("metric_*"))
+
+df_reduced = reduce.fit_transform(df)
+df_reduced.head()
+```
+
+### The `allow_reject` parameter
+When `ApplyToCols` or `ApplyToFrame` are using a skrub transformer, they can use
+the `allow_reject` parameter for more flexibility. By setting `allow_reject` to 
+`True`, columns that cannot be treated by the current transformer will be ignored
+rather than raising an exception. 
+
+Consider this example. By default, `ToDatetime` raises a `RejectColumn` exception
+when it finds a column it cannot convert to datetime. 
+
+```{python}
+from skrub import ToDatetime
+df = pd.DataFrame({
+    "date": ["03 January 2023", "04 February 2023", "05 March 2023"],
+    "values": [10, 20, 30]
+})
+df
+```
+
+By setting `allow_reject=True`, the datetime column is converted properly and 
+the other column is passed through without issues. 
+```{python}
+with_reject = ApplyToCols(ToDatetime(), allow_reject=True)
+with_reject.fit_transform(df)
+```
+
+## Concatenating the skrub column transformers
+Skrub column transformers can be concatenated by using scikit-learn pipelines.
+In the following example, we first select only the column `patient_id`, then encode
+it using `OneHotEncoder` and finally use `PCA` to reduce the number of dimensions.
+
+This is done by wrapping the latter two steps in `ApplyToCols` and `ApplyToFrame` 
+respectively, and then putting all transformers in order in a scikit-learn pipeline
+using `make_pipeline`. 
+
+```{python}
+from sklearn.pipeline import make_pipeline
+from skrub import SelectCols
+
+df = pd.DataFrame({
+    "patient_id": [f"P{i:03d}" for i in range(n_patients)],
+    "age": np.random.randint(18, 80, size=n_patients),
+    "sex": np.random.choice(["M", "F"], size=n_patients),
+})
+
+select = SelectCols("patient_id")
+encode = ApplyToCols(OneHotEncoder(sparse_output=False))
+reduce = ApplyToFrame(PCA(n_components=2))
+
+transform = make_pipeline(select, encode, reduce)
+dft= transform.fit_transform(df)
+dft.head(5)
+```
+
+### The order of column transformations is important
+Some care must be taken when concatenating columnn transformers, in particular
+when selection is done on datatypes. Consider this case:
+
+```{python}
+encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+scale = ApplyToCols(StandardScaler(), cols=s.numeric())
+```
+
+In the first case, we encode and then scale, in the second case we instead 
+scale first and then encode. 
+```{python}
+transform_1 = make_pipeline(encode, scale)
+dft = transform_1.fit_transform(df)
+dft.head(5)
+```
+
+```{python}
+transform_2 = make_pipeline(scale, encode)
+dft = transform_2.fit_transform(df)
+dft.head(5)
+```
+
+The result of `transform_1` is that the features that have been generated by 
+the `OneHotEncoder` are then scaled by the `StandardScaler`, because the new 
+features are numeric and are therefore selected in the next step. 
+
+In many cases, this behavior is not desired: while some model types may not be 
+affected by the different ordering (such as tree-based models), linear models
+and NN-based models may produce worse results.
+
+## Conclusions
+In this chapter we explored how skrub helps with selecting and transforming 
+specific columns using various transformers. While these transformers can take 
+simple lists of columns to work, they become far more flexible and powerful when
+they are combined with the skrub selectors, which is the subject of the next 
+chapter.

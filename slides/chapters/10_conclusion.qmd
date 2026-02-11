@@ -1,1 +1,4 @@
-../../book/chapters/10_conclusion.qmd
+---
+title: "Chapter 10: Conclusions"
+format: html
+---

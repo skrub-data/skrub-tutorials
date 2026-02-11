@@ -1,1 +1,196 @@
-../../book/chapters/02_cleaning_data.qmd
+---
+title: "Preprocessing data with the skrub `Cleaner`"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+
+---
+
+## Introduction
+In this chapter, we will show how we can quickly pre-process and sanitize 
+data using skrub's `Cleaner`. 
+
+
+## Using the skrub `Cleaner`
+The `Cleaner` is intended to be a first step in preparing tabular data for 
+analysis or modeling, and can handle a variety of common data cleaning tasks
+automatically. It is designed to work out-of-the-box with minimal configuration,
+although it is also possible to customize its behavior if needed.
+
+Given a dataframe, the `Cleaner` applies a sequence of transformers to each column:
+
+Consider this example dataframe:
+```{python}
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame(
+    {
+        "numerical_1": [1, 2, 3, 4, 5],
+        "numerical_2": [10.5, 20.3, None, 40.1, 50.2],
+        "string_column": ["apple", "?", "banana", "cherry", "?"],
+        "datetime_column": [
+            "03 Jan 2020",
+            "04 Jan 2020",
+            "05 Jan 2020",
+            "06 Jan 2020",
+            "07 Jan 2020",
+        ],
+        "all_none": [None, None, None, None, None],
+    }
+)
+df
+```
+
+This dataframe has mixed type columns, with some of the missing values denoted
+as `None` and some `"?"`. The datetime column has a non-standard format and has
+been parsed as a string column. Finally, one of the columns is completely empty. 
+
+```{python}
+df.info()
+```
+
+### Using plain pandas
+Cleaning this dataset using plain pandas may require writing code like this:
+```{python}
+# Parse the datetime strings with a specific format
+df['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')
+
+# Drop columns with only a single unique value
+df_clean = df.loc[:, df.nunique(dropna=True) > 1]
+
+# Replace "?" with np.nan in all string columns
+df_clean = df_clean.replace("?", np.nan)
+
+# Function to drop columns with only missing values or empty strings
+def drop_empty_columns(df):
+    # Drop columns with only missing values
+    df_clean = df.dropna(axis=1, how='all')
+    # Drop columns with only empty strings
+    empty_string_cols = df_clean.columns[df_clean.eq('').all()]
+    df_clean = df_clean.drop(columns=empty_string_cols)
+    return df_clean
+
+# Apply the function to the DataFrame
+df_clean = drop_empty_columns(df_clean)
+df_clean
+```
+
+### The alternative: `skrub.Cleaner`
+
+By default, the `Cleaner` applies various transformations that can sanitize many
+common use cases:
+
+```{python}
+from skrub import Cleaner
+df_clean = Cleaner().fit_transform(df)
+df_clean
+```
+
+We can see that the cleaned version of the dataframe is now marking missing values
+correctly, and that the datetime column has been parsed accordingly:
+
+```{python}
+df_clean.info()
+```
+
+
+::: {.content-hidden when-format="revealjs"}
+
+### Cleaning steps performed by the `Cleaner` 
+In more detail, the `Cleaner` executes the following steps in order: 
+
+1. It replaces common strings used to represent missing values (e.g., `NULL`, `?`)
+with NA markers. 
+2. It uses the `DropUninformative` transformer to decide whether a column is 
+"uninformative", that is, it is not likely to bring information useful to train
+a ML model. For example, empty columns are uninformative. 
+3. It tries to parse datetime columns using common formats, or a user-provided
+`datetime_format`. 
+4. It processes categorical columns to ensure consistent typing depending on the 
+dataframe library in use. 
+5. It converts columns to string, unless they have a data type that carries more 
+information, such as numerical, datetime, and categorial columns. 
+6. It automatically parses numbers written as strings ("1.324") to convert them 
+to actual numerical columns.
+6. Finally, it can convert numerical columns to `np.float32` dtype if called 
+with the parameter `numeric_dtype="float32"`. This ensures a consistent
+representation of numbers and missing values, and helps reducing the memory footprint. 
+
+
+:::
+
+## Under the hood: `DropUninformative`
+When the `Cleaner` is fitted on a dataframe, it checks whether the dataframe includes
+uninformative columns, that is columns that do not bring useful information for 
+training a ML model, and should therefore be dropped.
+
+This is done by the `DropUninformative` transformer, which is a standalone transformer
+that the `Cleaner` leverages to sanitize data. 
+`DropUninformative` marks a columns as "uninformative" if it satisfies one of these 
+conditions:
+
+- The fraction of missing values is larger than the threshold provided by the user
+with `drop_null_fraction`. 
+    - By default, this threshold is 1.0, i.e., only columns
+    that contain only missing values are dropped. 
+    - Setting the threshold to `None` will disable this check and therefore retain
+    empty columns. 
+- It contains only one value, and no missing values. 
+    - This is controlled by the `drop_if_constant` flag, which is `False` by 
+    default. 
+- All values in the column are distinct. 
+    - This may be the case if the column contains
+    UIDs, but it can also happen when the column contains text. 
+    - This check is off by default and can be turned on by setting 
+    `drop_if_unique` to `True`. 
+
+```{python}
+import pandas as pd
+import numpy as np
+
+df2 = pd.DataFrame({
+    "id": [101, 102, 103, 104, 105],
+    "age": [34, 28, 45, 52, 39],
+    "salary": [70000, None, 85000, None, None], 
+    "department": ["HR", "Finance", "IT", "HR", "Finance"],
+    "constant_col": ["active"] * 5,  # single constant value
+})
+df2
+```
+
+```{python}
+from skrub import ApplyToCols, DropUninformative
+
+drop = ApplyToCols(DropUninformative(drop_if_constant=True, drop_null_fraction=0.5))
+drop.fit_transform(df2)
+```
+
+
+## Conclusion
+In this chapter we have covered how the skrub `Cleaner` helps with sanitizing data
+by implementing a number of common transformations that need to be executed in 
+order to ensure that the data used by the pipeline are consistent and can be used
+as indended by ML models. 
+
+
+- The `Cleaner` object automates common data cleaning steps, making it easy to prepare tabular data for analysis or modeling with minimal configuration.
+- `Cleaner` leverages transformers like `DropUninformative` to automatically remove columns that are empty, constant, or contain mostly unique values (such as IDs), based on user-defined thresholds.
+- The `DropUninformative` transformer can also be used directly for fine-grained control over which columns to drop, according to missing value fraction, constant values, or uniqueness.
+- skrub objects are designed to work seamlessly with pandas DataFrames, streamlining the preprocessing workflow and reducing the need for manual data cleaning code.
+
+
+
+
+In the next chapter we will see how skrub helps with applying this and other 
+transformations to specific columns in the data.
+
+
+# Exercise
+
+**Path to the exercise**: `../notebooks/01_ex_explore_clean.html`

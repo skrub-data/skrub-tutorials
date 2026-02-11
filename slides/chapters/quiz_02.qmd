@@ -1,1 +1,219 @@
-../../book/chapters/quiz_02.qmd
+---
+title: "Quiz: Column-level transformations"
+format:
+    html:
+        code-tools: true
+
+---
+
+# Column transformers
+## Question 1
+
+::: {.callout}
+Consider this diagram. Which column transformer can replicate this behavior if 
+it wraps a `OneHotEncoder`? 
+
+![](images/ex_ApplyToCols.png)
+
+- [ ] A) `ApplyToCols`
+- [ ] B) `ApplyToFrame`
+- [ ] C) `DropCols`
+- [ ] D) `SelectCols`
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: A)
+`ApplyToCols` takes a transformer, then clones it and applies it separately to 
+each column under selection (in this case, `Name` and `Desc`). Columns that were
+not selected are left unchanged. 
+:::
+
+
+## Question 2
+
+::: {.callout}
+Consider this diagram. Which column transformer can replicate this behavior if 
+it wraps a `PCA`? 
+
+![](images/ex_ApplyToFrame.png)
+
+- [ ] A) `ApplyToCols`
+- [ ] B) `ApplyToFrame`
+- [ ] C) `DropCols`
+- [ ] D) `SelectCols`
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: B)
+`ApplyToFrame` takes a transformer and a list of columns (usually, a subset of 
+the columns in the dataframe), then applies the transformer to all the selected
+columns at once, replacing them with the output of the transfromer. Columns that
+were not selected are left unchanged. 
+:::
+
+## Question 3
+
+::: {.callout}
+Consider these transformers:
+```{.python}
+encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+scale = ApplyToCols(StandardScaler(), cols=s.numeric())
+```
+
+Is the output of these two snippets the same? In other words, does the order of 
+the transformers matter? 
+
+```{.python}
+case_1 = make_pipeline(encode, scale)
+case_1.fit_transform(df)
+```
+
+```{.python}
+case_2 = make_pipeline(scale, encode)
+case_2.fit_transform(df)
+```
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: No, the output is different. 
+
+The order of the operations matters, and a different order leads to different 
+results.
+
+
+```{python}
+import pandas as pd
+import numpy as np
+from sklearn.pipeline import make_pipeline
+from skrub import SelectCols, ApplyToCols, ApplyToFrame
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import skrub.selectors as s 
+
+n_patients = 5
+df = pd.DataFrame(
+    {
+        "patient_id": [f"P{i:03d}" for i in range(n_patients)],
+        "age": np.random.randint(18, 80, size=n_patients),
+        "sex": np.random.choice(["M", "F"], size=n_patients),
+    }
+)
+encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+scale = ApplyToCols(StandardScaler(), cols=s.numeric())
+```
+
+```{python}
+case_1 = make_pipeline(encode, scale)
+df_1 = case_1.fit_transform(df)
+df_1.head(5)
+```
+
+```{python}
+case_2 = make_pipeline(scale, encode)
+df_2 = case_2.fit_transform(df)
+df_2.head(5)
+```
+
+:::
+
+# Selectors
+For the following questions, refer to this example dataframe: 
+
+```{python}
+import pandas as pd
+import datetime
+
+data = {
+    "age": [25, 34, 29, 42, 31],
+    "salary": [45000.0, 52000.0, 61000.0, None, 48000.0],
+    "employment_type": ["full-time", "part-time", None, "contract", "full-time"],
+    "job_title": ["engineer", "analyst", "consultant", "designer", "developer"],
+    "department_title": ["IT", "Finance", "Consulting", "Design", "Development"],
+    "is_remote": [False, True, False, True, False],
+    "performance_rating": pd.Categorical(["excellent", None, "good", "excellent", "average"]),
+    "bonus_category": pd.Categorical(["5K+", "10K+", "15K+", "7K+", "12K+"]),
+    "hire_date": [
+        datetime.datetime.fromisoformat(dt)
+        for dt in [
+            "2018-06-01T09:00:00",
+            "2019-09-15T14:30:00",
+            "2020-11-20T10:15:00",
+            "2021-04-10T16:45:00",
+        ]
+    ]
+    + [None],
+
+}
+df = pd.DataFrame(data)
+df
+```
+
+
+## Question 4
+
+::: {.callout}
+What does this selector do? 
+
+```{python}
+from skrub import SelectCols
+import skrub.selectors as s
+
+def fun(col):
+    mean = col.mean()
+    return mean > 40000
+
+sel = s.numeric() & s.filter(fun) 
+t = SelectCols(cols=sel)
+t.fit_transform(df)
+```
+
+- [ ] A) It drops only numerical columns with mean < 40000
+- [ ] B) It selects only numerical column with mean > 40000
+- [ ] C) It selects non-numeric columns or numeric columns that have mean > 40000
+- [ ] D) It drops only numeric columns unless their mean is < 40000
+
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: B)
+```{python}
+t.fit_transform(df)
+```
+
+:::
+
+## Question 5
+
+::: {.callout}
+What does this selector do? 
+
+```{python}
+sel = s.cols("salary") | s.filter_names(lambda name: name.endswith("_title"))
+
+t = SelectCols(cols=sel)
+t.fit_transform(df)
+```
+
+- [ ] A) It selects the column "salary", numerical columns, and columns that end in "_title" 
+- [ ] B) It drops all columns (including "salary"), except the columns that 
+end in "_title"
+- [ ] C) It selects the column "salary", and columns whose name end in "_title"
+- [ ] D) It drops the column "salary", and columns whose name end in "_title"
+
+:::
+
+::: {.callout-tip collapse="true"}
+### Solution
+Answer: C)
+
+```{python}
+t.fit_transform(df)
+```
+
+:::
