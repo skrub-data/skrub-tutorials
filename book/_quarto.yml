@@ -6,38 +6,52 @@ project:
 book:
   title: "Skrub like a pro - Book"
   author: "Riccardo Cappuzzo"
+  page-navigation: true
+  sidebar: false
+  navbar:
+    background: primary
+    left:
+      - text: "Home"
+        href: ../index.html
+      - text: "Book"
+        href: index.html
+      - text: "Slides"
+        href: ../slides/index.html
+      - text: "JupyterLite"
+        href: ../jupyterlite/lab/
   chapters:
     - index.qmd
-    - ../content/chapters/00_intro.qmd
     - part: "Exploring and sanitizing data"
       chapters:
-        - ../content/chapters/01_exploring_data.qmd
-        - ../content/chapters/02_cleaning_data.qmd
-        - ../content/chapters/quiz_01.qmd
+        - chapters/01_exploring_data.qmd
+        - chapters/02_cleaning_data.qmd
+        - chapters/quiz_01.qmd
     - part: "Transforming columns"
       chapters:
-        - ../content/chapters/03_feat_eng_apply.qmd
-        - ../content/chapters/04_selectors.qmd
-        - ../content/chapters/quiz_02.qmd
+        - chapters/03_feat_eng_apply.qmd
+        - chapters/04_selectors.qmd
+        - chapters/quiz_02.qmd
     - part: "Feature Engineering with skrub"
       chapters:
-        - ../content/chapters/05_feat_eng_numerical.qmd
-        - ../content/chapters/06_feat_eng_datetimes.qmd
-        - ../content/chapters/07_feat_eng_categorical.qmd
-        - ../content/chapters/quiz_03.qmd
+        - chapters/05_feat_eng_numerical.qmd
+        - chapters/06_feat_eng_datetimes.qmd
+        - chapters/07_feat_eng_categorical.qmd
+        - chapters/quiz_03.qmd
     - part: "Bringing it all together"
       chapters:
-        - ../content/chapters/08_table_vectorizer.qmd
-        - ../content/chapters/09_tabular_pipeline.qmd
-        - ../content/chapters/quiz_04.qmd
-    - ../content/chapters/10_conclusion.qmd
+        - chapters/08_table_vectorizer.qmd
+        - chapters/09_tabular_pipeline.qmd
+        - chapters/quiz_04.qmd
+    - chapters/10_conclusion.qmd
 
 format:
   html:
     theme: cosmo
     toc: true
+    toc-location: right
     code-fold: false
     code-tools: true
 
 execute:
   freeze: auto
+  keep-ipynb: true

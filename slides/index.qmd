@@ -1,32 +1,32 @@
 ---
-title: "Skrub like a pro - Presentations"
+title: "Skrub Tutorial Slides"
 format: html
 ---
 
-# Course Presentations
+## Introduction
+- [Chapter 0: Introduction](chapters/00_intro.slides.html)
 
-## Part 1: Exploring and Sanitizing Data
-- [00. Introduction](../content/chapters/00_intro.slides.html)
-- [01. Exploring Data](../content/chapters/01_exploring_data.slides.html)
-- [02. Cleaning Data](../content/chapters/02_cleaning_data.slides.html)
-- [Quiz 1](../content/chapters/quiz_01.slides.html)
-- [Exercise 1](../content/notebooks/01_ex_explore_clean.html)
+## Exploring and sanitizing data
+- [Chapter 1: Exploring Data](chapters/01_exploring_data.slides.html)
+- [Chapter 2: Cleaning Data](chapters/02_cleaning_data.slides.html)
+- [Quiz 01](chapters/quiz_01.slides.html)
 
-## Part 2: Column Transformations
-- [03. Apply Transformations](../content/chapters/03_feat_eng_apply.slides.html)
-- [04. Selectors](../content/chapters/04_selectors.slides.html)
-- [Quiz 2](../content/chapters/quiz_02.slides.html)
-- [Exercise 2](../content/notebooks/02_ex_selectors.html)
+## Transforming columns
+- [Chapter 3: Apply Transformations](chapters/03_feat_eng_apply.slides.html)
+- [Chapter 4: Selectors](chapters/04_selectors.slides.html)
+- [Quiz 02](chapters/quiz_02.slides.html)
 
-## Part 3: Feature Engineering
-- [05. Numerical Features](../content/chapters/05_feat_eng_numerical.slides.html)
-- [06. Datetime Features](../content/chapters/06_feat_eng_datetimes.slides.html)
-- [07. Categorical Features](../content/chapters/07_feat_eng_categorical.slides.html)
-- [Quiz 3](../content/chapters/quiz_03.slides.html)
-- [Exercise 3](../content/notebooks/03_ex_feat_eng.html)
+## Feature Engineering with skrub
+- [Chapter 5: Numerical Features](chapters/05_feat_eng_numerical.slides.html)
+- [Chapter 6: Datetime Features](chapters/06_feat_eng_datetimes.slides.html)
+- [Chapter 7: Categorical Features](chapters/07_feat_eng_categorical.slides.html)
+- [Quiz 03](chapters/quiz_03.slides.html)
 
-## Part 4: Building Pipelines
-- [08. Table Vectorization](../content/chapters/08_feat_eng_table_vect.slides.html)
-- [09. Tabular Pipelines](../content/chapters/09_tabular_pipeline.slides.html)
-- [Quiz 4](../content/chapters/quiz_04.slides.html)
-- [Exercise 4](../content/notebooks/04_ex_table_vec.html)
+## Bringing it all together
+- [Chapter 8: Table Vectorization](chapters/08_table_vectorizer.slides.html)
+- [Chapter 9: Tabular Pipelines](chapters/09_tabular_pipeline.slides.html)
+- [Quiz 04](chapters/quiz_04.slides.html)
+
+## Conclusion
+- [Chapter 10: Conclusion](chapters/10_conclusion.slides.html)
+

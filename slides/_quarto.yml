@@ -2,53 +2,33 @@ project:
   type: website  
   title: "Inria Academy - Skrub like a pro (Slides)"
   output-dir: ../_build/slides
+  render:
+    - index.qmd
+    - chapters/*.qmd
 
 website:
   title: "Skrub Slides"
   navbar:
     left:
       - text: "Home"
-        href: index.qmd
-      - text: "Chapters"
-        menu:
-          - text: "00. Introduction"
-            href: ../content/chapters/00_intro.html
-          - text: "01. Exploring Data"
-            href: ../content/chapters/01_exploring_data.html
-          - text: "02. Cleaning Data"
-            href: ../content/chapters/02_cleaning_data.html
-          - text: "Quiz 01"
-            href: ../content/chapters/quiz_01.html
-          - text: "03. Apply Transformations"
-            href: ../content/chapters/03_feat_eng_apply.html
-          - text: "04. Selectors"
-            href: ../content/chapters/04_selectors.html
-          - text: "Quiz 02"
-            href: ../content/chapters/quiz_02.html
-          - text: "05. Numerical Features"
-            href: ../content/chapters/05_feat_eng_numerical.html
-          - text: "06. Datetime Features"
-            href: ../content/chapters/06_feat_eng_datetimes.html
-          - text: "07. Categorical Features"
-            href: ../content/chapters/07_feat_eng_categorical.html
-          - text: "Quiz 03"
-            href: ../content/chapters/quiz_03.html
-          - text: "08. Table Vectorization"
-            href: ../content/chapters/08_table_vectorizer.html
-          - text: "09. Tabular Pipelines"
-            href: ../content/chapters/09_tabular_pipeline.html
-          - text: "Quiz 04"
-            href: ../content/chapters/quiz_04.html
-          - text: "Conclusion"
-            href: ../content/chapters/10_conclusion.html
+        href: ../index.html
+      - text: "Book"
+        href: ../book/index.html
+      - text: "Slides"
+        href: index.html
 
 format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-location: right
   revealjs:
+    output-ext: slides.html
     slide-number: true
     transition: slide
     code-fold: false
     code-tools: true
-    footer: "Inria Academy - Skrub"
+    footer: "[← Back to Slides Index](../../slides/index.html)"
 
 execute:
   freeze: auto

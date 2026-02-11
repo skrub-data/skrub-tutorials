@@ -1,0 +1,189 @@
+---
+title: "Chapter 1: Introduction"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+execute: 
+    echo: true
+---
+
+##  A world without skrub {.smaller}
+
+Let's consider a world where skrub does not exist, and all we can do is use 
+pandas and scikit-learn to prepare data for a machine learning model.
+
+
+## Load and explore the data
+```{python}
+import pandas as pd
+import numpy as np
+
+X = pd.read_csv("../data/employee_salaries/data.csv")
+y = pd.read_csv("../data/employee_salaries/target.csv")["current_annual_salary"]
+X.head(5)
+```
+
+## Explore the target
+Let's take a look at the target:
+```{python}
+y.head(5)
+```
+
+This is a **regression** task: we want to predict the value of `current_annual_salary`.
+
+## Strategizing
+We can begin by exploring the dataframe with `.describe`, and then think of a 
+plan for pre-processing our data. 
+
+```{python}
+X.describe(include="all")
+```
+
+## Our plan
+We need to: 
+
+- Impute some missing values in the `gender` column.
+- Encode convert categorical features into numerical features. 
+- Convert the column `date_first_hired` into numerical features.
+- Scale numerical features. 
+- Evaluate the performance of the model. 
+
+## Step 1: Convert date features to numerical {.smaller}
+
+We extract numerical features from the `date_first_hired` column.
+
+```{python}
+# Create a copy to work with
+X_processed = X.copy()
+
+# Parse the date column
+X_processed['date_first_hired'] = pd.to_datetime(X_processed['date_first_hired'])
+
+# Extract numerical features from date
+X_processed['hired_month'] = X_processed['date_first_hired'].dt.month
+X_processed['hired_year'] = X_processed['date_first_hired'].dt.year
+
+# Drop original date column
+X_processed = X_processed.drop('date_first_hired', axis=1)
+
+print("Features after date transformation:")
+print("\nShape:", X_processed.shape)
+```
+
+## Step 2: Encode categorical features {.smaller}
+
+We encode the categorical features using one-hot encoding.
+
+```{python}
+# Identify only the non-numerical (truly categorical) columns
+categorical_cols = X_processed.select_dtypes(include=['object']).columns.tolist()
+print("Categorical columns to encode:", categorical_cols)
+
+# Apply one-hot encoding only to categorical columns
+X_encoded = pd.get_dummies(X_processed, columns=categorical_cols)
+print("\nShape after encoding:", X_encoded.shape)
+```
+
+## Step 3: Impute missing values {.smaller}
+
+We impute the missing values in the `gender` column 
+
+```{python}
+from sklearn.impute import SimpleImputer
+
+# Impute missing values with most frequent value
+imputer = SimpleImputer(strategy='most_frequent')
+X_encoded_imputed = pd.DataFrame(
+    imputer.fit_transform(X_encoded),
+    columns=X_encoded.columns
+)
+```
+
+## Step 4: Scale numerical features {.smaller}
+
+Scale numerical features for the Ridge regression model.
+
+```{python}
+from sklearn.preprocessing import StandardScaler
+
+# Initialize the scaler
+scaler = StandardScaler()
+
+# Fit and transform the data
+X_scaled = scaler.fit_transform(X_encoded_imputed)
+X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
+```
+
+## Step 5: Train Ridge model with cross-validation {.smaller}
+
+Train a `Ridge` regression model and evaluate with cross-validation.
+
+```{python}
+#| warning: false
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import cross_val_score, cross_validate
+import numpy as np
+
+# Initialize Ridge model
+ridge = Ridge(alpha=1.0)
+
+# Perform cross-validation (5-fold)
+cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2", "neg_mean_squared_error"])
+
+# Convert MSE to RMSE
+test_rmse = np.sqrt(-cv_results["test_neg_mean_squared_error"])
+
+# Display results
+print("Cross-Validation Results:")
+print(
+    f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+)
+print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
+``` 
+
+## "Just ask an agent to write the code" {.smaller}
+- Operations in the wrong order.
+- Trying to impute categorical features without converting them to numeric values.
+- The datetime feature was treated like a categorical feature.
+- Cells could not be executed in order without proper debugging and re-prompting.
+- `pd.get_dummies` was executed on the full dataframe, rather than only on the 
+training split, leading to data leakage. 
+
+## Waking up from a nightmare {.smaller}
+Thankfully, we can `import skrub`:
+```{python}
+#| warning: false
+from skrub import tabular_pipeline
+
+# Perform cross-validation (5-fold)
+cv_results = cross_validate(tabular_pipeline("regression"), X, y, cv=5, 
+                            scoring=['r2', 'neg_mean_squared_error'],
+                            return_train_score=True)
+
+# Convert MSE to RMSE
+train_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])
+test_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])
+
+# Display results
+print("Cross-Validation Results:")
+print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})")
+print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
+```
+
+## Roadmap for the course {.smaller}
+
+1. Data exploration with skrub's `TableReport`
+2. Data cleaning and sanitization with the `Cleaner`
+3. Intermission: simplifying column operations with skrub
+4. Feature engineering with the skrub encoders
+5. Putting everything together: `TableVectorizer` and `tabular_pipeline`
+
+## What we saw in this chapter
+- We built a predictive pipeline using traditional tools
+- We saw some possible shortcomings 
+- We tested skrub's `tabular_pipeline` 

@@ -18,6 +18,7 @@ pyarrow = ">=22.0.0,<23"
 jupyterlab = ">=4.5.0,<5"
 notebook = ">=7.5.0,<8"
 skrub = ">=0.7.0"
+jupytext = ">=1.19.1,<2"
 
 
 [environments]
@@ -44,7 +45,10 @@ jupytext = ">=1.18.1,<2"
 jupyterquiz = ">=2.9.6.2,<3"
 
 [feature.doc.tasks]
-render = "quarto render"
+render = {cmd = "quarto render", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
+render-book = {cmd = "quarto render book/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
+render-slides = {cmd = "quarto render slides/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
+
 publish = "quarto publish gh-pages"
 create-notebooks-dir = { cmd = "mkdir -p ./content/notebooks" }
 convert-exercises-to-notebooks = { cmd = "jupytext --to notebook ./content/exercises/*.py && mv ./content/exercises/*.ipynb ./content/notebooks", depends-on = [
