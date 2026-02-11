@@ -10,25 +10,10 @@ format:
         code-tools: true
         footer: "[← Back to Slides Index](../../slides/index.html)"
 ---
-## Introduction
-In this chapter, we will show how we use the skrub `TableReport` to explore
-tabular data. We will use the Adult Census dataset as our example table, and 
-perform some exploratory analysis to learn about the characteristics of the data. 
+## Why do we need to explore data?
+Before any kind of data processing or usage, we need to know what we are dealing with. 
 
-First, let's import the necessary libraries and load the dataset.
-
-```{python}
-import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import fetch_openml
-
-# Load the Adult Census dataset
-data =  pd.read_csv("../data/adult_census/data.csv")
-target =  pd.read_csv("../data/adult_census/target.csv")
-```
-
-Now that we have a dataframe we can work with, here is a list of features of the 
-data we would like to find out:
+Useful information includes:
 
 - The size of the dataset. 
 - The data types and names of the columns. 
@@ -37,16 +22,25 @@ data we would like to find out:
 - Discrete/categorical features, and their cardinality.
 - Columns strongly correlated with each other. 
 
-## Exploring data with Pandas tools
-Let's first explore the data using Pandas only.
 
-We can get an idea of the content of the table by printing the first few lines, 
-which gives an idea of the datatypes and the columns we are dealing with. 
+## Loading the data
+```{python}
+import pandas as pd
+from sklearn.datasets import fetch_openml
+
+# Load the Adult Census dataset
+data =  pd.read_csv("../data/adult_census/data.csv")
+target =  pd.read_csv("../data/adult_census/target.csv")
+```
+
+## Exploring data with Pandas tools 1/3
+Let's first explore the data using Pandas only.
 
 ```{python}
 data.head(5)
 ```
 
+## Exploring data with Pandas tools 2/3
 If we want to have a simpler view of the datatypes in the dataframe, we must 
 use `data.info()`:
 
@@ -54,39 +48,27 @@ use `data.info()`:
 data.info()
 ```
 
-With `.info()` we can find out the shape of the dataframe (the number of rows 
-and columns), the datatype and the number of non-null values for each column. 
-
+## Exploring data with Pandas tools 3/3
 We can also get a richer summary of the data with the `.describe()` method:
 
 ```{python}
 data.describe(include="all")
 ```
 
-This gives us useful information about all the features in the dataset. Among 
-others, we can find the number of unique values in each column, various statistics
-for the numerical columns and the number of null values.
-
 ## Exploring data with the `TableReport`
 Now, let's create a TableReport to explore the dataset.
 ```{python}
 from skrub import TableReport
-TableReport(data, verbose=0)
+TableReport(data)
 ```
 
-::: {.content-hidden when-format="revealjs"}
 
-### Default view of the TableReport
-The `TableReport` gives us a comprehensive overview of the dataset. The default
-view shows all the columns in the dataset, and allows to select and copy the content
+## Default view of the TableReport
+The `TableReport` shows all the columns in the dataset, and allows to select and copy the content
 of the cells shown in the preview. 
 
-The `TableReport` is intended to show a preview of the data, so it does not 
-contain all the rows in the dataset, rather it shows only the first and last
-few rows by default. Similarly, it stores only the top 10 most frequent values
-for each column, if column distributions are plotted.
-
-:::
+The `TableReport` shows a preview of the data, so it displays only the first and last
+few rows by default. 
 
 ### The "Stats" tab
 
@@ -94,105 +76,32 @@ for each column, if column distributions are plotted.
 TableReport(data, open_tab="stats")
 ```
 
-::: {.content-hidden when-format="revealjs"}
-
-The "Stats" tab provides a variety of descriptive statistics for each column in
-the dataset.
-This includes:
-
-- The column name
-- The detected data type of the column
-- Whether the column is sorted or not 
-- The number of null values in the column, as well as the percentage
-- The number of unique values in the column
-
-For numerical columns, additional statistics are provided:
-
-- Mean
-- Standard deviation
-- Minimum and maximum values
-- Median
-
-Stat columns can also be sorted, for example to quickly identify which columns 
-contain the most nulls, or have the largest cardinality (number of unique values).
-
-:::
-
-::: {.callout}
-### Filters
+## Filters
 Pre-made column filters are also available, allowing to select columns by dtype 
 or other characteristics. Filters are shared across tabs. 
-:::
 
-### The "Distributions" tab
+## The "Distributions" tab
 ```{python}
 TableReport(data, open_tab="distributions")
 ```
 
-::: {.content-hidden when-format="revealjs"}
 
-The "Distributions" tab provides visualizations of the distributions of values 
-in each column. This includes histograms for numerical columns and bar plots for
-categorical columns.
 
-The "Distributions" tab helps with detecting potential issues in the data, such as:
-
-- Skewed distributions
-- Outliers
-- Unexpected value frequencies
-
-For example, in this dataset we can see that some columns are heavily 
-skewed, such as "workclass", "race", and "native-country": this is important 
-information to keep track of, because these columns may require special handling
-during data preprocessing or modeling.
-
-Additionally, the "Distributions" tab allows to select columns manually, so that
-they can be added to a script and selected for further analysis or modeling.
-
-::: {.callout-caution}
-#### Outlier detection
+## Outlier detection
 The `TableReport` detects outliers using a simple interquartile test, marking 
 as outliers all values that are beyond the IQR. This is a simple heuristic, and 
 should not be treated as perfect. If your problem requires reliable outlier 
 detection, you should not rely exclusively on what the `TableReport` shows. 
-:::
 
-
-:::
-
-### The "Associations" tab
+## The "Associations" tab
 
 ```{python}
 TableReport(data, open_tab="associations")
 ```
 
-::: {.content-hidden when-format="revealjs"}
-
-The "Associations" tab provides insights into the relationships between different
-columns in the dataset.
-It shows [Pearson's correlation](https://en.wikipedia.org/wiki/Pearson_correlation_coefficient) 
-coefficient for numerical columns, as well as 
-[Cramér's V](https://en.wikipedia.org/wiki/Cram%C3%A9r%27s_V) for all columns. 
-
-While this is a somewhat rough measure of association, it can help identify potential
-relationships worth exploring further during the analysis, and highlights 
-highly correlated columns: depending on the modeling technique used, these may need 
-to be handled specially to avoid issues with multicollinearity.
-
-In this example, we can see that "education-num" and "education" have perfect 
-correlation, which means that one of the two columns can be dropped without losing
-information.
-
-
-:::
-
 ## Exploring the target variable
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
 numpy arrays.
-
-So, let's take a closer look at the target variable, which indicates whether an
-individual's income exceeds $50K per year. We can create a separate `TableReport`
-for the target variable to explore its distribution: 
 
 ```{python}
 TableReport(target)
@@ -206,34 +115,6 @@ TableReport(data).write_html("report.html")
 
 Then, the report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
-
-::: {.content-hidden when-format="revealjs"}
-
-
-It is possible to configure various parameters using the skrub global config. 
-For example, it is possible to replace the default Pandas or Polars dataframe
-display with the TableReport by using `patch_display`  (and `unpatch_display`):
-
-```{python}
-from skrub import patch_display, unpatch_display
-
-# replace the default pandas repr 
-patch_display()
-data
-```
-
-To disable, use `unpatch_display`:
-```{python}
-unpatch_display()
-data
-```
-
-
-More detail on the skrub configuration is reported in the 
-[User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
-
-
-:::
 
 ## Working with big tables
 
@@ -259,33 +140,11 @@ TableReport(
 ```
 
 
-## Conclusions
-
-::: {.content-hidden when-format="revealjs"}
+## What we have seen in this chapter
 
 
-In this chapter we have learned how the `TableReport` can be used to speed up 
-data exploration, allowing us to find possible criticalities in the data. 
-
-We covered:
-
-- Creating and configuring a `TableReport` for fast, interactive data exploration
-- Exploring column statistics, value distributions, and associations visually
-- Detecting nulls, outliers, and highly correlated columns at a glance
-- Filtering columns by type or characteristics using built-in filters
-- Saving and sharing interactive reports as standalone HTML files
-- Adjusting `TableReport` settings for large datasets to optimize performance
-
-In the
-next chapter, we will find out how to address some of the possible problems using 
-the skrub `Cleaner`.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-- The `TableReport` is a powerful EDA tool
-- It shows a rich preview of the content of the dataframe
+- The `TableReport` shows a rich preview of the content of the dataframe
 - It provides precomputed statistics for all the columns
 - It prepares distribution plots for each column
 - It measures the association between columns
-:::
+- It can be stored as a HTML file and shared without needing a running kernel

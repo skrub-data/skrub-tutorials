@@ -1,5 +1,5 @@
 ---
-title: "Chapter 1: Introduction"
+title: "Course introduction"
 format:
     html:
         toc: true
@@ -11,6 +11,17 @@ format:
 execute: 
     echo: true
 ---
+
+## Structure of the tutorial
+- Two ways to follow the course: a book and a set of slide decks
+- The material is split in sections that cintain two or more chapters
+- Each section ends with a Quiz section, and a coding exercise
+
+## Logistics
+- If I go too fast, stop me! 
+- Q&A time at the end of the chapter
+- You can ask in chat and I will answer later 
+- Break after section 3
 
 ##  A world without skrub {.smaller}
 
