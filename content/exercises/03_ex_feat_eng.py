@@ -1,13 +1,13 @@
 # %% [markdown]
 # # Exercise
 # Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided
-# dataframe to datetime dtype, then extract the following features: 
-# - All parts of the datetime 
+# dataframe to datetime dtype, then extract the following features:
+# - All parts of the datetime
 # - The number of seconds from epoch
 # - The day in the week
 # - The day of the year
 #
-# **Hint**: use the format `"%d %B %Y"` for the datetime. 
+# **Hint**: use the format `"%d %B %Y"` for the datetime.
 #
 
 # %%
@@ -29,20 +29,20 @@ print(df)
 
 # %%
 # Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 
 # %%
 # Solution with ApplyToCols and ToDatetime
@@ -80,23 +80,23 @@ encoder.fit_transform(df)
 
 # %%
 # Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 
 # %% [markdown]
-# Now modify the script above to add spline features (`periodic_encoding="spline"`). 
+# Now modify the script above to add spline features (`periodic_encoding="spline"`).
 #
 
 # %%
