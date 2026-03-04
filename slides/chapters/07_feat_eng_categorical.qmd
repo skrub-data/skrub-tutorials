@@ -1,5 +1,5 @@
 ---
-title: "Mixed data: dealing with categories"
+title: "Encoding categorical features"
 format:
     html:
         toc: true
@@ -11,183 +11,118 @@ format:
 
 ---
 
-## Introduction 
+## The Categorical Encoding Problem
 
-Real-world datasets rarely contain only numeric values. We frequently encounter
-categorical features—values that belong to discrete categories, such as names,
-occupations, geographic locations, or clothing sizes. Text data also falls into
-this category, since each unique string can be considered a categorical value.
+Machine learning models need numeric input, but we have:
 
-The challenge is that machine learning models require numeric input. How do we
-convert these categorical values into numeric features that preserve their
-information and enable our models to make good predictions?
+- Names: "Alice", "Bob"
+- Occupations: "engineer", "teacher"
+- Locations: "NYC", "LA"
 
-This chapter explores the various strategies and tools available in skrub to
-encode categorical features, with an eye on choosing the best method for our 
-specific use case.
+How to convert these to numbers?
 
-## Why categorical encoders matter
+## One-Hot Encoding
 
-The way we encode categorical features significantly impacts our machine learning
-pipeline:
+Creates binary indicator columns:
 
-- **Performance**: The encoding choice directly affects how well our model learns
-from categorical information
-- **Efficiency**: Some encodings create many features (potentially thousands), 
-which increases computation time and memory usage
-- **Interpretability**: Different encoders provide varying levels of transparency
-in what features represent
-- **Scalability**: Not all methods scale well to high-cardinality features (those
-with many unique values)
+```{python}
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd 
+from skrub import ApplyToCols
 
-Using the appropriate encoder ensures we're making the best use of categorical
-information while keeping our model efficient and interpretable.
+X = pd.DataFrame({"color": ["red", "blue", "red"]})
+encoder = OneHotEncoder(sparse_output=False)
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
 
-## Categorical encoders: pros and cons
+**Pros**: Intuitive, works well for few categories
+**Cons**: Explodes with many categories, creates sparse matrices
 
-### One-Hot Encoding and Ordinal Encoding (scikit-learn)
+## Ordinal Encoding
 
-**`OneHotEncoder`**: Creates a binary indicator column for each unique category, 
-where `1` denotes the presence of the category and `0` its absence.
+Assigns sequential numbers:
 
-**Pros:**
+```{python}
+pd.Categorical(X["color"]).codes
+# red=0, blue=1, etc.
+```
 
-- Straightforward and intuitive
-- Works well for low-cardinality features (few unique values)
-- Produces sparse matrices that can save memory
+**Pros**: Memory efficient
+**Cons**: Introduces artificial ordering
 
-**Cons:**
+## The Challenge: High-Cardinality Features
 
-- Becomes impractical with high-cardinality features (creates hundreds or
-thousands of columns)
-- Results in mostly zero-valued sparse matrices when dense, which is the situation
-when working with dataframes
-- Increases overfitting risk and computational overhead
+What if you have 1000+ unique values (IDs, free text)?
 
-The `OneHotEncoder` is used by default by the skrub `TableVectorizer` for categorical
-features with fewer than 40 unique values. 
+- One-Hot would create thousands of columns
+- Ordinal misleads models with false ordering
+- Need a smarter approach
 
-**`OrdinalEncoder`**: Assigns each category a numerical value (0, 1, 2, ...).
+## StringEncoder: Best All-Rounder
 
-**Pros:**
+```{.python}
+from skrub import StringEncoder
 
-- Very memory-efficient
-- Creates only one output column per input column
-- Fast to compute
+encoder = StringEncoder(n_components=10)
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
 
-**Cons:**
+- Uses TF-IDF + SVD for dimensionality reduction
+- Fixed output dimension (n_components)
+- No artificial ordering
+- Fast and robust
+- Not very good with free-flowing text
 
-- Introduces artificial ordering among categories that may not exist in reality
-- Can mislead models into thinking some categories are "greater than" others
+## TextEncoder: For Natural Language
 
-### Categorical encoders in skrub
-All the categorical encoders in skrub are designed to encode any number of unique
-values using a fixed number of components:  this number is controlled by the parameter
-`n_components` in each transformer. 
+```{.python}
+from skrub import TextEncoder
 
-### StringEncoder
+encoder = TextEncoder()
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
 
-**Approach**: Applies term frequency-inverse document frequency (tf-idf) vectorization
-to character n-grams, followed by truncated singular value decomposition (SVD)
-for dimensionality reduction. This method is also known as 
-[Latent Semantic Analysis](https://en.wikipedia.org/wiki/Latent_semantic_analysis). 
+**Pros**: Captures semantic meaning, works very well on text
+**Cons**: Very slow, requires heavy dependencies
 
-**Pros:**
+## MinHashEncoder: Fast Alternative
 
-- **The best all-rounder**: Performs well on both categorical and text data
-- Fast training time
-- Robust and generalizes well across different datasets
-- No artificial ordering introduced
+```{.python}
+from skrub import MinHashEncoder
 
-**Cons:**
+encoder = MinHashEncoder()
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
 
-- Less interpretable than one-hot encoding or ordinal encoding
-- May not capture semantic relationships as well as language model-based approaches
-- Performance depends on the nature of the categorical data
+**Pros**: Very fast
+**Cons**: Encodings usually have very low quality
 
-### TextEncoder
+## GapEncoder: Interpretable
 
-**Approach**: Uses pretrained language models from HuggingFace Hub to generate
-dense vector representations of text.
+```{.python}
+from skrub import GapEncoder
 
-**Pros:**
+encoder = GapEncoder(n_components=10)
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
 
-- Exceptional performance on free-flowing text and natural language
-- Captures semantic meaning and context
-- Leverages knowledge from large-scale language model pretraining
-- Can excel on datasets where domain-specific information aligns with pretraining data
+**Pros**: Interpretable results
+**Cons**: Slower, performance similar to StringEncoder
 
-**Cons:**
+## Encoder Comparison {.smaller}
 
-- **Very computationally expensive**: Significantly slower than other methods
-- Requires heavy dependencies (PyTorch, transformers)
-- Models are large and require downloading
-- Impractical for CPU-only environments
-- Performance on traditional categorical data (non-text, such as IDs) is not much
-better than simpler methods
+| Encoder | Speed | Performance | Interpretability | Use Case |
+|---------|-------|-------------|------------------|----------|
+| OneHot | Fast | Good | High | Low cardinality |
+| StringEncoder | Fast | Excellent | Low | Default choice |
+| TextEncoder | Slow | Excellent | Medium | Real text data |
+| MinHashEncoder | Very Fast | Fair | Low | Quick prototyping |
+| GapEncoder | Slow | Good | High | Interpretability needed |
 
-### MinHashEncoder
+## In summary
 
-**Approach**: Decomposes strings into n-grams and applies the MinHash algorithm
-for quick dimension reduction.
-
-**Pros:**
-
-- Very fast training time
-- Simple and lightweight
-- Minimal memory overhead
-- Good for quick prototyping or very large-scale datasets
-
-**Cons:**
-
-- Performance generally lags behind `StringEncoder` and `TextEncoder`
-- Less nuanced feature representation
-- Less robust across different types of data
-
-### GapEncoder
-
-**Approach**: Estimates latent categories by finding common n-gram patterns
-across values, then encodes these patterns as numeric features.
-
-**Pros:**
-
-- Interpretable: Column names reflect the estimated categories
-- Can group similar strings intelligently
-- Reasonable performance across datasets
-
-**Cons:**
-
-- Slower training time compared to `StringEncoder` and `MinHashEncoder`
-- Performance is on par with or slightly worse than the faster `StringEncoder`
-- Interpretability comes at the cost of training speed
-- May require more computational resources for large datasets
-
-## Conclusion
-
-Encoding categorical features is a critical step in preparing data for machine
-learning. The skrub library provides multiple encoders to handle different scenarios:
-
-- **Start with `StringEncoder`** as a default for high-cardinality categorical
-features. It offers the best balance of speed, performance, and robustness across
-diverse datasets.
-- **Use `OneHotEncoder`** for low-cardinality features (< 40 unique values) to
-keep the feature space manageable.
-- **Choose `TextEncoder`** if you're working with true textual data (reviews,
-comments, descriptions) and have sufficient computational resources.
-- **Consider `GapEncoder`** when interpretability is important and 
-the additional training time can be dealt with. 
-- **Use `MinHashEncoder`** when you need maximum speed and are working with very
-large datasets.
-
-The `TableVectorizer` integrates these encoders automatically, dispatching columns
-to the appropriate encoder based on their data type and cardinality. This automation
-makes it easy to process mixed-type datasets efficiently while still allowing
-fine-grained control when needed. By default, the `TableVectorizer` uses the 
-`OneHotEncoder` for categorical features with cardinality <= 40, and `StringEncoder`
-for categorical features with cardinality > 40. 
-
-For a comprehensive empirical comparison of these methods, refer to the
-[categorical encoders benchmark](https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html).
-
-In the next chapter we will put all the encoders explained so far in a single 
-object, the `TableVectorizer`. 
+- Use `OneHotEncoder` for < 40 unique values
+- Use `StringEncoder` for high-cardinality by default
+- Use `TextEncoder` for true natural language
+- Use `GapEncoder` when interpretability matters
+- All preserve no artificial ordering

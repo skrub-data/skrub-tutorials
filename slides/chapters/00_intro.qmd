@@ -1,5 +1,5 @@
 ---
-title: "Course introduction"
+title: "Data Preparation with skrub"
 format:
     html:
         toc: true
@@ -186,13 +186,13 @@ print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ```
 
-## Roadmap for the course {.smaller}
+## Course Roadmap
 
-1. Data exploration with skrub's `TableReport`
-2. Data cleaning and sanitization with the `Cleaner`
-3. Intermission: simplifying column operations with skrub
-4. Feature engineering with the skrub encoders
-5. Putting everything together: `TableVectorizer` and `tabular_pipeline`
+1. Explore data with `TableReport`
+2. Clean data with `Cleaner`
+3. Select & transform columns with selectors
+4. Engineer features: numerical, datetime, categorical
+5. Combine everything: `TableVectorizer` & `tabular_pipeline`
 
 ## What we saw in this chapter
 - We built a predictive pipeline using traditional tools

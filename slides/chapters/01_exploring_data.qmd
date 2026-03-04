@@ -8,20 +8,22 @@ format:
         toc: false
         code-fold: false
         code-tools: true
+        scrollable: true
         footer: "[← Back to Slides Index](../../slides/index.html)"
 ---
-## Why do we need to explore data?
+## Why do we need to explore data? {.smaller}
 Before any kind of data processing or usage, we need to know what we are dealing with. 
 
 Useful information includes:
 
+::: {.incremental}
 - The size of the dataset. 
 - The data types and names of the columns. 
 - The distribution of values in the columns. 
 - Whether null values are present, in what measure and where. 
 - Discrete/categorical features, and their cardinality.
 - Columns strongly correlated with each other. 
-
+:::
 
 ## Loading the data
 ```{python}
@@ -33,14 +35,14 @@ data =  pd.read_csv("../data/adult_census/data.csv")
 target =  pd.read_csv("../data/adult_census/target.csv")
 ```
 
-## Exploring data with Pandas tools 1/3
+## Exploring data with Pandas tools 1/3 {auto-animate="true" .smaller}
 Let's first explore the data using Pandas only.
 
 ```{python}
 data.head(5)
 ```
 
-## Exploring data with Pandas tools 2/3
+## Exploring data with Pandas tools 2/3 {auto-animate="true" .smaller}
 If we want to have a simpler view of the datatypes in the dataframe, we must 
 use `data.info()`:
 
@@ -48,44 +50,29 @@ use `data.info()`:
 data.info()
 ```
 
-## Exploring data with Pandas tools 3/3
+## Exploring data with Pandas tools 3/3 {auto-animate="true" .smaller}
 We can also get a richer summary of the data with the `.describe()` method:
 
 ```{python}
 data.describe(include="all")
 ```
 
-## Exploring data with the `TableReport`
+## Exploring data with the `TableReport` {.smaller}
 Now, let's create a TableReport to explore the dataset.
 ```{python}
 from skrub import TableReport
 TableReport(data)
 ```
 
-
-## Default view of the TableReport
+## The Preview tab
 The `TableReport` shows all the columns in the dataset, and allows to select and copy the content
 of the cells shown in the preview. 
 
-The `TableReport` shows a preview of the data, so it displays only the first and last
-few rows by default. 
-
-### The "Stats" tab
-
-```{python}
-TableReport(data, open_tab="stats")
-```
+As this is a preview, only the first and last few rows are displayed. 
 
 ## Filters
 Pre-made column filters are also available, allowing to select columns by dtype 
 or other characteristics. Filters are shared across tabs. 
-
-## The "Distributions" tab
-```{python}
-TableReport(data, open_tab="distributions")
-```
-
-
 
 ## Outlier detection
 The `TableReport` detects outliers using a simple interquartile test, marking 
@@ -93,13 +80,7 @@ as outliers all values that are beyond the IQR. This is a simple heuristic, and
 should not be treated as perfect. If your problem requires reliable outlier 
 detection, you should not rely exclusively on what the `TableReport` shows. 
 
-## The "Associations" tab
-
-```{python}
-TableReport(data, open_tab="associations")
-```
-
-## Exploring the target variable
+## Exploring the target variable {.smaller}
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
 numpy arrays.
 
@@ -107,31 +88,22 @@ numpy arrays.
 TableReport(target)
 ```
 
-## Configuring and saving the `TableReport` 
+## Persisting the `TableReport` 
 The `TableReport` can be saved on disk as an HTML. 
 ```{.python}
 TableReport(data).write_html("report.html")
 ```
 
+::: {.callout-tip}
 Then, the report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
+:::
 
 ## Working with big tables
-
-::: {.content-hidden when-format="revealjs"}
-
-
-Plotting and measuring the column correlations are expensive operations and may
-take a long time, so when the dataframe under study is large it may be more
-convenient to skip them for quicker development. 
 
 The `max_plot_columns` and `max_association_columns` parameters allow to set a 
 threshold on the number of columns: the `TableReport` will skip the respective
 task if the number of colums in the dataframe is larger than the threshold:
-
-When the number of columns is too large, an information message is shown in the 
-respective tab instead of the plots or correlations. 
-:::
 
 ```{python}
 TableReport(
@@ -140,7 +112,7 @@ TableReport(
 ```
 
 
-## What we have seen in this chapter
+## What we have seen in this chapter {.smaller}
 
 
 - The `TableReport` shows a rich preview of the content of the dataframe

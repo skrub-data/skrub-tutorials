@@ -9,7 +9,7 @@ df = pd.DataFrame(
     {
         "metric_1": [10.5, 20.3, 30.1, 40.2],
         "metric_2": [5.1, 15.6, None, 35.8],
-        "metric_3": [1.1, 3.3, 2.6, .8],
+        "metric_3": [1.1, 3.3, 2.6, 0.8],
         "num_id": [101, 102, 103, 104],
         "str_id": ["A101", "A102", "A103", "A104"],
         "description": ["apple", None, "cherry", "date"],
@@ -21,9 +21,9 @@ df
 # %% [markdown]
 # Using the skrub selectors and `ApplyToCols`:
 #
-# - Apply the `StandardScaler` to numeric columns, except `"num_id"`. 
+# - Apply the `StandardScaler` to numeric columns, except `"num_id"`.
 # - Apply a `OneHotEncoder` with `sparse_output=False` on all string columns except
-# `"str_id"`. 
+# `"str_id"`.
 
 # %%
 import skrub.selectors as s
@@ -32,15 +32,15 @@ from skrub import ApplyToCols
 from sklearn.pipeline import make_pipeline
 
 # Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
+#
+#
+#
 
 # %%
 import skrub.selectors as s
@@ -57,19 +57,19 @@ transformer.fit_transform(df)
 
 # %% [markdown]
 # Given the same dataframe and using selectors, drop only string columns that contain
-# nulls. 
+# nulls.
 
 # %%
 from skrub import DropCols
 
 # Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
+#
 
 # %%
 from skrub import DropCols
@@ -78,25 +78,27 @@ DropCols(cols=s.has_nulls() & s.string()).fit_transform(df)
 
 # %% [markdown]
 # Now write a custom function that selects columns where all values are lower than
-# `10.0`. 
+# `10.0`.
 
 # %%
 from skrub import SelectCols
 
 # Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#
+#
+#
+#
+#
+#
+#
 
 # %%
 from skrub import SelectCols
 
+
 def lower_than(col):
     return all(col < 10.0)
+
 
 SelectCols(cols=s.numeric() & s.filter(lower_than)).fit_transform(df)
 

@@ -28,6 +28,7 @@ format:
     transition: slide
     code-fold: false
     code-tools: true
+    scrollable: true
     footer: "[← Back to Slides Index](../../slides/index.html)"
 
 execute:
