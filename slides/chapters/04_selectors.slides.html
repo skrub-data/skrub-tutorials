@@ -9,7 +9,7 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.27">
 
-  <title>Skrub Slides – Choose your column: selectors</title>
+  <title>Skrub Slides – Choose your columns with selectors</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -110,6 +110,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -195,49 +196,45 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Choose your column: selectors</h1>
+  <h1 class="title">Choose your columns with selectors</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
-<section>
-<section id="introduction" class="title-slide slide level1 center">
-<h1>Introduction</h1>
-<p>Very often, column selection is more complex than simply passing a list of column names to a transformer: it may be necessary to select all columns that have a specific data type, or based on some other characteristic (presence of nulls, column cardinality, etc.).</p>
-<p>The skrub <code>selectors</code> implement a number of selection strategies that can be combined in various ways to build complex filtering conditions that can then be employed by <code>ApplyToCols</code>, <code>ApplyToFrame</code>, <code>SelectCols</code> and <code>DropCols</code>.</p>
-</section>
-<section id="skrub-selectors" class="slide level2">
-<h2>Skrub selectors</h2>
-<p>Selectors are available from the <code>skrub.selectors</code> namespace:</p>
-<div id="5a870f0d" class="cell" data-execution_count="1">
+<section id="introduction-to-selectors" class="slide level2">
+<h2>Introduction to Selectors</h2>
+<p>Complex column selection beyond simple name lists:</p>
+<div id="f4da8bc7" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>We will use this example dataframe to test some of the selectors:</p>
-<div id="4ca9ed10" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a></a><span class="im">import</span> datetime</span>
+</section>
+<section id="selecting-by-data-type" class="slide level2">
+<h2>Selecting by Data Type</h2>
+<p>Available selectors:</p>
+<ul>
+<li><code>.numeric()</code>: Numeric columns (int or float)</li>
+<li><code>.integer()</code>: Integer columns only</li>
+<li><code>.float()</code>: Floating-point columns</li>
+<li><code>.string()</code>: String columns</li>
+<li><code>.categorical()</code>: Categorical columns</li>
+<li><code>.any_date()</code>: Date or datetime columns</li>
+<li><code>.boolean()</code>: Boolean columns</li>
+</ul>
+</section>
+<section id="example-select-string-columns" class="slide level2">
+<h2>Example: Select String Columns</h2>
+<div id="70e0e705" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
+<span id="cb2-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-3"><a></a></span>
-<span id="cb2-4"><a></a>data <span class="op">=</span> {</span>
-<span id="cb2-5"><a></a>    <span class="st">"int"</span>: [<span class="dv">15</span>, <span class="dv">56</span>, <span class="dv">63</span>, <span class="dv">12</span>, <span class="dv">44</span>],</span>
-<span id="cb2-6"><a></a>    <span class="st">"float"</span>: [<span class="fl">5.2</span>, <span class="fl">2.4</span>, <span class="fl">6.2</span>, <span class="fl">10.45</span>, <span class="fl">9.0</span>],</span>
-<span id="cb2-7"><a></a>    <span class="st">"str1"</span>: [<span class="st">"public"</span>, <span class="st">"private"</span>, <span class="va">None</span>, <span class="st">"private"</span>, <span class="st">"public"</span>],</span>
-<span id="cb2-8"><a></a>    <span class="st">"str2"</span>: [<span class="st">"officer"</span>, <span class="st">"manager"</span>, <span class="st">"lawyer"</span>, <span class="st">"chef"</span>, <span class="st">"teacher"</span>],</span>
-<span id="cb2-9"><a></a>    <span class="st">"bool"</span>: [<span class="va">True</span>, <span class="va">False</span>, <span class="va">True</span>, <span class="va">False</span>, <span class="va">True</span>],</span>
-<span id="cb2-10"><a></a>    <span class="st">"cat1"</span>: pd.Categorical([<span class="st">"yes"</span>, <span class="st">"yes"</span>, <span class="va">None</span>, <span class="st">"yes"</span>, <span class="st">"no"</span>]),</span>
-<span id="cb2-11"><a></a>    <span class="st">"cat2"</span>: pd.Categorical([<span class="st">"20K+"</span>, <span class="st">"40K+"</span>, <span class="st">"60K+"</span>, <span class="st">"30K+"</span>, <span class="st">"50K+"</span>]),</span>
-<span id="cb2-12"><a></a>    <span class="st">"datetime-col"</span>: [</span>
-<span id="cb2-13"><a></a>        datetime.datetime.fromisoformat(dt)</span>
-<span id="cb2-14"><a></a>        <span class="cf">for</span> dt <span class="kw">in</span> [</span>
-<span id="cb2-15"><a></a>            <span class="st">"2020-02-03T12:30:05"</span>,</span>
-<span id="cb2-16"><a></a>            <span class="st">"2021-03-15T00:37:15"</span>,</span>
-<span id="cb2-17"><a></a>            <span class="st">"2022-02-13T17:03:25"</span>,</span>
-<span id="cb2-18"><a></a>            <span class="st">"2023-05-22T08:45:55"</span>,</span>
-<span id="cb2-19"><a></a>        ]</span>
-<span id="cb2-20"><a></a>    ]</span>
-<span id="cb2-21"><a></a>    <span class="op">+</span> [<span class="va">None</span>],    }</span>
-<span id="cb2-22"><a></a>df <span class="op">=</span> pd.DataFrame(data)</span>
-<span id="cb2-23"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-5"><a></a>    <span class="st">"age"</span>: [<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>],</span>
+<span id="cb2-6"><a></a>    <span class="st">"name"</span>: [<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>],</span>
+<span id="cb2-7"><a></a>    <span class="st">"city"</span>: [<span class="st">"NYC"</span>, <span class="st">"LA"</span>, <span class="st">"Chicago"</span>]</span>
+<span id="cb2-8"><a></a>})</span>
+<span id="cb2-9"><a></a></span>
+<span id="cb2-10"><a></a>SelectCols(cols<span class="op">=</span>s.string()).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <style scoped="">
@@ -258,71 +255,25 @@
 <thead>
 <tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">int</th>
-<th data-quarto-table-cell-role="th">float</th>
-<th data-quarto-table-cell-role="th">str1</th>
-<th data-quarto-table-cell-role="th">str2</th>
-<th data-quarto-table-cell-role="th">bool</th>
-<th data-quarto-table-cell-role="th">cat1</th>
-<th data-quarto-table-cell-role="th">cat2</th>
-<th data-quarto-table-cell-role="th">datetime-col</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">city</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>15</td>
-<td>5.20</td>
-<td>public</td>
-<td>officer</td>
-<td>True</td>
-<td>yes</td>
-<td>20K+</td>
-<td>2020-02-03 12:30:05</td>
+<td>Alice</td>
+<td>NYC</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>56</td>
-<td>2.40</td>
-<td>private</td>
-<td>manager</td>
-<td>False</td>
-<td>yes</td>
-<td>40K+</td>
-<td>2021-03-15 00:37:15</td>
+<td>Bob</td>
+<td>LA</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>63</td>
-<td>6.20</td>
-<td>None</td>
-<td>lawyer</td>
-<td>True</td>
-<td>NaN</td>
-<td>60K+</td>
-<td>2022-02-13 17:03:25</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>12</td>
-<td>10.45</td>
-<td>private</td>
-<td>chef</td>
-<td>False</td>
-<td>yes</td>
-<td>30K+</td>
-<td>2023-05-22 08:45:55</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>44</td>
-<td>9.00</td>
-<td>public</td>
-<td>teacher</td>
-<td>True</td>
-<td>no</td>
-<td>50K+</td>
-<td>NaT</td>
+<td>Charlie</td>
+<td>Chicago</td>
 </tr>
 </tbody>
 </table>
@@ -330,22 +281,16 @@
 </div>
 </div>
 </div>
-<p>Selectors should be used in conjunction with the transformers described in the previous chapter: <code>ApplyToCols</code>, <code>ApplyToFrame</code>, <code>SelectCols</code> and <code>DropCols</code>.</p>
-<p>Selectors allow to filter columns by data type:</p>
+</section>
+<section id="selecting-by-characteristics" class="slide level2">
+<h2>Selecting by Characteristics</h2>
 <ul>
-<li><code>.float</code>: floating-point columns</li>
-<li><code>.integer</code>: integer columns</li>
-<li><code>.any_date</code>: date or datetime columns</li>
-<li><code>.boolean</code>: boolean columns</li>
-<li><code>.string</code>: columns with a String data type</li>
-<li><code>.categorical</code>: columns with a Categorical data type</li>
-<li><code>.numeric</code>: numeric (either integer or float) columns</li>
+<li><code>.all()</code>: All columns</li>
+<li><code>.has_nulls()</code>: Columns with at least one null</li>
+<li><code>.cardinality_below(threshold)</code>: Few unique values</li>
 </ul>
-<div id="2c153919" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
-<span id="cb3-2"><a></a>string_selector <span class="op">=</span> s.string()</span>
-<span id="cb3-3"><a></a></span>
-<span id="cb3-4"><a></a>SelectCols(cols<span class="op">=</span>string_selector).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="3ddf5cd8" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>SelectCols(cols<span class="op">=</span>s.has_nulls()).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 <style scoped="">
@@ -366,35 +311,17 @@
 <thead>
 <tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">str1</th>
-<th data-quarto-table-cell-role="th">str2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>public</td>
-<td>officer</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>private</td>
-<td>manager</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>None</td>
-<td>lawyer</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>private</td>
-<td>chef</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>public</td>
-<td>teacher</td>
 </tr>
 </tbody>
 </table>
@@ -402,14 +329,16 @@
 </div>
 </div>
 </div>
-<p>Additional conditions include:</p>
+</section>
+<section id="selecting-by-name" class="slide level2">
+<h2>Selecting by Name</h2>
 <ul>
-<li><code>.all</code>: select all columns</li>
-<li><code>.cardinality_below</code>: select all columns with a number of unique values lower than the given <code>threshold</code></li>
-<li><code>.has_nulls</code>: select all columns that include at least one null value</li>
+<li><code>.cols("name")</code>: Specific column name(s)</li>
+<li><code>.glob("pattern*")</code>: Unix shell-style globbing</li>
+<li><code>.regex("pattern")</code>: Regular expressions</li>
 </ul>
-<div id="0ed03a4a" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>SelectCols(cols<span class="op">=</span>s.has_nulls()).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="f7b83465" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>SelectCols(cols<span class="op">=</span>s.glob(<span class="st">"metric_*"</span>)).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <style scoped="">
@@ -430,108 +359,17 @@
 <thead>
 <tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">str1</th>
-<th data-quarto-table-cell-role="th">cat1</th>
-<th data-quarto-table-cell-role="th">datetime-col</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>public</td>
-<td>yes</td>
-<td>2020-02-03 12:30:05</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>private</td>
-<td>yes</td>
-<td>2021-03-15 00:37:15</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>None</td>
-<td>NaN</td>
-<td>2022-02-13 17:03:25</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>private</td>
-<td>yes</td>
-<td>2023-05-22 08:45:55</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>public</td>
-<td>no</td>
-<td>NaT</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Various selectors allow to choose columns based on their name:</p>
-<ul>
-<li><code>.cols</code>: choose the provided column name (or list of names)
-<ul>
-<li>note that transformers that can accept selectors can also take column names or lists of columns by default</li>
-</ul></li>
-<li><code>.glob</code>: use Unix shell style <code>glob</code> to select column names</li>
-<li><code>.regex</code>: select columns using regular expressions</li>
-</ul>
-<div id="28072416" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>SelectCols(cols<span class="op">=</span>s.glob(<span class="st">"cat*"</span>)).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">cat1</th>
-<th data-quarto-table-cell-role="th">cat2</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>yes</td>
-<td>20K+</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>yes</td>
-<td>40K+</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>NaN</td>
-<td>60K+</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>yes</td>
-<td>30K+</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>no</td>
-<td>50K+</td>
 </tr>
 </tbody>
 </table>
@@ -540,11 +378,35 @@
 </div>
 </div>
 </section>
-<section id="combining-selectors" class="slide level2">
-<h2>Combining selectors</h2>
-<p>Selectors can be inverted using <code>.inv</code> or the logical operator <code>~</code> to select all <em>other</em> columns, and they can be combined using the <code>&amp;</code> and <code>|</code> logical operators. It is also possible to remove from a selection with <code>-</code>; for example to select all columns except for “datetime-col”, one would write:</p>
-<div id="1ba03b18" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>SelectCols(cols<span class="op">=</span>s.<span class="bu">all</span>() <span class="op">-</span> <span class="st">"datetime-col"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="combining-selectors" class="slide level2 smaller">
+<h2>Combining Selectors</h2>
+<p>Use logical operators:</p>
+<div id="7dea5f27" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># OR: datetime columns OR string columns</span></span>
+<span id="cb5-2"><a></a>s.any_date() <span class="op">|</span> s.string()</span>
+<span id="cb5-3"><a></a></span>
+<span id="cb5-4"><a></a><span class="co"># AND: string columns without nulls</span></span>
+<span id="cb5-5"><a></a>s.string() <span class="op">&amp;</span> <span class="op">~</span>s.has_nulls()</span>
+<span id="cb5-6"><a></a></span>
+<span id="cb5-7"><a></a><span class="co"># Exclude: all columns except "datetime-col"</span></span>
+<span id="cb5-8"><a></a>s.<span class="bu">all</span>() <span class="op">-</span> <span class="st">"datetime-col"</span></span>
+<span id="cb5-9"><a></a></span>
+<span id="cb5-10"><a></a><span class="co"># Inverse: NOT numeric</span></span>
+<span id="cb5-11"><a></a><span class="op">~</span>s.numeric()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>(~numeric())</code></pre>
+</div>
+</div>
+</section>
+<section id="extracting-selected-columns" class="slide level2">
+<h2>Extracting Selected Columns</h2>
+<p>Get the list of selected columns:</p>
+<div id="fa8f5d87" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>selector <span class="op">=</span> s.has_nulls()</span>
+<span id="cb7-2"><a></a>columns_with_nulls <span class="op">=</span> selector.expand(df)</span>
+<span id="cb7-3"><a></a></span>
+<span id="cb7-4"><a></a><span class="co"># Use in dataframe operations</span></span>
+<span id="cb7-5"><a></a>df.drop(columns<span class="op">=</span>columns_with_nulls)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 <style scoped="">
@@ -565,124 +427,29 @@
 <thead>
 <tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">int</th>
-<th data-quarto-table-cell-role="th">float</th>
-<th data-quarto-table-cell-role="th">str1</th>
-<th data-quarto-table-cell-role="th">str2</th>
-<th data-quarto-table-cell-role="th">bool</th>
-<th data-quarto-table-cell-role="th">cat1</th>
-<th data-quarto-table-cell-role="th">cat2</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">city</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>15</td>
-<td>5.20</td>
-<td>public</td>
-<td>officer</td>
-<td>True</td>
-<td>yes</td>
-<td>20K+</td>
+<td>25</td>
+<td>Alice</td>
+<td>NYC</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>56</td>
-<td>2.40</td>
-<td>private</td>
-<td>manager</td>
-<td>False</td>
-<td>yes</td>
-<td>40K+</td>
+<td>30</td>
+<td>Bob</td>
+<td>LA</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>63</td>
-<td>6.20</td>
-<td>None</td>
-<td>lawyer</td>
-<td>True</td>
-<td>NaN</td>
-<td>60K+</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>12</td>
-<td>10.45</td>
-<td>private</td>
-<td>chef</td>
-<td>False</td>
-<td>yes</td>
-<td>30K+</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>44</td>
-<td>9.00</td>
-<td>public</td>
-<td>teacher</td>
-<td>True</td>
-<td>no</td>
-<td>50K+</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>To select all datetime columns OR all string columns that do not contain nulls, we can do:</p>
-<div id="ef53e043" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>SelectCols(cols<span class="op">=</span>(s.any_date() <span class="op">|</span> (s.string()) <span class="op">&amp;</span> (<span class="op">~</span>s.has_nulls()))).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">str2</th>
-<th data-quarto-table-cell-role="th">datetime-col</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>officer</td>
-<td>2020-02-03 12:30:05</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>manager</td>
-<td>2021-03-15 00:37:15</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>lawyer</td>
-<td>2022-02-13 17:03:25</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>chef</td>
-<td>2023-05-22 08:45:55</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>teacher</td>
-<td>NaT</td>
+<td>35</td>
+<td>Charlie</td>
+<td>Chicago</td>
 </tr>
 </tbody>
 </table>
@@ -691,20 +458,21 @@
 </div>
 </div>
 </section>
-<section id="extracting-selected-columns" class="slide level2">
-<h2>Extracting selected columns</h2>
-<p>Selectors can use the <code>expand</code> and <code>expand_index</code> methods to extract the columns that have been selected:</p>
-<div id="6855e6f6" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>has_nulls <span class="op">=</span> s.has_nulls()</span>
-<span id="cb8-2"><a></a>has_nulls.expand(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="custom-selectors-filter-by-condition" class="slide level2">
+<h2>Custom Selectors: Filter by Condition</h2>
+<div id="d0f528d6" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="kw">def</span> more_nulls_than(col, threshold<span class="op">=</span><span class="fl">0.5</span>):</span>
+<span id="cb8-2"><a></a>    <span class="cf">return</span> col.isnull().<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(col) <span class="op">&gt;</span> threshold</span>
+<span id="cb8-3"><a></a></span>
+<span id="cb8-4"><a></a>selector <span class="op">=</span> s.<span class="bu">filter</span>(more_nulls_than, threshold<span class="op">=</span><span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="custom-selectors-filter-by-name" class="slide level2">
+<h2>Custom Selectors: Filter by Name</h2>
+<div id="db822b5c" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>selector <span class="op">=</span> s.filter_names(<span class="kw">lambda</span> name: name.endswith(<span class="st">'_mm'</span>))</span>
+<span id="cb9-2"><a></a>s.select(df, selector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>['str1', 'cat1', 'datetime-col']</code></pre>
-</div>
-</div>
-<p>This can be used, for example, to pass a list of columns to a dataframe library.</p>
-<div id="0f71f492" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>df.drop(columns<span class="op">=</span>has_nulls.expand(df))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -724,53 +492,17 @@
 <thead>
 <tr class="header" style="text-align: right;">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">int</th>
-<th data-quarto-table-cell-role="th">float</th>
-<th data-quarto-table-cell-role="th">str2</th>
-<th data-quarto-table-cell-role="th">bool</th>
-<th data-quarto-table-cell-role="th">cat2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>15</td>
-<td>5.20</td>
-<td>officer</td>
-<td>True</td>
-<td>20K+</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>56</td>
-<td>2.40</td>
-<td>manager</td>
-<td>False</td>
-<td>40K+</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>63</td>
-<td>6.20</td>
-<td>lawyer</td>
-<td>True</td>
-<td>60K+</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>12</td>
-<td>10.45</td>
-<td>chef</td>
-<td>False</td>
-<td>30K+</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>44</td>
-<td>9.00</td>
-<td>teacher</td>
-<td>True</td>
-<td>50K+</td>
 </tr>
 </tbody>
 </table>
@@ -779,567 +511,15 @@
 </div>
 </div>
 </section>
-<section id="designing-custom-filters" class="slide level2">
-<h2>Designing custom filters</h2>
-<p>Finally, it is possible to define function-based selectors using <code>.filter</code> and <code>.filter_names</code>.</p>
-<p><code>.filter</code> selects columns for which the <code>predicate</code> evaluated by a user-defined function on the given column is <code>True</code>. It is also possible to pass arguments to the function to further tweak the conditions. For example, it is possible to select columns that include a certain amount of nulls by defining a function like the following:</p>
-<div id="9aefd8f6" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb11-2"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb11-3"><a></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
-<span id="cb11-4"><a></a></span>
-<span id="cb11-5"><a></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"a"</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="dv">1</span>], <span class="st">"b"</span>: [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]})</span>
-<span id="cb11-6"><a></a></span>
-<span id="cb11-7"><a></a><span class="kw">def</span> more_nulls_than(col, threshold<span class="op">=</span><span class="fl">.5</span>):</span>
-<span id="cb11-8"><a></a>    <span class="cf">return</span> col.isnull().<span class="bu">sum</span>()<span class="op">/</span><span class="bu">len</span>(col) <span class="op">&gt;</span> threshold</span>
-<span id="cb11-9"><a></a></span>
-<span id="cb11-10"><a></a>DropCols(cols<span class="op">=</span>s.<span class="bu">filter</span>(more_nulls_than, threshold<span class="op">=</span><span class="fl">0.5</span>)).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">b</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>1</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>3</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>4</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p><code>.filter_names</code> is similar to <code>.filter</code> in the sense that it takes a function that returns a predicate, but in this case the function is evaluated over the column names.</p>
-<p>If we define this example dataframe:</p>
-<div id="513185af" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> selectors <span class="im">as</span> s</span>
-<span id="cb12-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb12-3"><a></a>df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb12-4"><a></a>    {</span>
-<span id="cb12-5"><a></a>        <span class="st">"height_mm"</span>: [<span class="fl">297.0</span>, <span class="fl">420.0</span>],</span>
-<span id="cb12-6"><a></a>        <span class="st">"width_mm"</span>: [<span class="fl">210.0</span>, <span class="fl">297.0</span>],</span>
-<span id="cb12-7"><a></a>        <span class="st">"kind"</span>: [<span class="st">"A4"</span>, <span class="st">"A3"</span>],</span>
-<span id="cb12-8"><a></a>        <span class="st">"ID"</span>: [<span class="dv">4</span>, <span class="dv">3</span>],</span>
-<span id="cb12-9"><a></a>    }</span>
-<span id="cb12-10"><a></a>)</span>
-<span id="cb12-11"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">height_mm</th>
-<th data-quarto-table-cell-role="th">width_mm</th>
-<th data-quarto-table-cell-role="th">kind</th>
-<th data-quarto-table-cell-role="th">ID</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>297.0</td>
-<td>210.0</td>
-<td>A4</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>420.0</td>
-<td>297.0</td>
-<td>A3</td>
-<td>3</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>We can select all the columns that end with <code>"_mm"</code> as follows:</p>
-<div id="1736efa1" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>selector <span class="op">=</span> s.filter_names(<span class="kw">lambda</span> name: name.endswith(<span class="st">'_mm'</span>))</span>
-<span id="cb13-2"><a></a>s.select(df, selector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">height_mm</th>
-<th data-quarto-table-cell-role="th">width_mm</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>297.0</td>
-<td>210.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>420.0</td>
-<td>297.0</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-<section id="conclusion" class="slide level2">
-<h2>Conclusion</h2>
-<p>In this chapter we covered the skrub selectors, how they allow to select specific columns either through simple conditions, or by combining different selectors. More use cases of <code>ApplyToCols</code> and the selectors will be shown through the rest of the course, starting from the next chapter on feature engineering.</p>
-</section></section>
-<section id="exercise-using-selectors-together-with-applytocols" class="title-slide slide level1 center">
-<h1>Exercise: using selectors together with <code>ApplyToCols</code></h1>
-<p><strong>Path to the exercise</strong>: <code>content/exercises/04_selectors.ipynb</code></p>
-<p>Consider this example dataframe:</p>
-<div id="ee97dfcc" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb14-2"><a></a></span>
-<span id="cb14-3"><a></a>df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb14-4"><a></a>    {</span>
-<span id="cb14-5"><a></a>        <span class="st">"metric_1"</span>: [<span class="fl">10.5</span>, <span class="fl">20.3</span>, <span class="fl">30.1</span>, <span class="fl">40.2</span>],</span>
-<span id="cb14-6"><a></a>        <span class="st">"metric_2"</span>: [<span class="fl">5.1</span>, <span class="fl">15.6</span>, <span class="va">None</span>, <span class="fl">35.8</span>],</span>
-<span id="cb14-7"><a></a>        <span class="st">"metric_3"</span>: [<span class="fl">1.1</span>, <span class="fl">3.3</span>, <span class="fl">2.6</span>, <span class="fl">.8</span>],</span>
-<span id="cb14-8"><a></a>        <span class="st">"num_id"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>],</span>
-<span id="cb14-9"><a></a>        <span class="st">"str_id"</span>: [<span class="st">"A101"</span>, <span class="st">"A102"</span>, <span class="st">"A103"</span>, <span class="st">"A104"</span>],</span>
-<span id="cb14-10"><a></a>        <span class="st">"description"</span>: [<span class="st">"apple"</span>, <span class="va">None</span>, <span class="st">"cherry"</span>, <span class="st">"date"</span>],</span>
-<span id="cb14-11"><a></a>        <span class="st">"name"</span>: [<span class="st">"Alice"</span>, <span class="st">"Bob"</span>, <span class="st">"Charlie"</span>, <span class="st">"David"</span>],</span>
-<span id="cb14-12"><a></a>    }</span>
-<span id="cb14-13"><a></a>)</span>
-<span id="cb14-14"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">metric_1</th>
-<th data-quarto-table-cell-role="th">metric_2</th>
-<th data-quarto-table-cell-role="th">metric_3</th>
-<th data-quarto-table-cell-role="th">num_id</th>
-<th data-quarto-table-cell-role="th">str_id</th>
-<th data-quarto-table-cell-role="th">description</th>
-<th data-quarto-table-cell-role="th">name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>10.5</td>
-<td>5.1</td>
-<td>1.1</td>
-<td>101</td>
-<td>A101</td>
-<td>apple</td>
-<td>Alice</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>20.3</td>
-<td>15.6</td>
-<td>3.3</td>
-<td>102</td>
-<td>A102</td>
-<td>None</td>
-<td>Bob</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>30.1</td>
-<td>NaN</td>
-<td>2.6</td>
-<td>103</td>
-<td>A103</td>
-<td>cherry</td>
-<td>Charlie</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>40.2</td>
-<td>35.8</td>
-<td>0.8</td>
-<td>104</td>
-<td>A104</td>
-<td>date</td>
-<td>David</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Using the skrub selectors and <code>ApplyToCols</code>:</p>
+<section id="key-takeaways" class="slide level2">
+<h2>Key Takeaways</h2>
 <ul>
-<li>Apply the <code>StandardScaler</code> to numeric columns, except <code>"num_id"</code>.</li>
-<li>Apply a <code>OneHotEncoder</code> with <code>sparse_output=False</code> on all string columns except <code>"str_id"</code>.</li>
+<li>Use selectors for flexible, reusable column selection</li>
+<li>Combine selectors with logical operators</li>
+<li><code>expand()</code> extracts selected column names</li>
+<li>Create custom selectors for domain-specific logic</li>
+<li>Perfect with <code>ApplyToCols</code>, <code>SelectCols</code>, <code>DropCols</code></li>
 </ul>
-<div id="99fad10b" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb15-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
-<span id="cb15-3"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
-<span id="cb15-4"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb15-5"><a></a></span>
-<span id="cb15-6"><a></a><span class="co"># Write your solution here</span></span>
-<span id="cb15-7"><a></a><span class="co"># </span></span>
-<span id="cb15-8"><a></a><span class="co"># </span></span>
-<span id="cb15-9"><a></a><span class="co"># </span></span>
-<span id="cb15-10"><a></a><span class="co"># </span></span>
-<span id="cb15-11"><a></a><span class="co"># </span></span>
-<span id="cb15-12"><a></a><span class="co"># </span></span>
-<span id="cb15-13"><a></a><span class="co"># </span></span>
-<span id="cb15-14"><a></a><span class="co"># </span></span>
-<span id="cb15-15"><a></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="0c2f3514" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb16-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
-<span id="cb16-3"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
-<span id="cb16-4"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb16-5"><a></a></span>
-<span id="cb16-6"><a></a>scaler <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric() <span class="op">-</span> <span class="st">"num_id"</span>)</span>
-<span id="cb16-7"><a></a>one_hot <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string() <span class="op">-</span> <span class="st">"str_id"</span>)</span>
-<span id="cb16-8"><a></a></span>
-<span id="cb16-9"><a></a>transformer <span class="op">=</span> make_pipeline(scaler, one_hot)</span>
-<span id="cb16-10"><a></a></span>
-<span id="cb16-11"><a></a>transformer.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">metric_1</th>
-<th data-quarto-table-cell-role="th">metric_2</th>
-<th data-quarto-table-cell-role="th">metric_3</th>
-<th data-quarto-table-cell-role="th">num_id</th>
-<th data-quarto-table-cell-role="th">str_id</th>
-<th data-quarto-table-cell-role="th">description_apple</th>
-<th data-quarto-table-cell-role="th">description_cherry</th>
-<th data-quarto-table-cell-role="th">description_date</th>
-<th data-quarto-table-cell-role="th">description_None</th>
-<th data-quarto-table-cell-role="th">name_Alice</th>
-<th data-quarto-table-cell-role="th">name_Bob</th>
-<th data-quarto-table-cell-role="th">name_Charlie</th>
-<th data-quarto-table-cell-role="th">name_David</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>-1.336178</td>
-<td>-1.077965</td>
-<td>-0.820768</td>
-<td>101</td>
-<td>A101</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>-0.449914</td>
-<td>-0.253793</td>
-<td>1.303572</td>
-<td>102</td>
-<td>A102</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>0.436349</td>
-<td>NaN</td>
-<td>0.627646</td>
-<td>103</td>
-<td>A103</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>1.349743</td>
-<td>1.331758</td>
-<td>-1.110450</td>
-<td>104</td>
-<td>A104</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>1.0</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Given the same dataframe and using selectors, drop only string columns that contain nulls.</p>
-<div id="49f5fd9d" class="cell" data-execution_count="16">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
-<span id="cb17-2"><a></a></span>
-<span id="cb17-3"><a></a><span class="co"># Write your solution here</span></span>
-<span id="cb17-4"><a></a><span class="co"># </span></span>
-<span id="cb17-5"><a></a><span class="co"># </span></span>
-<span id="cb17-6"><a></a><span class="co"># </span></span>
-<span id="cb17-7"><a></a><span class="co"># </span></span>
-<span id="cb17-8"><a></a><span class="co"># </span></span>
-<span id="cb17-9"><a></a><span class="co"># </span></span>
-<span id="cb17-10"><a></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="3d7d7282" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DropCols</span>
-<span id="cb18-2"><a></a></span>
-<span id="cb18-3"><a></a>DropCols(cols<span class="op">=</span>s.has_nulls() <span class="op">&amp;</span> s.string()).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">metric_1</th>
-<th data-quarto-table-cell-role="th">metric_2</th>
-<th data-quarto-table-cell-role="th">metric_3</th>
-<th data-quarto-table-cell-role="th">num_id</th>
-<th data-quarto-table-cell-role="th">str_id</th>
-<th data-quarto-table-cell-role="th">name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>10.5</td>
-<td>5.1</td>
-<td>1.1</td>
-<td>101</td>
-<td>A101</td>
-<td>Alice</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>20.3</td>
-<td>15.6</td>
-<td>3.3</td>
-<td>102</td>
-<td>A102</td>
-<td>Bob</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>30.1</td>
-<td>NaN</td>
-<td>2.6</td>
-<td>103</td>
-<td>A103</td>
-<td>Charlie</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>40.2</td>
-<td>35.8</td>
-<td>0.8</td>
-<td>104</td>
-<td>A104</td>
-<td>David</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Now write a custom function that selects columns where all values are lower than <code>10.0</code>.</p>
-<div id="363257d4" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
-<span id="cb19-2"><a></a></span>
-<span id="cb19-3"><a></a><span class="co"># Write your solution here</span></span>
-<span id="cb19-4"><a></a><span class="co"># </span></span>
-<span id="cb19-5"><a></a><span class="co"># </span></span>
-<span id="cb19-6"><a></a><span class="co"># </span></span>
-<span id="cb19-7"><a></a><span class="co"># </span></span>
-<span id="cb19-8"><a></a><span class="co"># </span></span>
-<span id="cb19-9"><a></a><span class="co"># </span></span>
-<span id="cb19-10"><a></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="a77bdd3e" class="cell" data-execution_count="19">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
-<span id="cb20-2"><a></a></span>
-<span id="cb20-3"><a></a><span class="kw">def</span> lower_than(col):</span>
-<span id="cb20-4"><a></a>    <span class="cf">return</span> <span class="bu">all</span>(col <span class="op">&lt;</span> <span class="fl">10.0</span>)</span>
-<span id="cb20-5"><a></a></span>
-<span id="cb20-6"><a></a>SelectCols(cols<span class="op">=</span>s.numeric() <span class="op">&amp;</span> s.<span class="bu">filter</span>(lower_than)).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">metric_3</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>1.1</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>3.3</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2.6</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>0.8</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 
 
 </section>

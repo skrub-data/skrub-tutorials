@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b1189524dc19e09ab363e9b4d3e2f65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4cad563b89d51a7306807a9bca28adc0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -156,15 +156,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#using-the-skrub-cleaner" id="toc-using-the-skrub-cleaner" class="nav-link" data-scroll-target="#using-the-skrub-cleaner">Using the skrub <code>Cleaner</code></a>
-  <ul class="collapse">
-  <li><a href="#using-plain-pandas" id="toc-using-plain-pandas" class="nav-link" data-scroll-target="#using-plain-pandas">Using plain pandas</a></li>
+  <li><a href="#an-example-dataframe" id="toc-an-example-dataframe" class="nav-link" data-scroll-target="#an-example-dataframe">An example dataframe</a></li>
+  <li><a href="#there-are-some-issues" id="toc-there-are-some-issues" class="nav-link" data-scroll-target="#there-are-some-issues">There are some issues!</a></li>
+  <li><a href="#cleaning-with-pandas" id="toc-cleaning-with-pandas" class="nav-link" data-scroll-target="#cleaning-with-pandas">Cleaning with pandas</a></li>
+  <li><a href="#cleaning-with-pandas-1" id="toc-cleaning-with-pandas-1" class="nav-link" data-scroll-target="#cleaning-with-pandas-1">Cleaning with pandas</a></li>
+  <li><a href="#cleaning-with-pandas-2" id="toc-cleaning-with-pandas-2" class="nav-link" data-scroll-target="#cleaning-with-pandas-2">Cleaning with pandas</a></li>
   <li><a href="#the-alternative-skrub.cleaner" id="toc-the-alternative-skrub.cleaner" class="nav-link" data-scroll-target="#the-alternative-skrub.cleaner">The alternative: <code>skrub.Cleaner</code></a></li>
-  <li><a href="#cleaning-steps-performed-by-the-cleaner" id="toc-cleaning-steps-performed-by-the-cleaner" class="nav-link" data-scroll-target="#cleaning-steps-performed-by-the-cleaner">Cleaning steps performed by the <code>Cleaner</code></a></li>
-  </ul></li>
+  <li><a href="#the-alternative-skrub.cleaner-1" id="toc-the-alternative-skrub.cleaner-1" class="nav-link" data-scroll-target="#the-alternative-skrub.cleaner-1">The alternative: <code>skrub.Cleaner</code></a></li>
+  <li><a href="#what-does-the-cleaner-do-in-practice" id="toc-what-does-the-cleaner-do-in-practice" class="nav-link" data-scroll-target="#what-does-the-cleaner-do-in-practice">What does the <code>Cleaner</code> do in practice?</a></li>
+  <li><a href="#note-on-intended-usage" id="toc-note-on-intended-usage" class="nav-link" data-scroll-target="#note-on-intended-usage">Note on intended usage</a></li>
   <li><a href="#under-the-hood-dropuninformative" id="toc-under-the-hood-dropuninformative" class="nav-link" data-scroll-target="#under-the-hood-dropuninformative">Under the hood: <code>DropUninformative</code></a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#an-example-for-dropuninformative" id="toc-an-example-for-dropuninformative" class="nav-link" data-scroll-target="#an-example-for-dropuninformative">An example for <code>DropUninformative</code></a></li>
+  <li><a href="#an-example-for-dropuninformative-1" id="toc-an-example-for-dropuninformative-1" class="nav-link" data-scroll-target="#an-example-for-dropuninformative-1">An example for <code>DropUninformative</code></a></li>
+  <li><a href="#what-we-have-seen-in-this-chapter" id="toc-what-we-have-seen-in-this-chapter" class="nav-link" data-scroll-target="#what-we-have-seen-in-this-chapter">What we have seen in this chapter</a></li>
+  <li><a href="#time-for-the-quiz" id="toc-time-for-the-quiz" class="nav-link" data-scroll-target="#time-for-the-quiz">Time for the quiz!</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="02_cleaning_data.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
@@ -192,14 +197,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In this chapter, we will show how we can quickly pre-process and sanitize data using skrub’s <code>Cleaner</code>.</p>
+<p>Once a table has been explored, the typical next step is addressing any problem it might have.</p>
+<p>This can be described broadly as “cleaning” or “sanitizing” the data.</p>
 </section>
-<section id="using-the-skrub-cleaner" class="level2">
-<h2 class="anchored" data-anchor-id="using-the-skrub-cleaner">Using the skrub <code>Cleaner</code></h2>
-<p>The <code>Cleaner</code> is intended to be a first step in preparing tabular data for analysis or modeling, and can handle a variety of common data cleaning tasks automatically. It is designed to work out-of-the-box with minimal configuration, although it is also possible to customize its behavior if needed.</p>
-<p>Given a dataframe, the <code>Cleaner</code> applies a sequence of transformers to each column:</p>
-<p>Consider this example dataframe:</p>
-<div id="568faa74" class="cell" data-execution_count="1">
+<section id="an-example-dataframe" class="level2">
+<h2 class="anchored" data-anchor-id="an-example-dataframe">An example dataframe</h2>
+<div id="37760f65" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -281,8 +284,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This dataframe has mixed type columns, with some of the missing values denoted as <code>None</code> and some <code>"?"</code>. The datetime column has a non-standard format and has been parsed as a string column. Finally, one of the columns is completely empty.</p>
-<div id="c4536320" class="cell" data-execution_count="2">
+</section>
+<section id="there-are-some-issues" class="level2">
+<h2 class="anchored" data-anchor-id="there-are-some-issues">There are some issues!</h2>
+<ul>
+<li>Null values in various columns</li>
+<li><code>"?"</code> used as null value marker</li>
+<li>The datetime column has an unusual format</li>
+<li>There is a column that is fully empty</li>
+</ul>
+</section>
+<section id="cleaning-with-pandas" class="level2">
+<h2 class="anchored" data-anchor-id="cleaning-with-pandas">Cleaning with pandas</h2>
+<p>First, let’s look at the datatypes detected by pandas:</p>
+<div id="4efbf4d6" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -299,10 +314,11 @@ dtypes: float64(1), int64(1), object(3)
 memory usage: 332.0+ bytes</code></pre>
 </div>
 </div>
-<section id="using-plain-pandas" class="level3">
-<h3 class="anchored" data-anchor-id="using-plain-pandas">Using plain pandas</h3>
-<p>Cleaning this dataset using plain pandas may require writing code like this:</p>
-<div id="e5e5835c" class="cell" data-execution_count="3">
+<p>Null values were not detected properly, the datetime wasn’t parsed as such.</p>
+</section>
+<section id="cleaning-with-pandas-1" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="cleaning-with-pandas-1">Cleaning with pandas</h2>
+<div id="c167ff47" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse the datetime strings with a specific format</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'datetime_column'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime_column'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st"> %b %Y'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -310,84 +326,24 @@ memory usage: 332.0+ bytes</code></pre>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df.loc[:, df.nunique(dropna<span class="op">=</span><span class="va">True</span>) <span class="op">&gt;</span> <span class="dv">1</span>]</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace "?" with np.nan in all string columns</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.replace(<span class="st">"?"</span>, np.nan)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to drop columns with only missing values or empty strings</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> drop_empty_columns(df):</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop columns with only missing values</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    df_clean <span class="op">=</span> df.dropna(axis<span class="op">=</span><span class="dv">1</span>, how<span class="op">=</span><span class="st">'all'</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop columns with only empty strings</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    empty_string_cols <span class="op">=</span> df_clean.columns[df_clean.eq(<span class="st">''</span>).<span class="bu">all</span>()]</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    df_clean <span class="op">=</span> df_clean.drop(columns<span class="op">=</span>empty_string_cols)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df_clean</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to the DataFrame</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> drop_empty_columns(df_clean)</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">numerical_1</th>
-<th data-quarto-table-cell-role="th">numerical_2</th>
-<th data-quarto-table-cell-role="th">string_column</th>
-<th data-quarto-table-cell-role="th">datetime_column</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>1</td>
-<td>10.5</td>
-<td>apple</td>
-<td>2020-01-03</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2</td>
-<td>20.3</td>
-<td>NaN</td>
-<td>2020-01-04</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>3</td>
-<td>NaN</td>
-<td>banana</td>
-<td>2020-01-05</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>4</td>
-<td>40.1</td>
-<td>cherry</td>
-<td>2020-01-06</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>5</td>
-<td>50.2</td>
-<td>NaN</td>
-<td>2020-01-07</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df_clean.replace(<span class="st">"?"</span>, np.nan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="the-alternative-skrub.cleaner" class="level3">
-<h3 class="anchored" data-anchor-id="the-alternative-skrub.cleaner">The alternative: <code>skrub.Cleaner</code></h3>
-<p>By default, the <code>Cleaner</code> applies various transformations that can sanitize many common use cases:</p>
-<div id="65d87a44" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="cleaning-with-pandas-2" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="cleaning-with-pandas-2">Cleaning with pandas</h2>
+<div id="628580bd" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to drop columns with only missing values or empty strings</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> drop_empty_columns(df):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop columns with only missing values</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    df_clean <span class="op">=</span> df.dropna(axis<span class="op">=</span><span class="dv">1</span>, how<span class="op">=</span><span class="st">'all'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop columns with only empty strings</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    empty_string_cols <span class="op">=</span> df_clean.columns[df_clean.eq(<span class="st">''</span>).<span class="bu">all</span>()]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    df_clean <span class="op">=</span> df_clean.drop(columns<span class="op">=</span>empty_string_cols)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df_clean</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to the DataFrame</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> drop_empty_columns(df_clean)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -414,6 +370,70 @@ memory usage: 332.0+ bytes</code></pre>
 <th data-quarto-table-cell-role="th">1</th>
 <td>2</td>
 <td>20.3</td>
+<td>NaN</td>
+<td>2020-01-04</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>NaN</td>
+<td>banana</td>
+<td>2020-01-05</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>40.1</td>
+<td>cherry</td>
+<td>2020-01-06</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>5</td>
+<td>50.2</td>
+<td>NaN</td>
+<td>2020-01-07</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="the-alternative-skrub.cleaner" class="level2">
+<h2 class="anchored" data-anchor-id="the-alternative-skrub.cleaner">The alternative: <code>skrub.Cleaner</code></h2>
+<p>By default, the <code>Cleaner</code> applies various transformations that can sanitize many common use cases:</p>
+<div id="82312ddd" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">numerical_1</th>
+<th data-quarto-table-cell-role="th">numerical_2</th>
+<th data-quarto-table-cell-role="th">string_column</th>
+<th data-quarto-table-cell-role="th">datetime_column</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>10.5</td>
+<td>apple</td>
+<td>2020-01-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2</td>
+<td>20.3</td>
 <td>None</td>
 <td>2020-01-04</td>
 </tr>
@@ -444,9 +464,12 @@ memory usage: 332.0+ bytes</code></pre>
 </div>
 </div>
 </div>
-<p>We can see that the cleaned version of the dataframe is now marking missing values correctly, and that the datetime column has been parsed accordingly:</p>
-<div id="4701a0c0" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="the-alternative-skrub.cleaner-1" class="level2">
+<h2 class="anchored" data-anchor-id="the-alternative-skrub.cleaner-1">The alternative: <code>skrub.Cleaner</code></h2>
+<p>The cleaned version of the dataframe is now marking missing values correctly, and that the datetime column has been parsed:</p>
+<div id="ca1a66b9" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 5 entries, 0 to 4
@@ -462,53 +485,47 @@ memory usage: 292.0+ bytes</code></pre>
 </div>
 </div>
 </section>
-<section id="cleaning-steps-performed-by-the-cleaner" class="level3">
-<h3 class="anchored" data-anchor-id="cleaning-steps-performed-by-the-cleaner">Cleaning steps performed by the <code>Cleaner</code></h3>
-<p>In more detail, the <code>Cleaner</code> executes the following steps in order:</p>
+<section id="what-does-the-cleaner-do-in-practice" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="what-does-the-cleaner-do-in-practice">What does the <code>Cleaner</code> do in practice?</h2>
 <ol type="1">
-<li>It replaces common strings used to represent missing values (e.g., <code>NULL</code>, <code>?</code>) with NA markers.</li>
-<li>It uses the <code>DropUninformative</code> transformer to decide whether a column is “uninformative”, that is, it is not likely to bring information useful to train a ML model. For example, empty columns are uninformative.</li>
-<li>It tries to parse datetime columns using common formats, or a user-provided <code>datetime_format</code>.</li>
-<li>It processes categorical columns to ensure consistent typing depending on the dataframe library in use.</li>
-<li>It converts columns to string, unless they have a data type that carries more information, such as numerical, datetime, and categorial columns.</li>
-<li>It automatically parses numbers written as strings (“1.324”) to convert them to actual numerical columns.</li>
-<li>Finally, it can convert numerical columns to <code>np.float32</code> dtype if called with the parameter <code>numeric_dtype="float32"</code>. This ensures a consistent representation of numbers and missing values, and helps reducing the memory footprint.</li>
+<li>It replaces strings used to represent null values with <code>None</code></li>
+<li>It removes uninformative columns</li>
+<li>It tries to parse datetime columns</li>
+<li>It converts columns to string, unless they have an informative type</li>
+<li>It parses strings like <code>"1234.6"</code> to numbers</li>
 </ol>
 </section>
+<section id="note-on-intended-usage" class="level2">
+<h2 class="anchored" data-anchor-id="note-on-intended-usage">Note on intended usage</h2>
+<p>The <code>Cleaner</code> is intended to be used early on when pre-processing, so it avoids altering the input dataframe too much.</p>
+<p>The assumption is that complex transformations are done in later steps by the user.</p>
+<p>This is different from what is done by the <code>TableVectorizer</code>.</p>
 </section>
-<section id="under-the-hood-dropuninformative" class="level2">
-<h2 class="anchored" data-anchor-id="under-the-hood-dropuninformative">Under the hood: <code>DropUninformative</code></h2>
-<p>When the <code>Cleaner</code> is fitted on a dataframe, it checks whether the dataframe includes uninformative columns, that is columns that do not bring useful information for training a ML model, and should therefore be dropped.</p>
-<p>This is done by the <code>DropUninformative</code> transformer, which is a standalone transformer that the <code>Cleaner</code> leverages to sanitize data. <code>DropUninformative</code> marks a columns as “uninformative” if it satisfies one of these conditions:</p>
+<section id="under-the-hood-dropuninformative" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="under-the-hood-dropuninformative">Under the hood: <code>DropUninformative</code></h2>
+<p>The <code>Cleaner</code> uses heuristics to detect columns that are unlikely to bring information useful to a ML model.</p>
+<p>This is done by the <code>DropUninformative</code> transformer, which marks a columns as “uninformative” if:</p>
 <ul>
-<li>The fraction of missing values is larger than the threshold provided by the user with <code>drop_null_fraction</code>.
-<ul>
-<li>By default, this threshold is 1.0, i.e., only columns that contain only missing values are dropped.</li>
-<li>Setting the threshold to <code>None</code> will disable this check and therefore retain empty columns.</li>
-</ul></li>
-<li>It contains only one value, and no missing values.
-<ul>
-<li>This is controlled by the <code>drop_if_constant</code> flag, which is <code>False</code> by default.</li>
-</ul></li>
-<li>All values in the column are distinct.
-<ul>
-<li>This may be the case if the column contains UIDs, but it can also happen when the column contains text.</li>
-<li>This check is off by default and can be turned on by setting <code>drop_if_unique</code> to <code>True</code>.</li>
-</ul></li>
+<li>It contains more nulls than a certain fraction (1.0 by default)</li>
+<li>It contains only one value (and no missing values)</li>
+<li>All values in a column are distinct</li>
 </ul>
-<div id="dd2bd0f5" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"id"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>, <span class="dv">105</span>],</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: [<span class="dv">34</span>, <span class="dv">28</span>, <span class="dv">45</span>, <span class="dv">52</span>, <span class="dv">39</span>],</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"salary"</span>: [<span class="dv">70000</span>, <span class="va">None</span>, <span class="dv">85000</span>, <span class="va">None</span>, <span class="va">None</span>], </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"department"</span>: [<span class="st">"HR"</span>, <span class="st">"Finance"</span>, <span class="st">"IT"</span>, <span class="st">"HR"</span>, <span class="st">"Finance"</span>],</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"constant_col"</span>: [<span class="st">"active"</span>] <span class="op">*</span> <span class="dv">5</span>,  <span class="co"># single constant value</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>df2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+</section>
+<section id="an-example-for-dropuninformative" class="level2">
+<h2 class="anchored" data-anchor-id="an-example-for-dropuninformative">An example for <code>DropUninformative</code></h2>
+<div id="6649d45f" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"id"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>, <span class="dv">105</span>],</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: [<span class="dv">34</span>, <span class="dv">28</span>, <span class="dv">45</span>, <span class="dv">52</span>, <span class="dv">39</span>],</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"salary"</span>: [<span class="dv">70000</span>, <span class="va">None</span>, <span class="dv">85000</span>, <span class="va">None</span>, <span class="va">None</span>], </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"department"</span>: [<span class="st">"HR"</span>, <span class="st">"Finance"</span>, <span class="st">"IT"</span>, <span class="st">"HR"</span>, <span class="st">"Finance"</span>],</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"constant_col"</span>: [<span class="st">"active"</span>] <span class="op">*</span> <span class="dv">5</span>,  <span class="co"># single constant value</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>df2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -570,12 +587,15 @@ memory usage: 292.0+ bytes</code></pre>
 </div>
 </div>
 </div>
-<div id="dcdd2c05" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, DropUninformative</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>drop <span class="op">=</span> ApplyToCols(DropUninformative(drop_if_constant<span class="op">=</span><span class="va">True</span>, drop_null_fraction<span class="op">=</span><span class="fl">0.5</span>))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>drop.fit_transform(df2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+</section>
+<section id="an-example-for-dropuninformative-1" class="level2">
+<h2 class="anchored" data-anchor-id="an-example-for-dropuninformative-1">An example for <code>DropUninformative</code></h2>
+<div id="83bb94ec" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, DropUninformative</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>drop <span class="op">=</span> ApplyToCols(DropUninformative(drop_if_constant<span class="op">=</span><span class="va">True</span>, drop_null_fraction<span class="op">=</span><span class="fl">0.5</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>drop.fit_transform(df2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -626,20 +646,17 @@ memory usage: 292.0+ bytes</code></pre>
 </div>
 </div>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>In this chapter we have covered how the skrub <code>Cleaner</code> helps with sanitizing data by implementing a number of common transformations that need to be executed in order to ensure that the data used by the pipeline are consistent and can be used as indended by ML models.</p>
+<section id="what-we-have-seen-in-this-chapter" class="level2">
+<h2 class="anchored" data-anchor-id="what-we-have-seen-in-this-chapter">What we have seen in this chapter</h2>
 <ul>
-<li>The <code>Cleaner</code> object automates common data cleaning steps, making it easy to prepare tabular data for analysis or modeling with minimal configuration.</li>
-<li><code>Cleaner</code> leverages transformers like <code>DropUninformative</code> to automatically remove columns that are empty, constant, or contain mostly unique values (such as IDs), based on user-defined thresholds.</li>
-<li>The <code>DropUninformative</code> transformer can also be used directly for fine-grained control over which columns to drop, according to missing value fraction, constant values, or uniqueness.</li>
-<li>skrub objects are designed to work seamlessly with pandas DataFrames, streamlining the preprocessing workflow and reducing the need for manual data cleaning code.</li>
+<li>The <code>Cleaner</code> automates common data cleaning steps.</li>
+<li>It parses numbers and datetimes, and replaces null sentinels with actual null values.</li>
+<li>It detects and possibly removes uninformative columns.</li>
+<li>It can be applied directly to any dataframe.</li>
 </ul>
-<p>In the next chapter we will see how skrub helps with applying this and other transformations to specific columns in the data.</p>
 </section>
-<section id="exercise" class="level1">
-<h1>Exercise</h1>
-<p><strong>Path to the exercise</strong>: <code>../notebooks/01_ex_explore_clean.html</code></p>
+<section id="time-for-the-quiz" class="level1">
+<h1>Time for the quiz!</h1>
 
 
 </section>

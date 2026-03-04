@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Encoding datetime features with DatetimeEncoder – Skrub Slides</title>
+<title>Encoding datetime features – Skrub Slides</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b1189524dc19e09ab363e9b4d3e2f65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4cad563b89d51a7306807a9bca28adc0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -155,12 +155,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#converting-datetime-strings-to-datetime-objects" id="toc-converting-datetime-strings-to-datetime-objects" class="nav-link" data-scroll-target="#converting-datetime-strings-to-datetime-objects">Converting datetime strings to datetime objects</a></li>
-  <li><a href="#encoding-datetime-features" id="toc-encoding-datetime-features" class="nav-link" data-scroll-target="#encoding-datetime-features">Encoding datetime features</a></li>
-  <li><a href="#periodic-features" id="toc-periodic-features" class="nav-link" data-scroll-target="#periodic-features">Periodic features</a></li>
-  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#the-datetime-challenge" id="toc-the-datetime-challenge" class="nav-link active" data-scroll-target="#the-datetime-challenge">The Datetime Challenge</a></li>
+  <li><a href="#converting-strings-to-datetime" id="toc-converting-strings-to-datetime" class="nav-link" data-scroll-target="#converting-strings-to-datetime">Converting Strings to Datetime</a></li>
+  <li><a href="#extracting-datetime-features" id="toc-extracting-datetime-features" class="nav-link" data-scroll-target="#extracting-datetime-features">Extracting Datetime Features</a></li>
+  <li><a href="#simpler-with-datetimeencoder" id="toc-simpler-with-datetimeencoder" class="nav-link" data-scroll-target="#simpler-with-datetimeencoder">Simpler with DatetimeEncoder</a></li>
+  <li><a href="#periodic-features" id="toc-periodic-features" class="nav-link" data-scroll-target="#periodic-features">Periodic Features</a></li>
+  <li><a href="#circular-sincos-encoding" id="toc-circular-sincos-encoding" class="nav-link" data-scroll-target="#circular-sincos-encoding">Circular (Sin/Cos) Encoding</a></li>
+  <li><a href="#spline-encoding-alternative" id="toc-spline-encoding-alternative" class="nav-link" data-scroll-target="#spline-encoding-alternative">Spline Encoding Alternative</a></li>
+  <li><a href="#example-spline-periodic-features" id="toc-example-spline-periodic-features" class="nav-link" data-scroll-target="#example-spline-periodic-features">Example: spline periodic features</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="06_feat_eng_datetimes.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
@@ -169,7 +172,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Encoding datetime features with <code>DatetimeEncoder</code></h1>
+<h1 class="title">Encoding datetime features</h1>
 </div>
 
 
@@ -186,77 +189,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Datetime features are very important for many data analysis and machine learning tasks, as they often carry significant information about temporal patterns and trends. For instance, including as features the day of the week, time of day, or season can provide valuable insights for predictive modeling.</p>
-<p>However, working with datetime data can be difficult due to the variety of formats in which dates and times are represented. Typical formats include <code>"%Y-%m-%d"</code>, <code>"%d/%m/%Y"</code>, and <code>"%d %B %Y"</code>, among others. Correct parsing of these and more exotic formats is essential to avoid errors and ensure accurate feature extraction.</p>
-<p>In this section we are going to cover how skrub can help with dealing with datetimes using <code>to_datetime</code>, <code>ToDatetime</code>, and the <code>DatetimeEncoder</code>.</p>
+<section id="the-datetime-challenge" class="level2">
+<h2 class="anchored" data-anchor-id="the-datetime-challenge">The Datetime Challenge</h2>
+<p>Datetimes come in many formats:</p>
+<ul>
+<li>“2023-01-03” (ISO format)</li>
+<li>“03/01/2023” (EU format)</li>
+<li>“January 3, 2023” (text)</li>
+<li>“03 Jan 2023” (custom)</li>
+</ul>
+<p>Correct parsing is essential for feature extraction.</p>
 </section>
-<section id="converting-datetime-strings-to-datetime-objects" class="level2">
-<h2 class="anchored" data-anchor-id="converting-datetime-strings-to-datetime-objects">Converting datetime strings to datetime objects</h2>
-<p>Often, the first operation that must be done to work with datetime objects is converting the datetimes from a string representation to a proper datetime object. This is beneficial because using datetimes gives access to datetime-specific features, and allows to access the different parts of the datetime.</p>
-<p>Skrub provides different objects to deal with the conversion problem.</p>
-<p><strong><code>ToDatetime</code></strong> is a single column transformer that tries to conver the given column to datetime either by relying on a user-provided format, or by guessing common formats. Since this transformer must be applied to single columns (rather than dataframes), it is typically better to use it in conjunction with <code>ApplyToCols</code>. Additionally, the <code>allow_reject</code> parameter of <code>ApplyToCols</code> should be set to <code>True</code> to avoid raising exceptions for non-datetime columns:</p>
-<div id="a1bbb7d4" class="cell" data-execution_count="1">
+<section id="converting-strings-to-datetime" class="level2">
+<h2 class="anchored" data-anchor-id="converting-strings-to-datetime">Converting Strings to Datetime</h2>
+<p><strong><code>ToDatetime</code></strong>: Single column transformer with format guessing:</p>
+<div id="f4630964" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dates"</span>: [</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-01-03"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-02-15"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-03-27"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-04-10"</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df_enc.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 4 entries, 0 to 3
-Data columns (total 1 columns):
- #   Column  Non-Null Count  Dtype         
----  ------  --------------  -----         
- 0   dates   4 non-null      datetime64[ns]
-dtypes: datetime64[ns](1)
-memory usage: 164.0 bytes</code></pre>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"dates"</span>: [<span class="st">"2023-01-03"</span>, <span class="st">"2023-02-15"</span>]})</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df_dt <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023-01-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023-02-15</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
-<p><strong><code>to_datetime</code></strong> works similarly to <a href="https://pandas.pydata.org/docs/reference/api/pandas.to_datetime.html#pandas.to_datetime">pd.to_datetime</a>, or the example shown above with <code>ApplyToCols</code>.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
 </div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><code>to_datetime</code> is a stateless function, so it should not be used in a pipeline, because it does not guarantee consistency between <code>fit_transform</code> and successive <code>transform</code>. <code>ApplyToCols(ToDatetime(), allow_reject=True)</code> is a better solution for pipelines.</p>
-</div>
-</div>
-<p>Finally, the standard <code>Cleaner</code> can be used for parsing datetimes, as it uses <code>ToDatetime</code> under the hood, and can take the <code>datetime_format</code>. As the <code>Cleaner</code> is a transformer, it guarantees consistency between <code>fit_transform</code> and <code>transform</code>.</p>
-</section>
-<section id="encoding-datetime-features" class="level2">
-<h2 class="anchored" data-anchor-id="encoding-datetime-features">Encoding datetime features</h2>
-<p>Datetimes cannot be used “as-is” for training ML models, and must instead be converted to numerical features. Typically, this is done by “splitting” the datetime parts (year, month, day etc.) into separate columns, so that each column contains only one number.</p>
-<p>Additional features may also be of interest, such as the number of seconds since epoch (which increases monotonically and gives an indication of the order of entries), whether a date is a weekday or weekend, or the day of the year.</p>
-<p>To achieve this with standard dataframe libraries, the code looks like this:</p>
-<div id="427b0661" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.year</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"month"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.month</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.weekday</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day_of_year</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"total_seconds"</span>] <span class="op">=</span> (</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    df_enc[<span class="st">"dates"</span>] <span class="op">-</span> pd.Timestamp(<span class="st">"1970-01-01"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">//</span> pd.Timedelta(seconds<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong><code>Cleaner</code></strong>: Also parses datetimes with custom format:</p>
+<div id="fe87b9c8" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>cleaner <span class="op">=</span> Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> cleaner.fit_transform(df)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -266,54 +252,16 @@ Warning
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">dates</th>
-<th data-quarto-table-cell-role="th">year</th>
-<th data-quarto-table-cell-role="th">month</th>
-<th data-quarto-table-cell-role="th">day</th>
-<th data-quarto-table-cell-role="th">weekday</th>
-<th data-quarto-table-cell-role="th">day_of_year</th>
-<th data-quarto-table-cell-role="th">total_seconds</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>2023-01-03</td>
-<td>2023</td>
-<td>1</td>
-<td>3</td>
-<td>1</td>
-<td>3</td>
-<td>1672704000</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>2023-02-15</td>
-<td>2023</td>
-<td>2</td>
-<td>15</td>
-<td>2</td>
-<td>46</td>
-<td>1676419200</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023-03-27</td>
-<td>2023</td>
-<td>3</td>
-<td>27</td>
-<td>0</td>
-<td>86</td>
-<td>1679875200</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023-04-10</td>
-<td>2023</td>
-<td>4</td>
-<td>10</td>
-<td>0</td>
-<td>100</td>
-<td>1681084800</td>
 </tr>
 </tbody>
 </table>
@@ -321,18 +269,34 @@ Warning
 </div>
 </div>
 </div>
-<p>Skrub’s <code>DatetimeEncoder</code> allows to add the same features with a simpler interface. As the <code>DatetimeEncoder</code> is a single column transformer, we use again <code>ApplyToCols</code>.</p>
-<p>The <code>DatetimeEncoder</code> includes various parameters to add more features to the transformed dataframe: - <code>add_total_seconds</code> adds the number of seconds since Epoch (1970-01-01) - <code>add_weekday</code> adds the day in the week (to highlight weekends, for example) - <code>add_day_of_year</code> adds the day in year of the datetime</p>
-<div id="7b15621c" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder</span>
+</section>
+<section id="extracting-datetime-features" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="extracting-datetime-features">Extracting Datetime Features</h2>
+<p>Datetimes must be converted to numerical features:</p>
+<div id="6d593c1c" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.year</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"month"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.month</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"day"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"weekday"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.weekday</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day_of_year</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"total_seconds"</span>] <span class="op">=</span> (df_dt[<span class="st">"dates"</span>] <span class="op">-</span> pd.Timestamp(<span class="st">"1970-01-01"</span>)) <span class="op">//</span> pd.Timedelta(<span class="st">'1s'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="simpler-with-datetimeencoder" class="level2">
+<h2 class="anchored" data-anchor-id="simpler-with-datetimeencoder">Simpler with DatetimeEncoder</h2>
+<div id="5c3d0a41" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, ApplyToCols</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    add_total_seconds<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    add_weekday<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    add_day_of_year<span class="op">=</span><span class="va">True</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>df_dt <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
 
@@ -367,24 +331,6 @@ Warning
 <td>3.0</td>
 <td>46.0</td>
 </tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023.0</td>
-<td>3.0</td>
-<td>27.0</td>
-<td>1.679875e+09</td>
-<td>1.0</td>
-<td>86.0</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023.0</td>
-<td>4.0</td>
-<td>10.0</td>
-<td>1.681085e+09</td>
-<td>1.0</td>
-<td>100.0</td>
-</tr>
 </tbody>
 </table>
 
@@ -393,93 +339,25 @@ Warning
 </div>
 </section>
 <section id="periodic-features" class="level2">
-<h2 class="anchored" data-anchor-id="periodic-features">Periodic features</h2>
-<p>Periodic features are useful for training machine learning models because they capture the cyclical nature of certain data patterns. For example, features such as hours in a day or days in a week often exhibit periodic behavior. By encoding these features periodically, models can better understand and predict patterns that repeat over time, such as daily traffic trends, or seasonal variations. This ensures that the model treats the start and end of a cycle as close neighbors, improving its ability to generalize and make accurate predictions.</p>
-<p>This can be done manually with dataframe libraries. For example, circular encoding (a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:</p>
-<div id="c0408334" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<h2 class="anchored" data-anchor-id="periodic-features">Periodic Features</h2>
+<p>Cyclical patterns need special handling:</p>
+<ul>
+<li>Day of week: 0-6, but 0 and 6 are close</li>
+<li>Month: 1-12, but 12 and 1 are close</li>
+<li>Hour: 0-23, but 23 and 0 are close</li>
+</ul>
+</section>
+<section id="circular-sincos-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="circular-sincos-encoding">Circular (Sin/Cos) Encoding</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day_of_year</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"day_of_year"</span>] <span class="op">/</span> <span class="dv">365</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"day_of_year"</span>] <span class="op">/</span> <span class="dv">365</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.weekday</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">dates</th>
-<th data-quarto-table-cell-role="th">day_of_year</th>
-<th data-quarto-table-cell-role="th">day_of_year_sin</th>
-<th data-quarto-table-cell-role="th">day_of_year_cos</th>
-<th data-quarto-table-cell-role="th">weekday</th>
-<th data-quarto-table-cell-role="th">weekday_sin</th>
-<th data-quarto-table-cell-role="th">weekday_cos</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>2023-01-03</td>
-<td>3</td>
-<td>0.051620</td>
-<td>0.998667</td>
-<td>1</td>
-<td>0.781831</td>
-<td>0.623490</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2023-02-15</td>
-<td>46</td>
-<td>0.711657</td>
-<td>0.702527</td>
-<td>2</td>
-<td>0.974928</td>
-<td>-0.222521</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023-03-27</td>
-<td>86</td>
-<td>0.995919</td>
-<td>0.090252</td>
-<td>0</td>
-<td>0.000000</td>
-<td>1.000000</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023-04-10</td>
-<td>100</td>
-<td>0.988678</td>
-<td>-0.150055</td>
-<td>0</td>
-<td>0.000000</td>
-<td>1.000000</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Alternatively, the <code>DatetimeEncoder</code> can add periodic features using either circular or spline encoding through the <code>periodic_encoding</code> parameter:</p>
-<div id="c07a6e5c" class="cell" data-execution_count="5">
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Or with <code>DatetimeEncoder</code>:</p>
+<div id="7b1b9e6a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
@@ -494,12 +372,6 @@ Warning
 <th data-quarto-table-cell-role="th">dates_month_circular_1</th>
 <th data-quarto-table-cell-role="th">dates_day_circular_0</th>
 <th data-quarto-table-cell-role="th">dates_day_circular_1</th>
-<th data-quarto-table-cell-role="th">day_of_year</th>
-<th data-quarto-table-cell-role="th">day_of_year_sin</th>
-<th data-quarto-table-cell-role="th">day_of_year_cos</th>
-<th data-quarto-table-cell-role="th">weekday</th>
-<th data-quarto-table-cell-role="th">weekday_sin</th>
-<th data-quarto-table-cell-role="th">weekday_cos</th>
 </tr>
 </thead>
 <tbody>
@@ -508,60 +380,18 @@ Warning
 <td>2023.0</td>
 <td>1.672704e+09</td>
 <td>0.500000</td>
-<td>8.660254e-01</td>
+<td>0.866025</td>
 <td>5.877853e-01</td>
 <td>0.809017</td>
-<td>3</td>
-<td>0.051620</td>
-<td>0.998667</td>
-<td>1</td>
-<td>0.781831</td>
-<td>0.623490</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>2023.0</td>
 <td>1.676419e+09</td>
 <td>0.866025</td>
-<td>5.000000e-01</td>
+<td>0.500000</td>
 <td>1.224647e-16</td>
 <td>-1.000000</td>
-<td>46</td>
-<td>0.711657</td>
-<td>0.702527</td>
-<td>2</td>
-<td>0.974928</td>
-<td>-0.222521</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023.0</td>
-<td>1.679875e+09</td>
-<td>1.000000</td>
-<td>6.123234e-17</td>
-<td>-5.877853e-01</td>
-<td>0.809017</td>
-<td>86</td>
-<td>0.995919</td>
-<td>0.090252</td>
-<td>0</td>
-<td>0.000000</td>
-<td>1.000000</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023.0</td>
-<td>1.681085e+09</td>
-<td>0.866025</td>
-<td>-5.000000e-01</td>
-<td>8.660254e-01</td>
-<td>-0.500000</td>
-<td>100</td>
-<td>0.988678</td>
-<td>-0.150055</td>
-<td>0</td>
-<td>0.000000</td>
-<td>1.000000</td>
 </tr>
 </tbody>
 </table>
@@ -570,412 +400,108 @@ Warning
 </div>
 </div>
 </section>
-<section id="conclusions" class="level2">
-<h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
-<p>In this chapter, we explored the importance and challenges of working with datetime features. We covered how to convert string representations of dates to datetime objects using skrub’s <code>ToDatetime</code> transformer and the <code>Cleaner</code>, both of which can be integrated into pipelines for robust preprocessing.</p>
-<p>We also discussed the need to encode datetime features into numerical representations suitable for machine learning models. The <code>DatetimeEncoder</code> provides a convenient way to extract useful components such as year, month, day, weekday, day of year, and total seconds since epoch. Additionally, we saw how periodic (circular) encoding can be used to capture cyclical patterns in time-based data.</p>
-<p>In the next chapter, we will cover the final type of columns: categorical/string columns.</p>
+<section id="spline-encoding-alternative" class="level2">
+<h2 class="anchored" data-anchor-id="spline-encoding-alternative">Spline Encoding Alternative</h2>
+<div id="4802bbf8" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"spline"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates_year</th>
+<th data-quarto-table-cell-role="th">dates_total_seconds</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_00</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_01</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_02</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_03</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_04</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_05</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_06</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_07</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_08</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_09</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_10</th>
+<th data-quarto-table-cell-role="th">dates_month_spline_11</th>
+<th data-quarto-table-cell-role="th">dates_day_spline_0</th>
+<th data-quarto-table-cell-role="th">dates_day_spline_1</th>
+<th data-quarto-table-cell-role="th">dates_day_spline_2</th>
+<th data-quarto-table-cell-role="th">dates_day_spline_3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023.0</td>
+<td>1.672704e+09</td>
+<td>0.0</td>
+<td>0.166667</td>
+<td>0.666667</td>
+<td>0.166667</td>
+<td>0.000000</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.036000</td>
+<td>0.538667</td>
+<td>0.414667</td>
+<td>0.010667</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023.0</td>
+<td>1.676419e+09</td>
+<td>0.0</td>
+<td>0.000000</td>
+<td>0.166667</td>
+<td>0.666667</td>
+<td>0.166667</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.166667</td>
+<td>0.000000</td>
+<td>0.166667</td>
+<td>0.666667</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
-<section id="exercise" class="level1">
-<h1>Exercise</h1>
-<p><strong>Path to the exercise</strong>: <code>content/exercises/06_feat_eng_datetimes.ipynb</code></p>
-<p>Use one of the methods explained so far (Cleaner/ApplyToCols) to convert the provided dataframe to datetime dtype, then extract the following features:</p>
+<section id="example-spline-periodic-features" class="level2">
+<h2 class="anchored" data-anchor-id="example-spline-periodic-features">Example: spline periodic features</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/periodic_features_light_transparent.png" class="img-fluid figure-img"></p>
+<figcaption>example of periodic features generated with splines</figcaption>
+</figure>
+</div>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <ul>
-<li>All parts of the datetime</li>
-<li>The number of seconds from epoch</li>
-<li>The day in the week</li>
-<li>The day of the year</li>
+<li>Use <code>ToDatetime</code> or <code>Cleaner</code> to parse string dates</li>
+<li><code>DatetimeEncoder</code> extracts useful features</li>
+<li>Use periodic encoding for cyclical features</li>
+<li>Circular encoding: sin/cos transformation</li>
+<li>Spline encoding: alternative periodic approach</li>
 </ul>
-<p><strong>Hint</strong>: use the format <code>"%d %B %Y"</code> for the datetime.</p>
-<div id="2f4201be" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"admission_dates"</span>: [</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"03 January 2023"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"15 February 2023"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"27 March 2023"</span>,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"10 April 2023"</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ],</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"patient_ids"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>],</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: [<span class="dv">25</span>, <span class="dv">34</span>, <span class="dv">45</span>, <span class="dv">52</span>],</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"outcome"</span>: [<span class="st">"Recovered"</span>, <span class="st">"Under Treatment"</span>, <span class="st">"Recovered"</span>, <span class="st">"Deceased"</span>],</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    admission_dates  patient_ids  age          outcome
-0   03 January 2023          101   25        Recovered
-1  15 February 2023          102   34  Under Treatment
-2     27 March 2023          103   45        Recovered
-3     10 April 2023          104   52         Deceased</code></pre>
-</div>
-</div>
-<div id="6ffc09dd" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="3705555a" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution with ApplyToCols and ToDatetime</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime, DatetimeEncoder</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>to_datetime_encoder <span class="op">=</span> ApplyToCols(ToDatetime(<span class="bu">format</span><span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>), cols<span class="op">=</span><span class="st">"admission_dates"</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>datetime_encoder <span class="op">=</span> ApplyToCols(</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    cols<span class="op">=</span>s.any_date(),</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> make_pipeline(to_datetime_encoder, datetime_encoder)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>encoder.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">admission_dates_year</th>
-<th data-quarto-table-cell-role="th">admission_dates_month</th>
-<th data-quarto-table-cell-role="th">admission_dates_day</th>
-<th data-quarto-table-cell-role="th">admission_dates_total_seconds</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday</th>
-<th data-quarto-table-cell-role="th">admission_dates_day_of_year</th>
-<th data-quarto-table-cell-role="th">patient_ids</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>2023.0</td>
-<td>1.0</td>
-<td>3.0</td>
-<td>1.672704e+09</td>
-<td>2.0</td>
-<td>3.0</td>
-<td>101</td>
-<td>25</td>
-<td>Recovered</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2023.0</td>
-<td>2.0</td>
-<td>15.0</td>
-<td>1.676419e+09</td>
-<td>3.0</td>
-<td>46.0</td>
-<td>102</td>
-<td>34</td>
-<td>Under Treatment</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023.0</td>
-<td>3.0</td>
-<td>27.0</td>
-<td>1.679875e+09</td>
-<td>1.0</td>
-<td>86.0</td>
-<td>103</td>
-<td>45</td>
-<td>Recovered</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023.0</td>
-<td>4.0</td>
-<td>10.0</td>
-<td>1.681085e+09</td>
-<td>1.0</td>
-<td>100.0</td>
-<td>104</td>
-<td>52</td>
-<td>Deceased</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<div id="2e284f67" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution with Cleaner</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>datetime_encoder <span class="op">=</span> ApplyToCols(</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    cols<span class="op">=</span>s.any_date(),</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> make_pipeline(Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>), datetime_encoder)</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>encoder.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">admission_dates_year</th>
-<th data-quarto-table-cell-role="th">admission_dates_month</th>
-<th data-quarto-table-cell-role="th">admission_dates_day</th>
-<th data-quarto-table-cell-role="th">admission_dates_total_seconds</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday</th>
-<th data-quarto-table-cell-role="th">admission_dates_day_of_year</th>
-<th data-quarto-table-cell-role="th">patient_ids</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>2023.0</td>
-<td>1.0</td>
-<td>3.0</td>
-<td>1.672704e+09</td>
-<td>2.0</td>
-<td>3.0</td>
-<td>101</td>
-<td>25</td>
-<td>Recovered</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2023.0</td>
-<td>2.0</td>
-<td>15.0</td>
-<td>1.676419e+09</td>
-<td>3.0</td>
-<td>46.0</td>
-<td>102</td>
-<td>34</td>
-<td>Under Treatment</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023.0</td>
-<td>3.0</td>
-<td>27.0</td>
-<td>1.679875e+09</td>
-<td>1.0</td>
-<td>86.0</td>
-<td>103</td>
-<td>45</td>
-<td>Recovered</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023.0</td>
-<td>4.0</td>
-<td>10.0</td>
-<td>1.681085e+09</td>
-<td>1.0</td>
-<td>100.0</td>
-<td>104</td>
-<td>52</td>
-<td>Deceased</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>Modify the script so that the <code>DatetimeEncoder</code> adds periodic encoding with sine and cosine (aka circular encoding):</p>
-<div id="34f1fc96" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Write your solution here</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Now modify the script above to add spline features (<code>periodic_encoding="spline"</code>).</p>
-<div id="00d1bcb5" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solution</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>datetime_encoder <span class="op">=</span> ApplyToCols(</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    DatetimeEncoder(</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        periodic_encoding<span class="op">=</span><span class="st">"spline"</span>,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        add_total_seconds<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        add_weekday<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        add_day_of_year<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    cols<span class="op">=</span>s.any_date(),</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> make_pipeline(Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>), datetime_encoder)</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>encoder.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">admission_dates_year</th>
-<th data-quarto-table-cell-role="th">admission_dates_total_seconds</th>
-<th data-quarto-table-cell-role="th">admission_dates_day_of_year</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_00</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_01</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_02</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_03</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_04</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_05</th>
-<th data-quarto-table-cell-role="th">admission_dates_month_spline_06</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_0</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_1</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_2</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_3</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_4</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_5</th>
-<th data-quarto-table-cell-role="th">admission_dates_weekday_spline_6</th>
-<th data-quarto-table-cell-role="th">patient_ids</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>2023.0</td>
-<td>1.672704e+09</td>
-<td>3.0</td>
-<td>0.0</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>...</td>
-<td>0.0</td>
-<td>0.000000</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.000000</td>
-<td>0.0</td>
-<td>101</td>
-<td>25</td>
-<td>Recovered</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2023.0</td>
-<td>1.676419e+09</td>
-<td>46.0</td>
-<td>0.0</td>
-<td>0.000000</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>...</td>
-<td>0.0</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.0</td>
-<td>102</td>
-<td>34</td>
-<td>Under Treatment</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>2023.0</td>
-<td>1.679875e+09</td>
-<td>86.0</td>
-<td>0.0</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.000000</td>
-<td>...</td>
-<td>0.0</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.0</td>
-<td>103</td>
-<td>45</td>
-<td>Recovered</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>2023.0</td>
-<td>1.681085e+09</td>
-<td>100.0</td>
-<td>0.0</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>...</td>
-<td>0.0</td>
-<td>0.166667</td>
-<td>0.666667</td>
-<td>0.166667</td>
-<td>0.000000</td>
-<td>0.000000</td>
-<td>0.0</td>
-<td>104</td>
-<td>52</td>
-<td>Deceased</td>
-</tr>
-</tbody>
-</table>
-
-<p>4 rows × 29 columns</p>
-</div>
-</div>
-</div>
 
 
 </section>

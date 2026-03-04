@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b1189524dc19e09ab363e9b4d3e2f65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4cad563b89d51a7306807a9bca28adc0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -181,16 +181,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#numerical-features-with-outliers" id="toc-numerical-features-with-outliers" class="nav-link" data-scroll-target="#numerical-features-with-outliers">Numerical features with outliers</a>
-  <ul class="collapse">
-  <li><a href="#regular-scalers-and-their-limitations" id="toc-regular-scalers-and-their-limitations" class="nav-link" data-scroll-target="#regular-scalers-and-their-limitations">Regular scalers and their limitations</a></li>
-  </ul></li>
-  <li><a href="#squashingscaler-a-robust-solution" id="toc-squashingscaler-a-robust-solution" class="nav-link" data-scroll-target="#squashingscaler-a-robust-solution">SquashingScaler: A robust solution</a>
-  <ul class="collapse">
-  <li><a href="#advantages-and-disadvantages-of-squashingscaler" id="toc-advantages-and-disadvantages-of-squashingscaler" class="nav-link" data-scroll-target="#advantages-and-disadvantages-of-squashingscaler">Advantages and disadvantages of <code>SquashingScaler</code></a></li>
-  </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#outliers-in-data" id="toc-outliers-in-data" class="nav-link active" data-scroll-target="#outliers-in-data">Outliers in Data</a></li>
+  <li><a href="#standardscaler-problems" id="toc-standardscaler-problems" class="nav-link" data-scroll-target="#standardscaler-problems">StandardScaler Problems</a></li>
+  <li><a href="#robustscaler" id="toc-robustscaler" class="nav-link" data-scroll-target="#robustscaler">RobustScaler</a></li>
+  <li><a href="#squashingscaler-best-approach" id="toc-squashingscaler-best-approach" class="nav-link" data-scroll-target="#squashingscaler-best-approach">SquashingScaler: Best Approach</a></li>
+  <li><a href="#comparing-the-scalers" id="toc-comparing-the-scalers" class="nav-link" data-scroll-target="#comparing-the-scalers">Comparing the scalers</a></li>
+  <li><a href="#how-squashingscaler-works" id="toc-how-squashingscaler-works" class="nav-link" data-scroll-target="#how-squashingscaler-works">How SquashingScaler Works</a></li>
+  <li><a href="#the-squashing-function" id="toc-the-squashing-function" class="nav-link" data-scroll-target="#the-squashing-function">The Squashing Function</a></li>
+  <li><a href="#advantages" id="toc-advantages" class="nav-link" data-scroll-target="#advantages">Advantages</a></li>
+  <li><a href="#disadvantages" id="toc-disadvantages" class="nav-link" data-scroll-target="#disadvantages">Disadvantages</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="05_feat_eng_numerical.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
@@ -216,16 +216,10 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Now that we can transform any column we want thanks to <code>ApplyToCols</code>, <code>ApplyToFrame</code> and the selectors, we can start covering the feature engineering part of our pipeline, beginning from numerical features.</p>
-<p>Specifically, we will find out how to safely scale numerical features with the skrub <code>SquashingScaler</code>.</p>
-</section>
-<section id="numerical-features-with-outliers" class="level2">
-<h2 class="anchored" data-anchor-id="numerical-features-with-outliers">Numerical features with outliers</h2>
-<p>When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.</p>
-<p>Consider this example:</p>
-<div id="f193dcbf" class="cell" data-execution_count="1">
+<section id="outliers-in-data" class="level2">
+<h2 class="anchored" data-anchor-id="outliers-in-data">Outliers in Data</h2>
+<p>Most values in range [-2, 2], but some outliers in [-40, 40]:</p>
+<div id="fffd2d62" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    generate_data_with_outliers,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    plot_feature_with_outliers</span>
@@ -242,49 +236,38 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>In this case, most of the values are in the range <code>[-2, 2]</code>, but there are some large outliers in the range <code>[-40, 40]</code> that can cause issues when the feature needs to be scaled.</p>
-<section id="regular-scalers-and-their-limitations" class="level3">
-<h3 class="anchored" data-anchor-id="regular-scalers-and-their-limitations">Regular scalers and their limitations</h3>
-<p>The <strong>StandardScaler</strong> computes mean and standard deviation across all values. With outliers present, these statistics become unreliable, and the scaling factor can become too small, squashing inlier values.</p>
-<p>The <strong>RobustScaler</strong> uses quantiles (typically the 25th and 75th percentiles) instead of mean/std, which makes it more resistant to outliers. However, it doesn’t bound the output values, so extreme outliers can still have very large scaled values.</p>
 </section>
-</section>
-<section id="squashingscaler-a-robust-solution" class="level2">
-<h2 class="anchored" data-anchor-id="squashingscaler-a-robust-solution">SquashingScaler: A robust solution</h2>
-<p>The <code>SquashingScaler</code> combines robust centering with smooth clipping to handle outliers effectively.</p>
-<p>It works as following:</p>
+<section id="standardscaler-problems" class="level2">
+<h2 class="anchored" data-anchor-id="standardscaler-problems">StandardScaler Problems</h2>
 <ul>
-<li>It centers the median to 0, then it scales values using quantile-based statistics.</li>
-<li>It fills constant columns with 0s.</li>
-<li>It applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
-<li>It constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
-<li>Infinite values are mapped to the corresponding boundaries.</li>
-<li>NaN values are kept unchanged.</li>
+<li>Uses mean and standard deviation</li>
+<li>Outliers make these statistics unreliable</li>
+<li>Scaling factor becomes too small</li>
+<li>Inliers get compressed into narrow range</li>
 </ul>
-<section id="advantages-and-disadvantages-of-squashingscaler" class="level3">
-<h3 class="anchored" data-anchor-id="advantages-and-disadvantages-of-squashingscaler">Advantages and disadvantages of <code>SquashingScaler</code></h3>
-<p>The <code>SquashingScaler</code> has various advantages over traditional scalers:</p>
-<ul>
-<li>It is <strong>outlier-resistant</strong>: Outliers don’t affect inlier scaling, unlike the <code>StandardScaler</code>.</li>
-<li>It has <strong>bounded output</strong>: All values stay in a predictable range, ideal for neural networks and linear models.</li>
-<li>It <strong>handles edge cases</strong>: The scaler works with infinite values and constant columns.</li>
-<li>It <strong>preserves missing data</strong>: NaN values are kept unchanged.</li>
-</ul>
-<p>A disadvantage of the <code>SquashingScaler</code> is that it is <strong>non-invertible</strong>: The soft clipping function is smooth but cannot be exactly inverted.</p>
 </section>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>When compared on data with outliers:</p>
+<section id="robustscaler" class="level2">
+<h2 class="anchored" data-anchor-id="robustscaler">RobustScaler</h2>
 <ul>
-<li><strong>StandardScaler</strong> compresses inliers due to large scaling factors</li>
-<li><strong>RobustScaler</strong> preserves relative scales but allows extreme outlier values</li>
-<li><strong>SquashingScaler</strong> keeps inliers in a reasonable range while smoothly bounding all values</li>
+<li>Uses percentiles (25th, 75th) instead of mean/std</li>
+<li>More resistant to outliers</li>
+<li>But doesn’t bound output values</li>
+<li>Extreme outliers still have large scaled values</li>
 </ul>
-<p>If we plot the impact of each scaler on the result, this is what we can see:</p>
-<div id="2b289d4c" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="squashingscaler-best-approach" class="level2">
+<h2 class="anchored" data-anchor-id="squashingscaler-best-approach">SquashingScaler: Best Approach</h2>
+<p>Smart outlier handling in skrub:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SquashingScaler</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> SquashingScaler()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="comparing-the-scalers" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-the-scalers">Comparing the scalers</h2>
+<div id="113d492d" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -293,6 +276,47 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</section>
+<section id="how-squashingscaler-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-squashingscaler-works">How SquashingScaler Works</h2>
+<ol type="1">
+<li>Center the median to 0</li>
+<li>Use quantile-based statistics for scaling</li>
+<li>Fill constant columns with 0s</li>
+<li>Apply smooth squashing function</li>
+<li>Constrain output to [-3, 3] (default)</li>
+<li>Map infinite values to boundaries</li>
+<li>Keep NaN values unchanged</li>
+</ol>
+</section>
+<section id="the-squashing-function" class="level2">
+<h2 class="anchored" data-anchor-id="the-squashing-function">The Squashing Function</h2>
+<p><span class="math display">\[x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\]</span></p>
+<p>Where <span class="math inline">\(z\)</span> is the centered/scaled value and <span class="math inline">\(B\)</span> is the bound (default: 3)</p>
+</section>
+<section id="advantages" class="level2">
+<h2 class="anchored" data-anchor-id="advantages">Advantages</h2>
+<ul>
+<li><strong>Outlier-resistant</strong>: Inliers unaffected by outliers</li>
+<li><strong>Bounded output</strong>: Predictable range ideal for neural networks</li>
+<li><strong>Handles edge cases</strong>: Works with infinite values, constant columns</li>
+<li><strong>Preserves NaN</strong>: Missing values stay unchanged</li>
+</ul>
+</section>
+<section id="disadvantages" class="level2">
+<h2 class="anchored" data-anchor-id="disadvantages">Disadvantages</h2>
+<ul>
+<li><strong>Non-invertible</strong>: Cannot perfectly reverse transformation</li>
+</ul>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><code>StandardScaler</code> is problematic with outliers</li>
+<li><code>SquashingScaler</code> safely handles outliers</li>
+<li>Smooth squashing preserves relative scales</li>
+<li>All values bounded to predictable range</li>
+</ul>
 
 
 </section>

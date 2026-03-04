@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Mixed data: dealing with categories – Skrub Slides</title>
+<title>Encoding categorical features – Skrub Slides</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -40,7 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b1189524dc19e09ab363e9b4d3e2f65.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4cad563b89d51a7306807a9bca28adc0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,18 +152,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter">Why categorical encoders matter</a></li>
-  <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons">Categorical encoders: pros and cons</a>
-  <ul class="collapse">
-  <li><a href="#one-hot-encoding-and-ordinal-encoding-scikit-learn" id="toc-one-hot-encoding-and-ordinal-encoding-scikit-learn" class="nav-link" data-scroll-target="#one-hot-encoding-and-ordinal-encoding-scikit-learn">One-Hot Encoding and Ordinal Encoding (scikit-learn)</a></li>
-  <li><a href="#categorical-encoders-in-skrub" id="toc-categorical-encoders-in-skrub" class="nav-link" data-scroll-target="#categorical-encoders-in-skrub">Categorical encoders in skrub</a></li>
-  <li><a href="#stringencoder" id="toc-stringencoder" class="nav-link" data-scroll-target="#stringencoder">StringEncoder</a></li>
-  <li><a href="#textencoder" id="toc-textencoder" class="nav-link" data-scroll-target="#textencoder">TextEncoder</a></li>
-  <li><a href="#minhashencoder" id="toc-minhashencoder" class="nav-link" data-scroll-target="#minhashencoder">MinHashEncoder</a></li>
-  <li><a href="#gapencoder" id="toc-gapencoder" class="nav-link" data-scroll-target="#gapencoder">GapEncoder</a></li>
-  </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#the-categorical-encoding-problem" id="toc-the-categorical-encoding-problem" class="nav-link active" data-scroll-target="#the-categorical-encoding-problem">The Categorical Encoding Problem</a></li>
+  <li><a href="#one-hot-encoding" id="toc-one-hot-encoding" class="nav-link" data-scroll-target="#one-hot-encoding">One-Hot Encoding</a></li>
+  <li><a href="#ordinal-encoding" id="toc-ordinal-encoding" class="nav-link" data-scroll-target="#ordinal-encoding">Ordinal Encoding</a></li>
+  <li><a href="#the-challenge-high-cardinality-features" id="toc-the-challenge-high-cardinality-features" class="nav-link" data-scroll-target="#the-challenge-high-cardinality-features">The Challenge: High-Cardinality Features</a></li>
+  <li><a href="#stringencoder-best-all-rounder" id="toc-stringencoder-best-all-rounder" class="nav-link" data-scroll-target="#stringencoder-best-all-rounder">StringEncoder: Best All-Rounder</a></li>
+  <li><a href="#textencoder-for-natural-language" id="toc-textencoder-for-natural-language" class="nav-link" data-scroll-target="#textencoder-for-natural-language">TextEncoder: For Natural Language</a></li>
+  <li><a href="#minhashencoder-fast-alternative" id="toc-minhashencoder-fast-alternative" class="nav-link" data-scroll-target="#minhashencoder-fast-alternative">MinHashEncoder: Fast Alternative</a></li>
+  <li><a href="#gapencoder-interpretable" id="toc-gapencoder-interpretable" class="nav-link" data-scroll-target="#gapencoder-interpretable">GapEncoder: Interpretable</a></li>
+  <li><a href="#encoder-comparison" id="toc-encoder-comparison" class="nav-link" data-scroll-target="#encoder-comparison">Encoder Comparison</a></li>
+  <li><a href="#in-summary" id="toc-in-summary" class="nav-link" data-scroll-target="#in-summary">In summary</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="07_feat_eng_categorical.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
@@ -137,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Mixed data: dealing with categories</h1>
+<h1 class="title">Encoding categorical features</h1>
 </div>
 
 
@@ -154,142 +187,149 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Real-world datasets rarely contain only numeric values. We frequently encounter categorical features—values that belong to discrete categories, such as names, occupations, geographic locations, or clothing sizes. Text data also falls into this category, since each unique string can be considered a categorical value.</p>
-<p>The challenge is that machine learning models require numeric input. How do we convert these categorical values into numeric features that preserve their information and enable our models to make good predictions?</p>
-<p>This chapter explores the various strategies and tools available in skrub to encode categorical features, with an eye on choosing the best method for our specific use case.</p>
+<section id="the-categorical-encoding-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-categorical-encoding-problem">The Categorical Encoding Problem</h2>
+<p>Machine learning models need numeric input, but we have:</p>
+<ul>
+<li>Names: “Alice”, “Bob”</li>
+<li>Occupations: “engineer”, “teacher”</li>
+<li>Locations: “NYC”, “LA”</li>
+</ul>
+<p>How to convert these to numbers?</p>
 </section>
-<section id="why-categorical-encoders-matter" class="level2">
-<h2 class="anchored" data-anchor-id="why-categorical-encoders-matter">Why categorical encoders matter</h2>
-<p>The way we encode categorical features significantly impacts our machine learning pipeline:</p>
-<ul>
-<li><strong>Performance</strong>: The encoding choice directly affects how well our model learns from categorical information</li>
-<li><strong>Efficiency</strong>: Some encodings create many features (potentially thousands), which increases computation time and memory usage</li>
-<li><strong>Interpretability</strong>: Different encoders provide varying levels of transparency in what features represent</li>
-<li><strong>Scalability</strong>: Not all methods scale well to high-cardinality features (those with many unique values)</li>
-</ul>
-<p>Using the appropriate encoder ensures we’re making the best use of categorical information while keeping our model efficient and interpretable.</p>
+<section id="one-hot-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="one-hot-encoding">One-Hot Encoding</h2>
+<p>Creates binary indicator columns:</p>
+<div id="78f252fe" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.DataFrame({<span class="st">"color"</span>: [<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>]})</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Pros</strong>: Intuitive, works well for few categories <strong>Cons</strong>: Explodes with many categories, creates sparse matrices</p>
 </section>
-<section id="categorical-encoders-pros-and-cons" class="level2">
-<h2 class="anchored" data-anchor-id="categorical-encoders-pros-and-cons">Categorical encoders: pros and cons</h2>
-<section id="one-hot-encoding-and-ordinal-encoding-scikit-learn" class="level3">
-<h3 class="anchored" data-anchor-id="one-hot-encoding-and-ordinal-encoding-scikit-learn">One-Hot Encoding and Ordinal Encoding (scikit-learn)</h3>
-<p><strong><code>OneHotEncoder</code></strong>: Creates a binary indicator column for each unique category, where <code>1</code> denotes the presence of the category and <code>0</code> its absence.</p>
-<p><strong>Pros:</strong></p>
+<section id="ordinal-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="ordinal-encoding">Ordinal Encoding</h2>
+<p>Assigns sequential numbers:</p>
+<div id="39d061aa" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pd.Categorical(X[<span class="st">"color"</span>]).codes</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># red=0, blue=1, etc.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>array([1, 0, 1], dtype=int8)</code></pre>
+</div>
+</div>
+<p><strong>Pros</strong>: Memory efficient <strong>Cons</strong>: Introduces artificial ordering</p>
+</section>
+<section id="the-challenge-high-cardinality-features" class="level2">
+<h2 class="anchored" data-anchor-id="the-challenge-high-cardinality-features">The Challenge: High-Cardinality Features</h2>
+<p>What if you have 1000+ unique values (IDs, free text)?</p>
 <ul>
-<li>Straightforward and intuitive</li>
-<li>Works well for low-cardinality features (few unique values)</li>
-<li>Produces sparse matrices that can save memory</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Becomes impractical with high-cardinality features (creates hundreds or thousands of columns)</li>
-<li>Results in mostly zero-valued sparse matrices when dense, which is the situation when working with dataframes</li>
-<li>Increases overfitting risk and computational overhead</li>
-</ul>
-<p>The <code>OneHotEncoder</code> is used by default by the skrub <code>TableVectorizer</code> for categorical features with fewer than 40 unique values.</p>
-<p><strong><code>OrdinalEncoder</code></strong>: Assigns each category a numerical value (0, 1, 2, …).</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Very memory-efficient</li>
-<li>Creates only one output column per input column</li>
-<li>Fast to compute</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Introduces artificial ordering among categories that may not exist in reality</li>
-<li>Can mislead models into thinking some categories are “greater than” others</li>
+<li>One-Hot would create thousands of columns</li>
+<li>Ordinal misleads models with false ordering</li>
+<li>Need a smarter approach</li>
 </ul>
 </section>
-<section id="categorical-encoders-in-skrub" class="level3">
-<h3 class="anchored" data-anchor-id="categorical-encoders-in-skrub">Categorical encoders in skrub</h3>
-<p>All the categorical encoders in skrub are designed to encode any number of unique values using a fixed number of components: this number is controlled by the parameter <code>n_components</code> in each transformer.</p>
-</section>
-<section id="stringencoder" class="level3">
-<h3 class="anchored" data-anchor-id="stringencoder">StringEncoder</h3>
-<p><strong>Approach</strong>: Applies term frequency-inverse document frequency (tf-idf) vectorization to character n-grams, followed by truncated singular value decomposition (SVD) for dimensionality reduction. This method is also known as <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent Semantic Analysis</a>.</p>
-<p><strong>Pros:</strong></p>
+<section id="stringencoder-best-all-rounder" class="level2">
+<h2 class="anchored" data-anchor-id="stringencoder-best-all-rounder">StringEncoder: Best All-Rounder</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> StringEncoder</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> StringEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li><strong>The best all-rounder</strong>: Performs well on both categorical and text data</li>
-<li>Fast training time</li>
-<li>Robust and generalizes well across different datasets</li>
-<li>No artificial ordering introduced</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Less interpretable than one-hot encoding or ordinal encoding</li>
-<li>May not capture semantic relationships as well as language model-based approaches</li>
-<li>Performance depends on the nature of the categorical data</li>
+<li>Uses TF-IDF + SVD for dimensionality reduction</li>
+<li>Fixed output dimension (n_components)</li>
+<li>No artificial ordering</li>
+<li>Fast and robust</li>
+<li>Not very good with free-flowing text</li>
 </ul>
 </section>
-<section id="textencoder" class="level3">
-<h3 class="anchored" data-anchor-id="textencoder">TextEncoder</h3>
-<p><strong>Approach</strong>: Uses pretrained language models from HuggingFace Hub to generate dense vector representations of text.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Exceptional performance on free-flowing text and natural language</li>
-<li>Captures semantic meaning and context</li>
-<li>Leverages knowledge from large-scale language model pretraining</li>
-<li>Can excel on datasets where domain-specific information aligns with pretraining data</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li><strong>Very computationally expensive</strong>: Significantly slower than other methods</li>
-<li>Requires heavy dependencies (PyTorch, transformers)</li>
-<li>Models are large and require downloading</li>
-<li>Impractical for CPU-only environments</li>
-<li>Performance on traditional categorical data (non-text, such as IDs) is not much better than simpler methods</li>
-</ul>
+<section id="textencoder-for-natural-language" class="level2">
+<h2 class="anchored" data-anchor-id="textencoder-for-natural-language">TextEncoder: For Natural Language</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TextEncoder</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> TextEncoder()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pros</strong>: Captures semantic meaning, works very well on text <strong>Cons</strong>: Very slow, requires heavy dependencies</p>
 </section>
-<section id="minhashencoder" class="level3">
-<h3 class="anchored" data-anchor-id="minhashencoder">MinHashEncoder</h3>
-<p><strong>Approach</strong>: Decomposes strings into n-grams and applies the MinHash algorithm for quick dimension reduction.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Very fast training time</li>
-<li>Simple and lightweight</li>
-<li>Minimal memory overhead</li>
-<li>Good for quick prototyping or very large-scale datasets</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Performance generally lags behind <code>StringEncoder</code> and <code>TextEncoder</code></li>
-<li>Less nuanced feature representation</li>
-<li>Less robust across different types of data</li>
-</ul>
+<section id="minhashencoder-fast-alternative" class="level2">
+<h2 class="anchored" data-anchor-id="minhashencoder-fast-alternative">MinHashEncoder: Fast Alternative</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> MinHashEncoder</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> MinHashEncoder()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pros</strong>: Very fast <strong>Cons</strong>: Encodings usually have very low quality</p>
 </section>
-<section id="gapencoder" class="level3">
-<h3 class="anchored" data-anchor-id="gapencoder">GapEncoder</h3>
-<p><strong>Approach</strong>: Estimates latent categories by finding common n-gram patterns across values, then encodes these patterns as numeric features.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Interpretable: Column names reflect the estimated categories</li>
-<li>Can group similar strings intelligently</li>
-<li>Reasonable performance across datasets</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code></li>
-<li>Performance is on par with or slightly worse than the faster <code>StringEncoder</code></li>
-<li>Interpretability comes at the cost of training speed</li>
-<li>May require more computational resources for large datasets</li>
-</ul>
+<section id="gapencoder-interpretable" class="level2">
+<h2 class="anchored" data-anchor-id="gapencoder-interpretable">GapEncoder: Interpretable</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> GapEncoder</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> GapEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pros</strong>: Interpretable results <strong>Cons</strong>: Slower, performance similar to StringEncoder</p>
 </section>
+<section id="encoder-comparison" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="encoder-comparison">Encoder Comparison</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Encoder</th>
+<th>Speed</th>
+<th>Performance</th>
+<th>Interpretability</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>OneHot</td>
+<td>Fast</td>
+<td>Good</td>
+<td>High</td>
+<td>Low cardinality</td>
+</tr>
+<tr class="even">
+<td>StringEncoder</td>
+<td>Fast</td>
+<td>Excellent</td>
+<td>Low</td>
+<td>Default choice</td>
+</tr>
+<tr class="odd">
+<td>TextEncoder</td>
+<td>Slow</td>
+<td>Excellent</td>
+<td>Medium</td>
+<td>Real text data</td>
+</tr>
+<tr class="even">
+<td>MinHashEncoder</td>
+<td>Very Fast</td>
+<td>Fair</td>
+<td>Low</td>
+<td>Quick prototyping</td>
+</tr>
+<tr class="odd">
+<td>GapEncoder</td>
+<td>Slow</td>
+<td>Good</td>
+<td>High</td>
+<td>Interpretability needed</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Encoding categorical features is a critical step in preparing data for machine learning. The skrub library provides multiple encoders to handle different scenarios:</p>
+<section id="in-summary" class="level2">
+<h2 class="anchored" data-anchor-id="in-summary">In summary</h2>
 <ul>
-<li><strong>Start with <code>StringEncoder</code></strong> as a default for high-cardinality categorical features. It offers the best balance of speed, performance, and robustness across diverse datasets.</li>
-<li><strong>Use <code>OneHotEncoder</code></strong> for low-cardinality features (&lt; 40 unique values) to keep the feature space manageable.</li>
-<li><strong>Choose <code>TextEncoder</code></strong> if you’re working with true textual data (reviews, comments, descriptions) and have sufficient computational resources.</li>
-<li><strong>Consider <code>GapEncoder</code></strong> when interpretability is important and the additional training time can be dealt with.</li>
-<li><strong>Use <code>MinHashEncoder</code></strong> when you need maximum speed and are working with very large datasets.</li>
+<li>Use <code>OneHotEncoder</code> for &lt; 40 unique values</li>
+<li>Use <code>StringEncoder</code> for high-cardinality by default</li>
+<li>Use <code>TextEncoder</code> for true natural language</li>
+<li>Use <code>GapEncoder</code> when interpretability matters</li>
+<li>All preserve no artificial ordering</li>
 </ul>
-<p>The <code>TableVectorizer</code> integrates these encoders automatically, dispatching columns to the appropriate encoder based on their data type and cardinality. This automation makes it easy to process mixed-type datasets efficiently while still allowing fine-grained control when needed. By default, the <code>TableVectorizer</code> uses the <code>OneHotEncoder</code> for categorical features with cardinality &lt;= 40, and <code>StringEncoder</code> for categorical features with cardinality &gt; 40.</p>
-<p>For a comprehensive empirical comparison of these methods, refer to the <a href="https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html">categorical encoders benchmark</a>.</p>
-<p>In the next chapter we will put all the encoders explained so far in a single object, the <code>TableVectorizer</code>.</p>
 
 
 </section>

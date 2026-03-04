@@ -110,6 +110,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -198,16 +199,10 @@
 </div>
 
 </section>
-<section id="introduction" class="slide level2">
-<h2>Introduction</h2>
-<p>Now that we can transform any column we want thanks to <code>ApplyToCols</code>, <code>ApplyToFrame</code> and the selectors, we can start covering the feature engineering part of our pipeline, beginning from numerical features.</p>
-<p>Specifically, we will find out how to safely scale numerical features with the skrub <code>SquashingScaler</code>.</p>
-</section>
-<section id="numerical-features-with-outliers" class="slide level2">
-<h2>Numerical features with outliers</h2>
-<p>When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.</p>
-<p>Consider this example:</p>
-<div id="f193dcbf" class="cell" data-execution_count="1">
+<section id="outliers-in-data" class="slide level2">
+<h2>Outliers in Data</h2>
+<p>Most values in range [-2, 2], but some outliers in [-40, 40]:</p>
+<div id="fffd2d62" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
 <span id="cb1-2"><a></a>    generate_data_with_outliers,</span>
 <span id="cb1-3"><a></a>    plot_feature_with_outliers</span>
@@ -224,45 +219,38 @@
 </div>
 </div>
 </div>
-<p>In this case, most of the values are in the range <code>[-2, 2]</code>, but there are some large outliers in the range <code>[-40, 40]</code> that can cause issues when the feature needs to be scaled.</p>
-<h3 id="regular-scalers-and-their-limitations">Regular scalers and their limitations</h3>
-<p>The <strong>StandardScaler</strong> computes mean and standard deviation across all values. With outliers present, these statistics become unreliable, and the scaling factor can become too small, squashing inlier values.</p>
-<p>The <strong>RobustScaler</strong> uses quantiles (typically the 25th and 75th percentiles) instead of mean/std, which makes it more resistant to outliers. However, it doesn’t bound the output values, so extreme outliers can still have very large scaled values.</p>
 </section>
-<section id="squashingscaler-a-robust-solution" class="slide level2">
-<h2>SquashingScaler: A robust solution</h2>
-<p>The <code>SquashingScaler</code> combines robust centering with smooth clipping to handle outliers effectively.</p>
-<p>It works as following:</p>
+<section id="standardscaler-problems" class="slide level2">
+<h2>StandardScaler Problems</h2>
 <ul>
-<li>It centers the median to 0, then it scales values using quantile-based statistics.</li>
-<li>It fills constant columns with 0s.</li>
-<li>It applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
-<li>It constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
-<li>Infinite values are mapped to the corresponding boundaries.</li>
-<li>NaN values are kept unchanged.</li>
+<li>Uses mean and standard deviation</li>
+<li>Outliers make these statistics unreliable</li>
+<li>Scaling factor becomes too small</li>
+<li>Inliers get compressed into narrow range</li>
 </ul>
-<h3 id="advantages-and-disadvantages-of-squashingscaler">Advantages and disadvantages of <code>SquashingScaler</code></h3>
-<p>The <code>SquashingScaler</code> has various advantages over traditional scalers:</p>
-<ul>
-<li>It is <strong>outlier-resistant</strong>: Outliers don’t affect inlier scaling, unlike the <code>StandardScaler</code>.</li>
-<li>It has <strong>bounded output</strong>: All values stay in a predictable range, ideal for neural networks and linear models.</li>
-<li>It <strong>handles edge cases</strong>: The scaler works with infinite values and constant columns.</li>
-<li>It <strong>preserves missing data</strong>: NaN values are kept unchanged.</li>
-</ul>
-<p>A disadvantage of the <code>SquashingScaler</code> is that it is <strong>non-invertible</strong>: The soft clipping function is smooth but cannot be exactly inverted.</p>
 </section>
-<section id="conclusion" class="slide level2">
-<h2>Conclusion</h2>
-<p>When compared on data with outliers:</p>
+<section id="robustscaler" class="slide level2">
+<h2>RobustScaler</h2>
 <ul>
-<li><strong>StandardScaler</strong> compresses inliers due to large scaling factors</li>
-<li><strong>RobustScaler</strong> preserves relative scales but allows extreme outlier values</li>
-<li><strong>SquashingScaler</strong> keeps inliers in a reasonable range while smoothly bounding all values</li>
+<li>Uses percentiles (25th, 75th) instead of mean/std</li>
+<li>More resistant to outliers</li>
+<li>But doesn’t bound output values</li>
+<li>Extreme outliers still have large scaled values</li>
 </ul>
-<p>If we plot the impact of each scaler on the result, this is what we can see:</p>
-<div id="2b289d4c" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
-<span id="cb2-2"><a></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="squashingscaler-best-approach" class="slide level2">
+<h2>SquashingScaler: Best Approach</h2>
+<p>Smart outlier handling in skrub:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SquashingScaler</span>
+<span id="cb2-2"><a></a></span>
+<span id="cb2-3"><a></a>scaler <span class="op">=</span> SquashingScaler()</span>
+<span id="cb2-4"><a></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="comparing-the-scalers" class="slide level2">
+<h2>Comparing the scalers</h2>
+<div id="113d492d" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
+<span id="cb3-2"><a></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -271,6 +259,47 @@
 </div>
 </div>
 </div>
+</section>
+<section id="how-squashingscaler-works" class="slide level2 scrollable">
+<h2>How SquashingScaler Works</h2>
+<ol type="1">
+<li>Center the median to 0</li>
+<li>Use quantile-based statistics for scaling</li>
+<li>Fill constant columns with 0s</li>
+<li>Apply smooth squashing function</li>
+<li>Constrain output to [-3, 3] (default)</li>
+<li>Map infinite values to boundaries</li>
+<li>Keep NaN values unchanged</li>
+</ol>
+</section>
+<section id="the-squashing-function" class="slide level2">
+<h2>The Squashing Function</h2>
+<p><span class="math display">\[x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\]</span></p>
+<p>Where <span class="math inline">\(z\)</span> is the centered/scaled value and <span class="math inline">\(B\)</span> is the bound (default: 3)</p>
+</section>
+<section id="advantages" class="slide level2">
+<h2>Advantages</h2>
+<ul>
+<li><strong>Outlier-resistant</strong>: Inliers unaffected by outliers</li>
+<li><strong>Bounded output</strong>: Predictable range ideal for neural networks</li>
+<li><strong>Handles edge cases</strong>: Works with infinite values, constant columns</li>
+<li><strong>Preserves NaN</strong>: Missing values stay unchanged</li>
+</ul>
+</section>
+<section id="disadvantages" class="slide level2">
+<h2>Disadvantages</h2>
+<ul>
+<li><strong>Non-invertible</strong>: Cannot perfectly reverse transformation</li>
+</ul>
+</section>
+<section id="key-takeaways" class="slide level2">
+<h2>Key Takeaways</h2>
+<ul>
+<li><code>StandardScaler</code> is problematic with outliers</li>
+<li><code>SquashingScaler</code> safely handles outliers</li>
+<li>Smooth squashing preserves relative scales</li>
+<li>All values bounded to predictable range</li>
+</ul>
 
 
 </section>
