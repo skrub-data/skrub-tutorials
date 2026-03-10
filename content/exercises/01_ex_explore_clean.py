@@ -14,6 +14,7 @@ data = pd.read_csv("../data/employee_salaries/data.csv")
 # Now use the skrub `TableReport` and answer the following questions:
 
 # %%
+%pip install skrub
 from skrub import TableReport
 
 TableReport(data)

@@ -4,6 +4,8 @@
 # selectors, and the given transformers.
 
 # %%
+%pip install skrub
+# %%
 from skrub import Cleaner, ApplyToCols, StringEncoder, DatetimeEncoder
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import make_pipeline

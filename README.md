@@ -4,34 +4,33 @@ This is the website for the
 on the [skrub package](https://skrub-data.org/stable/): it contains all the material
 used for the course, including the datasets and exercises used during the session. 
 
-## Beta warning
-If you are reading this, then you will be attending the **Beta version** of this 
-course. As a **Beta version**, this is not the final version of the course and 
-it will be tweaked according to the feedback provided after the session. 
-
-Both the presentation and the content of the book are liable to be changed based
-on feedback. 
-
 ## Structure of the course
 The course covers the main features of skrub, from data exploration to pipeline 
-construction, with the notable exclusion of the Data Ops.
+construction. While skrub DataOps are a major feature of the package, they are 
+also expansive enough to deserve their own course, and as such only a short introduction
+will be given here. 
 
 Each chapter includes a section that describes how a specific feature may assist
-in building a machine learning pipeline, along with practical code examples. 
+in building a machine learning pipeline, along with practical code examples, and
+a quiz at the end. 
 
-Some chapters include exercises for participants to work with the explained features.
-These exercises are made available in `content/exercises`, as well as at the end
-of the respective lesson in `content/notebooks`. 
-
-The content of the book is split in sections, and each section includes a "final 
-quiz" that covers the subjects covered up to that point. 
+The course is split in sections, which group relevant material together. Each 
+section is wrapped up by an exercise that covers what has been explained in the 
+section.
+These exercises are made available in `content/exercises` as `py` files, and 
+in `content/notebooks` as Jupyter notebooks. 
 
 # Prepration and setup
-First of all, clone the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
-of this book to have access to the exercises. In a future version, Jupyterlite 
-will be made available. 
+
+## Using Jupyterlite
+The easiest way to work on the exercises is simply by using Jupyterlite: this 
+will create a notebook interface directly from the browser that allows to run the
+exercises without needing to create a local environment. 
 
 ## Setting up a local environment
+If you still want to work locally (for example, if you want to use your own IDE),
+you can still do so by cloning the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
+of this book to have access to the exercises. 
 
 ### Finding the material
 Following any of the following commands should let you open a Jupyter lab or 

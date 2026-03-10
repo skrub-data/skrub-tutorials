@@ -11,6 +11,9 @@
 #
 
 # %%
+%pip install skrub
+
+# %%
 import pandas as pd
 
 data = {

@@ -3,6 +3,8 @@
 # Consider this example dataframe:
 
 # %%
+%pip install skrub
+# %%
 import pandas as pd
 
 df = pd.DataFrame(
@@ -26,6 +28,7 @@ df
 # `"str_id"`.
 
 # %%
+%pip install skrub
 import skrub.selectors as s
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from skrub import ApplyToCols
