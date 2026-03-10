@@ -8,13 +8,14 @@ format:
         toc: false
         code-fold: false
         code-tools: true
+        smaller: true
 execute: 
     echo: true
 ---
 
 ## Structure of the tutorial
 - Two ways to follow the course: a book and a set of slide decks
-- The material is split in sections that cintain two or more chapters
+- The material is split in sections that contain two or more chapters
 - Each section ends with a Quiz section, and a coding exercise
 
 ## Logistics

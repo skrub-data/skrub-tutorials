@@ -84,7 +84,7 @@ Where $z$ is the centered/scaled value and $B$ is the bound (default: 3)
 
 - **Non-invertible**: Cannot perfectly reverse transformation
 
-## Key Takeaways
+## What we have seen in this chapter
 
 - `StandardScaler` is problematic with outliers
 - `SquashingScaler` safely handles outliers

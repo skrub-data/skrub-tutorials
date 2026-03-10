@@ -27,6 +27,6 @@ format: html
 - [Chapter 9: Tabular Pipelines](chapters/09_tabular_pipeline.slides.html)
 - [Quiz 04](../book/chapters/quiz_04.html)
 
-## Conclusion
-- [Chapter 10: Conclusion](chapters/10_conclusion.slides.html)
+## Data Ops
+- [Chapter 10: Data Ops](chapters/10_data_ops.slides.html)
 

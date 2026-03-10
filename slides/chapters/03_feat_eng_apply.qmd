@@ -29,10 +29,14 @@ import pandas as pd
 
 df = pd.DataFrame({
     "date": ["03 January 2023", "04 February 2023"],
+    "city": ["Paris", "London"],
     "values": [10, 20]
 })
 
 SelectCols("date").fit_transform(df)
+```
+
+```{python}
 DropCols("date").fit_transform(df)
 ```
 
@@ -43,10 +47,11 @@ DropCols("date").fit_transform(df)
 ```{python}
 from skrub import ApplyToCols
 import skrub.selectors as s
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
 
-numeric = ApplyToCols(StandardScaler(), cols=s.numeric())
-transformed = numeric.fit_transform(df)
+one_hot = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+transformed = one_hot.fit_transform(df)
+transformed
 ```
 
 ## Example: `ApplyToCols`
@@ -62,6 +67,7 @@ from sklearn.decomposition import PCA
 
 reduce = ApplyToFrame(PCA(n_components=2), cols=s.glob("metric_*"))
 df_reduced = reduce.fit_transform(df)
+df_reduced
 ```
 
 ## Example: `ApplyToCols`
@@ -106,8 +112,10 @@ class ZipcodeParser(SingleColumnTransformer):
         if any(X.map(len) != 5):
             raise RejectColumn('This transformer only takes zip codes of length 5.')
         else:
+            # extract the first two characters
             letters = X.map(lambda s: s[:2])
             try:
+                # extract the last 3 characters and try to convert to int 
                 numbers = X.map(lambda s: int(s[2:]))
             except:
                 raise RejectColumn('Input zip codes must consist of two letters followed by three numbers.')
@@ -122,7 +130,7 @@ Use scikit-learn pipelines to combine multiple transformers:
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-select = SelectCols("patient_id")
+select = SelectCols("department-name")
 encode = ApplyToCols(OneHotEncoder(sparse_output=False))
 reduce = ApplyToFrame(PCA(n_components=2))
 
@@ -133,7 +141,7 @@ transform = make_pipeline(select, encode, reduce)
 
 Transformers should be ordered carefully:
 
-```{python}
+```{.python}
 # Encode first, then scale
 transform_1 = make_pipeline(
     ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),
@@ -147,7 +155,7 @@ transform_2 = make_pipeline(
 )
 ```
 
-## Key Takeaways
+## What we have seen in this chapter
 
 - `SelectCols` / `DropCols`: Filter columns
 - `ApplyToCols`: Apply transformer to matching columns

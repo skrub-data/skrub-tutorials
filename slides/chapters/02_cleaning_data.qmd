@@ -103,6 +103,7 @@ correctly, and that the datetime column has been parsed:
 ```{python}
 df_clean.info()
 ```
+
 ## What does the `Cleaner` do in practice? {.smaller}
 
 1. It replaces strings used to represent null values with `None`
@@ -144,7 +145,7 @@ df2 = pd.DataFrame({
 df2
 ```
 
-## An example for `DropUninformative`
+## An example for `DropUninformative` {auto-animate="true"}
 ```{python}
 from skrub import ApplyToCols, DropUninformative
 

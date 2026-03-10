@@ -9,6 +9,7 @@ format:
         code-fold: false
         code-tools: true
         scrollable: true
+        smaller: true
         footer: "[← Back to Slides Index](../../slides/index.html)"
 ---
 ## Why do we need to explore data? {.smaller}
@@ -95,7 +96,7 @@ TableReport(data).write_html("report.html")
 ```
 
 ::: {.callout-tip}
-Then, the report can be opened using any internet browser, with no need to run 
+The report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
 :::
 

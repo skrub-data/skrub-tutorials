@@ -39,12 +39,27 @@ import pandas as pd
 
 df = pd.DataFrame({
     "age": [25, 30, 35],
-    "name": ["Alice", "Bob", "Charlie"],
+    "name": ["Alice", None, "Charlie"],
     "city": ["NYC", "LA", "Chicago"]
 })
 
 SelectCols(cols=s.string()).fit_transform(df)
 ```
+
+
+## Example: select/drop columns
+
+```{python}
+df = pd.DataFrame({
+    "age": [25, 30, 35],
+    "name": ["Alice", None, "Charlie"],
+    "city": ["NYC", "LA", "Chicago"]
+})
+
+selector = s.string()
+s.select(df, selector)
+```
+
 
 ## Selecting by Characteristics
 
@@ -53,6 +68,11 @@ SelectCols(cols=s.string()).fit_transform(df)
 - `.cardinality_below(threshold)`: Few unique values
 
 ```{python}
+df = pd.DataFrame({
+    "age": [25, 30, 35],
+    "name": ["Alice", None, "Charlie"],
+    "city": ["NYC", "LA", "Chicago"]
+})
 SelectCols(cols=s.has_nulls()).fit_transform(df)
 ```
 
@@ -63,6 +83,12 @@ SelectCols(cols=s.has_nulls()).fit_transform(df)
 - `.regex("pattern")`: Regular expressions
 
 ```{python}
+df = pd.DataFrame({
+    "patient_id": [101, 102, 103],
+    "metric_1": [0.3, 0.3, 0.6],
+    "metric_2": [3, 5, 10],
+})
+
 SelectCols(cols=s.glob("metric_*")).fit_transform(df)
 ```
 
@@ -70,30 +96,50 @@ SelectCols(cols=s.glob("metric_*")).fit_transform(df)
 
 Use logical operators:
 
-```{python}
+```{.python}
+# Inverse: NOT numeric
+~s.numeric()
+
 # OR: datetime columns OR string columns
 s.any_date() | s.string()
 
 # AND: string columns without nulls
 s.string() & ~s.has_nulls()
 
+# XOR: either string, or name starts with "date_" but not both
+s.string() ^ s.glob("date_*")
+
+# Include: string columns and col "date"
+s.string() | "date"
+
 # Exclude: all columns except "datetime-col"
 s.all() - "datetime-col"
 
-# Inverse: NOT numeric
-~s.numeric()
 ```
+
+
+::: {.notes}
+df = pd.DataFrame({"a": ["a", "b"], "date_1": [2024, 2025], "date_str": ["Monday", "Tuesday"]})
+:::
 
 ## Extracting Selected Columns
 
 Get the list of selected columns:
 
 ```{python}
+df = pd.DataFrame(
+    {
+        "age": [25, 30, 35],
+        "name": ["Alice", None, "Charlie"],
+        "city": ["NYC", "LA", "Chicago"],
+    }
+)
+
 selector = s.has_nulls()
 columns_with_nulls = selector.expand(df)
 
-# Use in dataframe operations
-df.drop(columns=columns_with_nulls)
+# Use in dataframe operations: capitalize columns with nulls
+df[columns_with_nulls].apply(lambda x : x.str.upper())
 ```
 
 ## Custom Selectors: Filter by Condition
@@ -102,17 +148,33 @@ df.drop(columns=columns_with_nulls)
 def more_nulls_than(col, threshold=0.5):
     return col.isnull().sum() / len(col) > threshold
 
+df = pd.DataFrame(
+    {
+        "no-nulls": [1, 2, 3, 4],
+        "lotsa-nulls": [None, None, None, 4],
+    }
+)
+
 selector = s.filter(more_nulls_than, threshold=0.5)
+s.select(df, selector)
 ```
 
 ## Custom Selectors: Filter by Name
 
 ```{python}
-selector = s.filter_names(lambda name: name.endswith('_mm'))
+df = pd.DataFrame(
+    {
+        "patient_id": [101, 102, 103],
+        "metric_1": [0.3, 0.3, 0.6],
+        "metric_2": [3, 5, 10],
+    }
+)
+
+selector = s.filter_names(lambda name: name.startswith("metric_"))
 s.select(df, selector)
 ```
 
-## Key Takeaways
+## What we have seen in this chapters
 
 - Use selectors for flexible, reusable column selection
 - Combine selectors with logical operators
