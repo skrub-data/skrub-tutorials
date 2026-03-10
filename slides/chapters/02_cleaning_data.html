@@ -202,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="an-example-dataframe" class="level2">
 <h2 class="anchored" data-anchor-id="an-example-dataframe">An example dataframe</h2>
-<div id="37760f65" class="cell" data-execution_count="1">
+<div id="f7ee4887" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -297,7 +297,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="cleaning-with-pandas" class="level2">
 <h2 class="anchored" data-anchor-id="cleaning-with-pandas">Cleaning with pandas</h2>
 <p>First, let’s look at the datatypes detected by pandas:</p>
-<div id="4efbf4d6" class="cell" data-execution_count="2">
+<div id="7e0b3254" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -318,7 +318,7 @@ memory usage: 332.0+ bytes</code></pre>
 </section>
 <section id="cleaning-with-pandas-1" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="cleaning-with-pandas-1">Cleaning with pandas</h2>
-<div id="c167ff47" class="cell" data-execution_count="3">
+<div id="befd417b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse the datetime strings with a specific format</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'datetime_column'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime_column'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st"> %b %Y'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -331,7 +331,7 @@ memory usage: 332.0+ bytes</code></pre>
 </section>
 <section id="cleaning-with-pandas-2" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="cleaning-with-pandas-2">Cleaning with pandas</h2>
-<div id="628580bd" class="cell" data-execution_count="4">
+<div id="ff2eb306" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to drop columns with only missing values or empty strings</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> drop_empty_columns(df):</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop columns with only missing values</span></span>
@@ -404,7 +404,7 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="the-alternative-skrub.cleaner" class="level2">
 <h2 class="anchored" data-anchor-id="the-alternative-skrub.cleaner">The alternative: <code>skrub.Cleaner</code></h2>
 <p>By default, the <code>Cleaner</code> applies various transformations that can sanitize many common use cases:</p>
-<div id="82312ddd" class="cell" data-execution_count="5">
+<div id="fe89c5d2" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -468,7 +468,7 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="the-alternative-skrub.cleaner-1" class="level2">
 <h2 class="anchored" data-anchor-id="the-alternative-skrub.cleaner-1">The alternative: <code>skrub.Cleaner</code></h2>
 <p>The cleaned version of the dataframe is now marking missing values correctly, and that the datetime column has been parsed:</p>
-<div id="ca1a66b9" class="cell" data-execution_count="6">
+<div id="293385e0" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -513,7 +513,7 @@ memory usage: 292.0+ bytes</code></pre>
 </section>
 <section id="an-example-for-dropuninformative" class="level2">
 <h2 class="anchored" data-anchor-id="an-example-for-dropuninformative">An example for <code>DropUninformative</code></h2>
-<div id="6649d45f" class="cell" data-execution_count="7">
+<div id="9ba5b429" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -588,9 +588,9 @@ memory usage: 292.0+ bytes</code></pre>
 </div>
 </div>
 </section>
-<section id="an-example-for-dropuninformative-1" class="level2">
-<h2 class="anchored" data-anchor-id="an-example-for-dropuninformative-1">An example for <code>DropUninformative</code></h2>
-<div id="83bb94ec" class="cell" data-execution_count="8">
+<section id="an-example-for-dropuninformative-1" class="level2" data-auto-animate="true">
+<h2 data-auto-animate="true" class="anchored" data-anchor-id="an-example-for-dropuninformative-1">An example for <code>DropUninformative</code></h2>
+<div id="016927a2" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, DropUninformative</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>drop <span class="op">=</span> ApplyToCols(DropUninformative(drop_if_constant<span class="op">=</span><span class="va">True</span>, drop_null_fraction<span class="op">=</span><span class="fl">0.5</span>))</span>
