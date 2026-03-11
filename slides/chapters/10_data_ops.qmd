@@ -150,14 +150,6 @@ new_baskets = data.baskets
 new_products = data.products
 loaded_learner.predict({"baskets": new_baskets, "products": new_products})
 ```
-```{python}
-data = skrub.datasets.fetch_credit_fraud(split="test")
-new_baskets = data.baskets
-new_products = data.products
-loaded_learner.predict(
-    {"baskets": new_baskets, "products": new_products}
-)
-```
 :::
 
 
@@ -261,3 +253,9 @@ Skrub implements four `choose_*` functions:
 - `choose_float`: select a float within a range
 - `choose_bool`: select a bool 
 - `optional`: chooses whether to execute the given operation
+
+## What we have seen in this chapter
+- DataOps can be used to build complex multi-table pipelines
+- They track all the operations that are executed and replay them with the same parameters
+- DataOps simplify building hyperparameter grids
+- Learners can be exported and used with new data
