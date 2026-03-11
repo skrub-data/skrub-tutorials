@@ -67,7 +67,7 @@
     "href": "content/notebooks/01_ex_explore_clean.html#questions",
     "title": "Exercise: exploring a new table",
     "section": "Questions",
-    "text": "Questions\n\nWhat’s the size of the dataframe? (columns and rows)\nHow many columns have object/numerical/datetime\nAre there columns with a large number of missing values?\nAre there columns that have a high cardinality (&gt;40 unique values)?\nWere datetime columns parsed correctly?\nWhich columns have outliers?\nWhich columns have an imbalanced distribution?\nWhich columns are strongly correlated with each other?\n\n# PLACEHOLDER\n#\n#\n#\n#\n#\n#\n#\n#\n#"
+    "text": "Questions\n\nWhat’s the size of the dataframe? (columns and rows)\nHow many columns have object/numerical/datetime\nAre there columns with a large number of missing values?\nAre there columns that have a high cardinality (&gt;40 unique values)?\nWere datetime columns parsed correctly?\nWhich columns have outliers?\nWhich columns have an imbalanced distribution?\nWhich columns are strongly correlated with each other?"
   },
   {
     "objectID": "content/notebooks/01_ex_explore_clean.html#answers",
