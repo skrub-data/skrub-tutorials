@@ -2,11 +2,11 @@
   "content": [
     {
       "content": null,
-      "created": "2026-03-11T10:45:38.991204Z",
+      "created": "2026-03-11T11:56:04.523579Z",
       "format": null,
       "hash": null,
       "hash_algorithm": null,
-      "last_modified": "2026-03-11T10:45:36.421137Z",
+      "last_modified": "2026-03-11T11:56:01.815565Z",
       "mimetype": "text/csv",
       "name": "data.csv",
       "path": "data/wine/data.csv",
@@ -15,11 +15,11 @@
       "writable": true
     }
   ],
-  "created": "2026-03-11T10:45:38.989950Z",
+  "created": "2026-03-11T11:56:04.522877Z",
   "format": "json",
   "hash": null,
   "hash_algorithm": null,
-  "last_modified": "2026-03-11T10:45:38.989950Z",
+  "last_modified": "2026-03-11T11:56:04.522877Z",
   "mimetype": null,
   "name": "wine",
   "path": "data/wine",

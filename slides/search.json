@@ -60,7 +60,7 @@
     "href": "chapters/10_data_ops.html#exporting-the-plan-in-a-learner",
     "title": "Building extensive pipelines with DataOps",
     "section": "Exporting the plan in a learner",
-    "text": "Exporting the plan in a learner\nThe Learner is an estimator that takes a dictionary as input rather than just X and y.\n\n\nlearner = predictions.skb.make_learner(fitted=True)\n\n\n\nThen, the learner can be pickled …\n\nimport pickle \n\nlearner_bytes = pickle.dumps(learner)\n\nimport pickle\n\nwith open(\"learner.bin\", \"wb\") as fp:\n    pickle.dump(learner, fp)\n\nloaded_learner = pickle.loads(learner_bytes)\n\n\n\n… loaded and applied to new data:\nwith open(\"learner.bin\", \"rb\") as fp:\n    loaded_learner = pickle.load(fp)\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict({\"baskets\": new_baskets, \"products\": new_products})\n\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict(\n    {\"baskets\": new_baskets, \"products\": new_products}\n)\n\narray([0, 0, 0, ..., 0, 0, 0], shape=(31549,))"
+    "text": "Exporting the plan in a learner\nThe Learner is an estimator that takes a dictionary as input rather than just X and y.\n\n\nlearner = predictions.skb.make_learner(fitted=True)\n\n\n\nThen, the learner can be pickled …\n\nimport pickle \n\nlearner_bytes = pickle.dumps(learner)\n\nimport pickle\n\nwith open(\"learner.bin\", \"wb\") as fp:\n    pickle.dump(learner, fp)\n\nloaded_learner = pickle.loads(learner_bytes)\n\n\n\n… loaded and applied to new data:\nwith open(\"learner.bin\", \"rb\") as fp:\n    loaded_learner = pickle.load(fp)\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict({\"baskets\": new_baskets, \"products\": new_products})"
   },
   {
     "objectID": "chapters/10_data_ops.html#tuning-in-scikit-learn-can-be-complex",
@@ -96,6 +96,13 @@
     "title": "Building extensive pipelines with DataOps",
     "section": "Hyperparameter tuning in a Data Ops plan",
     "text": "Hyperparameter tuning in a Data Ops plan\nSkrub implements four choose_* functions:\n\nchoose_from: select from the given list of options\nchoose_int: select an integer within a range\nchoose_float: select a float within a range\nchoose_bool: select a bool\noptional: chooses whether to execute the given operation"
+  },
+  {
+    "objectID": "chapters/10_data_ops.html#what-we-have-seen-in-this-chapter",
+    "href": "chapters/10_data_ops.html#what-we-have-seen-in-this-chapter",
+    "title": "Building extensive pipelines with DataOps",
+    "section": "What we have seen in this chapter",
+    "text": "What we have seen in this chapter\n\nDataOps can be used to build complex multi-table pipelines\nThey track all the operations that are executed and replay them with the same parameters\nDataOps simplify building hyperparameter grids\nLearners can be exported and used with new data"
   },
   {
     "objectID": "chapters/10_data_ops.slides.html#skrub-dataops",
@@ -151,7 +158,7 @@
     "href": "chapters/10_data_ops.slides.html#exporting-the-plan-in-a-learner",
     "title": "Building extensive pipelines with DataOps",
     "section": "Exporting the plan in a learner",
-    "text": "Exporting the plan in a learner\nThe Learner is an estimator that takes a dictionary as input rather than just X and y.\n\n\nlearner = predictions.skb.make_learner(fitted=True)\n\n\n\nThen, the learner can be pickled …\n\nimport pickle \n\nlearner_bytes = pickle.dumps(learner)\n\nimport pickle\n\nwith open(\"learner.bin\", \"wb\") as fp:\n    pickle.dump(learner, fp)\n\nloaded_learner = pickle.loads(learner_bytes)\n\n\n\n… loaded and applied to new data:\nwith open(\"learner.bin\", \"rb\") as fp:\n    loaded_learner = pickle.load(fp)\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict({\"baskets\": new_baskets, \"products\": new_products})\n\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict(\n    {\"baskets\": new_baskets, \"products\": new_products}\n)\n\narray([0, 0, 0, ..., 0, 0, 0], shape=(31549,))"
+    "text": "Exporting the plan in a learner\nThe Learner is an estimator that takes a dictionary as input rather than just X and y.\n\n\nlearner = predictions.skb.make_learner(fitted=True)\n\n\n\nThen, the learner can be pickled …\n\nimport pickle \n\nlearner_bytes = pickle.dumps(learner)\n\nimport pickle\n\nwith open(\"learner.bin\", \"wb\") as fp:\n    pickle.dump(learner, fp)\n\nloaded_learner = pickle.loads(learner_bytes)\n\n\n\n… loaded and applied to new data:\nwith open(\"learner.bin\", \"rb\") as fp:\n    loaded_learner = pickle.load(fp)\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict({\"baskets\": new_baskets, \"products\": new_products})"
   },
   {
     "objectID": "chapters/10_data_ops.slides.html#tuning-in-scikit-learn-can-be-complex",
@@ -187,6 +194,13 @@
     "title": "Building extensive pipelines with DataOps",
     "section": "Hyperparameter tuning in a Data Ops plan",
     "text": "Hyperparameter tuning in a Data Ops plan\nSkrub implements four choose_* functions:\n\nchoose_from: select from the given list of options\nchoose_int: select an integer within a range\nchoose_float: select a float within a range\nchoose_bool: select a bool\noptional: chooses whether to execute the given operation"
+  },
+  {
+    "objectID": "chapters/10_data_ops.slides.html#what-we-have-seen-in-this-chapter",
+    "href": "chapters/10_data_ops.slides.html#what-we-have-seen-in-this-chapter",
+    "title": "Building extensive pipelines with DataOps",
+    "section": "What we have seen in this chapter",
+    "text": "What we have seen in this chapter\n\nDataOps can be used to build complex multi-table pipelines\nThey track all the operations that are executed and replay them with the same parameters\nDataOps simplify building hyperparameter grids\nLearners can be exported and used with new data"
   },
   {
     "objectID": "chapters/08_table_vectorizer.html",
