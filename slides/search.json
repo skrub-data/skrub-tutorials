@@ -25,7 +25,7 @@
     "href": "chapters/10_data_ops.html#starting-with-the-dataops",
     "title": "Building extensive pipelines with DataOps",
     "section": "Starting with the DataOps",
-    "text": "Starting with the DataOps\n\nimport skrub\ndata = skrub.datasets.fetch_credit_fraud()\n\nbaskets = skrub.var(\"baskets\", data.baskets)\nproducts = skrub.var(\"products\", data.products) # add a new variable\n\nX = baskets[[\"ID\"]].skb.mark_as_X()\ny = baskets[\"fraud_flag\"].skb.mark_as_y()\n\n\nbaskets and products represent inputs to the pipeline.\nSkrub tracks X and y so that training and test splits are never mixed."
+    "text": "Starting with the DataOps\n\nimport skrub\ndata = skrub.datasets.fetch_credit_fraud()\n\nbaskets = skrub.var(\"baskets\", data.baskets)\nproducts = skrub.var(\"products\", data.products) # add a new variable\n\nX = baskets[[\"ID\"]].skb.mark_as_X()\ny = baskets[\"fraud_flag\"].skb.mark_as_y()\n\nDownloading 'credit_fraud' from https://github.com/skrub-data/skrub-data-files/raw/refs/heads/main/credit_fraud.zip (attempt 1/3)\n\n\n\nbaskets and products represent inputs to the pipeline.\nSkrub tracks X and y so that training and test splits are never mixed."
   },
   {
     "objectID": "chapters/10_data_ops.html#applying-a-transformer",
@@ -81,7 +81,7 @@
     "href": "chapters/10_data_ops.html#run-hyperparameter-search",
     "title": "Building extensive pipelines with DataOps",
     "section": "Run hyperparameter search",
-    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_"
+    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_\nWith Optuna as backend:\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5, backend=\"optuna\"\n)"
   },
   {
     "objectID": "chapters/10_data_ops.html#a-parallel-coordinate-plot-to-explore-hyperparameters",
@@ -116,7 +116,7 @@
     "href": "chapters/10_data_ops.slides.html#starting-with-the-dataops",
     "title": "Building extensive pipelines with DataOps",
     "section": "Starting with the DataOps",
-    "text": "Starting with the DataOps\n\nimport skrub\ndata = skrub.datasets.fetch_credit_fraud()\n\nbaskets = skrub.var(\"baskets\", data.baskets)\nproducts = skrub.var(\"products\", data.products) # add a new variable\n\nX = baskets[[\"ID\"]].skb.mark_as_X()\ny = baskets[\"fraud_flag\"].skb.mark_as_y()\n\n\nbaskets and products represent inputs to the pipeline.\nSkrub tracks X and y so that training and test splits are never mixed."
+    "text": "Starting with the DataOps\n\nimport skrub\ndata = skrub.datasets.fetch_credit_fraud()\n\nbaskets = skrub.var(\"baskets\", data.baskets)\nproducts = skrub.var(\"products\", data.products) # add a new variable\n\nX = baskets[[\"ID\"]].skb.mark_as_X()\ny = baskets[\"fraud_flag\"].skb.mark_as_y()\n\nDownloading 'credit_fraud' from https://github.com/skrub-data/skrub-data-files/raw/refs/heads/main/credit_fraud.zip (attempt 1/3)\n\n\n\nbaskets and products represent inputs to the pipeline.\nSkrub tracks X and y so that training and test splits are never mixed."
   },
   {
     "objectID": "chapters/10_data_ops.slides.html#applying-a-transformer",
@@ -172,7 +172,7 @@
     "href": "chapters/10_data_ops.slides.html#run-hyperparameter-search",
     "title": "Building extensive pipelines with DataOps",
     "section": "Run hyperparameter search",
-    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_"
+    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_\nWith Optuna as backend:\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5, backend=\"optuna\"\n)"
   },
   {
     "objectID": "chapters/10_data_ops.slides.html#a-parallel-coordinate-plot-to-explore-hyperparameters",
