@@ -226,6 +226,16 @@ search = regressor.skb.make_randomized_search(
 # save the best learner
 best_learner = search.best_learner_
 ```
+
+With Optuna as backend:
+
+```{.python}
+# fit the search 
+search = regressor.skb.make_randomized_search(
+    scoring="roc_auc", fitted=True, cv=5, backend="optuna"
+)
+```
+
 ## A parallel coordinate plot to explore hyperparameters{auto-animate="true" .smaller} 
 
 ```{.python}
