@@ -30,7 +30,6 @@ TableReport(data)
 # - Which columns have an imbalanced distribution?
 # - Which columns are strongly correlated with each other?
 #
-# ```{.python}
 # # PLACEHOLDER
 # #
 # #
@@ -41,8 +40,8 @@ TableReport(data)
 # #
 # #
 # #
-# ```
-#
+# 
+# # %% [markdown]
 # ## Answers
 # - What's the size of the dataframe? (columns and rows)
 #     - 9228 rows × 8 columns
