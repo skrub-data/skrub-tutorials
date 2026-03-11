@@ -41,7 +41,7 @@ TableReport(data)
 # #
 # #
 # 
-# # %% [markdown]
+# %% [markdown]
 # ## Answers
 # - What's the size of the dataframe? (columns and rows)
 #     - 9228 rows × 8 columns
