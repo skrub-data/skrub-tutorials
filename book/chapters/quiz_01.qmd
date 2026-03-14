@@ -20,7 +20,7 @@ What do I need to open a `TableReport` saved with `.write_html("report.html")`?
 ### Solution
 Answer: B) 
 
-After its generation, the `TableReport` can be persisted on disk as a HTML file.
+After its generation, the `TableReport` can be persisted on disk as an HTML file.
 The file can be opened using a regular internet browswer.
 
 The `TableReport` is not updated dynamically, and is not connected to python consoles
