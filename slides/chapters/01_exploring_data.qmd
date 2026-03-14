@@ -120,4 +120,4 @@ TableReport(
 - It provides precomputed statistics for all the columns
 - It prepares distribution plots for each column
 - It measures the association between columns
-- It can be stored as a HTML file and shared without needing a running kernel
+- It can be stored as an HTML file and shared without needing a running kernel
