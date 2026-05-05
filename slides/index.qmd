@@ -18,17 +18,19 @@ format: html
 - [Quiz 02](../book/chapters/quiz_02.html)
 - Exercise 2
 
-## Feature Engineering with skrub
-- [Chapter 5: Numerical Features](chapters/05_feat_eng_numerical.slides.html)
-- [Chapter 6: Datetime Features](chapters/06_feat_eng_datetimes.slides.html)
-- [Chapter 7: Categorical Features](chapters/07_feat_eng_categorical.slides.html)
+## Building a strong baseline
+- [Chapter 5: Table Vectorization](chapters/05_table_vectorizer.slides.html)
+- [Chapter 6: Tabular Pipelines](chapters/06_tabular_pipeline.slides.html)
 - [Quiz 03](../book/chapters/quiz_03.html)
-
-## Bringing it all together
-- [Chapter 8: Table Vectorization](chapters/08_table_vectorizer.slides.html)
-- [Chapter 9: Tabular Pipelines](chapters/09_tabular_pipeline.slides.html)
-- [Quiz 04](../book/chapters/quiz_04.html)
 - Exercise 3
+
+
+## Feature Engineering with skrub
+- [Chapter 7: Numerical Features](chapters/07_feat_eng_numerical.slides.html)
+- [Chapter 8: Datetime Features](chapters/08_feat_eng_datetimes.slides.html)
+- [Chapter 9: Categorical Features](chapters/09_feat_eng_categorical.slides.html)
+- [Quiz 04](../book/chapters/quiz_04.html)
+
 
 ## Data Ops
 - [Chapter 10: Data Ops](chapters/10_data_ops.slides.html)

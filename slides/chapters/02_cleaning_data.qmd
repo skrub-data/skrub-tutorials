@@ -127,8 +127,6 @@ This is done by the `DropUninformative` transformer, which  marks a columns as "
 
 - It contains more nulls than a certain fraction (1.0 by default)
 - It contains only one value (and no missing values)
-- All values in a column are distinct
-
 
 ## An example for `DropUninformative`
 ```{python}
