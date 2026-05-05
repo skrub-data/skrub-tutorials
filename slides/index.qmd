@@ -10,11 +10,13 @@ format: html
 - [Chapter 1: Exploring Data](chapters/01_exploring_data.slides.html)
 - [Chapter 2: Cleaning Data](chapters/02_cleaning_data.slides.html)
 - [Quiz 01](../book/chapters/quiz_01.html)
+- Exercise 1
 
 ## Transforming columns
 - [Chapter 3: Apply Transformations](chapters/03_feat_eng_apply.slides.html)
 - [Chapter 4: Selectors](chapters/04_selectors.slides.html)
 - [Quiz 02](../book/chapters/quiz_02.html)
+- Exercise 2
 
 ## Feature Engineering with skrub
 - [Chapter 5: Numerical Features](chapters/05_feat_eng_numerical.slides.html)
@@ -26,6 +28,7 @@ format: html
 - [Chapter 8: Table Vectorization](chapters/08_table_vectorizer.slides.html)
 - [Chapter 9: Tabular Pipelines](chapters/09_tabular_pipeline.slides.html)
 - [Quiz 04](../book/chapters/quiz_04.html)
+- Exercise 3
 
 ## Data Ops
 - [Chapter 10: Data Ops](chapters/10_data_ops.slides.html)
