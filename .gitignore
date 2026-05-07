@@ -1,6 +1,7 @@
 _book
 _scratch
-
+jupyterlite/content*
+**/*.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -220,3 +221,5 @@ skrub-dev
 
 # MyST build outputs
 _build
+
+**/*.quarto_ipynb
