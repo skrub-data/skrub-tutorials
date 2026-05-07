@@ -3,35 +3,32 @@ title: "Skrub Tutorial Slides"
 format: html
 ---
 
-## Chapter 1: Introduction
+## Section 1: Introduction
 - [Chapter 0: Introduction](chapters/00_intro.slides.html)
 
-## Chapter 2: Exploring and sanitizing data
+## Section 2: Exploring and sanitizing data
 - [Chapter 1: Exploring Data](chapters/01_exploring_data.slides.html)
 - [Chapter 2: Cleaning Data](chapters/02_cleaning_data.slides.html)
 - [Quiz 01](../book/chapters/quiz_01.html)
 - Exercise 1
 
-## Chapter 3: Building a strong baseline
+## Section 3: Building a strong baseline
 - [Chapter 3: Table Vectorization](chapters/03_table_vectorizer.slides.html)
 - [Chapter 4: Tabular Pipelines](chapters/04_tabular_pipeline.slides.html)
 - [Quiz 02](../book/chapters/quiz_02.html)
 - Exercise 2
 
-## Chapter 4: Transforming columns
+## Section 4: Transforming columns
 - [Chapter 5: Apply Transformations](chapters/05_feat_eng_apply.slides.html)
 - [Chapter 6: Selectors](chapters/06_selectors.slides.html)
 - [Quiz 03](../book/chapters/quiz_03.html)
 - Exercise 3
 
 
-## Chapter 5: Feature Engineering with skrub
-- [Chapter 7: Numerical Features](chapters/07_feat_eng_numerical.slides.html)
-- [Chapter 8: Datetime Features](chapters/08_feat_eng_datetimes.slides.html)
-- [Chapter 9: Categorical Features](chapters/09_feat_eng_categorical.slides.html)
+## Section 5: Feature Engineering with skrub
+- [Chapter 7: Skrub transformers for feature engineering](chapters/07_feature_eng_all.slides.html)
 - [Quiz 04](../book/chapters/quiz_04.html)
 
-
-## Data Ops
-- [Chapter 10: Data Ops](chapters/10_data_ops.slides.html)
+## Section 6: Building dynamic pipeline with Data Ops
+- [Chapter 8: Data Ops](chapters/10_data_ops.slides.html)
 

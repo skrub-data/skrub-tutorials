@@ -137,12 +137,12 @@ Train a `Ridge` regression model and evaluate with cross-validation.
 
 ```{python}
 #| warning: false
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import RidgeCV
 from sklearn.model_selection import cross_val_score, cross_validate
 import numpy as np
 
 # Initialize Ridge model
-ridge = Ridge(alpha=1.0)
+ridge = RidgeCV()
 
 # Perform cross-validation (5-fold)
 cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2", "neg_mean_squared_error"])
@@ -187,15 +187,18 @@ print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ```
 
-## Course Roadmap
-
-1. Explore data with `TableReport`
-2. Clean data with `Cleaner`
-3. Select & transform columns with selectors
-4. Engineer features: numerical, datetime, categorical
-5. Combine everything: `TableVectorizer` & `tabular_pipeline`
-
 ## What we saw in this chapter
 - We built a predictive pipeline using traditional tools
 - We saw some possible shortcomings 
 - We tested skrub's `tabular_pipeline` 
+
+## Course Roadmap
+
+1. Data exploration with skrub's `TableReport`
+2. Data cleaning and sanitization with the `Cleaner`
+3. Automatic feature engineering with the `TableVectorizer`
+4. A robust baseline for machine learning tasks with the `tabular_pipeline`
+5. Columnwise operations with `ApplyToCols`
+6. Advanced column selectors and how to use them
+7. Feature engineering with the skrub encoders
+8. Building dynamic pipelines with the skrub Data Ops (short intro)

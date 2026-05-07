@@ -15,13 +15,10 @@ In this chapter, we will show how we use the skrub `TableReport` to explore
 tabular data. We will use the Adult Census dataset as our example table, and 
 perform some exploratory analysis to learn about the characteristics of the data. 
 
-First, let's import the necessary libraries and load the dataset.
+First, let's load the dataset.
 
 ```{python}
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import fetch_openml
-
 # Load the Adult Census dataset
 data =  pd.read_csv("../data/adult_census/data.csv")
 target =  pd.read_csv("../data/adult_census/target.csv")
@@ -33,9 +30,9 @@ data we would like to find out:
 - The size of the dataset. 
 - The data types and names of the columns. 
 - The distribution of values in the columns. 
-- Whether null values are present, in what measure and where. 
-- Discrete/categorical features, and their cardinality.
-- Columns strongly correlated with each other. 
+- Whether missing values are present, in what measure and where. 
+- Which features are discrete/categorical, and their cardinality.
+- Which columns are strongly correlated with each other. 
 
 ## Exploring data with Pandas tools
 Let's first explore the data using Pandas only.
@@ -74,7 +71,17 @@ from skrub import TableReport
 TableReport(data, verbose=0)
 ```
 
-::: {.content-hidden when-format="revealjs"}
+
+::: {.callout-tip}
+
+If you're working from a python console rather than a Jupyter notebook (or 
+equivalent), the `TableReport` must be opened explicitly:
+```python
+TableReport(data).open()
+```
+
+:::
+
 
 ### Default view of the TableReport
 The `TableReport` gives us a comprehensive overview of the dataset. The default
@@ -86,15 +93,11 @@ contain all the rows in the dataset, rather it shows only the first and last
 few rows by default. Similarly, it stores only the top 10 most frequent values
 for each column, if column distributions are plotted.
 
-:::
-
 ### The "Stats" tab
 
 ```{python}
 TableReport(data, open_tab="stats")
 ```
-
-::: {.content-hidden when-format="revealjs"}
 
 The "Stats" tab provides a variety of descriptive statistics for each column in
 the dataset.
@@ -116,7 +119,6 @@ For numerical columns, additional statistics are provided:
 Stat columns can also be sorted, for example to quickly identify which columns 
 contain the most nulls, or have the largest cardinality (number of unique values).
 
-:::
 
 ::: {.callout}
 ### Filters
@@ -128,8 +130,6 @@ or other characteristics. Filters are shared across tabs.
 ```{python}
 TableReport(data, open_tab="distributions")
 ```
-
-::: {.content-hidden when-format="revealjs"}
 
 The "Distributions" tab provides visualizations of the distributions of values 
 in each column. This includes histograms for numerical columns and bar plots for
@@ -157,16 +157,13 @@ should not be treated as perfect. If your problem requires reliable outlier
 detection, you should not rely exclusively on what the `TableReport` shows. 
 :::
 
-
-:::
+![](images/tablereport-outliers.png)
 
 ### The "Associations" tab
 
 ```{python}
 TableReport(data, open_tab="associations")
 ```
-
-::: {.content-hidden when-format="revealjs"}
 
 The "Associations" tab provides insights into the relationships between different
 columns in the dataset.
@@ -184,8 +181,6 @@ correlation, which means that one of the two columns can be dropped without losi
 information.
 
 
-:::
-
 ## Exploring the target variable
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
 numpy arrays.
@@ -198,21 +193,64 @@ for the target variable to explore its distribution:
 TableReport(target)
 ```
 
-## Configuring and saving the `TableReport` 
+## Working with big tables
+
+
+Plotting and measuring the column correlations are expensive operations and may
+take a long time, so when the dataframe under study is large it may be more
+convenient to skip them for quicker development. 
+
+By default, both operations are skipped when a table contains more than 30 columns, 
+and this threshold can be changed with the skrub config parameters 
+`table_report_plots_threshold` and `table_report_plots_associations_threshold`. 
+
+Alternatively, it is possible to set the behavior for a single report by changing
+the `plot_distributions` and `compute_associations` parameters to either `True`
+(to always execute the operation regardless of column number) or `False` (to 
+disable entirely the feature). 
+
+If plotting or associations are disabled, an informative message is shown:
+
+```{python}
+TableReport(
+    data, compute_associations=False, plot_distributions=False, open_tab="distributions"
+)
+```
+
+More detail on the skrub configuration is reported in the 
+[User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
+
+## Exporting the `TableReport` 
 The `TableReport` can be saved on disk as an HTML. 
 ```{.python}
 TableReport(data).write_html("report.html")
 ```
-
 Then, the report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
 
-::: {.content-hidden when-format="revealjs"}
+The report can also be exported in JSON format, so that it can be forwarded to 
+other programs that may benefit from the TableReport artifacts and statistics. 
+
+```python
+json_str = TableReport(data).json()
+
+with open("report.json", "w") as fp:
+    fp.write(json_str)
+```
 
 
-It is possible to configure various parameters using the skrub global config. 
-For example, it is possible to replace the default Pandas or Polars dataframe
-display with the TableReport by using `patch_display`  (and `unpatch_display`):
+::: {callout-important}
+
+The JSON exported by the report will contain all the distribution plots in SVG 
+format, which may not be necessary for some applications. To avoid exporting the
+plots, set `plot_distributions=False`. 
+
+:::
+
+
+## Replacing the default dataframe `_repr_` 
+It is possible to use the `TableReport` instead of the default dataframe representation
+used by Pandas and Polars with `patch_display`:
 
 ```{python}
 from skrub import patch_display, unpatch_display
@@ -229,39 +267,7 @@ data
 ```
 
 
-More detail on the skrub configuration is reported in the 
-[User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
-
-
-:::
-
-## Working with big tables
-
-::: {.content-hidden when-format="revealjs"}
-
-
-Plotting and measuring the column correlations are expensive operations and may
-take a long time, so when the dataframe under study is large it may be more
-convenient to skip them for quicker development. 
-
-The `max_plot_columns` and `max_association_columns` parameters allow to set a 
-threshold on the number of columns: the `TableReport` will skip the respective
-task if the number of colums in the dataframe is larger than the threshold:
-
-When the number of columns is too large, an information message is shown in the 
-respective tab instead of the plots or correlations. 
-:::
-
-```{python}
-TableReport(
-    data, max_association_columns=3, max_plot_columns=3, open_tab="distributions"
-)
-```
-
-
 ## Conclusions
-
-::: {.content-hidden when-format="revealjs"}
 
 
 In this chapter we have learned how the `TableReport` can be used to speed up 
@@ -279,13 +285,3 @@ We covered:
 In the
 next chapter, we will find out how to address some of the possible problems using 
 the skrub `Cleaner`.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-- The `TableReport` is a powerful EDA tool
-- It shows a rich preview of the content of the dataframe
-- It provides precomputed statistics for all the columns
-- It prepares distribution plots for each column
-- It measures the association between columns
-:::

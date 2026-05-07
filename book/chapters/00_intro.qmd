@@ -1,5 +1,5 @@
 ---
-title: "Chapter 1: Introduction"
+title: "Data Preparation with skrub"
 format:
     html:
         toc: true
@@ -18,7 +18,7 @@ Let's consider a world where skrub does not exist, and all we can do is use
 pandas and scikit-learn to prepare data for a machine learning model.
 
 
-## Load and explore the data
+### Load and explore the data
 ```{python}
 import pandas as pd
 import numpy as np
@@ -28,7 +28,7 @@ y = pd.read_csv("../data/employee_salaries/target.csv")["current_annual_salary"]
 X.head(5)
 ```
 
-## Explore the target
+### Explore the target
 Let's take a look at the target:
 ```{python}
 y.head(5)
@@ -36,7 +36,7 @@ y.head(5)
 
 This is a **regression** task: we want to predict the value of `current_annual_salary`.
 
-## Strategizing
+### Strategizing
 We can begin by exploring the dataframe with `.describe`, and then think of a 
 plan for pre-processing our data. 
 
@@ -44,7 +44,7 @@ plan for pre-processing our data.
 X.describe(include="all")
 ```
 
-## Our plan
+### Our plan
 We need to: 
 
 - Impute some missing values in the `gender` column.
@@ -53,7 +53,8 @@ We need to:
 - Scale numerical features. 
 - Evaluate the performance of the model. 
 
-## Step 1: Convert date features to numerical {.smaller}
+## Feature engineering
+### Step 1: Convert date features to numerical {.smaller}
 
 We extract numerical features from the `date_first_hired` column.
 
@@ -75,7 +76,7 @@ print("Features after date transformation:")
 print("\nShape:", X_processed.shape)
 ```
 
-## Step 2: Encode categorical features {.smaller}
+### Step 2: Encode categorical features {.smaller}
 
 We encode the categorical features using one-hot encoding.
 
@@ -89,7 +90,7 @@ X_encoded = pd.get_dummies(X_processed, columns=categorical_cols)
 print("\nShape after encoding:", X_encoded.shape)
 ```
 
-## Step 3: Impute missing values {.smaller}
+### Step 3: Impute missing values {.smaller}
 
 We impute the missing values in the `gender` column 
 
@@ -104,7 +105,7 @@ X_encoded_imputed = pd.DataFrame(
 )
 ```
 
-## Step 4: Scale numerical features {.smaller}
+### Step 4: Scale numerical features {.smaller}
 
 Scale numerical features for the Ridge regression model.
 
@@ -119,18 +120,18 @@ X_scaled = scaler.fit_transform(X_encoded_imputed)
 X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
 ```
 
-## Step 5: Train Ridge model with cross-validation {.smaller}
+### Step 5: Train Ridge model with cross-validation {.smaller}
 
 Train a `Ridge` regression model and evaluate with cross-validation.
 
 ```{python}
 #| warning: false
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import RidgeCV
 from sklearn.model_selection import cross_val_score, cross_validate
 import numpy as np
 
 # Initialize Ridge model
-ridge = Ridge(alpha=1.0)
+ridge = RidgeCV()
 
 # Perform cross-validation (5-fold)
 cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2", "neg_mean_squared_error"])
@@ -146,13 +147,26 @@ print(
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ``` 
 
-## "Just ask an agent to write the code" {.smaller}
-- Operations in the wrong order.
-- Trying to impute categorical features without converting them to numeric values.
-- The datetime feature was treated like a categorical feature.
-- Cells could not be executed in order without proper debugging and re-prompting.
-- `pd.get_dummies` was executed on the full dataframe, rather than only on the 
-training split, leading to data leakage. 
+## Looking back
+### "Just ask an agent to write the code" {.smaller}
+That's what I did: I asked an AI agent to turn the "strategizing" section into 
+code, and the result had all sorts of issues. In fact, the strategy I suggested 
+is not laid out in the best order, but the agent still followed it, leading to 
+more problems.
+
+Imputation is performed before converting categorical features to numeric values, 
+so it fails in various ways. 
+
+A wrong order of operations also means that datetimes are not parsed as datetimes
+before applying `OneHotEncoder`, therefore they are considered categorical and 
+encoded suboptimally. 
+
+Finally, `pd.get_dummies` was executed on the full dataframe, rather than only on
+the training split: this causes **data leakage** by creating an encoding for 
+categorical features that would appear only in the test set. 
+
+The order of our operations is just as important as the operations themselves,
+and relying blindly on agents can have bad consequences.
 
 ## Waking up from a nightmare {.smaller}
 Thankfully, we can `import skrub`:
@@ -175,15 +189,27 @@ print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ```
 
-## Roadmap for the course {.smaller}
+### What is happening? 
+The `tabular_pipeline` is implementing all the steps we have just covered, except
+in a more robust and battle-tested fashion. Before encoding, the input table is 
+sanitized so that features have the proper dtype, null values are marked as such, 
+and then the appropriate encoder is applied to each column. 
 
-1. Data exploration with skrub's `TableReport`
-2. Data cleaning and sanitization with the `Cleaner`
-3. Intermission: simplifying column operations with skrub
-4. Feature engineering with the skrub encoders
-5. Putting everything together: `TableVectorizer` and `tabular_pipeline`
+The functioning of the `tabular_pipeline` is explored in more detail in a later 
+chapter. 
 
 ## What we saw in this chapter
 - We built a predictive pipeline using traditional tools
 - We saw some possible shortcomings 
 - We tested skrub's `tabular_pipeline` 
+
+## Roadmap for the course {.smaller}
+
+1. Data exploration with skrub's `TableReport`
+2. Data cleaning and sanitization with the `Cleaner`
+3. Automatic feature engineering with the `TableVectorizer`
+4. A robust baseline for machine learning tasks with the `tabular_pipeline`
+5. Columnwise operations with `ApplyToCols`
+6. Advanced column selectors and how to use them
+7. Feature engineering with the skrub encoders
+8. Building dynamic pipelines with the skrub Data Ops (short intro)

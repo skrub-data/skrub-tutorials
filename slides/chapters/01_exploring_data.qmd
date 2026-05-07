@@ -21,16 +21,14 @@ Useful information includes:
 - The size of the dataset. 
 - The data types and names of the columns. 
 - The distribution of values in the columns. 
-- Whether null values are present, in what measure and where. 
-- Discrete/categorical features, and their cardinality.
-- Columns strongly correlated with each other. 
+- Whether missing values are present, in what measure and where. 
+- Which features are discrete/categorical, and their cardinality.
+- Which columns are strongly correlated with each other. 
 :::
 
 ## Loading the data
 ```{python}
 import pandas as pd
-from sklearn.datasets import fetch_openml
-
 # Load the Adult Census dataset
 data =  pd.read_csv("../data/adult_census/data.csv")
 target =  pd.read_csv("../data/adult_census/target.csv")
@@ -79,17 +77,34 @@ or other characteristics. Filters are shared across tabs.
 It is possible to define custom filters to select only specific columns:
 
 ```{python}
+my_filter = {"only_education": ["education", "education-num"]}
 
-
+TableReport(data, column_filters=my_filter)
 ```
 
-Skrub selectors can be used for that (more on that later)
+Skrub selectors can be used for that (more on that later).
 
 ## Outlier detection
+
+::: {.columns}
+
+::: {.column}
+
 The `TableReport` detects outliers using a simple interquartile test, marking 
 as outliers all values that are beyond the IQR. This is a simple heuristic, and 
 should not be treated as perfect. If your problem requires reliable outlier 
 detection, you should not rely exclusively on what the `TableReport` shows. 
+
+:::
+
+::: {.column}
+
+![](images/tablereport-outliers.png)
+
+:::
+
+:::
+
 
 ## Exploring the target variable {.smaller}
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
@@ -99,7 +114,19 @@ numpy arrays.
 TableReport(target)
 ```
 
-## Persisting the `TableReport` 
+## Working with big tables
+Plot generation and computation of associations are very expensive operations, so
+it may be beneficial to disable them while working with very big tables.
+
+Use the `plot_distributions` and `compute_associations` parameters to do so: 
+
+```{python}
+TableReport(
+    data, plot_distributions=False, compute_associations=False, open_tab="distributions"
+)
+
+```
+## Persisting the `TableReport`: HTML
 The `TableReport` can be saved on disk as an HTML. 
 ```{.python}
 TableReport(data).write_html("report.html")
@@ -110,24 +137,28 @@ The report can be opened using any internet browser, with no need to run
 a Jupyter notebok or a python interactive console. 
 :::
 
-## Working with big tables
+## Persisting the `TableReport`: JSON
+It is also possible to export the report in JSON format:
 
-The `max_plot_columns` and `max_association_columns` parameters allow to set a 
-threshold on the number of columns: the `TableReport` will skip the respective
-task if the number of colums in the dataframe is larger than the threshold:
-
-```{python}
-TableReport(
-    data, max_association_columns=3, max_plot_columns=3, open_tab="distributions"
-)
+```{.python}
+json_str = TableReport(data).json()
 ```
+
+::: {.callout-important}
+
+If the report is generating distribution plots, the JSON will include them in SVG 
+format. Distributions can be disabled by setting `plot_distributions=False`. 
+
+:::
+
+
 
 
 ## What we have seen in this chapter {.smaller}
-
 
 - The `TableReport` shows a rich preview of the content of the dataframe
 - It provides precomputed statistics for all the columns
 - It prepares distribution plots for each column
 - It measures the association between columns
-- It can be stored as a HTML file and shared without needing a running kernel
+- It can be exported as a HTML file and shared without needing a running kernel,
+or as a JSON file for other programs. 

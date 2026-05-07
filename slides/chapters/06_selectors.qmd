@@ -204,6 +204,22 @@ selector = s.filter_names(lambda name: name.startswith("metric_"))
 s.select(df, selector)
 ```
 
+## Using selectors with the `TableReport`
+
+The `TableReport` can use selectors (or simply column names) to focus only on 
+specific columns:
+
+```{python}
+import skrub.selectors as s
+from skrub import TableReport
+custom_filter = {
+    "metrics": s.glob("metric_*")
+}
+
+TableReport(df, column_filters=custom_filter)
+```
+
+
 ## What we have seen in this chapters
 
 - Use selectors for flexible, reusable column selection
