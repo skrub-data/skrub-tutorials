@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.27">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
 
   <title>Skrub Slides – Preprocessing data with the skrub Cleaner</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -94,7 +97,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-cea50a97bd1bf62732e69dd56e0c8687.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -204,12 +207,12 @@
 </section>
 <section id="introduction" class="slide level2">
 <h2>Introduction</h2>
-<p>Once a table has been explored, the typical next step is addressing any problem it might have.</p>
+<p>Once a table has been explored, the next step is addressing any problem it might have.</p>
 <p>This can be described broadly as “cleaning” or “sanitizing” the data.</p>
 </section>
 <section id="an-example-dataframe" class="slide level2">
 <h2>An example dataframe</h2>
-<div id="f7ee4887" class="cell" data-execution_count="1">
+<div id="b0bb9938" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a></a></span>
@@ -316,7 +319,7 @@
 <section id="cleaning-with-pandas" class="slide level2">
 <h2>Cleaning with pandas</h2>
 <p>First, let’s look at the datatypes detected by pandas:</p>
-<div id="7e0b3254" class="cell" data-execution_count="2">
+<div id="f9d80adf" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -337,7 +340,7 @@ memory usage: 332.0+ bytes</code></pre>
 </section>
 <section id="cleaning-with-pandas-1" class="slide level2 smaller">
 <h2>Cleaning with pandas</h2>
-<div id="befd417b" class="cell" data-execution_count="3">
+<div id="9e1f658f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="co"># Parse the datetime strings with a specific format</span></span>
 <span id="cb4-2"><a></a>df[<span class="st">'datetime_column'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime_column'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st"> %b %Y'</span>)</span>
 <span id="cb4-3"><a></a></span>
@@ -350,7 +353,7 @@ memory usage: 332.0+ bytes</code></pre>
 </section>
 <section id="cleaning-with-pandas-2" class="slide level2 smaller">
 <h2>Cleaning with pandas</h2>
-<div id="ff2eb306" class="cell" data-execution_count="4">
+<div id="0917a408" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Function to drop columns with only missing values or empty strings</span></span>
 <span id="cb5-2"><a></a><span class="kw">def</span> drop_empty_columns(df):</span>
 <span id="cb5-3"><a></a>    <span class="co"># Drop columns with only missing values</span></span>
@@ -435,7 +438,7 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="the-alternative-skrub.cleaner" class="slide level2">
 <h2>The alternative: <code>skrub.Cleaner</code></h2>
 <p>By default, the <code>Cleaner</code> applies various transformations that can sanitize many common use cases:</p>
-<div id="fe89c5d2" class="cell" data-execution_count="5">
+<div id="df2542ed" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb6-2"><a></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
 <span id="cb6-3"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -511,7 +514,7 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="the-alternative-skrub.cleaner-1" class="slide level2">
 <h2>The alternative: <code>skrub.Cleaner</code></h2>
 <p>The cleaned version of the dataframe is now marking missing values correctly, and that the datetime column has been parsed:</p>
-<div id="293385e0" class="cell" data-execution_count="6">
+<div id="6c78e375" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -551,12 +554,11 @@ memory usage: 292.0+ bytes</code></pre>
 <ul>
 <li>It contains more nulls than a certain fraction (1.0 by default)</li>
 <li>It contains only one value (and no missing values)</li>
-<li>All values in a column are distinct</li>
 </ul>
 </section>
 <section id="an-example-for-dropuninformative" class="slide level2">
 <h2>An example for <code>DropUninformative</code></h2>
-<div id="9ba5b429" class="cell" data-execution_count="7">
+<div id="0d343993" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb9-3"><a></a></span>
@@ -645,7 +647,7 @@ memory usage: 292.0+ bytes</code></pre>
 </section>
 <section id="an-example-for-dropuninformative-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">An example for <code>DropUninformative</code></h2>
-<div id="016927a2" class="cell" data-execution_count="8">
+<div id="1590614b" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb10-1" class="hljs-ln-code"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, DropUninformative</span>
 <span id="cb10-2" class="hljs-ln-code"><a></a></span>
 <span id="cb10-3" class="hljs-ln-code"><a></a>drop <span class="op">=</span> ApplyToCols(DropUninformative(drop_if_constant<span class="op">=</span><span class="va">True</span>, drop_null_fraction<span class="op">=</span><span class="fl">0.5</span>))</span>

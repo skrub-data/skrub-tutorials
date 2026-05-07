@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Skrub Tutorial Slides – Skrub Slides</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -32,15 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4cad563b89d51a7306807a9bca28adc0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c94d27c06415addd96d4503d7f4a0486.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,11 +119,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#exploring-and-sanitizing-data" id="toc-exploring-and-sanitizing-data" class="nav-link" data-scroll-target="#exploring-and-sanitizing-data">Exploring and sanitizing data</a></li>
-  <li><a href="#transforming-columns" id="toc-transforming-columns" class="nav-link" data-scroll-target="#transforming-columns">Transforming columns</a></li>
-  <li><a href="#feature-engineering-with-skrub" id="toc-feature-engineering-with-skrub" class="nav-link" data-scroll-target="#feature-engineering-with-skrub">Feature Engineering with skrub</a></li>
-  <li><a href="#bringing-it-all-together" id="toc-bringing-it-all-together" class="nav-link" data-scroll-target="#bringing-it-all-together">Bringing it all together</a></li>
+  <li><a href="#chapter-1-introduction" id="toc-chapter-1-introduction" class="nav-link active" data-scroll-target="#chapter-1-introduction">Chapter 1: Introduction</a></li>
+  <li><a href="#chapter-2-exploring-and-sanitizing-data" id="toc-chapter-2-exploring-and-sanitizing-data" class="nav-link" data-scroll-target="#chapter-2-exploring-and-sanitizing-data">Chapter 2: Exploring and sanitizing data</a></li>
+  <li><a href="#chapter-3-building-a-strong-baseline" id="toc-chapter-3-building-a-strong-baseline" class="nav-link" data-scroll-target="#chapter-3-building-a-strong-baseline">Chapter 3: Building a strong baseline</a></li>
+  <li><a href="#chapter-4-transforming-columns" id="toc-chapter-4-transforming-columns" class="nav-link" data-scroll-target="#chapter-4-transforming-columns">Chapter 4: Transforming columns</a></li>
+  <li><a href="#chapter-5-feature-engineering-with-skrub" id="toc-chapter-5-feature-engineering-with-skrub" class="nav-link" data-scroll-target="#chapter-5-feature-engineering-with-skrub">Chapter 5: Feature Engineering with skrub</a></li>
   <li><a href="#data-ops" id="toc-data-ops" class="nav-link" data-scroll-target="#data-ops">Data Ops</a></li>
   </ul>
 </nav>
@@ -148,42 +150,45 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<section id="chapter-1-introduction" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-1-introduction">Chapter 1: Introduction</h2>
 <ul>
 <li><a href="chapters/00_intro.slides.html">Chapter 0: Introduction</a></li>
 </ul>
 </section>
-<section id="exploring-and-sanitizing-data" class="level2">
-<h2 class="anchored" data-anchor-id="exploring-and-sanitizing-data">Exploring and sanitizing data</h2>
+<section id="chapter-2-exploring-and-sanitizing-data" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-2-exploring-and-sanitizing-data">Chapter 2: Exploring and sanitizing data</h2>
 <ul>
 <li><a href="chapters/01_exploring_data.slides.html">Chapter 1: Exploring Data</a></li>
 <li><a href="chapters/02_cleaning_data.slides.html">Chapter 2: Cleaning Data</a></li>
 <li><a href="../book/chapters/quiz_01.html">Quiz 01</a></li>
+<li>Exercise 1</li>
 </ul>
 </section>
-<section id="transforming-columns" class="level2">
-<h2 class="anchored" data-anchor-id="transforming-columns">Transforming columns</h2>
+<section id="chapter-3-building-a-strong-baseline" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-3-building-a-strong-baseline">Chapter 3: Building a strong baseline</h2>
 <ul>
-<li><a href="chapters/03_feat_eng_apply.slides.html">Chapter 3: Apply Transformations</a></li>
-<li><a href="chapters/04_selectors.slides.html">Chapter 4: Selectors</a></li>
+<li><a href="chapters/03_table_vectorizer.slides.html">Chapter 3: Table Vectorization</a></li>
+<li><a href="chapters/04_tabular_pipeline.slides.html">Chapter 4: Tabular Pipelines</a></li>
 <li><a href="../book/chapters/quiz_02.html">Quiz 02</a></li>
+<li>Exercise 2</li>
 </ul>
 </section>
-<section id="feature-engineering-with-skrub" class="level2">
-<h2 class="anchored" data-anchor-id="feature-engineering-with-skrub">Feature Engineering with skrub</h2>
+<section id="chapter-4-transforming-columns" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-4-transforming-columns">Chapter 4: Transforming columns</h2>
 <ul>
-<li><a href="chapters/05_feat_eng_numerical.slides.html">Chapter 5: Numerical Features</a></li>
-<li><a href="chapters/06_feat_eng_datetimes.slides.html">Chapter 6: Datetime Features</a></li>
-<li><a href="chapters/07_feat_eng_categorical.slides.html">Chapter 7: Categorical Features</a></li>
+<li><a href="chapters/05_feat_eng_apply.slides.html">Chapter 5: Apply Transformations</a></li>
+<li><a href="chapters/06_selectors.slides.html">Chapter 6: Selectors</a></li>
 <li><a href="../book/chapters/quiz_03.html">Quiz 03</a></li>
+<li>Exercise 3</li>
 </ul>
 </section>
-<section id="bringing-it-all-together" class="level2">
-<h2 class="anchored" data-anchor-id="bringing-it-all-together">Bringing it all together</h2>
+<section id="chapter-5-feature-engineering-with-skrub" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-5-feature-engineering-with-skrub">Chapter 5: Feature Engineering with skrub</h2>
 <ul>
-<li><a href="chapters/08_table_vectorizer.slides.html">Chapter 8: Table Vectorization</a></li>
-<li><a href="chapters/09_tabular_pipeline.slides.html">Chapter 9: Tabular Pipelines</a></li>
+<li><a href="chapters/07_feat_eng_numerical.slides.html">Chapter 7: Numerical Features</a></li>
+<li><a href="chapters/08_feat_eng_datetimes.slides.html">Chapter 8: Datetime Features</a></li>
+<li><a href="chapters/09_feat_eng_categorical.slides.html">Chapter 9: Categorical Features</a></li>
 <li><a href="../book/chapters/quiz_04.html">Quiz 04</a></li>
 </ul>
 </section>
