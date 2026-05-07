@@ -2,11 +2,11 @@
   "content": [
     {
       "content": null,
-      "created": "2026-05-07T15:07:55.069630Z",
+      "created": "2026-05-07T15:21:58.195600Z",
       "format": null,
       "hash": null,
       "hash_algorithm": null,
-      "last_modified": "2026-05-07T15:07:52.440608Z",
+      "last_modified": "2026-05-07T15:21:55.442561Z",
       "mimetype": "text/csv",
       "name": "data.csv",
       "path": "data/adult_census/data.csv",
@@ -16,11 +16,11 @@
     },
     {
       "content": null,
-      "created": "2026-05-07T15:07:55.078515Z",
+      "created": "2026-05-07T15:21:58.204587Z",
       "format": null,
       "hash": null,
       "hash_algorithm": null,
-      "last_modified": "2026-05-07T15:07:52.442014Z",
+      "last_modified": "2026-05-07T15:21:55.443497Z",
       "mimetype": "text/csv",
       "name": "target.csv",
       "path": "data/adult_census/target.csv",
@@ -29,11 +29,11 @@
       "writable": true
     }
   ],
-  "created": "2026-05-07T15:07:55.077630Z",
+  "created": "2026-05-07T15:21:58.203600Z",
   "format": "json",
   "hash": null,
   "hash_algorithm": null,
-  "last_modified": "2026-05-07T15:07:55.077630Z",
+  "last_modified": "2026-05-07T15:21:58.203600Z",
   "mimetype": null,
   "name": "adult_census",
   "path": "data/adult_census",
