@@ -32,50 +32,56 @@ df = pd.DataFrame({
     "city": ["Paris", "London"],
     "values": [10, 20]
 })
+```
 
+## Selection Operations {auto-animate="true"}
+```{python}
+# By name
 SelectCols("date").fit_transform(df)
 ```
 
+## Selection Operations {auto-animate="true"}
 ```{python}
 DropCols("date").fit_transform(df)
 ```
 
+More advanced selection rules in the next chapter! 
+
 ## Applying Transformers to Columns
 
-`ApplyToCols` applies a transformer to selected columns:
+`ApplyToCols` applies a transformer to columns that can be selected by name, or
+according to specific rules. 
 
 ```{python}
 from skrub import ApplyToCols
 import skrub.selectors as s
 from sklearn.preprocessing import OneHotEncoder
 
-one_hot = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+one_hot = ApplyToCols(OneHotEncoder(sparse_output=False), cols="city")
 transformed = one_hot.fit_transform(df)
 transformed
 ```
 
-## Example: `ApplyToCols`
-![example of ApplyToCols](./images/ex_ApplyToCols.png)
+## Example: `ApplyToCols` with a single column transformer
+![](./images/ex_ApplyToCols.png)
 
-## Applying to Multiple Columns: `ApplyToFrame`
+## Example: `ApplyToCols` with a regular transformer
+![](./images/ex_ApplyToFrame.png)
 
-`ApplyToFrame` applies a transformer to a subset of columns:
+## Exclude specific columns
+For example, scale all numeric columns except for an integer ID. 
 
 ```{python}
-from skrub import ApplyToFrame
-from sklearn.decomposition import PCA
-
-reduce = ApplyToFrame(PCA(n_components=2), cols=s.glob("metric_*"))
-df_reduced = reduce.fit_transform(df)
-df_reduced
+df_id = pd.DataFrame(dict(id=[1000, 2000], A=[-10.0, 10.0], B=[-10.0, 0.0], C=[19, 20]))
+df_id
 ```
 
-## Example: `ApplyToCols`
-![example of ApplyToFrame](./images/ex_ApplyToFrame.png)
+```{python}
+from sklearn.preprocessing import StandardScaler
+exc_scaler = ApplyToCols(StandardScaler(), exclude_cols="id")
+exc_scaler.fit_transform(df_id)
+```
 
-## Important: new behavior in the next release
-- No `ApplyToFrame` anymore
-- `ApplyToCols` will automatically detect the transformer
 
 ## The `allow_reject` Parameter
 
@@ -87,6 +93,9 @@ from skrub import ApplyToCols, ToDatetime
 with_reject = ApplyToCols(ToDatetime(), allow_reject=True)
 result = with_reject.fit_transform(df)
 ```
+
+This is useful when you don't know if a column may be rejected or not (common
+when parsing types). 
 
 ## The `allow_reject` Parameter
 
@@ -100,42 +109,76 @@ with_reject = ApplyToCols(ToDatetime(), allow_reject=False)
 result = with_reject.fit_transform(df)
 ```
 
-## In the next release: `SingleColumnTransformer` {.smaller}
-The `SingleColumnTransformer` allows to define a transformer with custom rules:
+## Build your own `SingleColumnTransformer` {.smaller}
+Consider an example like this: 
 
-```python
+```{python}
+import pandas as pd
+df = pd.DataFrame({'sent': ["AB123", "BD601", "HS014"], 'received': ["AB145", "DU393", "WB988"]})
+df
+```
+
+Given a code like `AB123`, we want to separate the first two letters from the digits. 
+
+## Build your own `SingleColumnTransformer` {.smaller auto-animate="true"}
+The `SingleColumnTransformer` allows to define a transformer with custom rules,
+while `RejectColumn` gives control over the behavior in presence of invalid inputs.
+
+```{python code-line-numbers="|7,15-17"}
 from skrub.core import RejectColumn, SingleColumnTransformer
+
 class ZipcodeParser(SingleColumnTransformer):
-    def __init__(self):
-        return
     def fit_transform(self, X, y=None):
+        col_name = X.name
         if any(X.map(len) != 5):
-            raise RejectColumn('This transformer only takes zip codes of length 5.')
+            raise RejectColumn("This transformer only takes zip codes of length 5.")
         else:
             # extract the first two characters
             letters = X.map(lambda s: s[:2])
             try:
-                # extract the last 3 characters and try to convert to int 
+                # extract the last 3 characters and try to convert to int
                 numbers = X.map(lambda s: int(s[2:]))
             except:
-                raise RejectColumn('Input zip codes must consist of two letters followed by three numbers.')
-            return(pd.DataFrame({'letters': letters, 'numbers': numbers}))
+                raise RejectColumn(
+                    "Input zip codes must consist of two letters followed by three numbers."
+                )
+            return pd.DataFrame(
+                {f"{col_name}_letters": letters, f"{col_name}_numbers": numbers}
+            )
 ```
+
+## Build your own `SingleColumnTransformer` {auto-animate="true"}
+
+```{python}
+parser = ApplyToCols(ZipcodeParser(), allow_reject=True)
+parser.fit_transform(df)
+```
+
 
 ## Chaining Transformers
 
-Use scikit-learn pipelines to combine multiple transformers:
+Use scikit-learn pipelines to concatenate multiple transformers, even when
+wrapped in `ApplyToCols`:
 
-```{python}
+```{.python}
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder
 
 select = SelectCols("department-name")
 encode = ApplyToCols(OneHotEncoder(sparse_output=False))
-reduce = ApplyToFrame(PCA(n_components=2))
+reduce = ApplyToCols(PCA(n_components=2))
 
 transform = make_pipeline(select, encode, reduce)
 ```
+
+
+::: {.callout-tip}
+
+Remember that columns that are not selected pass through without any change. 
+
+:::
+
+
 
 ## Order Matters! {.smaller}
 
@@ -157,9 +200,9 @@ transform_2 = make_pipeline(
 
 ## What we have seen in this chapter
 
-- `SelectCols` / `DropCols`: Filter columns
-- `ApplyToCols`: Apply transformer to matching columns
-- `ApplyToFrame`: Apply transformer to subset, keep rest
+- `SelectCols` / `DropCols`: Filter columns with the `cols` parameter
+- `ApplyToCols`: Apply a transformer to columns selected with `cols`, exclude with
+`exclude_cols`
 - `SingleColumnTransformer`: Create a transformer with custom rules
-- `allow_reject`: Skip incompatible columns
+- `allow_reject`: Reject columns that cannot be treated
 - Chain transformers with scikit-learn pipelines
