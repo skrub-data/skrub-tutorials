@@ -287,6 +287,13 @@
     "text": "Custom Selectors: Filter by Name\n\ndf = pd.DataFrame(\n    {\n        \"patient_id\": [101, 102, 103],\n        \"metric_1\": [0.3, 0.3, 0.6],\n        \"metric_2\": [3, 5, 10],\n    }\n)\n\nselector = s.filter_names(lambda name: name.startswith(\"metric_\"))\ns.select(df, selector)\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\n\n\n\n\n0\n0.3\n3\n\n\n1\n0.3\n5\n\n\n2\n0.6\n10"
   },
   {
+    "objectID": "chapters/06_selectors.html#using-selectors-with-the-tablereport",
+    "href": "chapters/06_selectors.html#using-selectors-with-the-tablereport",
+    "title": "Choose your columns with selectors",
+    "section": "Using selectors with the TableReport",
+    "text": "Using selectors with the TableReport\nThe TableReport can use selectors (or simply column names) to focus only on specific columns:\n\nimport skrub.selectors as s\nfrom skrub import TableReport\ncustom_filter = {\n    \"metrics\": s.glob(\"metric_*\")\n}\n\nTableReport(df, column_filters=custom_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+  },
+  {
     "objectID": "chapters/06_selectors.html#what-we-have-seen-in-this-chapters",
     "href": "chapters/06_selectors.html#what-we-have-seen-in-this-chapters",
     "title": "Choose your columns with selectors",
@@ -369,6 +376,13 @@
     "title": "Choose your columns with selectors",
     "section": "Custom Selectors: Filter by Name",
     "text": "Custom Selectors: Filter by Name\n\ndf = pd.DataFrame(\n    {\n        \"patient_id\": [101, 102, 103],\n        \"metric_1\": [0.3, 0.3, 0.6],\n        \"metric_2\": [3, 5, 10],\n    }\n)\n\nselector = s.filter_names(lambda name: name.startswith(\"metric_\"))\ns.select(df, selector)\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\n\n\n\n\n0\n0.3\n3\n\n\n1\n0.3\n5\n\n\n2\n0.6\n10"
+  },
+  {
+    "objectID": "chapters/06_selectors.slides.html#using-selectors-with-the-tablereport",
+    "href": "chapters/06_selectors.slides.html#using-selectors-with-the-tablereport",
+    "title": "Choose your columns with selectors",
+    "section": "Using selectors with the TableReport",
+    "text": "Using selectors with the TableReport\nThe TableReport can use selectors (or simply column names) to focus only on specific columns:\n\nimport skrub.selectors as s\nfrom skrub import TableReport\ncustom_filter = {\n    \"metrics\": s.glob(\"metric_*\")\n}\n\nTableReport(df, column_filters=custom_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
     "objectID": "chapters/06_selectors.slides.html#what-we-have-seen-in-this-chapters",
@@ -816,7 +830,7 @@
     "href": "chapters/00_intro.html#step-5-train-ridge-model-with-cross-validation",
     "title": "Data Preparation with skrub",
     "section": "Step 5: Train Ridge model with cross-validation",
-    "text": "Step 5: Train Ridge model with cross-validation\nTrain a Ridge regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import Ridge\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = Ridge(alpha=1.0)\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\", \"neg_mean_squared_error\"])\n\n# Convert MSE to RMSE\ntest_rmse = np.sqrt(-cv_results[\"test_neg_mean_squared_error\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.8722 (+/- 0.0274)\nMean test RMSE: 10367.1206 (+/- 1403.4322)"
+    "text": "Step 5: Train Ridge model with cross-validation\nTrain a Ridge regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\", \"neg_mean_squared_error\"])\n\n# Convert MSE to RMSE\ntest_rmse = np.sqrt(-cv_results[\"test_neg_mean_squared_error\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)\nMean test RMSE: 10329.8687 (+/- 1421.8752)"
   },
   {
     "objectID": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
@@ -830,14 +844,7 @@
     "href": "chapters/00_intro.html#waking-up-from-a-nightmare",
     "title": "Data Preparation with skrub",
     "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9114 (+/- 0.0136)\nMean test RMSE: 8656.7724 (+/- 940.1298)"
-  },
-  {
-    "objectID": "chapters/00_intro.html#course-roadmap",
-    "href": "chapters/00_intro.html#course-roadmap",
-    "title": "Data Preparation with skrub",
-    "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nExplore data with TableReport\nClean data with Cleaner\nSelect & transform columns with selectors\nEngineer features: numerical, datetime, categorical\nCombine everything: TableVectorizer & tabular_pipeline"
+    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9092 (+/- 0.0165)\nMean test RMSE: 8755.5384 (+/- 1061.5480)"
   },
   {
     "objectID": "chapters/00_intro.html#what-we-saw-in-this-chapter",
@@ -845,6 +852,13 @@
     "title": "Data Preparation with skrub",
     "section": "What we saw in this chapter",
     "text": "What we saw in this chapter\n\nWe built a predictive pipeline using traditional tools\nWe saw some possible shortcomings\nWe tested skrub’s tabular_pipeline"
+  },
+  {
+    "objectID": "chapters/00_intro.html#course-roadmap",
+    "href": "chapters/00_intro.html#course-roadmap",
+    "title": "Data Preparation with skrub",
+    "section": "Course Roadmap",
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nFeature engineering with the skrub encoders\nBuilding dynamic pipelines with the skrub Data Ops (short intro)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#structure-of-the-tutorial",
@@ -928,7 +942,7 @@
     "href": "chapters/00_intro.slides.html#step-5-train-ridge-model-with-cross-validation",
     "title": "Data Preparation with skrub",
     "section": "Step 5: Train Ridge model with cross-validation",
-    "text": "Step 5: Train Ridge model with cross-validation\nTrain a Ridge regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import Ridge\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = Ridge(alpha=1.0)\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\", \"neg_mean_squared_error\"])\n\n# Convert MSE to RMSE\ntest_rmse = np.sqrt(-cv_results[\"test_neg_mean_squared_error\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.8722 (+/- 0.0274)\nMean test RMSE: 10367.1206 (+/- 1403.4322)"
+    "text": "Step 5: Train Ridge model with cross-validation\nTrain a Ridge regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\", \"neg_mean_squared_error\"])\n\n# Convert MSE to RMSE\ntest_rmse = np.sqrt(-cv_results[\"test_neg_mean_squared_error\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)\nMean test RMSE: 10329.8687 (+/- 1421.8752)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
@@ -942,14 +956,7 @@
     "href": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
     "title": "Data Preparation with skrub",
     "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9114 (+/- 0.0136)\nMean test RMSE: 8656.7724 (+/- 940.1298)"
-  },
-  {
-    "objectID": "chapters/00_intro.slides.html#course-roadmap",
-    "href": "chapters/00_intro.slides.html#course-roadmap",
-    "title": "Data Preparation with skrub",
-    "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nExplore data with TableReport\nClean data with Cleaner\nSelect & transform columns with selectors\nEngineer features: numerical, datetime, categorical\nCombine everything: TableVectorizer & tabular_pipeline"
+    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9092 (+/- 0.0165)\nMean test RMSE: 8755.5384 (+/- 1061.5480)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#what-we-saw-in-this-chapter",
@@ -959,6 +966,13 @@
     "text": "What we saw in this chapter\n\nWe built a predictive pipeline using traditional tools\nWe saw some possible shortcomings\nWe tested skrub’s tabular_pipeline"
   },
   {
+    "objectID": "chapters/00_intro.slides.html#course-roadmap",
+    "href": "chapters/00_intro.slides.html#course-roadmap",
+    "title": "Data Preparation with skrub",
+    "section": "Course Roadmap",
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nFeature engineering with the skrub encoders\nBuilding dynamic pipelines with the skrub Data Ops (short intro)"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Skrub Tutorial Slides",
@@ -966,60 +980,60 @@
     "text": "Chapter 0: Introduction"
   },
   {
-    "objectID": "index.html#chapter-1-introduction",
-    "href": "index.html#chapter-1-introduction",
+    "objectID": "index.html#section-1-introduction",
+    "href": "index.html#section-1-introduction",
     "title": "Skrub Tutorial Slides",
     "section": "",
     "text": "Chapter 0: Introduction"
   },
   {
-    "objectID": "index.html#chapter-2-exploring-and-sanitizing-data",
-    "href": "index.html#chapter-2-exploring-and-sanitizing-data",
+    "objectID": "index.html#section-2-exploring-and-sanitizing-data",
+    "href": "index.html#section-2-exploring-and-sanitizing-data",
     "title": "Skrub Tutorial Slides",
-    "section": "Chapter 2: Exploring and sanitizing data",
-    "text": "Chapter 2: Exploring and sanitizing data\n\nChapter 1: Exploring Data\nChapter 2: Cleaning Data\nQuiz 01\nExercise 1"
+    "section": "Section 2: Exploring and sanitizing data",
+    "text": "Section 2: Exploring and sanitizing data\n\nChapter 1: Exploring Data\nChapter 2: Cleaning Data\nQuiz 01\nExercise 1"
   },
   {
-    "objectID": "index.html#chapter-3-building-a-strong-baseline",
-    "href": "index.html#chapter-3-building-a-strong-baseline",
+    "objectID": "index.html#section-3-building-a-strong-baseline",
+    "href": "index.html#section-3-building-a-strong-baseline",
     "title": "Skrub Tutorial Slides",
-    "section": "Chapter 3: Building a strong baseline",
-    "text": "Chapter 3: Building a strong baseline\n\nChapter 3: Table Vectorization\nChapter 4: Tabular Pipelines\nQuiz 02\nExercise 2"
+    "section": "Section 3: Building a strong baseline",
+    "text": "Section 3: Building a strong baseline\n\nChapter 3: Table Vectorization\nChapter 4: Tabular Pipelines\nQuiz 02\nExercise 2"
   },
   {
-    "objectID": "index.html#chapter-4-transforming-columns",
-    "href": "index.html#chapter-4-transforming-columns",
+    "objectID": "index.html#section-4-transforming-columns",
+    "href": "index.html#section-4-transforming-columns",
     "title": "Skrub Tutorial Slides",
-    "section": "Chapter 4: Transforming columns",
-    "text": "Chapter 4: Transforming columns\n\nChapter 5: Apply Transformations\nChapter 6: Selectors\nQuiz 03\nExercise 3"
+    "section": "Section 4: Transforming columns",
+    "text": "Section 4: Transforming columns\n\nChapter 5: Apply Transformations\nChapter 6: Selectors\nQuiz 03\nExercise 3"
   },
   {
-    "objectID": "index.html#chapter-5-feature-engineering-with-skrub",
-    "href": "index.html#chapter-5-feature-engineering-with-skrub",
+    "objectID": "index.html#section-5-feature-engineering-with-skrub",
+    "href": "index.html#section-5-feature-engineering-with-skrub",
     "title": "Skrub Tutorial Slides",
-    "section": "Chapter 5: Feature Engineering with skrub",
-    "text": "Chapter 5: Feature Engineering with skrub\n\nChapter 7: Numerical Features\nChapter 8: Datetime Features\nChapter 9: Categorical Features\nQuiz 04"
+    "section": "Section 5: Feature Engineering with skrub",
+    "text": "Section 5: Feature Engineering with skrub\n\nChapter 7: Skrub transformers for feature engineering\nQuiz 04"
   },
   {
-    "objectID": "index.html#data-ops",
-    "href": "index.html#data-ops",
+    "objectID": "index.html#section-6-building-dynamic-pipeline-with-data-ops",
+    "href": "index.html#section-6-building-dynamic-pipeline-with-data-ops",
     "title": "Skrub Tutorial Slides",
-    "section": "Data Ops",
-    "text": "Data Ops\n\nChapter 10: Data Ops"
+    "section": "Section 6: Building dynamic pipeline with Data Ops",
+    "text": "Section 6: Building dynamic pipeline with Data Ops\n\nChapter 8: Data Ops"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#why-do-we-need-to-explore-data",
     "href": "chapters/01_exploring_data.slides.html#why-do-we-need-to-explore-data",
     "title": "Exploring dataframes with skrub",
     "section": "Why do we need to explore data?",
-    "text": "Why do we need to explore data?\nBefore any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nThe distribution of values in the columns.\nWhether null values are present, in what measure and where.\nDiscrete/categorical features, and their cardinality.\nColumns strongly correlated with each other."
+    "text": "Why do we need to explore data?\nBefore any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nThe distribution of values in the columns.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and their cardinality.\nWhich columns are strongly correlated with each other."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#loading-the-data",
     "href": "chapters/01_exploring_data.slides.html#loading-the-data",
     "title": "Exploring dataframes with skrub",
     "section": "Loading the data",
-    "text": "Loading the data\n\nimport pandas as pd\nfrom sklearn.datasets import fetch_openml\n\n# Load the Adult Census dataset\ndata =  pd.read_csv(\"../data/adult_census/data.csv\")\ntarget =  pd.read_csv(\"../data/adult_census/target.csv\")"
+    "text": "Loading the data\n\nimport pandas as pd\n# Load the Adult Census dataset\ndata =  pd.read_csv(\"../data/adult_census/data.csv\")\ntarget =  pd.read_csv(\"../data/adult_census/target.csv\")"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#exploring-data-with-pandas-tools-13",
@@ -1068,14 +1082,14 @@
     "href": "chapters/01_exploring_data.slides.html#custom-filters",
     "title": "Exploring dataframes with skrub",
     "section": "Custom filters",
-    "text": "Custom filters\nIt is possible to define custom filters to select only specific columns:\nSkrub selectors can be used for that (more on that later)"
+    "text": "Custom filters\nIt is possible to define custom filters to select only specific columns:\n\nmy_filter = {\"only_education\": [\"education\", \"education-num\"]}\n\nTableReport(data, column_filters=my_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\nSkrub selectors can be used for that (more on that later)."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#outlier-detection",
     "href": "chapters/01_exploring_data.slides.html#outlier-detection",
     "title": "Exploring dataframes with skrub",
     "section": "Outlier detection",
-    "text": "Outlier detection\nThe TableReport detects outliers using a simple interquartile test, marking as outliers all values that are beyond the IQR. This is a simple heuristic, and should not be treated as perfect. If your problem requires reliable outlier detection, you should not rely exclusively on what the TableReport shows."
+    "text": "Outlier detection\n\n\nThe TableReport detects outliers using a simple interquartile test, marking as outliers all values that are beyond the IQR. This is a simple heuristic, and should not be treated as perfect. If your problem requires reliable outlier detection, you should not rely exclusively on what the TableReport shows."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#exploring-the-target-variable",
@@ -1085,46 +1099,53 @@
     "text": "Exploring the target variable\nBesides dataframes, the TableReport handles series and mono- and bi-dimensional numpy arrays.\n\nTableReport(target)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
-    "objectID": "chapters/01_exploring_data.slides.html#persisting-the-tablereport",
-    "href": "chapters/01_exploring_data.slides.html#persisting-the-tablereport",
-    "title": "Exploring dataframes with skrub",
-    "section": "Persisting the TableReport",
-    "text": "Persisting the TableReport\nThe TableReport can be saved on disk as an HTML.\nTableReport(data).write_html(\"report.html\")\n\n\n\n\n\n\nTip\n\n\nThe report can be opened using any internet browser, with no need to run a Jupyter notebok or a python interactive console."
-  },
-  {
     "objectID": "chapters/01_exploring_data.slides.html#working-with-big-tables",
     "href": "chapters/01_exploring_data.slides.html#working-with-big-tables",
     "title": "Exploring dataframes with skrub",
     "section": "Working with big tables",
-    "text": "Working with big tables\nThe max_plot_columns and max_association_columns parameters allow to set a threshold on the number of columns: the TableReport will skip the respective task if the number of colums in the dataframe is larger than the threshold:\n\nTableReport(\n    data, max_association_columns=3, max_plot_columns=3, open_tab=\"distributions\"\n)\n\n/tmp/ipykernel_4206/2483313439.py:1: DeprecationWarning: 'max_plot_columns' is deprecated. Use 'plot_distributions' (bool) instead.\n  TableReport(\n/tmp/ipykernel_4206/2483313439.py:1: DeprecationWarning: 'max_association_columns' is deprecated. Use 'compute_associations' (bool) instead.\n  TableReport(\n\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+    "text": "Working with big tables\nPlot generation and computation of associations are very expensive operations, so it may be beneficial to disable them while working with very big tables.\nUse the plot_distributions and compute_associations parameters to do so:\n\nTableReport(\n    data, plot_distributions=False, compute_associations=False, open_tab=\"distributions\"\n)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+  },
+  {
+    "objectID": "chapters/01_exploring_data.slides.html#persisting-the-tablereport-html",
+    "href": "chapters/01_exploring_data.slides.html#persisting-the-tablereport-html",
+    "title": "Exploring dataframes with skrub",
+    "section": "Persisting the TableReport: HTML",
+    "text": "Persisting the TableReport: HTML\nThe TableReport can be saved on disk as an HTML.\nTableReport(data).write_html(\"report.html\")\n\n\n\n\n\n\nTip\n\n\nThe report can be opened using any internet browser, with no need to run a Jupyter notebok or a python interactive console."
+  },
+  {
+    "objectID": "chapters/01_exploring_data.slides.html#persisting-the-tablereport-json",
+    "href": "chapters/01_exploring_data.slides.html#persisting-the-tablereport-json",
+    "title": "Exploring dataframes with skrub",
+    "section": "Persisting the TableReport: JSON",
+    "text": "Persisting the TableReport: JSON\nIt is also possible to export the report in JSON format:\njson_str = TableReport(data).json()\n\n\n\n\n\n\nImportant\n\n\nIf the report is generating distribution plots, the JSON will include them in SVG format. Distributions can be disabled by setting plot_distributions=False."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/01_exploring_data.slides.html#what-we-have-seen-in-this-chapter",
     "title": "Exploring dataframes with skrub",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nThe TableReport shows a rich preview of the content of the dataframe\nIt provides precomputed statistics for all the columns\nIt prepares distribution plots for each column\nIt measures the association between columns\nIt can be stored as a HTML file and shared without needing a running kernel"
+    "text": "What we have seen in this chapter\n\nThe TableReport shows a rich preview of the content of the dataframe\nIt provides precomputed statistics for all the columns\nIt prepares distribution plots for each column\nIt measures the association between columns\nIt can be exported as a HTML file and shared without needing a running kernel, or as a JSON file for other programs."
   },
   {
     "objectID": "chapters/01_exploring_data.html",
     "href": "chapters/01_exploring_data.html",
     "title": "Exploring dataframes with skrub",
     "section": "",
-    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\n\nThe size of the dataset.\nThe data types and names of the columns.\nThe distribution of values in the columns.\nWhether null values are present, in what measure and where.\nDiscrete/categorical features, and their cardinality.\nColumns strongly correlated with each other."
+    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\n\nThe size of the dataset.\nThe data types and names of the columns.\nThe distribution of values in the columns.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and their cardinality.\nWhich columns are strongly correlated with each other."
   },
   {
     "objectID": "chapters/01_exploring_data.html#why-do-we-need-to-explore-data",
     "href": "chapters/01_exploring_data.html#why-do-we-need-to-explore-data",
     "title": "Exploring dataframes with skrub",
     "section": "",
-    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\n\nThe size of the dataset.\nThe data types and names of the columns.\nThe distribution of values in the columns.\nWhether null values are present, in what measure and where.\nDiscrete/categorical features, and their cardinality.\nColumns strongly correlated with each other."
+    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\n\nThe size of the dataset.\nThe data types and names of the columns.\nThe distribution of values in the columns.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and their cardinality.\nWhich columns are strongly correlated with each other."
   },
   {
     "objectID": "chapters/01_exploring_data.html#loading-the-data",
     "href": "chapters/01_exploring_data.html#loading-the-data",
     "title": "Exploring dataframes with skrub",
     "section": "Loading the data",
-    "text": "Loading the data\n\nimport pandas as pd\nfrom sklearn.datasets import fetch_openml\n\n# Load the Adult Census dataset\ndata =  pd.read_csv(\"../data/adult_census/data.csv\")\ntarget =  pd.read_csv(\"../data/adult_census/target.csv\")"
+    "text": "Loading the data\n\nimport pandas as pd\n# Load the Adult Census dataset\ndata =  pd.read_csv(\"../data/adult_census/data.csv\")\ntarget =  pd.read_csv(\"../data/adult_census/target.csv\")"
   },
   {
     "objectID": "chapters/01_exploring_data.html#exploring-data-with-pandas-tools-13",
@@ -1173,14 +1194,14 @@
     "href": "chapters/01_exploring_data.html#custom-filters",
     "title": "Exploring dataframes with skrub",
     "section": "Custom filters",
-    "text": "Custom filters\nIt is possible to define custom filters to select only specific columns:\nSkrub selectors can be used for that (more on that later)"
+    "text": "Custom filters\nIt is possible to define custom filters to select only specific columns:\n\nmy_filter = {\"only_education\": [\"education\", \"education-num\"]}\n\nTableReport(data, column_filters=my_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\nSkrub selectors can be used for that (more on that later)."
   },
   {
     "objectID": "chapters/01_exploring_data.html#outlier-detection",
     "href": "chapters/01_exploring_data.html#outlier-detection",
     "title": "Exploring dataframes with skrub",
     "section": "Outlier detection",
-    "text": "Outlier detection\nThe TableReport detects outliers using a simple interquartile test, marking as outliers all values that are beyond the IQR. This is a simple heuristic, and should not be treated as perfect. If your problem requires reliable outlier detection, you should not rely exclusively on what the TableReport shows."
+    "text": "Outlier detection\n\n\nThe TableReport detects outliers using a simple interquartile test, marking as outliers all values that are beyond the IQR. This is a simple heuristic, and should not be treated as perfect. If your problem requires reliable outlier detection, you should not rely exclusively on what the TableReport shows."
   },
   {
     "objectID": "chapters/01_exploring_data.html#exploring-the-target-variable",
@@ -1190,25 +1211,32 @@
     "text": "Exploring the target variable\nBesides dataframes, the TableReport handles series and mono- and bi-dimensional numpy arrays.\n\nTableReport(target)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
-    "objectID": "chapters/01_exploring_data.html#persisting-the-tablereport",
-    "href": "chapters/01_exploring_data.html#persisting-the-tablereport",
-    "title": "Exploring dataframes with skrub",
-    "section": "Persisting the TableReport",
-    "text": "Persisting the TableReport\nThe TableReport can be saved on disk as an HTML.\nTableReport(data).write_html(\"report.html\")\n\n\n\n\n\n\nTip\n\n\n\nThe report can be opened using any internet browser, with no need to run a Jupyter notebok or a python interactive console."
-  },
-  {
     "objectID": "chapters/01_exploring_data.html#working-with-big-tables",
     "href": "chapters/01_exploring_data.html#working-with-big-tables",
     "title": "Exploring dataframes with skrub",
     "section": "Working with big tables",
-    "text": "Working with big tables\nThe max_plot_columns and max_association_columns parameters allow to set a threshold on the number of columns: the TableReport will skip the respective task if the number of colums in the dataframe is larger than the threshold:\n\nTableReport(\n    data, max_association_columns=3, max_plot_columns=3, open_tab=\"distributions\"\n)\n\n/tmp/ipykernel_4206/2483313439.py:1: DeprecationWarning: 'max_plot_columns' is deprecated. Use 'plot_distributions' (bool) instead.\n  TableReport(\n/tmp/ipykernel_4206/2483313439.py:1: DeprecationWarning: 'max_association_columns' is deprecated. Use 'compute_associations' (bool) instead.\n  TableReport(\n\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+    "text": "Working with big tables\nPlot generation and computation of associations are very expensive operations, so it may be beneficial to disable them while working with very big tables.\nUse the plot_distributions and compute_associations parameters to do so:\n\nTableReport(\n    data, plot_distributions=False, compute_associations=False, open_tab=\"distributions\"\n)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#persisting-the-tablereport-html",
+    "href": "chapters/01_exploring_data.html#persisting-the-tablereport-html",
+    "title": "Exploring dataframes with skrub",
+    "section": "Persisting the TableReport: HTML",
+    "text": "Persisting the TableReport: HTML\nThe TableReport can be saved on disk as an HTML.\nTableReport(data).write_html(\"report.html\")\n\n\n\n\n\n\nTip\n\n\n\nThe report can be opened using any internet browser, with no need to run a Jupyter notebok or a python interactive console."
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#persisting-the-tablereport-json",
+    "href": "chapters/01_exploring_data.html#persisting-the-tablereport-json",
+    "title": "Exploring dataframes with skrub",
+    "section": "Persisting the TableReport: JSON",
+    "text": "Persisting the TableReport: JSON\nIt is also possible to export the report in JSON format:\njson_str = TableReport(data).json()\n\n\n\n\n\n\nImportant\n\n\n\nIf the report is generating distribution plots, the JSON will include them in SVG format. Distributions can be disabled by setting plot_distributions=False."
   },
   {
     "objectID": "chapters/01_exploring_data.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/01_exploring_data.html#what-we-have-seen-in-this-chapter",
     "title": "Exploring dataframes with skrub",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nThe TableReport shows a rich preview of the content of the dataframe\nIt provides precomputed statistics for all the columns\nIt prepares distribution plots for each column\nIt measures the association between columns\nIt can be stored as a HTML file and shared without needing a running kernel"
+    "text": "What we have seen in this chapter\n\nThe TableReport shows a rich preview of the content of the dataframe\nIt provides precomputed statistics for all the columns\nIt prepares distribution plots for each column\nIt measures the association between columns\nIt can be exported as a HTML file and shared without needing a running kernel, or as a JSON file for other programs."
   },
   {
     "objectID": "chapters/03_table_vectorizer.slides.html#the-goal",

@@ -217,7 +217,7 @@
 <section id="selection-operations" class="slide level2">
 <h2>Selection Operations</h2>
 <p><code>SelectCols</code> and <code>DropCols</code> filter columns based on rules:</p>
-<div id="c0c50ff3" class="cell" data-execution_count="1">
+<div id="ab2e9e64" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols, DropCols</span>
 <span id="cb1-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a></a></span>
@@ -230,7 +230,7 @@
 </section>
 <section id="selection-operations-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Selection Operations</h2>
-<div id="cd7a0fd1" class="cell" data-execution_count="2">
+<div id="eaa45738" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb2-1" class="hljs-ln-code"><a></a><span class="co"># By name</span></span>
 <span id="cb2-2" class="hljs-ln-code"><a></a>SelectCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -274,7 +274,7 @@
 </section>
 <section id="selection-operations-2" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Selection Operations</h2>
-<div id="4939762d" class="cell" data-execution_count="3">
+<div id="e10ea76d" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb3-1" class="hljs-ln-code"><a></a>DropCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -322,7 +322,7 @@
 <section id="applying-transformers-to-columns" class="slide level2">
 <h2>Applying Transformers to Columns</h2>
 <p><code>ApplyToCols</code> applies a transformer to columns that can be selected by name, or according to specific rules.</p>
-<div id="54be8015" class="cell" data-execution_count="4">
+<div id="aab05bff" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb4-2"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb4-3"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
@@ -389,7 +389,7 @@
 <section id="exclude-specific-columns" class="slide level2">
 <h2>Exclude specific columns</h2>
 <p>For example, scale all numeric columns except for an integer ID.</p>
-<div id="2e3e734d" class="cell" data-execution_count="5">
+<div id="d0e9547a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>df_id <span class="op">=</span> pd.DataFrame(<span class="bu">dict</span>(<span class="bu">id</span><span class="op">=</span>[<span class="dv">1000</span>, <span class="dv">2000</span>], A<span class="op">=</span>[<span class="op">-</span><span class="fl">10.0</span>, <span class="fl">10.0</span>], B<span class="op">=</span>[<span class="op">-</span><span class="fl">10.0</span>, <span class="fl">0.0</span>], C<span class="op">=</span>[<span class="dv">19</span>, <span class="dv">20</span>]))</span>
 <span id="cb5-2"><a></a>df_id</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -439,7 +439,7 @@
 </div>
 </div>
 </div>
-<div id="30a72305" class="cell" data-execution_count="6">
+<div id="97181a1b" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb6-2"><a></a>exc_scaler <span class="op">=</span> ApplyToCols(StandardScaler(), exclude_cols<span class="op">=</span><span class="st">"id"</span>)</span>
 <span id="cb6-3"><a></a>exc_scaler.fit_transform(df_id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -494,7 +494,7 @@
 <section id="the-allow_reject-parameter" class="slide level2">
 <h2>The <code>allow_reject</code> Parameter</h2>
 <p>When <code>allow_reject=True</code>, columns that can’t be transformed are passed through:</p>
-<div id="ea0da7d5" class="cell" data-execution_count="7">
+<div id="d169af2d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
@@ -505,7 +505,7 @@
 <section id="the-allow_reject-parameter-1" class="slide level2">
 <h2>The <code>allow_reject</code> Parameter</h2>
 <p>When <code>allow_reject=False</code>, columns that can’t be transformed raise an exception:</p>
-<div id="e5094a59" class="cell" data-execution_count="8">
+<div id="e3f6001c" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb8-2"><a></a></span>
 <span id="cb8-3"><a></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">False</span>)</span>
@@ -621,7 +621,7 @@ Transformer ToDatetime.fit_transform failed on column 'city'. See above for the 
 <section id="build-your-own-singlecolumntransformer" class="slide level2 smaller">
 <h2>Build your own <code>SingleColumnTransformer</code></h2>
 <p>Consider an example like this:</p>
-<div id="f254456b" class="cell" data-execution_count="9">
+<div id="732a1e28" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'sent'</span>: [<span class="st">"AB123"</span>, <span class="st">"BD601"</span>, <span class="st">"HS014"</span>], <span class="st">'received'</span>: [<span class="st">"AB145"</span>, <span class="st">"DU393"</span>, <span class="st">"WB988"</span>]})</span>
 <span id="cb9-3"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -676,7 +676,7 @@ Transformer ToDatetime.fit_transform failed on column 'city'. See above for the 
 <section id="build-your-own-singlecolumntransformer-1" class="slide level2 smaller" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Build your own <code>SingleColumnTransformer</code></h2>
 <p>The <code>SingleColumnTransformer</code> allows to define a transformer with custom rules, while <code>RejectColumn</code> gives control over the behavior in presence of invalid inputs.</p>
-<div id="b92697af" class="cell" data-execution_count="10">
+<div id="ac2390a2" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb10-1" class="hljs-ln-code"><a></a><span class="im">from</span> skrub.core <span class="im">import</span> RejectColumn, SingleColumnTransformer</span>
 <span id="cb10-2" class="hljs-ln-code"><a></a></span>
 <span id="cb10-3" class="hljs-ln-code"><a></a><span class="kw">class</span> ZipcodeParser(SingleColumnTransformer):</span>
@@ -701,7 +701,7 @@ Transformer ToDatetime.fit_transform failed on column 'city'. See above for the 
 </section>
 <section id="build-your-own-singlecolumntransformer-2" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Build your own <code>SingleColumnTransformer</code></h2>
-<div id="c4f3de5e" class="cell" data-execution_count="11">
+<div id="f20e8b93" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb11-1" class="hljs-ln-code"><a></a>parser <span class="op">=</span> ApplyToCols(ZipcodeParser(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb11-2" class="hljs-ln-code"><a></a>parser.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
