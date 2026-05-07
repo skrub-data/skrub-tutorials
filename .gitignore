@@ -216,7 +216,7 @@ __marimo__/
 # Local env for debugging
 skrub-dev
 /.quarto/
-**/*.quarto_ipynb
+**/*.quarto_ipynb*
 
 # MyST build outputs
 _build
