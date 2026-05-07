@@ -14,6 +14,11 @@ format:
 ## The Goal
 
 Convert any mixed-type dataframe into numeric features for ML:
+- Categorical features need to be encoded into features
+- Datetime features can be transformed into more informative features
+- Data should be sanitized
+
+## A toy example
 ```{python}
 import pandas as pd
 from skrub import TableVectorizer
@@ -38,7 +43,9 @@ The `TableVectorizer` starts by cleaning:
 - Handle missing value markers ("N/A", "?")
 - Type consistency for categories
 - Drop uninformative columns
-- Convert to float32 for efficiency
+- Convert to `float32` for efficiency
+
+In practice, a `Cleaner` followed by conversion to `float32`. 
 
 ## Phase 2: Column Dispatch
 
@@ -66,16 +73,19 @@ tv = TableVectorizer(cardinality_threshold=10)
 tv = TableVectorizer(
     drop_null_fraction=0.9,  # Drop columns 90% null
     drop_if_constant=True,   # Drop constant columns
-    datetime_format="%Y-%m-%d"
+    datetime_format="%Y-%m-%d",  # Specific datetime format
+    null_strings=["UKN", "unknown", "missing"] # Custom strings to mark null values
 )
 ```
 
-## Customizing Transformers {.smaller}
+### Customizing Transformers {.smaller}
 
 ```{python}
 from skrub import DatetimeEncoder, StringEncoder
 
+# Add periodic encoding
 datetime_enc = DatetimeEncoder(periodic_encoding="circular")
+# Change the number of output components of the StringEncoder
 string_enc = StringEncoder(n_components=10)
 
 tv = TableVectorizer(
@@ -84,7 +94,9 @@ tv = TableVectorizer(
 )
 ```
 
-## Applying to Subset of Columns
+More about the encoders in Chapter 4!
+
+### Applying to Subset of Columns
 
 ```{python}
 from skrub import ApplyToCols
@@ -97,6 +109,9 @@ tv = ApplyToCols(
 )
 ```
 
+
+More about selectors in Chapter 3!
+
 ## Fine-Grained Control: specific_transformers
 
 ```{python}
@@ -105,6 +120,9 @@ from sklearn.preprocessing import OrdinalEncoder
 specific = [(OrdinalEncoder(), ["occupation"])]
 tv = TableVectorizer(specific_transformers=specific)
 ```
+
+Columns in `specific_transformers` are forwarded directly to the transformer without
+any cleaning or parsing. 
 
 
 ## Key Takeaways

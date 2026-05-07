@@ -12,7 +12,7 @@ format:
 ---
 
 ## Introduction
-Once a table has been explored, the typical next step is addressing any
+Once a table has been explored, the next step is addressing any
 problem it might have.
 
 This can be described broadly as "cleaning" or "sanitizing" the data. 

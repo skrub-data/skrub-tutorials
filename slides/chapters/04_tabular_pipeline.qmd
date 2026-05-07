@@ -11,7 +11,7 @@ format:
 
 ---
 
-## The Complete Pipeline
+## Building a baseline model with preprocessing
 
 Beyond preprocessing, ML pipelines need:
 
@@ -56,10 +56,11 @@ model_reg = tabular_pipeline("regression")
 
 Configures pipeline with:
 
-- `TableVectorizer` with spline-encoded datetimes
+- `TableVectorizer` optimized for linear models
+    - `DatetimeEncoder` with spline-encoded datetimes
 - `SimpleImputer` (linear models need this)
 - `SquashingScaler` for robust scaling
-- Your estimator (LogisticRegression, Ridge, etc.)
+- Your estimator (`LogisticRegression`, `Ridge`, etc.)
 
 ## For Tree-Based Models {.smaller}
 
@@ -69,7 +70,8 @@ Configures pipeline with:
   - Low-cardinality: Keep as categorical (HistGB) or ordinal (RandomForest)
   - High-cardinality: StringEncoder
   - No spline encoding (unnecessary)
-- No scaling (trees don't need it)
+- No scaling (trees don't need scaling)
+- No imputation (trees don't need imputation)
 - Your estimator
 
 ## When to Use Which Approach
@@ -84,6 +86,31 @@ Configures pipeline with:
 - Custom preprocessing steps
 - Experimenting with different transformers
 
+## Customizing the pipeline
+
+::: {.callout-tip}
+This is unnecessary most of the time!
+:::
+
+
+::: {.fragment}
+
+```{.python}
+from sklearn.decomposition import PCA
+from sklearn.linear_model import Ridge
+from sklearn.pipeline import make_pipeline
+from skrub import tabular_pipeline
+# Create a pipeline that includes two steps
+model_pipeline = make_pipeline(PCA(n_components=20), Ridge())
+
+# Pass the new model to tabular_pipeline
+full_pipeline = tabular_pipeline(model_pipeline)
+[name for name, _ in full_pipeline.steps]
+```
+
+:::
+
+
 ## Example: Complete Workflow
 
 ```{.python}
@@ -97,15 +124,9 @@ scores = cross_val_score(model, X, y, cv=5)
 print(f"Score: {scores.mean():.4f}")
 ```
 
-## Key Advantages of Pipelines
+That's it! 
 
-✓ Prevent data leakage (fit only on training data)
-✓ Consistent transformations (train & test)
-✓ Reproducible workflows
-✓ Deployable units
-✓ Compatible with hyperparameter tuning
-
-## Key Takeaways
+## What to remember
 
 - `TableVectorizer` handles all feature engineering
 - Manual pipelines give full control
