@@ -125,10 +125,10 @@ Columns in `specific_transformers` are forwarded directly to the transformer wit
 any cleaning or parsing. 
 
 
-## Key Takeaways
+## What to remember
 
-- One object handles all preprocessing
-- Automatic type detection and routing
+- One object -- the `TableVectorizer` -- handles preprocessing and feature engineering
+- Types are detected and encoded automatically
 - Configurable cleaning and encoding
 - Smart defaults based on column characteristics
 - Easy to customize per-column behavior

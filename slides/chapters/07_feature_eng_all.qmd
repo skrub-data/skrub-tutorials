@@ -1,0 +1,293 @@
+---
+title: "Feature engineering with skrub"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+
+---
+
+## Under the hood of the `TableVectorizer` and `tabular_pipeline`
+Both the `TableVectorizer` and the `tabular_pipeline` rely on various skrub encoders
+to feature-engineer the given table:
+- categorical features need to be converted into numbers
+- datetime features need to be split in datetime parts
+- numeric feature need to be scaled
+
+In this chapter we will cover the relevant skrub transformers in more detail
+
+## Safe scaling of numerical features
+Consider a situation where a numerical feature includes large outliers.
+
+Most values are in range [-2, 2], but some outliers are in [-40, 40]:
+
+```{python}
+from helpers import (
+    generate_data_with_outliers,
+    plot_feature_with_outliers
+)
+
+values = generate_data_with_outliers()
+
+plot_feature_with_outliers(values)
+
+```
+
+### `StandardScaler` Problems
+
+- Uses mean and standard deviation
+- Outliers make these statistics unreliable
+- Scaling factor becomes too small
+- Inliers get compressed into narrow range
+
+### `RobustScaler`
+
+- Uses percentiles (25th, 75th) instead of mean/std
+- More resistant to outliers
+- But doesn't bound output values
+- Extreme outliers still have large scaled values
+
+### `SquashingScaler`: Best Approach
+
+Smart outlier handling in skrub:
+
+```python
+from skrub import SquashingScaler
+
+scaler = SquashingScaler()
+X_scaled = scaler.fit_transform(X)
+```
+
+### Comparing the scalers
+```{python}
+from helpers import scale_feature_and_plot
+scale_feature_and_plot(values)
+```
+
+### How `SquashingScaler` Works
+
+1. Center the median to 0
+2. Use quantile-based statistics for scaling
+3. Fill constant columns with 0s
+4. Apply a smooth squashing function
+5. Constrain output to [-3, 3] (default)
+6. Map infinite values to boundaries
+7. Keep NaN values unchanged
+
+## In summary: 
+
+Advantages:
+- **Outlier-resistant**: Inliers unaffected by outliers
+- **Bounded output**: Predictable range ideal for neural networks
+- **Handles edge cases**: Works with infinite values, constant columns
+- **Preserves NaN**: Missing values stay unchanged
+
+Disadvantages:
+- **Non-invertible**: Cannot perfectly reverse transformation
+
+## Encoding categorical features
+
+Machine learning models need numeric input, but we have:
+
+- Names: "Alice", "Bob"
+- Occupations: "engineer", "teacher"
+- Locations: "NYC", "LA"
+- Text: reviews, tweets, comments...
+...
+
+How to convert these features to numbers?
+
+### One-Hot Encoding
+
+Creates binary indicator columns:
+
+```{python}
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd 
+from skrub import ApplyToCols
+
+X = pd.DataFrame({"color": ["red", "blue", "red"]})
+encoder = OneHotEncoder(sparse_output=False)
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
+
+**Pros**: Intuitive, works well for few categories
+**Cons**: Explodes with many categories, creates sparse matrices
+
+### Ordinal Encoding
+
+Assigns sequential numbers:
+
+```{python}
+pd.Categorical(X["color"]).codes
+# red=0, blue=1, etc.
+```
+
+**Pros**: Memory efficient
+**Cons**: Introduces artificial ordering, lacking context
+
+### The Challenge: High-Cardinality Features
+
+What if you have 1000+ unique values (IDs, free text)?
+
+### How skrub deals with categorical features
+
+Skrub implements four different strategies:
+- `StringEncoder`
+- `TextEncoder`
+- `MinHashEncoder`
+- `GapEncoder`
+
+### StringEncoder: Best All-Rounder
+
+```{.python}
+from skrub import StringEncoder
+
+encoder = StringEncoder(n_components=10)
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
+
+- Uses TF-IDF + SVD for dimensionality reduction
+- Fixed output dimension (n_components)
+- Fast and robust
+- Not very good with free-flowing text
+- Default in both `TableVectorizer` and `tabular_pipeline`
+
+### TextEncoder: For Natural Language
+
+```{.python}
+from skrub import TextEncoder
+
+encoder = TextEncoder()
+encoded = ApplyToCols(encoder).fit_transform(X)
+```
+
+**Pros**: Captures semantic meaning, works very well on text
+**Cons**: Very slow, requires heavy dependencies
+
+### Encoder Comparison {.smaller}
+
+| Encoder | Speed | Performance | Interpretability | Use Case |
+|---------|-------|-------------|------------------|----------|
+| OneHot | Fast | Good | High | Low cardinality |
+| StringEncoder | Fast | Excellent | Low | Default choice |
+| TextEncoder | Slow | Excellent | Medium | Real text data |
+| MinHashEncoder | Very Fast | Fair | Low | Quick prototyping |
+| GapEncoder | Slow | Good | High | Interpretability needed |
+
+### In summary
+
+- Use `OneHotEncoder` for < 40 unique values
+- Use `StringEncoder` for high-cardinality
+- Use `TextEncoder` for true natural language
+
+## Encoding datetimes
+Datetimes come in many formats:
+
+- "2023-01-03" (ISO format)
+- "03/01/2023" (EU format)
+- "January 3, 2023" (text)
+- "03 Jan 2023" (custom)
+
+Correct parsing is essential for feature extraction.
+
+### Converting Strings to Datetime
+
+**`ToDatetime`**: Single column transformer with format guessing:
+
+```{python}
+from skrub import ApplyToCols, ToDatetime
+import pandas as pd
+
+df = pd.DataFrame({"dates": ["2023-01-03", "2023-02-15"]})
+df_dt = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+df_dt
+```
+
+**`Cleaner`**: Also parses datetimes with custom format:
+
+```{python}
+from skrub import Cleaner
+
+cleaner = Cleaner(datetime_format="%d %B %Y")
+df_clean = cleaner.fit_transform(df)
+df_clean
+```
+
+### Extracting Datetime Features {.smaller}
+
+Datetimes must be converted to numerical features:
+
+```{python}
+df_dt["year"] = df_dt["dates"].dt.year
+df_dt["month"] = df_dt["dates"].dt.month
+df_dt["day"] = df_dt["dates"].dt.day
+df_dt["weekday"] = df_dt["dates"].dt.weekday
+df_dt["day_of_year"] = df_dt["dates"].dt.day_of_year
+df_dt["total_seconds"] = (df_dt["dates"] - pd.Timestamp("1970-01-01")) // pd.Timedelta('1s')
+df_dt
+```
+
+### Simpler with DatetimeEncoder
+
+```{python}
+from skrub import DatetimeEncoder, ApplyToCols
+
+de = DatetimeEncoder(
+    add_total_seconds=True,
+    add_weekday=True,
+    add_day_of_year=True
+)
+
+df_dt = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
+df_enc = ApplyToCols(de, cols="dates").fit_transform(df_dt)
+df_enc
+```
+
+### Periodic Features
+
+Cyclical patterns need special handling:
+
+- Day of week: 0-6, but 0 and 6 are close
+- Month: 1-12, but 12 and 1 are close
+- Hour: 0-23, but 23 and 0 are close
+
+### Circular (Sin/Cos) Encoding
+
+```python
+import numpy as np
+
+df["weekday_sin"] = np.sin(2 * np.pi * df["weekday"] / 7)
+df["weekday_cos"] = np.cos(2 * np.pi * df["weekday"] / 7)
+```
+
+Or with `DatetimeEncoder`:
+
+```{python}
+de = DatetimeEncoder(periodic_encoding="circular")
+df_enc = ApplyToCols(de, cols="dates").fit_transform(df_dt)
+df_enc
+```
+
+### Spline Encoding Alternative
+
+```{python}
+de = DatetimeEncoder(periodic_encoding="spline")
+df_enc = ApplyToCols(de, cols="dates").fit_transform(df_dt)
+df_enc
+```
+
+### Example: spline periodic features
+![example of periodic features generated with splines](images/periodic_features_light_transparent.png)
+
+## In summary
+
+- Use `ToDatetime` or `Cleaner` to parse string dates
+- `DatetimeEncoder` extracts useful features
+- Use periodic encoding for cyclical features
+- Circular encoding: sin/cos transformation
+- Spline encoding: alternative periodic approach

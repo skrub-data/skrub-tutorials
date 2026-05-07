@@ -19,6 +19,12 @@ Complex column selection beyond simple name lists:
 import skrub.selectors as s
 ```
 
+Selectors are used throughout the skrub package:
+- `SelectCols`/`DropCols`
+- `ApplyToCols`
+- `.skb.apply()`
+- `TableReport`
+
 ## Selecting by Data Type
 
 Available selectors:
@@ -32,6 +38,8 @@ Available selectors:
 - `.boolean()`: Boolean columns
 
 ## Example: Select String Columns
+
+We can use `SelectCols` to choose which columns to keep:
 
 ```{python}
 from skrub import SelectCols
@@ -49,6 +57,8 @@ SelectCols(cols=s.string()).fit_transform(df)
 
 ## Example: select/drop columns
 
+`selectors` include their own `select` method, which takes a dataframe and selector:
+
 ```{python}
 df = pd.DataFrame({
     "age": [25, 30, 35],
@@ -64,8 +74,9 @@ s.select(df, selector)
 ## Selecting by Characteristics
 
 - `.all()`: All columns
-- `.has_nulls()`: Columns with at least one null
+- `.has_nulls()`: Columns with more than a given threshold of nulls (default=0)
 - `.cardinality_below(threshold)`: Few unique values
+- `.has_dtype()`: Columns that have the provided dtype
 
 ```{python}
 df = pd.DataFrame({
@@ -75,6 +86,21 @@ df = pd.DataFrame({
 })
 SelectCols(cols=s.has_nulls()).fit_transform(df)
 ```
+
+## Example: Selecting by dtype
+```{python}
+import polars as pl
+
+df = pl.DataFrame({"A": [[1,2], [1,2,3]], "B": ["A", "B"]})
+df.dtypes
+```
+
+We want to select list columns:
+```{python}
+sel = s.has_dtype(pl.List)
+SelectCols(cols=sel).fit_transform(df)
+```
+
 
 ## Selecting by Name
 
@@ -94,7 +120,11 @@ SelectCols(cols=s.glob("metric_*")).fit_transform(df)
 
 ## Combining Selectors {.smaller}
 
-Use logical operators:
+Selectors can be combined: 
+- each selector produces a **set** of columns
+- **set operations** (`&`, `|`, `^`, `-`, `~`) can be used
+to combine selectors
+- column names or lists of columns can be used directly
 
 ```{.python}
 # Inverse: NOT numeric
@@ -109,7 +139,7 @@ s.string() & ~s.has_nulls()
 # XOR: either string, or name starts with "date_" but not both
 s.string() ^ s.glob("date_*")
 
-# Include: string columns and col "date"
+# Include: string columns OR col "date"
 s.string() | "date"
 
 # Exclude: all columns except "datetime-col"

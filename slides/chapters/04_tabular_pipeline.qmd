@@ -133,3 +133,5 @@ That's it!
 - `tabular_pipeline` provides smart defaults
 - Different configurations for different model types
 - Always use pipelines to prevent data leakage
+
+## Time for the quiz!

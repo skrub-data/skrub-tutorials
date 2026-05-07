@@ -75,6 +75,16 @@ As this is a preview, only the first and last few rows are displayed.
 Pre-made column filters are also available, allowing to select columns by dtype 
 or other characteristics. Filters are shared across tabs. 
 
+## Custom filters
+It is possible to define custom filters to select only specific columns:
+
+```{python}
+
+
+```
+
+Skrub selectors can be used for that (more on that later)
+
 ## Outlier detection
 The `TableReport` detects outliers using a simple interquartile test, marking 
 as outliers all values that are beyond the IQR. This is a simple heuristic, and 
