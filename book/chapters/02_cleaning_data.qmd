@@ -12,8 +12,13 @@ format:
 ---
 
 ## Introduction
-In this chapter, we will show how we can quickly pre-process and sanitize 
-data using skrub's `Cleaner`. 
+Once a table has been explored, the next step is addressing any
+problem it might have.
+
+This can be described broadly as "cleaning" or "sanitizing" the data. 
+
+In this chapter, we will show how we can quickly address this task using skrub's 
+`Cleaner`. 
 
 
 ## Using the skrub `Cleaner`
@@ -99,8 +104,21 @@ correctly, and that the datetime column has been parsed accordingly:
 df_clean.info()
 ```
 
+## Note on intended usage 
 
-::: {.content-hidden when-format="revealjs"}
+::: {.callout-tip}
+
+The `Cleaner` is intended to be used early on when pre-processing, so it avoids
+altering the input dataframe too much.
+
+The `Cleaner` tries to move from less-informative dtypes (e.g., generic strings)
+to more-informative types (e.g., datetimes). 
+
+:::
+
+The assumption is that complex transformations are done in later steps by the user.
+
+This is different from what is done by the `TableVectorizer`.
 
 ### Cleaning steps performed by the `Cleaner` 
 In more detail, the `Cleaner` executes the following steps in order: 
@@ -121,9 +139,6 @@ to actual numerical columns.
 6. Finally, it can convert numerical columns to `np.float32` dtype if called 
 with the parameter `numeric_dtype="float32"`. This ensures a consistent
 representation of numbers and missing values, and helps reducing the memory footprint. 
-
-
-:::
 
 ## Under the hood: `DropUninformative`
 When the `Cleaner` is fitted on a dataframe, it checks whether the dataframe includes
@@ -172,20 +187,21 @@ drop.fit_transform(df2)
 ```
 
 
-## Conclusion
+## What we have seen in this chapter {.smaller}
 In this chapter we have covered how the skrub `Cleaner` helps with sanitizing data
 by implementing a number of common transformations that need to be executed in 
 order to ensure that the data used by the pipeline are consistent and can be used
 as indended by ML models. 
 
 
-- The `Cleaner` object automates common data cleaning steps, making it easy to prepare tabular data for analysis or modeling with minimal configuration.
-- `Cleaner` leverages transformers like `DropUninformative` to automatically remove columns that are empty, constant, or contain mostly unique values (such as IDs), based on user-defined thresholds.
-- The `DropUninformative` transformer can also be used directly for fine-grained control over which columns to drop, according to missing value fraction, constant values, or uniqueness.
-- skrub objects are designed to work seamlessly with pandas DataFrames, streamlining the preprocessing workflow and reducing the need for manual data cleaning code.
-
-
-
+- The `Cleaner` object automates common data cleaning steps, making it easy to
+prepare tabular data for analysis or modeling with minimal configuration.
+- `Cleaner` leverages transformers like `DropUninformative` to automatically
+remove columns that are empty, constant, or contain mostly unique values (such
+as IDs), based on user-defined thresholds.
+- The `DropUninformative` transformer can also be used directly for fine-grained
+control over which columns to drop, according to missing value fraction, constant
+values, or uniqueness.
 
 In the next chapter we will see how skrub helps with applying this and other 
 transformations to specific columns in the data.

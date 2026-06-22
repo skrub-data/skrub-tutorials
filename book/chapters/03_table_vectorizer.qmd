@@ -15,13 +15,16 @@ format:
 
 Machine learning models typically require numeric input features. When working
 with real-world datasets, we often have a mix of data types: numbers, text,
-dates, and categorical values. The `TableVectorizer` automates the entire process
-of converting a heterogeneous dataframe into a matrix of numeric features ready
-for machine learning.
+dates, and categorical values.
 
+So far, we've seen how skrub helps consolidating those data types by sanitizing
+and converting when possible. Then, the next step is going from complex and 
+heterogeneous data types like strings and datetimes to a matrix of numeric
+features ready for machine learning.
+
+This is where the subject of this chapter, the `TableVectorizer`, comes into play.
 Instead of manually specifying how to handle each column, the `TableVectorizer`
-automatically detects the data type of each column and applies the appropriate
-transformation to encode the column using numerical features. 
+automatically assigns columns to trasformation strategies, and encodes them accordingly. 
 
 ## How does the TableVectorizer work?
 
@@ -34,20 +37,18 @@ First, it runs a `Cleaner` on the input data to:
 - Detect and parse datetime columns (possibly, with custom datetime formats)
 - Detect and parse numerical columns written as strings
 - Handle missing values represented as strings (e.g., "N/A")
-- Clean up categorical columns to have consistent typing
 - Remove uninformative columns (those with only nulls, constant values, or all
 unique values)
-- Finally, convert all numerical features to `float32` to reduce the computational
-cost. 
-
 This ensures that each column has the correct data type before encoding.
+
+Additionally, all numerical features are converted to `float32` to reduce the
+computational cost. 
 
 ### Phase 2: Column dispatch and encoding
 
 After cleaning, the `TableVectorizer` categorizes columns and dispatches them
 to the appropriate transformer based on their data type and cardinality. Categorical
-columns with a cardinality (i.e., number of unique values) larger than 40 (by
-default)) are 
+columns with a cardinality (i.e., number of unique values) larger than 40 are 
 considered "high cardinality", while all other categorical columns are "low 
 cardinality".
 
@@ -106,7 +107,9 @@ from skrub import TableVectorizer, DatetimeEncoder, StringEncoder
 from sklearn.preprocessing import OneHotEncoder
 
 # Create custom transformers
+# Add periodic features with the DatetimeEncoder
 datetime_enc = DatetimeEncoder(periodic_encoding="circular")
+# Change the number of components of the StringEncoder
 string_enc = StringEncoder(n_components=10)
 
 # Pass them to TableVectorizer
@@ -115,10 +118,6 @@ tv = TableVectorizer(
     high_cardinality=string_enc,
 )
 ```
-
-This allows to, for example, change the number of parameters in the `StringEncoder`, 
-provide a custom datetime format for the `DatetimeEncoder`, or use a completely 
-different encoder such as the `TextEncoder`. 
 
 ### Applying the `TableVectorizer` only to a subset of columns
 By default, the `TableVectorizer` is applied to all the columns in the given 
@@ -149,7 +148,7 @@ df
 
 We can use `ApplyToCols` and the skrub selectors as follows: 
 ```{python}
-tv = ApplyToCols(TableVectorizer(), cols=s.all()-s.glob("*_id"))
+tv = ApplyToCols(TableVectorizer(), exclude_cols=["num_id", "str_id"])
 df_enc = tv.fit_transform(df)
 
 print("Original")
@@ -189,10 +188,10 @@ Important notes about `specific_transformers`:
 - The transformer must be able to handle the column's current data type and values
 - For more complex transformations, consider using `ApplyToCols` and the selectors API
 (explained in the previous chapters), or the skrub
-[Data Ops](https://skrub-data.org/stable/auto_examples/data_ops/11_data_ops_intro.html).
+[Data Ops](https://skrub-data.org/stable/data_ops.html).
 
-## Conclusions
-The `TableVectorizer` is a self-contained feature engineering engine that 
+## What we have seen in this chapter 
+The `TableVectorizer` is a self-contained feature engineering transformer that 
 
 1. Cleans your data to have consistent representation of data types and null values,
 and

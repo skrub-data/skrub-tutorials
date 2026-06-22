@@ -1,5 +1,5 @@
 ---
-title: "TableVectorizer: All preprocessing in one place"
+title: "All the pre-processing in one place: `TableVectorizer`"
 format:
     html:
         toc: true
@@ -17,6 +17,14 @@ Convert any mixed-type dataframe into numeric features for ML:
 - Categorical features need to be encoded into features
 - Datetime features can be transformed into more informative features
 - Data should be sanitized
+
+## The solution: `TableVectorizer`
+The `TableVectorizer` is a transformer that 
+
+1. Cleans your data to have consistent representation of data types and null values,
+and
+2. Encodes all columns depending on their data type and characteristics using good
+defaults. 
 
 ## A toy example
 ```{python}
@@ -41,7 +49,6 @@ The `TableVectorizer` starts by cleaning:
 - Parse datetime columns (with custom formats)
 - Detect numbers written as strings ("123.45")
 - Handle missing value markers ("N/A", "?")
-- Type consistency for categories
 - Drop uninformative columns
 - Convert to `float32` for efficiency
 
@@ -65,9 +72,7 @@ After cleaning, columns are routed to appropriate transformers:
 tv = TableVectorizer(cardinality_threshold=10)
 ```
 
-## Customizing Parameters
-
-### Data cleaning parameters:
+## Data cleaning parameters:
 
 ```{python}
 tv = TableVectorizer(
@@ -78,7 +83,7 @@ tv = TableVectorizer(
 )
 ```
 
-### Customizing Transformers {.smaller}
+## Customizing Transformers {.smaller}
 
 ```{python}
 from skrub import DatetimeEncoder, StringEncoder
@@ -94,23 +99,38 @@ tv = TableVectorizer(
 )
 ```
 
-More about the encoders in Chapter 4!
-
-### Applying to Subset of Columns
+## Applying to a subset of columns
 
 ```{python}
+import pandas as pd
 from skrub import ApplyToCols
 import skrub.selectors as s
 
-# Don't transform ID columns
-tv = ApplyToCols(
-    TableVectorizer(),
-    cols=s.all() - s.glob("*_id")
+df = pd.DataFrame(
+    {
+        "metric_1": [10.5, 20.3, 30.1, 40.2],
+        "metric_2": [5.1, 15.6, None, 35.8],
+        "metric_3": [1.1, 3.3, 2.6, .8],
+        "num_id": [101, 102, 103, 104],
+        "str_id": ["A101", "A102", "A103", "A104"],
+        "description": ["apple", None, "cherry", "date"],
+        "name": ["Alice", "Bob", "Charlie", "David"],
+    }
 )
+df
 ```
 
+## Applying to a subset of columns {auto-animate="true"}
+We can use `ApplyToCols` and the skrub selectors as follows: 
+```{python}
+tv = ApplyToCols(TableVectorizer(), exclude_cols=["num_id", "str_id"])
+df_enc = tv.fit_transform(df)
 
-More about selectors in Chapter 3!
+print("Original")
+print(df[["num_id", "str_id"]])
+print("\nEncoded")
+print(df_enc[["num_id", "str_id"]])
+```
 
 ## Fine-Grained Control: specific_transformers
 
@@ -125,7 +145,7 @@ Columns in `specific_transformers` are forwarded directly to the transformer wit
 any cleaning or parsing. 
 
 
-## What to remember
+## What we have seen in this chapter 
 
 - One object -- the `TableVectorizer` -- handles preprocessing and feature engineering
 - Types are detected and encoded automatically

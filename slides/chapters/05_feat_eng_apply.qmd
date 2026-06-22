@@ -1,5 +1,5 @@
 ---
-title: "Applying transformers to columns"
+title: "Column-specific transformers"
 format:
     html:
         toc: true
@@ -11,46 +11,36 @@ format:
 
 ---
 
-## Why Column-Specific Transformers?
 
-Different columns need different transformations:
-
-- `StandardScaler` works only on numeric columns
-- `OneHotEncoder` works only on categorical columns
-- Some columns need no transformation
-
-## Selection Operations
-
-`SelectCols` and `DropCols` filter columns based on rules:
+## Why Column-Specific Transformations?
+Different columns must be handled in different ways. 
 
 ```{python}
 from skrub import SelectCols, DropCols
 import pandas as pd
 
 df = pd.DataFrame({
-    "date": ["03 January 2023", "04 February 2023"],
-    "city": ["Paris", "London"],
-    "values": [10, 20]
+    "user_id": [0, 1, 2],
+    "date": ["03 January 2023", "04 February 2023","14 April 2023" ],
+    "city": ["Paris", "London", "Rome"],
+    "metric_1": [10, 20, 30],
+    "metric_2": [3, 22, 45]
 })
+
 ```
 
-## Selection Operations {auto-animate="true"}
-```{python}
-# By name
-SelectCols("date").fit_transform(df)
-```
+## Why Column-Specific Transformations?
 
-## Selection Operations {auto-animate="true"}
-```{python}
-DropCols("date").fit_transform(df)
-```
+- Some transformers (e.g., the `StandardScaler`) work only on numeric columns
+- Some transformers (e.g., the `OneHotEncoder`) work only on categorical columns
+- Different columns with the same dtype may need to be treated differently (e.g.,
+one has outliers and requires a `RobustScaler`)
+- Some transformations only make sense for a subset of the columns (e.g., parsing
+datetimes)
 
-More advanced selection rules in the next chapter! 
-
-## Applying Transformers to Columns
-
+## Applying transformers to columns with ApplyToCols
 `ApplyToCols` applies a transformer to columns that can be selected by name, or
-according to specific rules. 
+with filters. 
 
 ```{python}
 from skrub import ApplyToCols
@@ -69,17 +59,68 @@ transformed
 ![](./images/ex_ApplyToFrame.png)
 
 ## Exclude specific columns
-For example, scale all numeric columns except for an integer ID. 
-
-```{python}
-df_id = pd.DataFrame(dict(id=[1000, 2000], A=[-10.0, 10.0], B=[-10.0, 0.0], C=[19, 20]))
-df_id
-```
+For example, apply the `StandardScaler` only to the `metric_*` columns, excluding
+the column `user_id`.
 
 ```{python}
 from sklearn.preprocessing import StandardScaler
-exc_scaler = ApplyToCols(StandardScaler(), exclude_cols="id")
-exc_scaler.fit_transform(df_id)
+
+scaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols="user_id")
+scaler.fit_transform(df)
+```
+
+## Chaining Transformers
+
+Use a scikit-learn `Pipeline to concatenate multiple transformers, when
+wrapped in `ApplyToCols`:
+
+```{.python}
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder
+
+select = SelectCols("department-name")
+encode = ApplyToCols(OneHotEncoder(sparse_output=False))
+reduce = ApplyToCols(PCA(n_components=2))
+
+transform = make_pipeline(select, encode, reduce)
+```
+
+
+::: {.callout-tip}
+
+Remember that columns that are not selected pass through without any change. 
+
+:::
+
+## Example: convert to datetime and encode
+
+```{python}
+from skrub import ToDatetime, DatetimeEncoder
+from sklearn.pipeline import Pipeline
+
+encode_datetime = Pipeline(
+    ApplyToCols(ToDatetime(), cols="date"), ApplyToCols(DatetimeEncoder(), cols="date")
+)
+encode_datetime.fit_transform(df)
+```
+
+
+## Order Matters! {.smaller}
+
+Transformers should be ordered carefully:
+
+```{.python}
+# Encode first, then scale
+transform_1 = make_pipeline(
+    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),
+    ApplyToCols(StandardScaler(), cols=s.numeric())
+)
+
+# vs. Scale first, then encode
+transform_2 = make_pipeline(
+    ApplyToCols(StandardScaler(), cols=s.numeric()),
+    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
+)
 ```
 
 
@@ -108,6 +149,34 @@ from skrub import ApplyToCols, ToDatetime
 with_reject = ApplyToCols(ToDatetime(), allow_reject=False)
 result = with_reject.fit_transform(df)
 ```
+
+## Selection Operations
+
+`SelectCols` and `DropCols` filter columns based on rules:
+
+```{python}
+from skrub import SelectCols, DropCols
+import pandas as pd
+
+df = pd.DataFrame({
+    "date": ["03 January 2023", "04 February 2023"],
+    "city": ["Paris", "London"],
+    "values": [10, 20]
+})
+```
+
+## Selection Operations {auto-animate="true"}
+```{python}
+# By name
+SelectCols("date").fit_transform(df)
+```
+
+## Selection Operations {auto-animate="true"}
+```{python}
+DropCols("date").fit_transform(df)
+```
+
+More advanced selection rules in the next chapter! 
 
 ## Build your own `SingleColumnTransformer` {.smaller}
 Consider an example like this: 
@@ -155,54 +224,12 @@ parser.fit_transform(df)
 ```
 
 
-## Chaining Transformers
-
-Use scikit-learn pipelines to concatenate multiple transformers, even when
-wrapped in `ApplyToCols`:
-
-```{.python}
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import OneHotEncoder
-
-select = SelectCols("department-name")
-encode = ApplyToCols(OneHotEncoder(sparse_output=False))
-reduce = ApplyToCols(PCA(n_components=2))
-
-transform = make_pipeline(select, encode, reduce)
-```
-
-
-::: {.callout-tip}
-
-Remember that columns that are not selected pass through without any change. 
-
-:::
-
-
-
-## Order Matters! {.smaller}
-
-Transformers should be ordered carefully:
-
-```{.python}
-# Encode first, then scale
-transform_1 = make_pipeline(
-    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),
-    ApplyToCols(StandardScaler(), cols=s.numeric())
-)
-
-# vs. Scale first, then encode
-transform_2 = make_pipeline(
-    ApplyToCols(StandardScaler(), cols=s.numeric()),
-    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
-)
-```
 
 ## What we have seen in this chapter
 
-- `SelectCols` / `DropCols`: Filter columns with the `cols` parameter
 - `ApplyToCols`: Apply a transformer to columns selected with `cols`, exclude with
 `exclude_cols`
-- `SingleColumnTransformer`: Create a transformer with custom rules
-- `allow_reject`: Reject columns that cannot be treated
 - Chain transformers with scikit-learn pipelines
+- `allow_reject`: Reject columns that cannot be treated
+- `SelectCols` / `DropCols`: Filter columns with the `cols` parameter
+- `SingleColumnTransformer`: Create a transformer with custom rules

@@ -15,6 +15,20 @@ In this chapter, we will show how we use the skrub `TableReport` to explore
 tabular data. We will use the Adult Census dataset as our example table, and 
 perform some exploratory analysis to learn about the characteristics of the data. 
 
+## Why do we need to do data exploration? {.smaller}
+Before any kind of data processing or usage, we need to know what we are dealing with. 
+
+Useful information includes:
+
+- The size of the dataset. 
+- The data types and names of the columns. 
+- How values are distributed in each column. 
+- Whether missing values are present, in what measure and where. 
+- Which features are discrete/categorical, and how many categories there are.
+- Whether columns are strongly correlated with each other. 
+...
+
+## Exploring data with Pandas
 First, let's load the dataset.
 
 ```{python}
@@ -23,18 +37,6 @@ import pandas as pd
 data =  pd.read_csv("../data/adult_census/data.csv")
 target =  pd.read_csv("../data/adult_census/target.csv")
 ```
-
-Now that we have a dataframe we can work with, here is a list of features of the 
-data we would like to find out:
-
-- The size of the dataset. 
-- The data types and names of the columns. 
-- The distribution of values in the columns. 
-- Whether missing values are present, in what measure and where. 
-- Which features are discrete/categorical, and their cardinality.
-- Which columns are strongly correlated with each other. 
-
-## Exploring data with Pandas tools
 Let's first explore the data using Pandas only.
 
 We can get an idea of the content of the table by printing the first few lines, 
@@ -44,27 +46,25 @@ which gives an idea of the datatypes and the columns we are dealing with.
 data.head(5)
 ```
 
-If we want to have a simpler view of the datatypes in the dataframe, we must 
-use `data.info()`:
+We can use `data.info()` to find the shape of the dataframe, which dtypes are 
+involved, the number of missing values and the size in memory of the dataframe. 
 
 ```{python}
 data.info()
 ```
 
-With `.info()` we can find out the shape of the dataframe (the number of rows 
-and columns), the datatype and the number of non-null values for each column. 
-
 We can also get a richer summary of the data with the `.describe()` method:
-
-```{python}
-data.describe(include="all")
-```
 
 This gives us useful information about all the features in the dataset. Among 
 others, we can find the number of unique values in each column, various statistics
 for the numerical columns and the number of null values.
 
-## Exploring data with the `TableReport`
+```{python}
+data.describe(include="all")
+```
+
+
+## Exploring data with the skrub `TableReport`
 Now, let's create a TableReport to explore the dataset.
 ```{python}
 from skrub import TableReport
@@ -120,11 +120,6 @@ Stat columns can also be sorted, for example to quickly identify which columns
 contain the most nulls, or have the largest cardinality (number of unique values).
 
 
-::: {.callout}
-### Filters
-Pre-made column filters are also available, allowing to select columns by dtype 
-or other characteristics. Filters are shared across tabs. 
-:::
 
 ### The "Distributions" tab
 ```{python}
@@ -180,6 +175,23 @@ In this example, we can see that "education-num" and "education" have perfect
 correlation, which means that one of the two columns can be dropped without losing
 information.
 
+### Filtering columns
+The `TableReport` includes various column filters to display only specific columns.
+Filters can select columns by dtype (for example, to show only numeric columns), 
+or by other characteristics (like the number of unique values, or the presence
+of missing values). 
+
+It is also possible to create custom filters to select columns based on a specific
+use case:
+
+```{python}
+my_filter = {"only_education": ["education", "education-num"]}
+
+TableReport(data, column_filters=my_filter)
+```
+
+
+Skrub selectors can be used for that (more on that later).
 
 ## Exploring the target variable
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
@@ -195,41 +207,51 @@ TableReport(target)
 
 ## Working with big tables
 
-
 Plotting and measuring the column correlations are expensive operations and may
-take a long time, so when the dataframe under study is large it may be more
-convenient to skip them for quicker development. 
+take a long time for large tables; in these cases it may be 
+beneficial to disable these features when developing and enabling them only when
+the dataframe has been processed. 
 
-By default, both operations are skipped when a table contains more than 30 columns, 
-and this threshold can be changed with the skrub config parameters 
-`table_report_plots_threshold` and `table_report_plots_associations_threshold`. 
-
-Alternatively, it is possible to set the behavior for a single report by changing
-the `plot_distributions` and `compute_associations` parameters to either `True`
-(to always execute the operation regardless of column number) or `False` (to 
-disable entirely the feature). 
-
-If plotting or associations are disabled, an informative message is shown:
+By default, both features are disabled when the given dataframe has more than 30
+columns, but this behavior can be changed by setting the respective parameters
+to either `True` (to always plot/compute associations) or `False (to disable 
+the features entirely):
 
 ```{python}
 TableReport(
-    data, compute_associations=False, plot_distributions=False, open_tab="distributions"
+    data, plot_distributions=False, compute_associations=False, open_tab="distributions"
 )
 ```
 
+
+It is also possible to change the column threshold from 30 to a different value
+using the skrub configuration and the `table_report_plots_threshold` and 
+`table_report_associations_threshold` parameters: 
+
+```python
+from skrub import set_config
+
+set_config(table_report_plots_threshold=10)
+```
+
+As with all other skrub configuration parameters, a new default value can be set
+by using the proper environemntal variables. 
 More detail on the skrub configuration is reported in the 
 [User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
 
 ## Exporting the `TableReport` 
-The `TableReport` can be saved on disk as an HTML. 
+A generated `TableReport` can be exported in various ways depending on the use case.
+
+The entire report can be exported as a standalone HTML page that includes all the 
+features:
 ```{.python}
 TableReport(data).write_html("report.html")
 ```
 Then, the report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
 
-The report can also be exported in JSON format, so that it can be forwarded to 
-other programs that may benefit from the TableReport artifacts and statistics. 
+Alternatively, the report can be exported in JSON format: this allows to forward 
+it to other programs for programmatic access to the statistics gathered by the report. 
 
 ```python
 json_str = TableReport(data).json()
@@ -238,12 +260,32 @@ with open("report.json", "w") as fp:
     fp.write(json_str)
 ```
 
-
 ::: {callout-important}
 
 The JSON exported by the report will contain all the distribution plots in SVG 
 format, which may not be necessary for some applications. To avoid exporting the
 plots, set `plot_distributions=False`. 
+
+:::
+
+Finally, the report can be exported in summarized form as a Markdown-formatted string,
+which can be useful to share as a message, printed on a command line, or fed to 
+agents ask for insights. 
+
+```python
+
+md_str = TableReport(data).markdown()
+
+with open("report.md", "w") as fp:
+    fp.write(md_str)
+```
+
+
+::: {.callout-warning}
+
+The `TableReport` does not do any sanitization of the input data, and prints out
+column names and most frequent values as part of the output. Do not feed the content
+of the report to an agent if the dataset is large, or if its content is not trusted.
 
 :::
 
@@ -257,7 +299,7 @@ from skrub import patch_display, unpatch_display
 
 # replace the default pandas repr 
 patch_display()
-data
+data.head()
 ```
 
 To disable, use `unpatch_display`:
@@ -267,7 +309,17 @@ data
 ```
 
 
-## Conclusions
+::: {.callout-warning}
+
+After patching, calling methods like `df.head()` will generate the report **only 
+on the relative few lines of the dataframe**, thus making stats and distributions
+unreliable. 
+
+:::
+
+
+
+## What we have seen in this chapter {.smaller}
 
 
 In this chapter we have learned how the `TableReport` can be used to speed up 
@@ -279,9 +331,8 @@ We covered:
 - Exploring column statistics, value distributions, and associations visually
 - Detecting nulls, outliers, and highly correlated columns at a glance
 - Filtering columns by type or characteristics using built-in filters
-- Saving and sharing interactive reports as standalone HTML files
+- Saving and sharing reports as HTML, JSON, and Markdown files
 - Adjusting `TableReport` settings for large datasets to optimize performance
 
-In the
-next chapter, we will find out how to address some of the possible problems using 
-the skrub `Cleaner`.
+In the next chapter, we will find out how to address some of the possible problems 
+using the skrub `Cleaner`.

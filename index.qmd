@@ -1,11 +1,10 @@
 ---
-title: "Inria Academy - skrub like a pro"
+title: "Skrub - machine learning with dataframes"
 author: "Riccardo Cappuzzo"
 ---
 
-This is the website for the 
-[Inria Academy course](https://www.inria-academy.fr/formation/skrub-like-a-pro-clean-prepare-and-transform-your-data-faster/)
-on the [skrub package](https://skrub-data.org/stable/): it contains all the material
+This website hosts the material used for teaching how to use 
+the [skrub package](https://skrub-data.org/stable/): it contains all the material
 used for the course, including the datasets and exercises used during the session. 
 
 Choose your learning format:
@@ -14,7 +13,8 @@ Choose your learning format:
 
 ::: {.g-col-6}
 ## 📖 Book Format
-Complete course material in book format with detailed explanations.
+Complete course material in book format with detailed explanations. The book 
+includes more detail that isn't covered in the slides.  
 
 [Access the Book →](book/index.html){.btn .btn-primary}
 :::
@@ -29,13 +29,17 @@ Slide-based presentation for instructor-led sessions.
 :::
 
 ## 💻 Interactive Exercises
-Try the exercises in your browser with JupyterLite (no installation required).
+Try the exercises in your browser with JupyterLite (no installation required). 
 
 [Launch JupyterLite →](jupyterlite/lab/){.btn .btn-success}
 
+If you want to run the code locally, refer to the [Preparation and setup](#prepration-and-setup)
+section for detailed instructions. 
+
+
 ## Structure of the course
 The course covers the main features of skrub, from data exploration to pipeline 
-construction, with the notable exclusion of the Data Ops.
+construction, with a short discussion about Data Ops.
 
 Each chapter includes a section that describes how a specific feature may assist
 in building a machine learning pipeline, along with practical code examples. 
@@ -45,7 +49,7 @@ These exercises are made available in `content/exercises`, as well as at the end
 of the respective lesson in `content/notebooks`. 
 
 The content of the book is split in sections, and each section includes a "final 
-quiz" that covers the subjects covered up to that point. 
+quiz" that covers the subjects covered up to that point.
 
 # Prepration and setup
 First of all, clone the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
@@ -64,22 +68,6 @@ exercises are in `content/exercises`.
 :::
 
 
-### Using pixi
-The easiest way to set up the environment is by installing and
-using [pixi](https://pixi.sh/latest/installation/). Follow the platform-specific 
-instructions in the link to install pixi, then open a terminal window in the 
-folder of the repository you cloned.
-
-Run 
-```sh
-pixi install
-```
-to create the environment, followed by 
-
-```sh
-pixi run lab
-``` 
-to start a Jupyter lab instance. 
 
 ### Using `pip`
 Create the and activate the environment:
@@ -133,3 +121,18 @@ Start the Jupyter lab instance:
 jupyter lab
 ```
 
+### Using pixi
+Follow the platform-specific 
+instructions in the link to install [pixi](https://pixi.sh/latest/installation/), 
+then open a terminal window in the folder of the repository you cloned.
+
+Run 
+```sh
+pixi install
+```
+to create the environment, followed by 
+
+```sh
+pixi run lab
+``` 
+to start a Jupyter lab instance. 

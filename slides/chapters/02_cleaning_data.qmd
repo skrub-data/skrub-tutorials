@@ -53,7 +53,8 @@ First, let's look at the datatypes detected by pandas:
 df.info()
 ```
 
-Null values were not detected properly, the datetime wasn't parsed as such.
+Missing values were not detected properly ("?" was treated as a string), 
+the datetime wasn't parsed as datetimes.
 
 ## Cleaning with pandas {.smaller}
 ```{python}
@@ -96,7 +97,7 @@ df_clean
 ```
 
 
-## The alternative: `skrub.Cleaner`
+## The alternative: `skrub.Cleaner` {auto-animate="true"}
 The cleaned version of the dataframe is now marking missing values
 correctly, and that the datetime column has been parsed:
 
@@ -112,9 +113,17 @@ df_clean.info()
 4. It converts columns to string, unless they have an informative type
 5. It parses strings like ` "1234.6"` to numbers
 
-## Note on intended usage
+## Note on intended usage 
+
+::: {.callout-tip}
+
 The `Cleaner` is intended to be used early on when pre-processing, so it avoids
 altering the input dataframe too much.
+
+The `Cleaner` tries to move from less-informative dtypes (e.g., generic strings)
+to more-informative types (e.g., datetimes). 
+
+:::
 
 The assumption is that complex transformations are done in later steps by the user.
 
@@ -158,4 +167,3 @@ drop.fit_transform(df2)
 - It detects and possibly removes uninformative columns. 
 - It can be applied directly to any dataframe.
 
-# Time for the quiz!

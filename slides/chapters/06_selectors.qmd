@@ -20,22 +20,10 @@ import skrub.selectors as s
 ```
 
 Selectors are used throughout the skrub package:
-- `SelectCols`/`DropCols`
 - `ApplyToCols`
+- `SelectCols`/`DropCols`
 - `.skb.apply()`
 - `TableReport`
-
-## Selecting by Data Type
-
-Available selectors:
-
-- `.numeric()`: Numeric columns (int or float)
-- `.integer()`: Integer columns only
-- `.float()`: Floating-point columns
-- `.string()`: String columns
-- `.categorical()`: Categorical columns
-- `.any_date()`: Date or datetime columns
-- `.boolean()`: Boolean columns
 
 ## Example: Select String Columns
 
@@ -54,21 +42,17 @@ df = pd.DataFrame({
 SelectCols(cols=s.string()).fit_transform(df)
 ```
 
+## Selecting by Data Type
 
-## Example: select/drop columns
+Available selectors:
 
-`selectors` include their own `select` method, which takes a dataframe and selector:
-
-```{python}
-df = pd.DataFrame({
-    "age": [25, 30, 35],
-    "name": ["Alice", None, "Charlie"],
-    "city": ["NYC", "LA", "Chicago"]
-})
-
-selector = s.string()
-s.select(df, selector)
-```
+- `.numeric()`: Numeric columns (int or float)
+- `.integer()`: Integer columns only
+- `.float()`: Floating-point columns
+- `.string()`: String columns
+- `.categorical()`: Categorical columns
+- `.any_date()`: Date or datetime columns
+- `.boolean()`: Boolean columns
 
 
 ## Selecting by Characteristics
@@ -79,23 +63,12 @@ s.select(df, selector)
 - `.has_dtype()`: Columns that have the provided dtype
 
 ```{python}
-df = pd.DataFrame({
-    "age": [25, 30, 35],
-    "name": ["Alice", None, "Charlie"],
-    "city": ["NYC", "LA", "Chicago"]
-})
-SelectCols(cols=s.has_nulls()).fit_transform(df)
-```
-
-## Example: Selecting by dtype
-```{python}
 import polars as pl
 
 df = pl.DataFrame({"A": [[1,2], [1,2,3]], "B": ["A", "B"]})
 df.dtypes
 ```
 
-We want to select list columns:
 ```{python}
 sel = s.has_dtype(pl.List)
 SelectCols(cols=sel).fit_transform(df)
@@ -147,11 +120,6 @@ s.all() - "datetime-col"
 
 ```
 
-
-::: {.notes}
-df = pd.DataFrame({"a": ["a", "b"], "date_1": [2024, 2025], "date_str": ["Monday", "Tuesday"]})
-:::
-
 ## Extracting Selected Columns
 
 Get the list of selected columns:
@@ -186,21 +154,6 @@ df = pd.DataFrame(
 )
 
 selector = s.filter(more_nulls_than, threshold=0.5)
-s.select(df, selector)
-```
-
-## Custom Selectors: Filter by Name
-
-```{python}
-df = pd.DataFrame(
-    {
-        "patient_id": [101, 102, 103],
-        "metric_1": [0.3, 0.3, 0.6],
-        "metric_2": [3, 5, 10],
-    }
-)
-
-selector = s.filter_names(lambda name: name.startswith("metric_"))
 s.select(df, selector)
 ```
 

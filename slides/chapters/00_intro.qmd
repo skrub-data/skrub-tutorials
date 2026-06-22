@@ -13,22 +13,12 @@ execute:
     echo: true
 ---
 
-## Structure of the tutorial
-- Two ways to follow the course: a book and a set of slide decks
-- The material is split in sections that contain two or more chapters
-- Each section ends with a Quiz section, and a coding exercise
-
-## Logistics
-- If I go too fast, stop me! 
-- Q&A time at the end of the chapter
-- You can ask in chat and I will answer later 
-- Break after section 3
-
 ##  A world without skrub {.smaller}
 
 Let's consider a world where skrub does not exist, and all we can do is use 
 pandas and scikit-learn to prepare data for a machine learning model.
 
+You may already be living in such a world. 
 
 ## Load and explore the data
 ```{python}
@@ -62,7 +52,7 @@ We need to:
 - Impute some missing values in the `gender` column.
 - Encode convert categorical features into numerical features. 
 - Convert the column `date_first_hired` into numerical features.
-- Scale numerical features. 
+- Scale numerical features (we'll be using a linear model).
 - Evaluate the performance of the model. 
 
 ## Step 1: Convert date features to numerical {.smaller}
@@ -116,9 +106,21 @@ X_encoded_imputed = pd.DataFrame(
 )
 ```
 
+## Step 3: Impute missing values {auto-animate="true"}
+
+::: {.callout-important}
+
+Null values are important! The fact that a value is missing is by itself useful 
+information, and the pattern of missingness is also important.
+
+For this reason, skrub transformers keep missing values as they are to retain the 
+information content. 
+
+:::
+
 ## Step 4: Scale numerical features {.smaller}
 
-Scale numerical features for the Ridge regression model.
+Scale numerical features for the `RidgeCV` regression model.
 
 ```{python}
 from sklearn.preprocessing import StandardScaler
@@ -133,7 +135,7 @@ X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
 
 ## Step 5: Train Ridge model with cross-validation {.smaller}
 
-Train a `Ridge` regression model and evaluate with cross-validation.
+Train a `RidgeCV` regression model and evaluate with cross-validation.
 
 ```{python}
 #| warning: false
@@ -166,6 +168,37 @@ print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 - `pd.get_dummies` was executed on the full dataframe, rather than only on the 
 training split, leading to data leakage. 
 
+## Small intermission: data leakage
+
+```{python}
+from sklearn.impute import SimpleImputer
+
+df = pd.DataFrame({
+    "value": [1, 3, None, 5, 10, None, 1000, 5]
+})
+
+df_train = df[:4]
+df_test = df[5:]
+
+```
+
+
+## Small intermission: data leakage {auto-animate="true"}
+What happens if you try to find the mean over all data? 
+```{python}
+imputer = SimpleImputer(strategy="mean").set_output(transform="pandas")
+df_imputed = imputer.fit_transform(df)
+print(df)
+print(df_imputed)
+```
+
+The proper way to do it: fit the transformer on the training data, transform 
+the training with the same mean:
+
+```{python}
+print(imputer.fit(df_train).transform(df_test))
+```
+
 ## Waking up from a nightmare {.smaller}
 Thankfully, we can `import skrub`:
 ```{python}
@@ -189,7 +222,7 @@ print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 
 ## What we saw in this chapter
 - We built a predictive pipeline using traditional tools
-- We saw some possible shortcomings 
+- We saw some possible difficulties 
 - We tested skrub's `tabular_pipeline` 
 
 ## Course Roadmap
