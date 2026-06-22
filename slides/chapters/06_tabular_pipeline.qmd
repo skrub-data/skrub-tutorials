@@ -54,17 +54,17 @@ model_reg = tabular_pipeline("regression")
 
 ## For Linear Models
 
-Configures pipeline with:
+The pipeline is configured with:
 
 - `TableVectorizer` optimized for linear models
     - `DatetimeEncoder` with spline-encoded datetimes
 - `SimpleImputer` (linear models need this)
 - `SquashingScaler` for robust scaling
-- Your estimator (`LogisticRegression`, `Ridge`, etc.)
+- The estimator (`LogisticRegression`, `Ridge`, etc.)
 
 ## For Tree-Based Models {.smaller}
 
-Configures pipeline with:
+The pipeline is configured with:
 
 - `TableVectorizer` optimized for trees
   - Low-cardinality: Keep as categorical (HistGB) or ordinal (RandomForest)
@@ -72,14 +72,14 @@ Configures pipeline with:
   - No spline encoding (unnecessary)
 - No scaling (trees don't need scaling)
 - No imputation (trees don't need imputation)
-- Your estimator
+- The estimator
 
 ## When to Use Which Approach
 
 **Use `tabular_pipeline`**:
 - Quick baseline for benchmarking
 - Starting point for experimentation
-- Don't need custom preprocessing
+- No need for custom preprocessing
 
 **Use manual pipeline**:
 - Fine-grained control needed
@@ -133,5 +133,3 @@ That's it!
 - `tabular_pipeline` provides smart defaults
 - Different configurations for different model types
 - Always use pipelines to prevent data leakage
-
-## Time for the quiz!

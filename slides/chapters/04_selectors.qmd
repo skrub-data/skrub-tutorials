@@ -103,17 +103,11 @@ to combine selectors
 # Inverse: NOT numeric
 ~s.numeric()
 
-# OR: datetime columns OR string columns
-s.any_date() | s.string()
+# OR: datetime columns OR string columns OR the "date" column
+s.any_date() | s.string() | "date"
 
 # AND: string columns without nulls
 s.string() & ~s.has_nulls()
-
-# XOR: either string, or name starts with "date_" but not both
-s.string() ^ s.glob("date_*")
-
-# Include: string columns OR col "date"
-s.string() | "date"
 
 # Exclude: all columns except "datetime-col"
 s.all() - "datetime-col"

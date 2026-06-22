@@ -12,8 +12,9 @@ format:
 ---
 
 ## Under the hood of the `TableVectorizer` and `tabular_pipeline`
-Both the `TableVectorizer` and the `tabular_pipeline` rely on various skrub encoders
-to feature-engineer the given table:
+Both the `TableVectorizer` and the `tabular_pipeline` rely on skrub encoders
+do feature engineering:
+
 - categorical features need to be converted into numbers
 - datetime features need to be split in datetime parts
 - numeric feature need to be scaled
@@ -118,18 +119,6 @@ encoded = ApplyToCols(encoder).fit_transform(X)
 **Pros**: Intuitive, works well for few categories
 **Cons**: Explodes with many categories, creates sparse matrices
 
-### Ordinal Encoding
-
-Assigns sequential numbers:
-
-```{python}
-pd.Categorical(X["color"]).codes
-# red=0, blue=1, etc.
-```
-
-**Pros**: Memory efficient
-**Cons**: Introduces artificial ordering, lacking context
-
 ### The Challenge: High-Cardinality Features
 
 What if you have 1000+ unique values (IDs, free text)?
@@ -165,9 +154,8 @@ from skrub import TextEncoder
 encoder = TextEncoder()
 encoded = ApplyToCols(encoder).fit_transform(X)
 ```
-
-**Pros**: Captures semantic meaning, works very well on text
-**Cons**: Very slow, requires heavy dependencies
+- Captures semantic meaning, works very well on text
+- Very slow on CPU, requires sentence-transformers (heavy dependency)
 
 ### Encoder Comparison {.smaller}
 

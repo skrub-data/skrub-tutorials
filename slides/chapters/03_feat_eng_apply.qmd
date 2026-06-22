@@ -38,7 +38,7 @@ one has outliers and requires a `RobustScaler`)
 - Some transformations only make sense for a subset of the columns (e.g., parsing
 datetimes)
 
-## Applying transformers to columns with ApplyToCols
+## Applying transformers to columns with `ApplyToCols`
 `ApplyToCols` applies a transformer to columns that can be selected by name, or
 with filters. 
 
@@ -99,7 +99,8 @@ from skrub import ToDatetime, DatetimeEncoder
 from sklearn.pipeline import Pipeline
 
 encode_datetime = Pipeline(
-    ApplyToCols(ToDatetime(), cols="date"), ApplyToCols(DatetimeEncoder(), cols="date")
+    ApplyToCols(ToDatetime(), cols="date"), 
+    ApplyToCols(DatetimeEncoder(), cols="date")
 )
 encode_datetime.fit_transform(df)
 ```

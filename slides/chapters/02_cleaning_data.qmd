@@ -129,6 +129,17 @@ The assumption is that complex transformations are done in later steps by the us
 
 This is different from what is done by the `TableVectorizer`.
 
+## Data cleaning parameters:
+
+```{python}
+cleaner = Cleaner(
+    drop_null_fraction=0.9,  # Drop columns 90% null
+    drop_if_constant=True,   # Drop constant columns
+    datetime_format="%Y-%m-%d",  # Specific datetime format
+    null_strings=["UKN", "unknown", "missing"] # Custom strings to mark null values
+)
+```
+
 ## Under the hood: `DropUninformative` {.smaller}
 The `Cleaner` uses heuristics to detect columns that are unlikely to bring information useful to a ML model. 
 

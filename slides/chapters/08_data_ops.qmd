@@ -16,6 +16,7 @@ format:
 ::: {.incremental}
 - Extend the `scikit-learn` machinery to multi-table operations 
 - Take care of data leakage
+- Store stateful objects in the pipeline (including encoders and trasformers)
 - Track all operations with a computational graph (a *Data Ops plan*)
 - Allow tuning any operation in the plan
 - Can be persisted and shared easily 

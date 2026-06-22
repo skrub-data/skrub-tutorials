@@ -73,15 +73,11 @@ tv = TableVectorizer(cardinality_threshold=10)
 ```
 
 ## Data cleaning parameters:
-
-```{python}
-tv = TableVectorizer(
-    drop_null_fraction=0.9,  # Drop columns 90% null
-    drop_if_constant=True,   # Drop constant columns
-    datetime_format="%Y-%m-%d",  # Specific datetime format
-    null_strings=["UKN", "unknown", "missing"] # Custom strings to mark null values
-)
-```
+Same as the `Cleaner`:
+- `drop_null_fraction`
+- `drop_if_constant`
+- `datetime_format`
+- `null_strings`
 
 ## Customizing Transformers {.smaller}
 
@@ -121,7 +117,7 @@ df
 ```
 
 ## Applying to a subset of columns {auto-animate="true"}
-We can use `ApplyToCols` and the skrub selectors as follows: 
+We can use `ApplyToCols` and the skrub selectors: 
 ```{python}
 tv = ApplyToCols(TableVectorizer(), exclude_cols=["num_id", "str_id"])
 df_enc = tv.fit_transform(df)
@@ -138,6 +134,7 @@ print(df_enc[["num_id", "str_id"]])
 from sklearn.preprocessing import OrdinalEncoder
 
 specific = [(OrdinalEncoder(), ["occupation"])]
+specific = [("passthrough", ["num_id"])]
 tv = TableVectorizer(specific_transformers=specific)
 ```
 
@@ -151,4 +148,4 @@ any cleaning or parsing.
 - Types are detected and encoded automatically
 - Configurable cleaning and encoding
 - Smart defaults based on column characteristics
-- Easy to customize per-column behavior
+- Per-column behavior can be set with `ApplyToCols`
