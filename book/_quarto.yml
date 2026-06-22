@@ -33,14 +33,13 @@ book:
         - chapters/quiz_02.qmd
     - part: "Feature Engineering with skrub"
       chapters:
-        - chapters/05_feat_eng_numerical.qmd
-        - chapters/06_feat_eng_datetimes.qmd
-        - chapters/07_feat_eng_categorical.qmd
+        - chapters/05_table_vectorizer.qmd
+        - chapters/06_tabular_pipeline.qmd
+        - chapters/07_feature_eng_all.qmd
         - chapters/quiz_03.qmd
-    - part: "Bringing it all together"
+    - part: "Advanced pipelines"
       chapters:
-        - chapters/08_table_vectorizer.qmd
-        - chapters/09_tabular_pipeline.qmd
+        - chapters/08_data_ops.qmd
         - chapters/quiz_04.qmd
     - chapters/10_conclusion.qmd
 

@@ -1,0 +1,266 @@
+---
+title: "Building extensive pipelines with DataOps"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+
+---
+
+## Introduction
+
+So far, we've learned how to build pipelines using scikit-learn's `Pipeline` and
+skrub's `TableVectorizer` and `tabular_pipeline`. These tools are excellent for
+single-table, supervised learning workflows. However, many real-world data science
+tasks involve:
+
+- Multiple related tables that need to be joined
+- Complex aggregations and transformations
+- Avoiding data leakage when operations are applied to training vs. test data
+- Tuning multiple components of a pipeline simultaneously
+- Persisting and sharing complex preprocessing workflows
+
+This is where skrub's **DataOps** framework becomes invaluable.
+
+## What are DataOps?
+
+Skrub DataOps extend the scikit-learn machinery to multi-table operations and
+complex data transformations. They:
+
+- Extend scikit-learn's machinery to **multi-table operations**
+- Take care of **data leakage** automatically
+- Store **stateful objects** in the pipeline (including encoders and transformers)
+- Track all operations with a **computational graph** (a *Data Ops plan*)
+- Allow **tuning any operation** in the plan
+- Can be **persisted and shared** easily
+
+### How do DataOps work?
+
+DataOps **wrap** around *user operations*, where user operations are:
+
+- any dataframe operation (e.g., merge, group by, aggregate etc.)
+- scikit-learn estimators (a Random Forest, RidgeCV etc.)
+- custom user code (load data from a path, fetch from an URL etc.)
+
+::: {.callout-important}
+DataOps _record_ user operations, so that they can later be _replayed_ in the same
+order and with the same arguments on unseen data. This ensures that complex 
+preprocessing pipelines can be applied consistently to new data without data leakage.
+:::
+
+## Starting with DataOps
+
+Let's begin with a simple example using the credit fraud dataset:
+
+```{python}
+#| echo: true
+import skrub
+data = skrub.datasets.fetch_credit_fraud()
+
+baskets = skrub.var("baskets", data.baskets)
+products = skrub.var("products", data.products)
+
+X = baskets[["ID"]].skb.mark_as_X()
+y = baskets["fraud_flag"].skb.mark_as_y()
+```
+
+In this example:
+- `baskets` and `products` represent **inputs** to the pipeline
+- Skrub tracks `X` and `y` so that **training and test splits** are never mixed
+
+## Applying transformers
+
+We can apply skrub transformers to our data:
+
+```{python}
+#| echo: true
+from skrub import selectors as s
+
+vectorizer = skrub.TableVectorizer(
+    high_cardinality=skrub.StringEncoder()
+)
+vectorized_products = products.skb.apply(
+    vectorizer, cols=s.all() - "basket_ID"
+)
+```
+
+## Executing dataframe operations
+
+We can perform standard pandas operations like groupby and merge:
+
+```{python}
+#| echo: true
+aggregated_products = vectorized_products.groupby(
+    "basket_ID"
+).agg("mean").reset_index()
+
+features = X.merge(
+    aggregated_products, left_on="ID", right_on="basket_ID"
+)
+features = features.drop(columns=["ID", "basket_ID"])
+```
+
+## Applying ML models
+
+Finally, we can apply scikit-learn estimators:
+
+```{python}
+#| echo: true
+from sklearn.ensemble import ExtraTreesClassifier  
+predictions = features.skb.apply(
+    ExtraTreesClassifier(n_jobs=-1), y=y
+)
+```
+
+## Inspecting the Data Ops plan
+
+Once you've built your DataOps pipeline, you can inspect the computational graph:
+
+```{.python}
+predictions.skb.full_report()
+```
+
+This generates a detailed report showing:
+
+- Each node in the computation graph
+- A preview of the data resulting from each operation
+- The location in the code where the operation is defined
+- The run time of each operation
+- Any parameters used for that operation
+
+This visibility into your pipeline makes it much easier to debug and understand
+the data transformations being applied.
+
+## Exporting the pipeline as a Learner
+
+The **Learner** is an estimator that takes a dictionary as input rather
+than just `X` and `y`. Once you've built and fitted your DataOps pipeline,
+you can export it as a learner:
+
+```{python}
+#| echo: true
+learner = predictions.skb.make_learner(fitted=True)
+```
+
+The learner can then be pickled and persisted:
+
+```{.python}
+import pickle
+
+with open("learner.bin", "wb") as fp:
+    pickle.dump(learner, fp)
+```
+
+And later loaded and applied to new data:
+
+```{.python}
+with open("learner.bin", "rb") as fp:
+    loaded_learner = pickle.load(fp)
+
+# Apply to new data (dictionary of dataframes)
+new_data = {
+    "baskets": new_baskets,
+    "products": new_products
+}
+predictions = loaded_learner.predict(new_data)
+```
+
+## Hyperparameter Tuning with DataOps
+
+Tuning complex pipelines in scikit-learn can quickly become unwieldy with many
+parameter combinations:
+
+```{.python}
+# Traditional scikit-learn approach becomes complex quickly
+pipe = Pipeline([("dim_reduction", PCA()), ("regressor", Ridge())])
+grid = [
+    {
+        "dim_reduction": [PCA()],
+        "dim_reduction__n_components": [10, 20, 30],
+        "regressor": [Ridge()],
+        "regressor__alpha": loguniform(0.1, 10.0),
+    },
+    # ... many more configurations
+]
+```
+
+With DataOps, tuning is more intuitive:
+
+```{.python}
+dim_reduction = X.skb.apply(
+    skrub.choose_from(
+        {
+            "PCA": PCA(n_components=skrub.choose_int(10, 30)),
+            "SelectKBest": SelectKBest(k=skrub.choose_int(10, 30))
+        }, name="dim_reduction"
+    )
+)
+regressor = dim_reduction.skb.apply(
+    skrub.choose_from(
+        {
+            "Ridge": Ridge(alpha=skrub.choose_float(0.1, 10.0, log=True)),
+            "RandomForest": RandomForestRegressor(
+                n_estimators=skrub.choose_int(20, 200, log=True)
+            )
+        }, name="regressor"
+    )
+)
+```
+
+### Running hyperparameter search
+
+Once you've defined the search space with `choose_*` functions, you can run
+an automatic hyperparameter search:
+
+```{.python}
+# Scikit-learn's GridSearchCV backend
+search = regressor.skb.make_randomized_search(
+    scoring="roc_auc", fitted=True, cv=5
+)
+best_learner = search.best_learner_
+
+# Or use Optuna as the backend for more sophisticated search
+search = regressor.skb.make_randomized_search(
+    scoring="roc_auc", fitted=True, cv=5, backend="optuna"
+)
+```
+
+### Exploring hyperparameter results
+
+The search object includes methods to visualize and understand the results:
+
+```{.python}
+search.plot_parallel_coord()
+```
+
+This generates a parallel coordinates plot showing how different hyperparameter
+combinations affect your scoring metric.
+
+## Available choose functions
+
+Skrub implements four `choose_*` functions for building flexible search spaces:
+
+- `choose_from`: Select from a list of options
+- `choose_int`: Select an integer within a range
+- `choose_float`: Select a float within a range
+- `choose_bool`: Select a boolean value
+- `optional`: Choose whether to execute an operation
+
+## Summary
+
+DataOps provide a powerful framework for building, tracking, and deploying complex
+machine learning pipelines:
+
+- **Multi-table support**: Work naturally with multiple related datasets
+- **Data leakage prevention**: Automatic handling of train/test splits
+- **Transparency**: Full computational graph with inspection tools
+- **Reproducibility**: Pipelines can be persisted and applied to new data
+- **Flexibility**: Tune any part of your pipeline uniformly
+- **Scalability**: Designed for complex real-world workflows
+
+Whether you're working with simple single-table datasets or complex multi-table
+data problems, DataOps can help you build more reliable and maintainable pipelines.
