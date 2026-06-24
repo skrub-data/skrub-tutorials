@@ -58,7 +58,9 @@ data.describe(include="all")
 ```
 
 ## Exploring data with the `TableReport` {.smaller}
-Now, let's create a TableReport to explore the dataset.
+The `TableReport` computes various statistics about the given dataframe and presents
+them in an interactive format:
+
 ```{python}
 from skrub import TableReport
 TableReport(data)
@@ -69,6 +71,29 @@ The `TableReport` shows all the columns in the dataset, and allows to select and
 of the cells shown in the preview. 
 
 As this is a preview, only the first and last few rows are displayed. 
+
+## The Stats tab 
+The `Stats` tab includes information about each column:
+
+- full name
+- detected dtype (no parsing!)
+- presence of nulls
+- cardinality (number of unique values)
+- additional statistics for numerical features
+
+## The Distributions tab
+A histogram is drawn for each column to show the distribution of values in that 
+column. 
+
+Most frequent values are also displayed
+
+## The Associations tab
+Cramer's V and Pearson's correlation coefficient are measured for all pairs of 
+columns.
+
+Associations show whether there are strong correlations between columns, and 
+columns that may be redundant. 
+
 
 ## Outlier detection
 
@@ -125,7 +150,21 @@ TableReport(
 )
 ```
 
-## Persisting the `TableReport`: HTML
+## Exporting the `TableReport`
+
+The `TableReport` computes many statistics about a given table. Typically, the 
+interactive view is sufficient when developing with a notebook. 
+
+It is also possible to export the statistics in various formats to share them,
+or to use them programmatically. 
+
+The `TableReport` can be exported in
+
+- standalone **HTML**, to retain interactivity
+- **JSON**, for programmatic access
+- **Markdown**, to obtain a shortened textual summary of the content
+
+## Exporting the `TableReport`: HTML
 The `TableReport` can be saved on disk as an HTML. 
 ```{.python}
 TableReport(data).write_html("report.html")
@@ -136,7 +175,7 @@ The report can be opened using any internet browser, with no need to run
 a Jupyter notebok or a python interactive console. 
 :::
 
-## Persisting the `TableReport`: JSON
+## Exporting the `TableReport`: JSON
 It is also possible to export the report in JSON format:
 
 ```{.python}
@@ -150,12 +189,11 @@ format. Distributions can be disabled by setting `plot_distributions=False`.
 
 :::
 
-## Persisting the `TableReport`: Markdown {.smaller}
+## Exporting the `TableReport`: Markdown {.smaller}
 
 Finally, the report can be exported in summarized form as a Markdown-formatted string:
 
 ```python
-
 md_str = TableReport(data).markdown()
 
 with open("report.md", "w") as fp:
@@ -180,5 +218,5 @@ of the report to an agent if the dataset is large, or if its content is not trus
 - Exploring column statistics, value distributions, and associations visually
 - Detecting nulls, outliers, and highly correlated columns at a glance
 - Filtering columns by type or characteristics using built-in filters
-- Saving and sharing reports as HTML, JSON, and Markdown files
+- Saving and exporting reports as HTML, JSON, and Markdown files
 - Adjusting `TableReport` settings for large datasets to optimize performance

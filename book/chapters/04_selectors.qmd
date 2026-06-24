@@ -18,7 +18,8 @@ column cardinality, etc.).
 
 The skrub `selectors` implement a number of selection strategies that can be 
 combined in various ways to build complex filtering conditions that can then be 
-employed by `ApplyToCols`, `ApplyToFrame`, `SelectCols` and `DropCols`. 
+employed by `ApplyToCols`, `SelectCols`, `DropCols`, `.skb.apply()` and the 
+`TableReport`. 
 
 ## Skrub selectors
 Selectors are available from the `skrub.selectors` namespace:
@@ -26,35 +27,21 @@ Selectors are available from the `skrub.selectors` namespace:
 import skrub.selectors as s
 ```
 
-We will use this example dataframe to test some of the selectors: 
+We can use them in conjunction with `SelectCols` to select, for example, only string
+columns:
 ```{python}
+from skrub import SelectCols
 import pandas as pd
-import datetime
 
-data = {
-    "int": [15, 56, 63, 12, 44],
-    "float": [5.2, 2.4, 6.2, 10.45, 9.0],
-    "str1": ["public", "private", None, "private", "public"],
-    "str2": ["officer", "manager", "lawyer", "chef", "teacher"],
-    "bool": [True, False, True, False, True],
-    "cat1": pd.Categorical(["yes", "yes", None, "yes", "no"]),
-    "cat2": pd.Categorical(["20K+", "40K+", "60K+", "30K+", "50K+"]),
-    "datetime-col": [
-        datetime.datetime.fromisoformat(dt)
-        for dt in [
-            "2020-02-03T12:30:05",
-            "2021-03-15T00:37:15",
-            "2022-02-13T17:03:25",
-            "2023-05-22T08:45:55",
-        ]
-    ]
-    + [None],    }
-df = pd.DataFrame(data)
-df
+df = pd.DataFrame({
+    "age": [25, 30, 35],
+    "name": ["Alice", None, "Charlie"],
+    "city": ["NYC", "LA", "Chicago"]
+})
+
+SelectCols(cols=s.string()).fit_transform(df)
 ```
 
-Selectors should be used in conjunction with the transformers described in the 
-previous chapter: `ApplyToCols`, `ApplyToFrame`, `SelectCols` and `DropCols`. 
 
 Selectors allow to filter columns by data type:
 
@@ -79,9 +66,19 @@ Additional conditions include:
 - `.cardinality_below`: select all columns with a number of unique values lower
 than the given `threshold`
 - `.has_nulls`: select all columns that include at least one null value
+- `.has_dtype`: select columns that include the provided dtype
 
 ```{python}
 SelectCols(cols=s.has_nulls()).fit_transform(df)
+```
+
+```{python}
+import polars as pl
+
+df = pl.DataFrame({"A": [[1,2], [1,2,3]], "B": ["A", "B"]})
+print(df.dtypes)
+sel = s.has_dtype(pl.List)
+SelectCols(cols=sel).fit_transform(df)
 ```
 
 Various selectors allow to choose columns based on their name: 
@@ -93,39 +90,56 @@ Various selectors allow to choose columns based on their name:
 - `.regex`: select columns using regular expressions
 
 ```{python}
-SelectCols(cols=s.glob("cat*")).fit_transform(df)
+df = pd.DataFrame({
+    "patient_id": [101, 102, 103],
+    "metric_1": [0.3, 0.3, 0.6],
+    "metric_2": [3, 5, 10],
+})
+
+SelectCols(cols=s.glob("metric_*")).fit_transform(df)
 ```
 
 
 ## Combining selectors
 
-Selectors can be inverted using `.inv` or the logical operator `~` to
-select all _other_ columns, and they can be combined using the `&` and `|`
-logical operators. It is also possible to remove from a selection with `-`; 
-for example to select all columns except for "datetime-col", one would write:
+Selectors are designed to be treated like **sets of columns**, and can be combined
+by using **set operations**. Column names or lists of column names are transformed
+into selectors automatically. 
 
-```{python}
-SelectCols(cols=s.all() - "datetime-col").fit_transform(df)
-```
+Column selection rules are very powerful and provide a high degree of flexibility:
+```{.python}
+# Inverse: NOT numeric
+~s.numeric()
 
-To select all datetime columns OR all string columns that do not contain nulls, 
-we can do:
-```{python}
-SelectCols(cols=(s.any_date() | (s.string()) & (~s.has_nulls()))).fit_transform(df)
+# OR: datetime columns OR string columns OR the columns in a list
+s.any_date() | s.string() | ["date", "datetime-col"]
+
+# AND: string columns without nulls
+s.string() & ~s.has_nulls()
+
+# Exclude: all columns except "datetime-col"
+s.all() - "datetime-col"
+
 ```
 
 ## Extracting selected columns
 Selectors can use the `expand` and `expand_index` methods to extract the columns
 that have been selected:
 ```{python}
-has_nulls = s.has_nulls()
-has_nulls.expand(df)
+df = pd.DataFrame(
+    {
+        "age": [25, 30, 35],
+        "name": ["Alice", None, "Charlie"],
+        "city": ["NYC", "LA", "Chicago"],
+    }
+)
+
+selector = s.has_nulls()
+columns_with_nulls = selector.expand(df)
 ```
-
 This can be used, for example, to pass a list of columns to a dataframe library. 
-
-```{python}
-df.drop(columns=has_nulls.expand(df))
+```{.python}
+df[columns_with_nulls].apply(lambda x : x.str.upper())
 ```
 
 ## Designing custom filters
@@ -139,16 +153,18 @@ For example, it is possible to select columns that include a certain amount of
 nulls by defining a function like the following:
 
 ```{python}
-import pandas as pd
-import skrub.selectors as s
-from skrub import DropCols
+def more_nulls_than(col, threshold=0.5):
+    return col.isnull().sum() / len(col) > threshold
 
-df = pd.DataFrame({"a": [None, None, None, 1], "b": [1,2,3,4]})
+df = pd.DataFrame(
+    {
+        "no-nulls": [1, 2, 3, 4],
+        "lotsa-nulls": [None, None, None, 4],
+    }
+)
 
-def more_nulls_than(col, threshold=.5):
-    return col.isnull().sum()/len(col) > threshold
-
-DropCols(cols=s.filter(more_nulls_than, threshold=0.5)).fit_transform(df)
+selector = s.filter(more_nulls_than, threshold=0.5)
+s.select(df, selector)
 ```
 
 `.filter_names` is similar to `.filter` in the sense that it takes a function that
@@ -176,120 +192,31 @@ selector = s.filter_names(lambda name: name.endswith('_mm'))
 s.select(df, selector)
 ```
 
-## Conclusion
+
+## Using selectors with the `TableReport`
+
+The `TableReport` can use selectors (or simply column names) to focus only on 
+specific columns:
+
+```{python}
+import skrub.selectors as s
+from skrub import TableReport
+custom_filter = {
+    "metrics": s.glob("metric_*")
+}
+
+df = pd.DataFrame({
+    "patient_id": [101, 102, 103],
+    "metric_1": [0.3, 0.3, 0.6],
+    "metric_2": [3, 5, 10],
+})
+
+TableReport(df, column_filters=custom_filter)
+```
+
+## What we have seen in this chapters
 In this chapter we covered the skrub selectors, how they allow to select specific
 columns either through simple conditions, or by combining different selectors. 
-More use cases of `ApplyToCols` and the selectors will be shown through the rest
-of the course, starting from the next chapter on feature engineering.
 
-
-# Exercise: using selectors together with `ApplyToCols`
-
-**Path to the exercise**: `content/exercises/04_selectors.ipynb`
-
-Consider this example dataframe:
-
-```{python}
-import pandas as pd
-
-df = pd.DataFrame(
-    {
-        "metric_1": [10.5, 20.3, 30.1, 40.2],
-        "metric_2": [5.1, 15.6, None, 35.8],
-        "metric_3": [1.1, 3.3, 2.6, .8],
-        "num_id": [101, 102, 103, 104],
-        "str_id": ["A101", "A102", "A103", "A104"],
-        "description": ["apple", None, "cherry", "date"],
-        "name": ["Alice", "Bob", "Charlie", "David"],
-    }
-)
-df
-```
-
-Using the skrub selectors and `ApplyToCols`:
-
-- Apply the `StandardScaler` to numeric columns, except `"num_id"`. 
-- Apply a `OneHotEncoder` with `sparse_output=False` on all string columns except
-`"str_id"`. 
-
-```{python}
-import skrub.selectors as s
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from skrub import ApplyToCols
-from sklearn.pipeline import make_pipeline
-
-# Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-```
-
-```{python}
-import skrub.selectors as s
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from skrub import ApplyToCols
-from sklearn.pipeline import make_pipeline
-
-scaler = ApplyToCols(StandardScaler(), cols=s.numeric() - "num_id")
-one_hot = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string() - "str_id")
-
-transformer = make_pipeline(scaler, one_hot)
-
-transformer.fit_transform(df)
-
-```
-
-Given the same dataframe and using selectors, drop only string columns that contain
-nulls. 
-
-```{python}
-from skrub import DropCols
-
-# Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-```
-
-
-```{python}
-from skrub import DropCols
-
-DropCols(cols=s.has_nulls() & s.string()).fit_transform(df)
-```
-
-Now write a custom function that selects columns where all values are lower than
-`10.0`. 
-
-```{python}
-from skrub import SelectCols
-
-# Write your solution here
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-```
-
-
-```{python}
-from skrub import SelectCols
-
-def lower_than(col):
-    return all(col < 10.0)
-
-SelectCols(cols=s.numeric() & s.filter(lower_than)).fit_transform(df)
-```
+Selectors can be combined with other skrub transformers to filter and operate
+over only specific column. 

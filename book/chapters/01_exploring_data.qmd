@@ -240,9 +240,12 @@ More detail on the skrub configuration is reported in the
 [User Guide](https://skrub-data.org/dev/modules/configuration_and_utils/customizing_configuration.html).
 
 ## Exporting the `TableReport` 
-A generated `TableReport` can be exported in various ways depending on the use case.
+The `TableReport` measures a number of statistics that can be used 
+for more than just exploration: for example, they may be provided
+to other programs for alternative plotting, or shared outside of the 
+starting notebook.
 
-The entire report can be exported as a standalone HTML page that includes all the 
+The entire report can be exported as a standalone **HTML** page that includes all the 
 features:
 ```{.python}
 TableReport(data).write_html("report.html")
@@ -250,7 +253,7 @@ TableReport(data).write_html("report.html")
 Then, the report can be opened using any internet browser, with no need to run 
 a Jupyter notebok or a python interactive console. 
 
-Alternatively, the report can be exported in JSON format: this allows to forward 
+Alternatively, the report can be exported in **JSON** format: this allows to forward 
 it to other programs for programmatic access to the statistics gathered by the report. 
 
 ```python
@@ -268,9 +271,9 @@ plots, set `plot_distributions=False`.
 
 :::
 
-Finally, the report can be exported in summarized form as a Markdown-formatted string,
-which can be useful to share as a message, printed on a command line, or fed to 
-agents ask for insights. 
+Finally, the report can be exported in summarized form as a **Markdown**-formatted 
+string, which can be useful to share as a message, printed on a command line, or 
+fed to agents ask for insights. 
 
 ```python
 

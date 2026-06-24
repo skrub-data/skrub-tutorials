@@ -117,7 +117,8 @@ encoded = ApplyToCols(encoder).fit_transform(X)
 ```
 
 **Pros**: Intuitive, works well for few categories
-**Cons**: Explodes with many categories, creates sparse matrices
+**Cons**: Explodes with many categories, creates sparse matrices, leads to overfitting, 
+worsens model interpretability
 
 ### The Challenge: High-Cardinality Features
 
@@ -162,7 +163,7 @@ encoded = ApplyToCols(encoder).fit_transform(X)
 | Encoder | Speed | Performance | Interpretability | Use Case |
 |---------|-------|-------------|------------------|----------|
 | OneHot | Fast | Good | High | Low cardinality |
-| StringEncoder | Fast | Excellent | Low | Default choice |
+| StringEncoder | Fast | Good | Low | Default choice |
 | TextEncoder | Slow | Excellent | Medium | Real text data |
 | MinHashEncoder | Very Fast | Fair | Low | Quick prototyping |
 | GapEncoder | Slow | Good | High | Interpretability needed |
@@ -196,7 +197,7 @@ df_dt = ApplyToCols(ToDatetime(), allow_reject=True).fit_transform(df)
 df_dt
 ```
 
-**`Cleaner`**: Also parses datetimes with custom format:
+**`Cleaner`**: Same machinery:
 
 ```{python}
 from skrub import Cleaner
@@ -205,6 +206,10 @@ cleaner = Cleaner(datetime_format="%d %B %Y")
 df_clean = cleaner.fit_transform(df)
 df_clean
 ```
+
+Both objects can take a `datetime_format` if known. 
+
+
 
 ### Extracting Datetime Features {.smaller}
 
@@ -272,10 +277,10 @@ df_enc
 ### Example: spline periodic features
 ![example of periodic features generated with splines](images/periodic_features_light_transparent.png)
 
-## In summary
+## What we have seen in this chapter
 
+- `SqushingScaler` provides robust and smooth scaling of numeric values with outliers
+- The `StringEncoder` is a good default for encoding strings
+- The `TextEncoder` works well on meaningful text data 
 - Use `ToDatetime` or `Cleaner` to parse string dates
-- `DatetimeEncoder` extracts useful features
-- Use periodic encoding for cyclical features
-- Circular encoding: sin/cos transformation
-- Spline encoding: alternative periodic approach
+- `DatetimeEncoder` extracts useful features, including periodic features

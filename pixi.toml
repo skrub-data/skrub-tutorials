@@ -61,9 +61,6 @@ convert-exercises-to-notebooks = { cmd = "jupytext --to notebook ./content/exerc
 convert-exercises-to-executed-notebooks = { cmd = "jupytext --to notebook --execute ./content/exercises/*.py && mv ./content/exercises/*.ipynb ./content/notebooks", depends-on = [
     "create-notebooks-dir",
 ] }
-build-book = { cmd = "jupyter-book build book", depends-on = [
-    "convert-exercises-to-notebooks",
-] }
 copy-data = { cmd = "cp -r ./data ./content/ && cp -r ./content/chapters/helpers ./content/notebooks", depends-on = [
 ] }
 setup-jupyterlite-content = { cmd = "mkdir -p ./content/notebooks ./content/data && cp ../content/notebooks/*.ipynb ./content/notebooks && cp -r ../data/* ./content/data", cwd = "jupyterlite", depends-on = [

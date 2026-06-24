@@ -193,7 +193,6 @@ by implementing a number of common transformations that need to be executed in
 order to ensure that the data used by the pipeline are consistent and can be used
 as indended by ML models. 
 
-
 - The `Cleaner` object automates common data cleaning steps, making it easy to
 prepare tabular data for analysis or modeling with minimal configuration.
 - `Cleaner` leverages transformers like `DropUninformative` to automatically
@@ -205,7 +204,6 @@ values, or uniqueness.
 
 In the next chapter we will see how skrub helps with applying this and other 
 transformations to specific columns in the data.
-
 
 # Exercise
 

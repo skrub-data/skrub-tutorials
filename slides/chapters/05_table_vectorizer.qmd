@@ -145,7 +145,6 @@ any cleaning or parsing.
 ## What we have seen in this chapter 
 
 - One object -- the `TableVectorizer` -- handles preprocessing and feature engineering
-- Types are detected and encoded automatically
-- Configurable cleaning and encoding
-- Smart defaults based on column characteristics
+- Column types are detected, and columns are encoded accordingly
+- Cleaning and encoding operations can be customized based on the use case
 - Per-column behavior can be set with `ApplyToCols`

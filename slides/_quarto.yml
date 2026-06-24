@@ -1,6 +1,6 @@
 project:
   type: website  
-  title: "Inria Academy - Skrub like a pro (Slides)"
+  title: "Skrub - Machine learning with dataframes (Slides)"
   output-dir: ../_build/slides
   render:
     - index.qmd

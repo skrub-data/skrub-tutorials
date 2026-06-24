@@ -1,6 +1,6 @@
 project:
   type: book
-  title: "Inria Academy - Skrub like a pro (Book)"
+  title: "Skrub - Machine learning with dataframes (Book)"
   output-dir: ../_build/book
 
 book:
@@ -25,23 +25,18 @@ book:
       chapters:
         - chapters/01_exploring_data.qmd
         - chapters/02_cleaning_data.qmd
-        - chapters/quiz_01.qmd
     - part: "Transforming columns"
       chapters:
         - chapters/03_feat_eng_apply.qmd
         - chapters/04_selectors.qmd
-        - chapters/quiz_02.qmd
     - part: "Feature Engineering with skrub"
       chapters:
         - chapters/05_table_vectorizer.qmd
         - chapters/06_tabular_pipeline.qmd
         - chapters/07_feature_eng_all.qmd
-        - chapters/quiz_03.qmd
     - part: "Advanced pipelines"
       chapters:
         - chapters/08_data_ops.qmd
-        - chapters/quiz_04.qmd
-    - chapters/10_conclusion.qmd
 
 format:
   html:

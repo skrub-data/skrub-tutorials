@@ -9,26 +9,22 @@ format: html
 ## Section 2: Exploring and sanitizing data
 - [Chapter 1: Exploring Data](chapters/01_exploring_data.slides.html)
 - [Chapter 2: Cleaning Data](chapters/02_cleaning_data.slides.html)
-- [Quiz 01](../book/chapters/quiz_01.html)
 - Exercise 1
 
-## Section 3: Building a strong baseline
-- [Chapter 3: Table Vectorization](chapters/03_table_vectorizer.slides.html)
-- [Chapter 4: Tabular Pipelines](chapters/04_tabular_pipeline.slides.html)
-- [Quiz 02](../book/chapters/quiz_02.html)
+
+## Section 3: Transforming columns
+- [Chapter 3: Column-specific transformations](chapters/03_feat_eng_apply.slides.html)
+- [Chapter 4: Advanced column selection](chapters/04_selectors.slides.html)
 - Exercise 2
 
-## Section 4: Transforming columns
-- [Chapter 5: Apply Transformations](chapters/05_feat_eng_apply.slides.html)
-- [Chapter 6: Selectors](chapters/06_selectors.slides.html)
-- [Quiz 03](../book/chapters/quiz_03.html)
+## Section 4: Building a strong baseline
+- [Chapter 5: Feature engineering with the TableVectorizer](chapters/05_table_vectorizer.slides.html)
+- [Chapter 6: Strong ML baselines: `tabular_pipeline`](chapters/06_tabular_pipeline.slides.html)
 - Exercise 3
-
 
 ## Section 5: Feature Engineering with skrub
 - [Chapter 7: Skrub transformers for feature engineering](chapters/07_feature_eng_all.slides.html)
-- [Quiz 04](../book/chapters/quiz_04.html)
+- Exercise 4 
 
 ## Section 6: Building dynamic pipeline with Data Ops
-- [Chapter 8: Data Ops](chapters/10_data_ops.slides.html)
-
+- [Chapter 9: Data Ops](chapters/08_data_ops.slides.html)

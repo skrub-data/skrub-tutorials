@@ -1,5 +1,5 @@
 ---
-title: "Building complete tabular pipelines"
+title: "Building a complete machine learning pipeline with skrub"
 format:
     html:
         toc: true
@@ -13,14 +13,26 @@ format:
 
 ## Building a baseline model with preprocessing
 
-Beyond preprocessing, ML pipelines need:
+Beyond preprocessing and cleaning, ML pipelines need to:
 
-- Feature engineering (cleaning, encoding)
-- Handling missing values
-- Scaling features
-- Training the model
+- Add new features via feature engineering
+- Handle missing values (possibly via imputation)
+- Scale numeric features
+- Train the model
+
+## Reminder: avoiding data leakage
+- We want to prevent data that belongs to the test set from entering the train set.
+- Data leakage leads to over-optimistic results. 
+- Transformers and encoders must be trained exclusively on the training samples.
+- A sequence of transformers needs to use the same set of samples for each step,
+and the samples should not change (kind of...).
 
 ## Manual Pipeline Construction {.smaller}
+scikit-learn provides either `Pipeline` or `make_pipeline` to concatenate transformers
+and avoid leakage. 
+
+The pipeline takes care of passing the same set of samples to the transformers 
+in sequence. 
 
 ```{python}
 from sklearn.pipeline import make_pipeline
@@ -37,9 +49,10 @@ model = make_pipeline(
 )
 ```
 
-## The tabular_pipeline Function
+## The `tabular_pipeline` Function
 
-Quick one-liner for well-tuned baselines:
+skrub's `tabular_pipeline` returns a pipeline that includes all steps, with 
+tuned defaults depending on the input model. 
 
 ```{python}
 from skrub import tabular_pipeline
@@ -74,17 +87,6 @@ The pipeline is configured with:
 - No imputation (trees don't need imputation)
 - The estimator
 
-## When to Use Which Approach
-
-**Use `tabular_pipeline`**:
-- Quick baseline for benchmarking
-- Starting point for experimentation
-- No need for custom preprocessing
-
-**Use manual pipeline**:
-- Fine-grained control needed
-- Custom preprocessing steps
-- Experimenting with different transformers
 
 ## Customizing the pipeline
 
@@ -95,7 +97,7 @@ This is unnecessary most of the time!
 
 ::: {.fragment}
 
-```{.python}
+```{python}
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Ridge
 from sklearn.pipeline import make_pipeline
@@ -110,6 +112,22 @@ full_pipeline = tabular_pipeline(model_pipeline)
 
 :::
 
+## When to Use Which Approach
+
+**Use `tabular_pipeline`** if:
+- You need a quick baseline for benchmarking/checking if there is a signal
+- You want a starting point for experimentation
+- You don't need custom preprocessing/feature engineering
+
+**Embed a pipeline in `tabular_pipeline`** if :
+- You need to modify only the end of the pipeline
+
+**Use a manual pipeline** if :
+- You need fine-grained control over most of the transformations
+- Your training process includes custom preprocessing steps
+- You want to experiment with different transformers
+
+Or... use the skrub Data Ops! (more on that later, maybe)
 
 ## Example: Complete Workflow
 
@@ -126,10 +144,10 @@ print(f"Score: {scores.mean():.4f}")
 
 That's it! 
 
-## What to remember
+## What we have seen in this chapter 
 
-- `TableVectorizer` handles all feature engineering
-- Manual pipelines give full control
-- `tabular_pipeline` provides smart defaults
-- Different configurations for different model types
 - Always use pipelines to prevent data leakage
+- `TableVectorizer` handles most of the feature engineering
+- Manual pipelines give full control
+- `tabular_pipeline` provides a good baseline with good defaults
+- Provide a model, or `"classification"` or `"regression"`

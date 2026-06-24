@@ -44,7 +44,7 @@ SelectCols(cols=s.string()).fit_transform(df)
 
 ## Selecting by Data Type
 
-Available selectors:
+Some of the available selectors:
 
 - `.numeric()`: Numeric columns (int or float)
 - `.integer()`: Integer columns only
@@ -103,8 +103,8 @@ to combine selectors
 # Inverse: NOT numeric
 ~s.numeric()
 
-# OR: datetime columns OR string columns OR the "date" column
-s.any_date() | s.string() | "date"
+# OR: datetime columns OR string columns OR the columns in a list
+s.any_date() | s.string() | ["date", "datetime-col"]
 
 # AND: string columns without nulls
 s.string() & ~s.has_nulls()
@@ -163,14 +163,21 @@ custom_filter = {
     "metrics": s.glob("metric_*")
 }
 
+df = pd.DataFrame({
+    "patient_id": [101, 102, 103],
+    "metric_1": [0.3, 0.3, 0.6],
+    "metric_2": [3, 5, 10],
+})
+
 TableReport(df, column_filters=custom_filter)
 ```
 
 
 ## What we have seen in this chapters
 
-- Use selectors for flexible, reusable column selection
-- Combine selectors with logical operators
+- Selectors can be used for flexible, reusable column selection
+- Selectors can be combined with logical operators as "sets of columns"
 - `expand()` extracts selected column names
-- Create custom selectors for domain-specific logic
-- Perfect with `ApplyToCols`, `SelectCols`, `DropCols`
+- `s.filter()` can be used to create custom selectors for domain-specific logic
+- `ApplyToCols`, `SelectCols`, `DropCols`, `.skb.apply()` can use selectors to 
+filter columns

@@ -45,10 +45,10 @@ with filters.
 ```{python}
 from skrub import ApplyToCols
 import skrub.selectors as s
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OrdinalEncoder
 
-one_hot = ApplyToCols(OneHotEncoder(sparse_output=False), cols="city")
-transformed = one_hot.fit_transform(df)
+ordinal = ApplyToCols(OrdinalEncoder(), cols="city")
+transformed = ordinal.fit_transform(df)
 transformed
 ```
 
@@ -88,9 +88,35 @@ transform = make_pipeline(select, encode, reduce)
 
 ::: {.callout-tip}
 
-Remember that columns that are not selected pass through without any change. 
+Remember that columns that are not selected **pass through** without any change. 
 
 :::
+
+## Example: encode and reduce dimensionality
+```{python}
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.decomposition import PCA
+from skrub import SelectCols
+import numpy as np
+
+n_patients = 5 
+
+df = pd.DataFrame({
+    "patient_id": [f"P{i:03d}" for i in range(n_patients)],
+    "age": np.random.randint(18, 80, size=n_patients),
+    "sex": np.random.choice(["M", "F"], size=n_patients),
+})
+
+select = SelectCols("patient_id")
+encode = ApplyToCols(OneHotEncoder(sparse_output=False))
+reduce = ApplyToCols(PCA(n_components=2))
+
+transform = make_pipeline(select, encode, reduce)
+dft= transform.fit_transform(df)
+dft.head(5)
+```
+
 
 ## Example: convert to datetime and encode
 
@@ -98,6 +124,11 @@ Remember that columns that are not selected pass through without any change.
 from skrub import ToDatetime, DatetimeEncoder
 from sklearn.pipeline import make_pipeline
 
+df = pd.DataFrame({
+    "date": ["03 January 2023", "04 February 2023"],
+    "city": ["Paris", "London"],
+    "values": [10, 20]
+})
 encode_datetime = make_pipeline(
     ApplyToCols(ToDatetime(), cols="date"),
     ApplyToCols(DatetimeEncoder(), cols="date"),
