@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Exercise: using selectors together with `ApplyToCols`
+# # Exercise: Use `ApplyToCols` and the selectors to transform a dataframe
 # %%
 %pip install skrub
 

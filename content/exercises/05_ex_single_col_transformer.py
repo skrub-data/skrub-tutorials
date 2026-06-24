@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Exercise
+# # Exercise: Build a custom `SingleColumnTransformer` to unpack a combined string column
 # Build a custom `SingleColumnTransformer` that unpacks the combined string column
 # in the provided dataframe into separate columns for `str_id`, `num_id`, and
 # `datetime`. The `datetime` column should be converted to datetime dtype. Then,
