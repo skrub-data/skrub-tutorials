@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Feature engineering with skrub – Skrub like a pro - Book</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/08_data_ops.html" rel="next">
+<link href="../chapters/06_tabular_pipeline.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8581705eba37712140b7ea9851258fee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Skrub like a pro - Book</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Book</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../slides/index.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../jupyterlite/lab/"> 
+<span class="menu-text">JupyterLite</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/05_table_vectorizer.html">Feature Engineering with skrub</a></li><li class="breadcrumb-item"><a href="../chapters/07_feature_eng_all.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Feature engineering with skrub</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Chapter 1: Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Exploring and sanitizing data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01_exploring_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Exploring dataframes with skrub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02_cleaning_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Preprocessing data with the skrub <code>Cleaner</code></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Transforming columns</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03_feat_eng_apply.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Applying transformers to columns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04_selectors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Choose your column: selectors</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Feature Engineering with skrub</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05_table_vectorizer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">All the pre-processing in one place: <code>TableVectorizer</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06_tabular_pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07_feature_eng_all.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Feature engineering with skrub</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Advanced pipelines</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08_data_ops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Building extensive pipelines with DataOps</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">8.1</span> Introduction</a></li>
+  <li><a href="#part-1-scaling-numerical-features-safely" id="toc-part-1-scaling-numerical-features-safely" class="nav-link" data-scroll-target="#part-1-scaling-numerical-features-safely"><span class="header-section-number">8.2</span> Part 1: Scaling Numerical Features Safely</a>
+  <ul class="collapse">
+  <li><a href="#numerical-features-with-outliers" id="toc-numerical-features-with-outliers" class="nav-link" data-scroll-target="#numerical-features-with-outliers"><span class="header-section-number">8.2.1</span> Numerical features with outliers</a></li>
+  <li><a href="#regular-scalers-and-their-limitations" id="toc-regular-scalers-and-their-limitations" class="nav-link" data-scroll-target="#regular-scalers-and-their-limitations"><span class="header-section-number">8.2.2</span> Regular scalers and their limitations</a></li>
+  </ul></li>
+  <li><a href="#squashingscaler-a-robust-solution" id="toc-squashingscaler-a-robust-solution" class="nav-link" data-scroll-target="#squashingscaler-a-robust-solution"><span class="header-section-number">8.3</span> SquashingScaler: A robust solution</a>
+  <ul class="collapse">
+  <li><a href="#advantages-and-disadvantages-of-squashingscaler" id="toc-advantages-and-disadvantages-of-squashingscaler" class="nav-link" data-scroll-target="#advantages-and-disadvantages-of-squashingscaler"><span class="header-section-number">8.3.1</span> Advantages and disadvantages of <code>SquashingScaler</code></a></li>
+  <li><a href="#comparison-of-scalers" id="toc-comparison-of-scalers" class="nav-link" data-scroll-target="#comparison-of-scalers"><span class="header-section-number">8.3.2</span> Comparison of scalers</a></li>
+  </ul></li>
+  <li><a href="#part-2-encoding-datetime-features" id="toc-part-2-encoding-datetime-features" class="nav-link" data-scroll-target="#part-2-encoding-datetime-features"><span class="header-section-number">8.4</span> Part 2: Encoding Datetime Features</a>
+  <ul class="collapse">
+  <li><a href="#introduction-to-datetime-encoding" id="toc-introduction-to-datetime-encoding" class="nav-link" data-scroll-target="#introduction-to-datetime-encoding"><span class="header-section-number">8.4.1</span> Introduction to datetime encoding</a></li>
+  <li><a href="#converting-datetime-strings-to-datetime-objects" id="toc-converting-datetime-strings-to-datetime-objects" class="nav-link" data-scroll-target="#converting-datetime-strings-to-datetime-objects"><span class="header-section-number">8.4.2</span> Converting datetime strings to datetime objects</a></li>
+  <li><a href="#extracting-features-from-datetimes" id="toc-extracting-features-from-datetimes" class="nav-link" data-scroll-target="#extracting-features-from-datetimes"><span class="header-section-number">8.4.3</span> Extracting features from datetimes</a></li>
+  <li><a href="#periodic-features" id="toc-periodic-features" class="nav-link" data-scroll-target="#periodic-features"><span class="header-section-number">8.4.4</span> Periodic features</a></li>
+  </ul></li>
+  <li><a href="#part-3-encoding-categorical-features" id="toc-part-3-encoding-categorical-features" class="nav-link" data-scroll-target="#part-3-encoding-categorical-features"><span class="header-section-number">8.5</span> Part 3: Encoding Categorical Features</a>
+  <ul class="collapse">
+  <li><a href="#introduction-1" id="toc-introduction-1" class="nav-link" data-scroll-target="#introduction-1"><span class="header-section-number">8.5.1</span> Introduction</a></li>
+  <li><a href="#why-categorical-encoders-matter" id="toc-why-categorical-encoders-matter" class="nav-link" data-scroll-target="#why-categorical-encoders-matter"><span class="header-section-number">8.5.2</span> Why categorical encoders matter</a></li>
+  <li><a href="#categorical-encoders-pros-and-cons" id="toc-categorical-encoders-pros-and-cons" class="nav-link" data-scroll-target="#categorical-encoders-pros-and-cons"><span class="header-section-number">8.5.3</span> Categorical encoders: pros and cons</a></li>
+  <li><a href="#categorical-encoders-in-skrub" id="toc-categorical-encoders-in-skrub" class="nav-link" data-scroll-target="#categorical-encoders-in-skrub"><span class="header-section-number">8.5.4</span> Categorical encoders in skrub</a></li>
+  </ul></li>
+  <li><a href="#summary-and-recommendations" id="toc-summary-and-recommendations" class="nav-link" data-scroll-target="#summary-and-recommendations"><span class="header-section-number">8.6</span> Summary and Recommendations</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/05_table_vectorizer.html">Feature Engineering with skrub</a></li><li class="breadcrumb-item"><a href="../chapters/07_feature_eng_all.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Feature engineering with skrub</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Feature engineering with skrub</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">8.1</span> Introduction</h2>
+<p>In previous chapters, we’ve learned how to clean and sanitize data, apply transformers to specific columns, and select columns using flexible selectors. Now we dive into the heart of feature engineering: transforming different data types (numerical, datetime, and categorical) into meaningful numeric features suitable for machine learning models.</p>
+<p>Both the <code>TableVectorizer</code> and the <code>tabular_pipeline</code> rely on the encoders covered in this chapter to perform feature engineering. Understanding these transformers will help you build more effective pipelines and make informed decisions about how to handle different types of data.</p>
+</section>
+<section id="part-1-scaling-numerical-features-safely" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="part-1-scaling-numerical-features-safely"><span class="header-section-number">8.2</span> Part 1: Scaling Numerical Features Safely</h2>
+<section id="numerical-features-with-outliers" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="numerical-features-with-outliers"><span class="header-section-number">8.2.1</span> Numerical features with outliers</h3>
+<p>When dealing with numerical features that contain outliers (including infinite values), standard scaling methods can be problematic. Outliers can dramatically affect the centering and scaling of the entire dataset, causing the scaled inliers to be compressed into a narrow range.</p>
+<p>Consider this example:</p>
+<div id="01f61f22" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    generate_data_with_outliers,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    plot_feature_with_outliers</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> generate_data_with_outliers()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plot_feature_with_outliers(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_feature_eng_all_files/figure-html/cell-2-output-1.png" width="587" height="395" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this case, most of the values are in the range <code>[-2, 2]</code>, but there are some large outliers in the range <code>[-40, 40]</code> that can cause issues when the feature needs to be scaled.</p>
+</section>
+<section id="regular-scalers-and-their-limitations" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="regular-scalers-and-their-limitations"><span class="header-section-number">8.2.2</span> Regular scalers and their limitations</h3>
+<p>The <strong>StandardScaler</strong> computes mean and standard deviation across all values. With outliers present, these statistics become unreliable, and the scaling factor can become too small, squashing inlier values.</p>
+<p>The <strong>RobustScaler</strong> uses quantiles (typically the 25th and 75th percentiles) instead of mean/std, which makes it more resistant to outliers. However, it doesn’t bound the output values, so extreme outliers can still have very large scaled values.</p>
+</section>
+</section>
+<section id="squashingscaler-a-robust-solution" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="squashingscaler-a-robust-solution"><span class="header-section-number">8.3</span> SquashingScaler: A robust solution</h2>
+<p>The <code>SquashingScaler</code> combines robust centering with smooth clipping to handle outliers effectively.</p>
+<p>It works as following:</p>
+<ul>
+<li>It centers the median to 0, then it scales values using quantile-based statistics.</li>
+<li>It fills constant columns with 0s.</li>
+<li>It applies a smooth squashing function: <span class="math inline">\(x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}\)</span></li>
+<li>It constrains all values to the range <span class="math inline">\([-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}]\)</span> (default: 3)</li>
+<li>Infinite values are mapped to the corresponding boundaries.</li>
+<li>NaN values are kept unchanged.</li>
+</ul>
+<section id="advantages-and-disadvantages-of-squashingscaler" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="advantages-and-disadvantages-of-squashingscaler"><span class="header-section-number">8.3.1</span> Advantages and disadvantages of <code>SquashingScaler</code></h3>
+<p>The <code>SquashingScaler</code> has various advantages over traditional scalers:</p>
+<ul>
+<li>It is <strong>outlier-resistant</strong>: Outliers don’t affect inlier scaling, unlike the <code>StandardScaler</code>.</li>
+<li>It has <strong>bounded output</strong>: All values stay in a predictable range, ideal for neural networks and linear models.</li>
+<li>It <strong>handles edge cases</strong>: The scaler works with infinite values and constant columns.</li>
+<li>It <strong>preserves missing data</strong>: NaN values are kept unchanged.</li>
+</ul>
+<p>A disadvantage of the <code>SquashingScaler</code> is that it is <strong>non-invertible</strong>: The soft clipping function is smooth but cannot be exactly inverted.</p>
+</section>
+<section id="comparison-of-scalers" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="comparison-of-scalers"><span class="header-section-number">8.3.2</span> Comparison of scalers</h3>
+<p>When compared on data with outliers:</p>
+<ul>
+<li><strong>StandardScaler</strong> compresses inliers due to large scaling factors</li>
+<li><strong>RobustScaler</strong> preserves relative scales but allows extreme outlier values</li>
+<li><strong>SquashingScaler</strong> keeps inliers in a reasonable range while smoothly bounding all values</li>
+</ul>
+<p>If we plot the impact of each scaler on the result, this is what we can see:</p>
+<div id="9d5d3806" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="07_feature_eng_all_files/figure-html/cell-3-output-1.png" width="813" height="491" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-2-encoding-datetime-features" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="part-2-encoding-datetime-features"><span class="header-section-number">8.4</span> Part 2: Encoding Datetime Features</h2>
+<section id="introduction-to-datetime-encoding" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="introduction-to-datetime-encoding"><span class="header-section-number">8.4.1</span> Introduction to datetime encoding</h3>
+<p>Datetime features are very important for many data analysis and machine learning tasks, as they often carry significant information about temporal patterns and trends. For instance, including as features the day of the week, time of day, or season can provide valuable insights for predictive modeling.</p>
+<p>However, working with datetime data can be difficult due to the variety of formats in which dates and times are represented. Typical formats include <code>"%Y-%m-%d"</code>, <code>"%d/%m/%Y"</code>, and <code>"%d %B %Y"</code>, among others. Correct parsing of these and more exotic formats is essential to avoid errors and ensure accurate feature extraction.</p>
+<p>In this section we are going to cover how skrub can help with dealing with datetimes using <code>to_datetime</code>, <code>ToDatetime</code>, and the <code>DatetimeEncoder</code>.</p>
+</section>
+<section id="converting-datetime-strings-to-datetime-objects" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="converting-datetime-strings-to-datetime-objects"><span class="header-section-number">8.4.2</span> Converting datetime strings to datetime objects</h3>
+<p>Often, the first operation that must be done to work with datetime objects is converting the datetimes from a string representation to a proper datetime object. This is beneficial because using datetimes gives access to datetime-specific features, and allows to access the different parts of the datetime.</p>
+<p>Skrub provides different objects to deal with the conversion problem.</p>
+<p><strong><code>ToDatetime</code></strong> is a single column transformer that tries to conver the given column to datetime either by relying on a user-provided format, or by guessing common formats. Since this transformer must be applied to single columns (rather than dataframes), it is typically better to use it in conjunction with <code>ApplyToCols</code>. Additionally, the <code>allow_reject</code> parameter of <code>ApplyToCols</code> should be set to <code>True</code> to avoid raising exceptions for non-datetime columns:</p>
+<div id="91296c64" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dates"</span>: [</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-01-03"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-02-15"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-03-27"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-04-10"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>df_enc.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 4 entries, 0 to 3
+Data columns (total 1 columns):
+ #   Column  Non-Null Count  Dtype         
+---  ------  --------------  -----         
+ 0   dates   4 non-null      datetime64[ns]
+dtypes: datetime64[ns](1)
+memory usage: 164.0 bytes</code></pre>
+</div>
+</div>
+<p><strong><code>to_datetime</code></strong> works similarly to <a href="https://pandas.pydata.org/docs/reference/api/pandas.to_datetime.html#pandas.to_datetime">pd.to_datetime</a>, or the example shown above with <code>ApplyToCols</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>to_datetime</code> is a stateless function, so it should not be used in a pipeline, because it does not guarantee consistency between <code>fit_transform</code> and successive <code>transform</code>. <code>ApplyToCols(ToDatetime(), allow_reject=True)</code> is a better solution for pipelines.</p>
+</div>
+</div>
+<p>Finally, the standard <code>Cleaner</code> can be used for parsing datetimes, as it uses <code>ToDatetime</code> under the hood, and can take the <code>datetime_format</code>. As the <code>Cleaner</code> is a transformer, it guarantees consistency between <code>fit_transform</code> and <code>transform</code>.</p>
+</section>
+<section id="extracting-features-from-datetimes" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="extracting-features-from-datetimes"><span class="header-section-number">8.4.3</span> Extracting features from datetimes</h3>
+<p>Datetimes cannot be used “as-is” for training ML models, and must instead be converted to numerical features. Typically, this is done by “splitting” the datetime parts (year, month, day etc.) into separate columns, so that each column contains only one number.</p>
+<p>Additional features may also be of interest, such as the number of seconds since epoch (which increases monotonically and gives an indication of the order of entries), whether a date is a weekday or weekend, or the day of the year.</p>
+<p>To achieve this with standard dataframe libraries, the code looks like this:</p>
+<div id="802203ae" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.year</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"month"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.month</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.weekday</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day_of_year</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"total_seconds"</span>] <span class="op">=</span> (</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    df_enc[<span class="st">"dates"</span>] <span class="op">-</span> pd.Timestamp(<span class="st">"1970-01-01"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">//</span> pd.Timedelta(seconds<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">month</th>
+<th data-quarto-table-cell-role="th">day</th>
+<th data-quarto-table-cell-role="th">weekday</th>
+<th data-quarto-table-cell-role="th">day_of_year</th>
+<th data-quarto-table-cell-role="th">total_seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023-01-03</td>
+<td>2023</td>
+<td>1</td>
+<td>3</td>
+<td>1</td>
+<td>3</td>
+<td>1672704000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023-02-15</td>
+<td>2023</td>
+<td>2</td>
+<td>15</td>
+<td>2</td>
+<td>46</td>
+<td>1676419200</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2023-03-27</td>
+<td>2023</td>
+<td>3</td>
+<td>27</td>
+<td>0</td>
+<td>86</td>
+<td>1679875200</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2023-04-10</td>
+<td>2023</td>
+<td>4</td>
+<td>10</td>
+<td>0</td>
+<td>100</td>
+<td>1681084800</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Skrub’s <code>DatetimeEncoder</code> allows to add the same features with a simpler interface. As the <code>DatetimeEncoder</code> is a single column transformer, we use again <code>ApplyToCols</code>.</p>
+<p>The <code>DatetimeEncoder</code> includes various parameters to add more features to the transformed dataframe: - <code>add_total_seconds</code> adds the number of seconds since Epoch (1970-01-01) - <code>add_weekday</code> adds the day in the week (to highlight weekends, for example) - <code>add_day_of_year</code> adds the day in year of the datetime</p>
+<div id="34227e05" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates_year</th>
+<th data-quarto-table-cell-role="th">dates_month</th>
+<th data-quarto-table-cell-role="th">dates_day</th>
+<th data-quarto-table-cell-role="th">dates_total_seconds</th>
+<th data-quarto-table-cell-role="th">dates_weekday</th>
+<th data-quarto-table-cell-role="th">dates_day_of_year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023.0</td>
+<td>1.0</td>
+<td>3.0</td>
+<td>1.672704e+09</td>
+<td>2.0</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023.0</td>
+<td>2.0</td>
+<td>15.0</td>
+<td>1.676419e+09</td>
+<td>3.0</td>
+<td>46.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2023.0</td>
+<td>3.0</td>
+<td>27.0</td>
+<td>1.679875e+09</td>
+<td>1.0</td>
+<td>86.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2023.0</td>
+<td>4.0</td>
+<td>10.0</td>
+<td>1.681085e+09</td>
+<td>1.0</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="periodic-features" class="level3" data-number="8.4.4">
+<h3 data-number="8.4.4" class="anchored" data-anchor-id="periodic-features"><span class="header-section-number">8.4.4</span> Periodic features</h3>
+<p>Periodic features are useful for training machine learning models because they capture the cyclical nature of certain data patterns. For example, features such as hours in a day or days in a week often exhibit periodic behavior. By encoding these features periodically, models can better understand and predict patterns that repeat over time, such as daily traffic trends, or seasonal variations. This ensures that the model treats the start and end of a cycle as close neighbors, improving its ability to generalize and make accurate predictions.</p>
+<p>This can be done manually with dataframe libraries. For example, circular encoding (a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:</p>
+<div id="63db3685" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day_of_year</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"day_of_year"</span>] <span class="op">/</span> <span class="dv">365</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"day_of_year"</span>] <span class="op">/</span> <span class="dv">365</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.weekday</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates</th>
+<th data-quarto-table-cell-role="th">day_of_year</th>
+<th data-quarto-table-cell-role="th">day_of_year_sin</th>
+<th data-quarto-table-cell-role="th">day_of_year_cos</th>
+<th data-quarto-table-cell-role="th">weekday</th>
+<th data-quarto-table-cell-role="th">weekday_sin</th>
+<th data-quarto-table-cell-role="th">weekday_cos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023-01-03</td>
+<td>3</td>
+<td>0.051620</td>
+<td>0.998667</td>
+<td>1</td>
+<td>0.781831</td>
+<td>0.623490</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023-02-15</td>
+<td>46</td>
+<td>0.711657</td>
+<td>0.702527</td>
+<td>2</td>
+<td>0.974928</td>
+<td>-0.222521</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2023-03-27</td>
+<td>86</td>
+<td>0.995919</td>
+<td>0.090252</td>
+<td>0</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2023-04-10</td>
+<td>100</td>
+<td>0.988678</td>
+<td>-0.150055</td>
+<td>0</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Alternatively, the <code>DatetimeEncoder</code> can add periodic features using either circular or spline encoding through the <code>periodic_encoding</code> parameter:</p>
+<div id="3004af9c" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates_year</th>
+<th data-quarto-table-cell-role="th">dates_total_seconds</th>
+<th data-quarto-table-cell-role="th">dates_month_circular_0</th>
+<th data-quarto-table-cell-role="th">dates_month_circular_1</th>
+<th data-quarto-table-cell-role="th">dates_day_circular_0</th>
+<th data-quarto-table-cell-role="th">dates_day_circular_1</th>
+<th data-quarto-table-cell-role="th">day_of_year</th>
+<th data-quarto-table-cell-role="th">day_of_year_sin</th>
+<th data-quarto-table-cell-role="th">day_of_year_cos</th>
+<th data-quarto-table-cell-role="th">weekday</th>
+<th data-quarto-table-cell-role="th">weekday_sin</th>
+<th data-quarto-table-cell-role="th">weekday_cos</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023.0</td>
+<td>1.672704e+09</td>
+<td>0.500000</td>
+<td>8.660254e-01</td>
+<td>5.877853e-01</td>
+<td>0.809017</td>
+<td>3</td>
+<td>0.051620</td>
+<td>0.998667</td>
+<td>1</td>
+<td>0.781831</td>
+<td>0.623490</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023.0</td>
+<td>1.676419e+09</td>
+<td>0.866025</td>
+<td>5.000000e-01</td>
+<td>1.224647e-16</td>
+<td>-1.000000</td>
+<td>46</td>
+<td>0.711657</td>
+<td>0.702527</td>
+<td>2</td>
+<td>0.974928</td>
+<td>-0.222521</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2023.0</td>
+<td>1.679875e+09</td>
+<td>1.000000</td>
+<td>6.123234e-17</td>
+<td>-5.877853e-01</td>
+<td>0.809017</td>
+<td>86</td>
+<td>0.995919</td>
+<td>0.090252</td>
+<td>0</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2023.0</td>
+<td>1.681085e+09</td>
+<td>0.866025</td>
+<td>-5.000000e-01</td>
+<td>8.660254e-01</td>
+<td>-0.500000</td>
+<td>100</td>
+<td>0.988678</td>
+<td>-0.150055</td>
+<td>0</td>
+<td>0.000000</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-3-encoding-categorical-features" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="part-3-encoding-categorical-features"><span class="header-section-number">8.5</span> Part 3: Encoding Categorical Features</h2>
+<section id="introduction-1" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="introduction-1"><span class="header-section-number">8.5.1</span> Introduction</h3>
+<p>Real-world datasets rarely contain only numeric values. We frequently encounter categorical features—values that belong to discrete categories, such as names, occupations, geographic locations, or clothing sizes. Text data also falls into this category, since each unique string can be considered a categorical value.</p>
+<p>The challenge is that machine learning models require numeric input. How do we convert these categorical values into numeric features that preserve their information and enable our models to make good predictions?</p>
+<p>This chapter explores the various strategies and tools available in skrub to encode categorical features, with an eye on choosing the best method for our specific use case.</p>
+</section>
+<section id="why-categorical-encoders-matter" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="why-categorical-encoders-matter"><span class="header-section-number">8.5.2</span> Why categorical encoders matter</h3>
+<p>The way we encode categorical features significantly impacts our machine learning pipeline:</p>
+<ul>
+<li><strong>Performance</strong>: The encoding choice directly affects how well our model learns from categorical information</li>
+<li><strong>Efficiency</strong>: Some encodings create many features (potentially thousands), which increases computation time and memory usage</li>
+<li><strong>Interpretability</strong>: Different encoders provide varying levels of transparency in what features represent</li>
+<li><strong>Scalability</strong>: Not all methods scale well to high-cardinality features (those with many unique values)</li>
+</ul>
+<p>Using the appropriate encoder ensures we’re making the best use of categorical information while keeping our model efficient and interpretable.</p>
+</section>
+<section id="categorical-encoders-pros-and-cons" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="categorical-encoders-pros-and-cons"><span class="header-section-number">8.5.3</span> Categorical encoders: pros and cons</h3>
+<section id="one-hot-encoding-and-ordinal-encoding-scikit-learn" class="level4" data-number="8.5.3.1">
+<h4 data-number="8.5.3.1" class="anchored" data-anchor-id="one-hot-encoding-and-ordinal-encoding-scikit-learn"><span class="header-section-number">8.5.3.1</span> One-Hot Encoding and Ordinal Encoding (scikit-learn)</h4>
+<p><strong><code>OneHotEncoder</code></strong>: Creates a binary indicator column for each unique category, where <code>1</code> denotes the presence of the category and <code>0</code> its absence.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Straightforward and intuitive</li>
+<li>Works well for low-cardinality features (few unique values)</li>
+<li>Produces sparse matrices that can save memory</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Becomes impractical with high-cardinality features (creates hundreds or thousands of columns)</li>
+<li>Results in mostly zero-valued sparse matrices when dense, which is the situation when working with dataframes</li>
+<li>Increases overfitting risk and computational overhead</li>
+</ul>
+<p>The <code>OneHotEncoder</code> is used by default by the skrub <code>TableVectorizer</code> for categorical features with fewer than 40 unique values.</p>
+<p><strong><code>OrdinalEncoder</code></strong>: Assigns each category a numerical value (0, 1, 2, …).</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Very memory-efficient</li>
+<li>Creates only one output column per input column</li>
+<li>Fast to compute</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Introduces artificial ordering among categories that may not exist in reality</li>
+<li>Can mislead models into thinking some categories are “greater than” others</li>
+</ul>
+</section>
+</section>
+<section id="categorical-encoders-in-skrub" class="level3" data-number="8.5.4">
+<h3 data-number="8.5.4" class="anchored" data-anchor-id="categorical-encoders-in-skrub"><span class="header-section-number">8.5.4</span> Categorical encoders in skrub</h3>
+<p>All the categorical encoders in skrub are designed to encode any number of unique values using a fixed number of components: this number is controlled by the parameter <code>n_components</code> in each transformer.</p>
+<section id="stringencoder" class="level4" data-number="8.5.4.1">
+<h4 data-number="8.5.4.1" class="anchored" data-anchor-id="stringencoder"><span class="header-section-number">8.5.4.1</span> StringEncoder</h4>
+<p><strong>Approach</strong>: Applies term frequency-inverse document frequency (tf-idf) vectorization to character n-grams, followed by truncated singular value decomposition (SVD) for dimensionality reduction. This method is also known as <a href="https://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent Semantic Analysis</a>.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li><strong>The best all-rounder</strong>: Performs well on both categorical and text data</li>
+<li>Fast training time</li>
+<li>Robust and generalizes well across different datasets</li>
+<li>No artificial ordering introduced</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Less interpretable than one-hot encoding or ordinal encoding</li>
+<li>May not capture semantic relationships as well as language model-based approaches</li>
+<li>Performance depends on the nature of the categorical data</li>
+</ul>
+</section>
+<section id="textencoder" class="level4" data-number="8.5.4.2">
+<h4 data-number="8.5.4.2" class="anchored" data-anchor-id="textencoder"><span class="header-section-number">8.5.4.2</span> TextEncoder</h4>
+<p><strong>Approach</strong>: Uses pretrained language models from HuggingFace Hub to generate dense vector representations of text.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Exceptional performance on free-flowing text and natural language</li>
+<li>Captures semantic meaning and context</li>
+<li>Leverages knowledge from large-scale language model pretraining</li>
+<li>Can excel on datasets where domain-specific information aligns with pretraining data</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li><strong>Very computationally expensive</strong>: Significantly slower than other methods</li>
+<li>Requires heavy dependencies (PyTorch, transformers)</li>
+<li>Models are large and require downloading</li>
+<li>Impractical for CPU-only environments</li>
+<li>Performance on traditional categorical data (non-text, such as IDs) is not much better than simpler methods</li>
+</ul>
+</section>
+<section id="minhashencoder" class="level4" data-number="8.5.4.3">
+<h4 data-number="8.5.4.3" class="anchored" data-anchor-id="minhashencoder"><span class="header-section-number">8.5.4.3</span> MinHashEncoder</h4>
+<p><strong>Approach</strong>: Decomposes strings into n-grams and applies the MinHash algorithm for quick dimension reduction.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Very fast training time</li>
+<li>Simple and lightweight</li>
+<li>Minimal memory overhead</li>
+<li>Good for quick prototyping or very large-scale datasets</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Performance generally lags behind <code>StringEncoder</code> and <code>TextEncoder</code></li>
+<li>Less nuanced feature representation</li>
+<li>Less robust across different types of data</li>
+</ul>
+</section>
+<section id="gapencoder" class="level4" data-number="8.5.4.4">
+<h4 data-number="8.5.4.4" class="anchored" data-anchor-id="gapencoder"><span class="header-section-number">8.5.4.4</span> GapEncoder</h4>
+<p><strong>Approach</strong>: Estimates latent categories by finding common n-gram patterns across values, then encodes these patterns as numeric features.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Interpretable: Column names reflect the estimated categories</li>
+<li>Can group similar strings intelligently</li>
+<li>Reasonable performance across datasets</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Slower training time compared to <code>StringEncoder</code> and <code>MinHashEncoder</code></li>
+<li>Performance is on par with or slightly worse than the faster <code>StringEncoder</code></li>
+<li>Interpretability comes at the cost of training speed</li>
+<li>May require more computational resources for large datasets</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="summary-and-recommendations" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="summary-and-recommendations"><span class="header-section-number">8.6</span> Summary and Recommendations</h2>
+<p>Encoding features effectively is a critical step in preparing data for machine learning. The skrub library provides multiple options for handling different scenarios:</p>
+<ul>
+<li><strong>Start with <code>StringEncoder</code></strong> as a default for high-cardinality categorical features. It offers the best balance of speed, performance, and robustness across diverse datasets.</li>
+<li><strong>Use <code>OneHotEncoder</code></strong> for low-cardinality features (&lt; 40 unique values) to keep the feature space manageable.</li>
+<li><strong>Choose <code>TextEncoder</code></strong> if you’re working with true textual data (reviews, comments, descriptions) and have sufficient computational resources.</li>
+<li><strong>Consider <code>GapEncoder</code></strong> when interpretability is important and the additional training time can be dealt with.</li>
+<li><strong>Use <code>MinHashEncoder</code></strong> when you need maximum speed and are working with very large datasets.</li>
+</ul>
+<p>For numerical features, remember to use <code>SquashingScaler</code> for robust handling of outliers, and for datetime features, extract meaningful components and consider periodic encoding for cyclical patterns.</p>
+<p>The <code>TableVectorizer</code> integrates all these encoders automatically, dispatching columns to the appropriate encoder based on their data type and cardinality. This automation makes it easy to process mixed-type datasets efficiently while still allowing fine-grained control when needed. By default, the <code>TableVectorizer</code> uses the <code>OneHotEncoder</code> for categorical features with cardinality &lt;= 40, and <code>StringEncoder</code> for categorical features with cardinality &gt; 40.</p>
+<p>For a comprehensive empirical comparison of categorical encoding methods, refer to the <a href="https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html">categorical encoders benchmark</a>.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/06_tabular_pipeline.html" class="pagination-link" aria-label="Building a tabular pipeline">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Building a tabular pipeline</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/08_data_ops.html" class="pagination-link" aria-label="Building extensive pipelines with DataOps">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Building extensive pipelines with DataOps</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Feature engineering with skrub"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">    html:</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">        toc: true</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">    revealjs:</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">        slide-number: true</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">        toc: false</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">        code-fold: false</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">        code-tools: true</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>In previous chapters, we've learned how to clean and sanitize data, apply transformers</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>to specific columns, and select columns using flexible selectors. Now we dive into </span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>the heart of feature engineering: transforming different data types (numerical, </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>datetime, and categorical) into meaningful numeric features suitable for machine </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>learning models.</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>Both the <span class="in">`TableVectorizer`</span> and the <span class="in">`tabular_pipeline`</span> rely on the encoders covered</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>in this chapter to perform feature engineering. Understanding these transformers</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>will help you build more effective pipelines and make informed decisions about </span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>how to handle different types of data.</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 1: Scaling Numerical Features Safely</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="fu">### Numerical features with outliers</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>When dealing with numerical features that contain outliers (including infinite</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>values), standard scaling methods can be problematic. Outliers can dramatically</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>affect the centering and scaling of the entire dataset, causing the scaled inliers</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>to be compressed into a narrow range.</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>Consider this example:</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    generate_data_with_outliers,</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    plot_feature_with_outliers</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> generate_data_with_outliers()</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>plot_feature_with_outliers(values)</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>In this case, most of the values are in the range <span class="in">`[-2, 2]`</span>, but there are some </span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>large outliers in the range <span class="in">`[-40, 40]`</span> that can cause issues when the feature </span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>needs to be scaled. </span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="fu">### Regular scalers and their limitations</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>The **StandardScaler** computes mean and standard deviation across all values.</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>With outliers present, these statistics become unreliable, and the scaling factor</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>can become too small, squashing inlier values.</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>The **RobustScaler** uses quantiles (typically the 25th and 75th percentiles)</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>instead of mean/std, which makes it more resistant to outliers. However, it</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>doesn't bound the output values, so extreme outliers can still have very large</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>scaled values.</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## SquashingScaler: A robust solution</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>The <span class="in">`SquashingScaler`</span> combines robust centering with smooth clipping to handle</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>outliers effectively.</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>It works as following:</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It centers the median to 0, then it scales values using quantile-based statistics.</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It fills constant columns with 0s.</span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It applies a smooth squashing function:</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>$x_{\text{out}} = \frac{z}{\sqrt{1 + (z/B)^2}}$</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It constrains all values to the range</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>$<span class="co">[</span><span class="ot">-\texttt{max\_absolute\_value}, \texttt{max\_absolute\_value}</span><span class="co">]</span>$ (default: 3)</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Infinite values are mapped to the corresponding boundaries.</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NaN values are kept unchanged.</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="fu">### Advantages and disadvantages of `SquashingScaler`</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>The <span class="in">`SquashingScaler`</span> has various advantages over traditional scalers: </span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It is **outlier-resistant**: Outliers don't affect inlier scaling, unlike the</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="in">`StandardScaler`</span>.</span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It has **bounded output**: All values stay in a predictable range, ideal for </span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>neural networks and linear models.</span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It **handles edge cases**: The scaler works with infinite values and constant </span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>columns.</span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>It **preserves missing data**: NaN values are kept unchanged. </span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>A disadvantage of the <span class="in">`SquashingScaler`</span> is that it is **non-invertible**: </span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>The soft clipping function is smooth but cannot be exactly inverted. </span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a><span class="fu">### Comparison of scalers</span></span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>When compared on data with outliers:</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**StandardScaler** compresses inliers due to large scaling factors</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**RobustScaler** preserves relative scales but allows extreme outlier values</span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**SquashingScaler** keeps inliers in a reasonable range while smoothly bounding</span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a>all values</span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a>If we plot the impact of each scaler on the result, this is what we can see: </span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 2: Encoding Datetime Features</span></span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a><span class="fu">### Introduction to datetime encoding</span></span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a>Datetime features are very important for many data analysis and machine learning </span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>tasks, as they often carry significant information about temporal patterns and </span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a>trends. For instance, including as features the day of the week, time of day, or </span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>season can provide valuable insights for predictive modeling.</span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a>However, working with datetime data can be difficult due to the variety of formats</span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a>in which dates and times are represented. Typical formats include <span class="in">`"%Y-%m-%d"`</span>,</span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a><span class="in">`"%d/%m/%Y"`</span>, and <span class="in">`"%d %B %Y"`</span>, among others. Correct parsing of these and more</span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a>exotic formats is essential to avoid errors and ensure accurate feature extraction. </span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a>In this section we are going to cover how skrub can help with dealing with </span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a>datetimes using <span class="in">`to_datetime`</span>, <span class="in">`ToDatetime`</span>, and the <span class="in">`DatetimeEncoder`</span>. </span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a><span class="fu">### Converting datetime strings to datetime objects</span></span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a>Often, the first operation that must be done to work with datetime objects is </span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a>converting the datetimes from a string representation to a proper datetime object.</span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a>This is beneficial because using datetimes gives access to datetime-specific </span>
+<span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a>features, and allows to access the different parts of the datetime. </span>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a>Skrub provides different objects to deal with the conversion problem.</span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a>**`ToDatetime`** is a single column transformer that tries to conver the given</span>
+<span id="cb9-142"><a href="#cb9-142" aria-hidden="true" tabindex="-1"></a>column to datetime either by relying on a user-provided format, or by guessing</span>
+<span id="cb9-143"><a href="#cb9-143" aria-hidden="true" tabindex="-1"></a>common formats. Since this transformer must be applied to single columns (rather</span>
+<span id="cb9-144"><a href="#cb9-144" aria-hidden="true" tabindex="-1"></a>than dataframes), it is typically better to use it in conjunction with <span class="in">`ApplyToCols`</span>. </span>
+<span id="cb9-145"><a href="#cb9-145" aria-hidden="true" tabindex="-1"></a>Additionally, the <span class="in">`allow_reject`</span> parameter of <span class="in">`ApplyToCols`</span> should be set to <span class="in">`True`</span> </span>
+<span id="cb9-146"><a href="#cb9-146" aria-hidden="true" tabindex="-1"></a>to avoid raising exceptions for non-datetime columns:</span>
+<span id="cb9-147"><a href="#cb9-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-150"><a href="#cb9-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-151"><a href="#cb9-151" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
+<span id="cb9-152"><a href="#cb9-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-153"><a href="#cb9-153" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-154"><a href="#cb9-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {</span>
+<span id="cb9-156"><a href="#cb9-156" aria-hidden="true" tabindex="-1"></a>    <span class="st">"dates"</span>: [</span>
+<span id="cb9-157"><a href="#cb9-157" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-01-03"</span>,</span>
+<span id="cb9-158"><a href="#cb9-158" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-02-15"</span>,</span>
+<span id="cb9-159"><a href="#cb9-159" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-03-27"</span>,</span>
+<span id="cb9-160"><a href="#cb9-160" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2023-04-10"</span>,</span>
+<span id="cb9-161"><a href="#cb9-161" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb9-162"><a href="#cb9-162" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-163"><a href="#cb9-163" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span>
+<span id="cb9-164"><a href="#cb9-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-165"><a href="#cb9-165" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb9-166"><a href="#cb9-166" aria-hidden="true" tabindex="-1"></a>df_enc.info()</span>
+<span id="cb9-167"><a href="#cb9-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-168"><a href="#cb9-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-169"><a href="#cb9-169" aria-hidden="true" tabindex="-1"></a>**`to_datetime`** works similarly to </span>
+<span id="cb9-170"><a href="#cb9-170" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">pd.to_datetime</span><span class="co">](https://pandas.pydata.org/docs/reference/api/pandas.to_datetime.html#pandas.to_datetime)</span>, </span>
+<span id="cb9-171"><a href="#cb9-171" aria-hidden="true" tabindex="-1"></a>or the example shown above with <span class="in">`ApplyToCols`</span>. </span>
+<span id="cb9-172"><a href="#cb9-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-173"><a href="#cb9-173" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning}</span>
+<span id="cb9-174"><a href="#cb9-174" aria-hidden="true" tabindex="-1"></a><span class="in">`to_datetime`</span> is a stateless function, so it should not be used in a pipeline, because</span>
+<span id="cb9-175"><a href="#cb9-175" aria-hidden="true" tabindex="-1"></a>it does not guarantee consistency between <span class="in">`fit_transform`</span> and successive <span class="in">`transform`</span>. </span>
+<span id="cb9-176"><a href="#cb9-176" aria-hidden="true" tabindex="-1"></a><span class="in">`ApplyToCols(ToDatetime(), allow_reject=True)`</span> is a better solution for pipelines. </span>
+<span id="cb9-177"><a href="#cb9-177" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-178"><a href="#cb9-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-179"><a href="#cb9-179" aria-hidden="true" tabindex="-1"></a>Finally, the standard <span class="in">`Cleaner`</span> can be used for parsing datetimes, as it uses</span>
+<span id="cb9-180"><a href="#cb9-180" aria-hidden="true" tabindex="-1"></a><span class="in">`ToDatetime`</span> under the hood, and can take the <span class="in">`datetime_format`</span>. As the <span class="in">`Cleaner`</span></span>
+<span id="cb9-181"><a href="#cb9-181" aria-hidden="true" tabindex="-1"></a>is a transformer, it guarantees consistency between <span class="in">`fit_transform`</span> and <span class="in">`transform`</span>. </span>
+<span id="cb9-182"><a href="#cb9-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-183"><a href="#cb9-183" aria-hidden="true" tabindex="-1"></a><span class="fu">### Extracting features from datetimes</span></span>
+<span id="cb9-184"><a href="#cb9-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-185"><a href="#cb9-185" aria-hidden="true" tabindex="-1"></a>Datetimes cannot be used "as-is" for training ML models, and must instead be </span>
+<span id="cb9-186"><a href="#cb9-186" aria-hidden="true" tabindex="-1"></a>converted to numerical features. Typically, this is done by "splitting" the </span>
+<span id="cb9-187"><a href="#cb9-187" aria-hidden="true" tabindex="-1"></a>datetime parts (year, month, day etc.) into separate columns, so that each column</span>
+<span id="cb9-188"><a href="#cb9-188" aria-hidden="true" tabindex="-1"></a>contains only one number. </span>
+<span id="cb9-189"><a href="#cb9-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-190"><a href="#cb9-190" aria-hidden="true" tabindex="-1"></a>Additional features may also be of interest, such as the number of seconds since </span>
+<span id="cb9-191"><a href="#cb9-191" aria-hidden="true" tabindex="-1"></a>epoch (which increases monotonically and gives an indication of the order of entries), </span>
+<span id="cb9-192"><a href="#cb9-192" aria-hidden="true" tabindex="-1"></a>whether a date is a weekday or weekend, or the day of the year. </span>
+<span id="cb9-193"><a href="#cb9-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-194"><a href="#cb9-194" aria-hidden="true" tabindex="-1"></a>To achieve this with standard dataframe libraries, the code looks like this: </span>
+<span id="cb9-197"><a href="#cb9-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-198"><a href="#cb9-198" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.year</span>
+<span id="cb9-199"><a href="#cb9-199" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"month"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.month</span>
+<span id="cb9-200"><a href="#cb9-200" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day</span>
+<span id="cb9-201"><a href="#cb9-201" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.weekday</span>
+<span id="cb9-202"><a href="#cb9-202" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day_of_year</span>
+<span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"total_seconds"</span>] <span class="op">=</span> (</span>
+<span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a>    df_enc[<span class="st">"dates"</span>] <span class="op">-</span> pd.Timestamp(<span class="st">"1970-01-01"</span>)</span>
+<span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>) <span class="op">//</span> pd.Timedelta(seconds<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-207"><a href="#cb9-207" aria-hidden="true" tabindex="-1"></a>df_enc</span>
+<span id="cb9-208"><a href="#cb9-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-209"><a href="#cb9-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-210"><a href="#cb9-210" aria-hidden="true" tabindex="-1"></a>Skrub's <span class="in">`DatetimeEncoder`</span> allows to add the same features with a simpler interface.</span>
+<span id="cb9-211"><a href="#cb9-211" aria-hidden="true" tabindex="-1"></a>As the <span class="in">`DatetimeEncoder`</span> is a single column transformer, we use again <span class="in">`ApplyToCols`</span>. </span>
+<span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a>The <span class="in">`DatetimeEncoder`</span> includes various parameters to add more features to the </span>
+<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a>transformed dataframe:</span>
+<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`add_total_seconds`</span> adds the number of seconds since Epoch (1970-01-01)</span>
+<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`add_weekday`</span> adds the day in the week (to highlight weekends, for example)</span>
+<span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`add_day_of_year`</span> adds the day in year of the datetime</span>
+<span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-221"><a href="#cb9-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-222"><a href="#cb9-222" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder</span>
+<span id="cb9-223"><a href="#cb9-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-224"><a href="#cb9-224" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb9-225"><a href="#cb9-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-226"><a href="#cb9-226" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(add_total_seconds<span class="op">=</span><span class="va">True</span>, add_weekday<span class="op">=</span><span class="va">True</span>, add_day_of_year<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-227"><a href="#cb9-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-228"><a href="#cb9-228" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
+<span id="cb9-229"><a href="#cb9-229" aria-hidden="true" tabindex="-1"></a>df_enc</span>
+<span id="cb9-230"><a href="#cb9-230" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-231"><a href="#cb9-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-232"><a href="#cb9-232" aria-hidden="true" tabindex="-1"></a><span class="fu">### Periodic features</span></span>
+<span id="cb9-233"><a href="#cb9-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-234"><a href="#cb9-234" aria-hidden="true" tabindex="-1"></a>Periodic features are useful for training machine learning models because they</span>
+<span id="cb9-235"><a href="#cb9-235" aria-hidden="true" tabindex="-1"></a>capture the cyclical nature of certain data patterns. For example, features such </span>
+<span id="cb9-236"><a href="#cb9-236" aria-hidden="true" tabindex="-1"></a>as hours in a day or days in a week  often exhibit periodic behavior. </span>
+<span id="cb9-237"><a href="#cb9-237" aria-hidden="true" tabindex="-1"></a>By encoding these features periodically, models can better understand and predict </span>
+<span id="cb9-238"><a href="#cb9-238" aria-hidden="true" tabindex="-1"></a>patterns that repeat over time, such as daily traffic trends, or seasonal variations. </span>
+<span id="cb9-239"><a href="#cb9-239" aria-hidden="true" tabindex="-1"></a>This ensures that the model treats the start and end of a cycle as close neighbors, </span>
+<span id="cb9-240"><a href="#cb9-240" aria-hidden="true" tabindex="-1"></a>improving its ability to generalize and make accurate predictions.</span>
+<span id="cb9-241"><a href="#cb9-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-242"><a href="#cb9-242" aria-hidden="true" tabindex="-1"></a>This can be done manually with dataframe libraries. For example, circular encoding</span>
+<span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a>(a.k.a., trigonometric or sin/cos encoding) can be implemented with Pandas like so:</span>
+<span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb9-248"><a href="#cb9-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-249"><a href="#cb9-249" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb9-250"><a href="#cb9-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-251"><a href="#cb9-251" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.day_of_year</span>
+<span id="cb9-252"><a href="#cb9-252" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"day_of_year"</span>] <span class="op">/</span> <span class="dv">365</span>)</span>
+<span id="cb9-253"><a href="#cb9-253" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"day_of_year_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"day_of_year"</span>] <span class="op">/</span> <span class="dv">365</span>)</span>
+<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-255"><a href="#cb9-255" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday"</span>] <span class="op">=</span> df_enc[<span class="st">"dates"</span>].dt.weekday</span>
+<span id="cb9-256"><a href="#cb9-256" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
+<span id="cb9-257"><a href="#cb9-257" aria-hidden="true" tabindex="-1"></a>df_enc[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df_enc[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
+<span id="cb9-258"><a href="#cb9-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-259"><a href="#cb9-259" aria-hidden="true" tabindex="-1"></a>df_enc</span>
+<span id="cb9-260"><a href="#cb9-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-261"><a href="#cb9-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-262"><a href="#cb9-262" aria-hidden="true" tabindex="-1"></a>Alternatively, the <span class="in">`DatetimeEncoder`</span> can add periodic features using either circular</span>
+<span id="cb9-263"><a href="#cb9-263" aria-hidden="true" tabindex="-1"></a>or spline encoding through the <span class="in">`periodic_encoding`</span> parameter:</span>
+<span id="cb9-264"><a href="#cb9-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-267"><a href="#cb9-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-268"><a href="#cb9-268" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
+<span id="cb9-269"><a href="#cb9-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-270"><a href="#cb9-270" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_enc)</span>
+<span id="cb9-271"><a href="#cb9-271" aria-hidden="true" tabindex="-1"></a>df_enc</span>
+<span id="cb9-272"><a href="#cb9-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-273"><a href="#cb9-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-274"><a href="#cb9-274" aria-hidden="true" tabindex="-1"></a><span class="fu">## Part 3: Encoding Categorical Features</span></span>
+<span id="cb9-275"><a href="#cb9-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-276"><a href="#cb9-276" aria-hidden="true" tabindex="-1"></a><span class="fu">### Introduction </span></span>
+<span id="cb9-277"><a href="#cb9-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-278"><a href="#cb9-278" aria-hidden="true" tabindex="-1"></a>Real-world datasets rarely contain only numeric values. We frequently encounter</span>
+<span id="cb9-279"><a href="#cb9-279" aria-hidden="true" tabindex="-1"></a>categorical features—values that belong to discrete categories, such as names,</span>
+<span id="cb9-280"><a href="#cb9-280" aria-hidden="true" tabindex="-1"></a>occupations, geographic locations, or clothing sizes. Text data also falls into</span>
+<span id="cb9-281"><a href="#cb9-281" aria-hidden="true" tabindex="-1"></a>this category, since each unique string can be considered a categorical value.</span>
+<span id="cb9-282"><a href="#cb9-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-283"><a href="#cb9-283" aria-hidden="true" tabindex="-1"></a>The challenge is that machine learning models require numeric input. How do we</span>
+<span id="cb9-284"><a href="#cb9-284" aria-hidden="true" tabindex="-1"></a>convert these categorical values into numeric features that preserve their</span>
+<span id="cb9-285"><a href="#cb9-285" aria-hidden="true" tabindex="-1"></a>information and enable our models to make good predictions?</span>
+<span id="cb9-286"><a href="#cb9-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-287"><a href="#cb9-287" aria-hidden="true" tabindex="-1"></a>This chapter explores the various strategies and tools available in skrub to</span>
+<span id="cb9-288"><a href="#cb9-288" aria-hidden="true" tabindex="-1"></a>encode categorical features, with an eye on choosing the best method for our </span>
+<span id="cb9-289"><a href="#cb9-289" aria-hidden="true" tabindex="-1"></a>specific use case.</span>
+<span id="cb9-290"><a href="#cb9-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-291"><a href="#cb9-291" aria-hidden="true" tabindex="-1"></a><span class="fu">### Why categorical encoders matter</span></span>
+<span id="cb9-292"><a href="#cb9-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-293"><a href="#cb9-293" aria-hidden="true" tabindex="-1"></a>The way we encode categorical features significantly impacts our machine learning</span>
+<span id="cb9-294"><a href="#cb9-294" aria-hidden="true" tabindex="-1"></a>pipeline:</span>
+<span id="cb9-295"><a href="#cb9-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-296"><a href="#cb9-296" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Performance**: The encoding choice directly affects how well our model learns</span>
+<span id="cb9-297"><a href="#cb9-297" aria-hidden="true" tabindex="-1"></a>from categorical information</span>
+<span id="cb9-298"><a href="#cb9-298" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Efficiency**: Some encodings create many features (potentially thousands), </span>
+<span id="cb9-299"><a href="#cb9-299" aria-hidden="true" tabindex="-1"></a>which increases computation time and memory usage</span>
+<span id="cb9-300"><a href="#cb9-300" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Interpretability**: Different encoders provide varying levels of transparency</span>
+<span id="cb9-301"><a href="#cb9-301" aria-hidden="true" tabindex="-1"></a>in what features represent</span>
+<span id="cb9-302"><a href="#cb9-302" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Scalability**: Not all methods scale well to high-cardinality features (those</span>
+<span id="cb9-303"><a href="#cb9-303" aria-hidden="true" tabindex="-1"></a>with many unique values)</span>
+<span id="cb9-304"><a href="#cb9-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-305"><a href="#cb9-305" aria-hidden="true" tabindex="-1"></a>Using the appropriate encoder ensures we're making the best use of categorical</span>
+<span id="cb9-306"><a href="#cb9-306" aria-hidden="true" tabindex="-1"></a>information while keeping our model efficient and interpretable.</span>
+<span id="cb9-307"><a href="#cb9-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-308"><a href="#cb9-308" aria-hidden="true" tabindex="-1"></a><span class="fu">### Categorical encoders: pros and cons</span></span>
+<span id="cb9-309"><a href="#cb9-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-310"><a href="#cb9-310" aria-hidden="true" tabindex="-1"></a><span class="fu">#### One-Hot Encoding and Ordinal Encoding (scikit-learn)</span></span>
+<span id="cb9-311"><a href="#cb9-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-312"><a href="#cb9-312" aria-hidden="true" tabindex="-1"></a>**`OneHotEncoder`**: Creates a binary indicator column for each unique category, </span>
+<span id="cb9-313"><a href="#cb9-313" aria-hidden="true" tabindex="-1"></a>where <span class="in">`1`</span> denotes the presence of the category and <span class="in">`0`</span> its absence.</span>
+<span id="cb9-314"><a href="#cb9-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-315"><a href="#cb9-315" aria-hidden="true" tabindex="-1"></a>**Pros:**</span>
+<span id="cb9-316"><a href="#cb9-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-317"><a href="#cb9-317" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Straightforward and intuitive</span>
+<span id="cb9-318"><a href="#cb9-318" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Works well for low-cardinality features (few unique values)</span>
+<span id="cb9-319"><a href="#cb9-319" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Produces sparse matrices that can save memory</span>
+<span id="cb9-320"><a href="#cb9-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-321"><a href="#cb9-321" aria-hidden="true" tabindex="-1"></a>**Cons:**</span>
+<span id="cb9-322"><a href="#cb9-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-323"><a href="#cb9-323" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Becomes impractical with high-cardinality features (creates hundreds or</span>
+<span id="cb9-324"><a href="#cb9-324" aria-hidden="true" tabindex="-1"></a>thousands of columns)</span>
+<span id="cb9-325"><a href="#cb9-325" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Results in mostly zero-valued sparse matrices when dense, which is the situation</span>
+<span id="cb9-326"><a href="#cb9-326" aria-hidden="true" tabindex="-1"></a>when working with dataframes</span>
+<span id="cb9-327"><a href="#cb9-327" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Increases overfitting risk and computational overhead</span>
+<span id="cb9-328"><a href="#cb9-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-329"><a href="#cb9-329" aria-hidden="true" tabindex="-1"></a>The <span class="in">`OneHotEncoder`</span> is used by default by the skrub <span class="in">`TableVectorizer`</span> for categorical</span>
+<span id="cb9-330"><a href="#cb9-330" aria-hidden="true" tabindex="-1"></a>features with fewer than 40 unique values. </span>
+<span id="cb9-331"><a href="#cb9-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-332"><a href="#cb9-332" aria-hidden="true" tabindex="-1"></a>**`OrdinalEncoder`**: Assigns each category a numerical value (0, 1, 2, ...).</span>
+<span id="cb9-333"><a href="#cb9-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-334"><a href="#cb9-334" aria-hidden="true" tabindex="-1"></a>**Pros:**</span>
+<span id="cb9-335"><a href="#cb9-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-336"><a href="#cb9-336" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Very memory-efficient</span>
+<span id="cb9-337"><a href="#cb9-337" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Creates only one output column per input column</span>
+<span id="cb9-338"><a href="#cb9-338" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Fast to compute</span>
+<span id="cb9-339"><a href="#cb9-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-340"><a href="#cb9-340" aria-hidden="true" tabindex="-1"></a>**Cons:**</span>
+<span id="cb9-341"><a href="#cb9-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-342"><a href="#cb9-342" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Introduces artificial ordering among categories that may not exist in reality</span>
+<span id="cb9-343"><a href="#cb9-343" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Can mislead models into thinking some categories are "greater than" others</span>
+<span id="cb9-344"><a href="#cb9-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-345"><a href="#cb9-345" aria-hidden="true" tabindex="-1"></a><span class="fu">### Categorical encoders in skrub</span></span>
+<span id="cb9-346"><a href="#cb9-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-347"><a href="#cb9-347" aria-hidden="true" tabindex="-1"></a>All the categorical encoders in skrub are designed to encode any number of unique</span>
+<span id="cb9-348"><a href="#cb9-348" aria-hidden="true" tabindex="-1"></a>values using a fixed number of components: this number is controlled by the parameter</span>
+<span id="cb9-349"><a href="#cb9-349" aria-hidden="true" tabindex="-1"></a><span class="in">`n_components`</span> in each transformer. </span>
+<span id="cb9-350"><a href="#cb9-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-351"><a href="#cb9-351" aria-hidden="true" tabindex="-1"></a><span class="fu">#### StringEncoder</span></span>
+<span id="cb9-352"><a href="#cb9-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-353"><a href="#cb9-353" aria-hidden="true" tabindex="-1"></a>**Approach**: Applies term frequency-inverse document frequency (tf-idf) vectorization</span>
+<span id="cb9-354"><a href="#cb9-354" aria-hidden="true" tabindex="-1"></a>to character n-grams, followed by truncated singular value decomposition (SVD)</span>
+<span id="cb9-355"><a href="#cb9-355" aria-hidden="true" tabindex="-1"></a>for dimensionality reduction. This method is also known as </span>
+<span id="cb9-356"><a href="#cb9-356" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Latent Semantic Analysis</span><span class="co">](https://en.wikipedia.org/wiki/Latent_semantic_analysis)</span>. </span>
+<span id="cb9-357"><a href="#cb9-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-358"><a href="#cb9-358" aria-hidden="true" tabindex="-1"></a>**Pros:**</span>
+<span id="cb9-359"><a href="#cb9-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-360"><a href="#cb9-360" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**The best all-rounder**: Performs well on both categorical and text data</span>
+<span id="cb9-361"><a href="#cb9-361" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Fast training time</span>
+<span id="cb9-362"><a href="#cb9-362" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Robust and generalizes well across different datasets</span>
+<span id="cb9-363"><a href="#cb9-363" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>No artificial ordering introduced</span>
+<span id="cb9-364"><a href="#cb9-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-365"><a href="#cb9-365" aria-hidden="true" tabindex="-1"></a>**Cons:**</span>
+<span id="cb9-366"><a href="#cb9-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-367"><a href="#cb9-367" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Less interpretable than one-hot encoding or ordinal encoding</span>
+<span id="cb9-368"><a href="#cb9-368" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>May not capture semantic relationships as well as language model-based approaches</span>
+<span id="cb9-369"><a href="#cb9-369" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Performance depends on the nature of the categorical data</span>
+<span id="cb9-370"><a href="#cb9-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-371"><a href="#cb9-371" aria-hidden="true" tabindex="-1"></a><span class="fu">#### TextEncoder</span></span>
+<span id="cb9-372"><a href="#cb9-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-373"><a href="#cb9-373" aria-hidden="true" tabindex="-1"></a>**Approach**: Uses pretrained language models from HuggingFace Hub to generate</span>
+<span id="cb9-374"><a href="#cb9-374" aria-hidden="true" tabindex="-1"></a>dense vector representations of text.</span>
+<span id="cb9-375"><a href="#cb9-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-376"><a href="#cb9-376" aria-hidden="true" tabindex="-1"></a>**Pros:**</span>
+<span id="cb9-377"><a href="#cb9-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-378"><a href="#cb9-378" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Exceptional performance on free-flowing text and natural language</span>
+<span id="cb9-379"><a href="#cb9-379" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Captures semantic meaning and context</span>
+<span id="cb9-380"><a href="#cb9-380" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Leverages knowledge from large-scale language model pretraining</span>
+<span id="cb9-381"><a href="#cb9-381" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Can excel on datasets where domain-specific information aligns with pretraining data</span>
+<span id="cb9-382"><a href="#cb9-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-383"><a href="#cb9-383" aria-hidden="true" tabindex="-1"></a>**Cons:**</span>
+<span id="cb9-384"><a href="#cb9-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-385"><a href="#cb9-385" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Very computationally expensive**: Significantly slower than other methods</span>
+<span id="cb9-386"><a href="#cb9-386" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Requires heavy dependencies (PyTorch, transformers)</span>
+<span id="cb9-387"><a href="#cb9-387" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Models are large and require downloading</span>
+<span id="cb9-388"><a href="#cb9-388" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Impractical for CPU-only environments</span>
+<span id="cb9-389"><a href="#cb9-389" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Performance on traditional categorical data (non-text, such as IDs) is not much</span>
+<span id="cb9-390"><a href="#cb9-390" aria-hidden="true" tabindex="-1"></a>better than simpler methods</span>
+<span id="cb9-391"><a href="#cb9-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-392"><a href="#cb9-392" aria-hidden="true" tabindex="-1"></a><span class="fu">#### MinHashEncoder</span></span>
+<span id="cb9-393"><a href="#cb9-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-394"><a href="#cb9-394" aria-hidden="true" tabindex="-1"></a>**Approach**: Decomposes strings into n-grams and applies the MinHash algorithm</span>
+<span id="cb9-395"><a href="#cb9-395" aria-hidden="true" tabindex="-1"></a>for quick dimension reduction.</span>
+<span id="cb9-396"><a href="#cb9-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-397"><a href="#cb9-397" aria-hidden="true" tabindex="-1"></a>**Pros:**</span>
+<span id="cb9-398"><a href="#cb9-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-399"><a href="#cb9-399" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Very fast training time</span>
+<span id="cb9-400"><a href="#cb9-400" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Simple and lightweight</span>
+<span id="cb9-401"><a href="#cb9-401" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Minimal memory overhead</span>
+<span id="cb9-402"><a href="#cb9-402" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Good for quick prototyping or very large-scale datasets</span>
+<span id="cb9-403"><a href="#cb9-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-404"><a href="#cb9-404" aria-hidden="true" tabindex="-1"></a>**Cons:**</span>
+<span id="cb9-405"><a href="#cb9-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-406"><a href="#cb9-406" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Performance generally lags behind <span class="in">`StringEncoder`</span> and <span class="in">`TextEncoder`</span></span>
+<span id="cb9-407"><a href="#cb9-407" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Less nuanced feature representation</span>
+<span id="cb9-408"><a href="#cb9-408" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Less robust across different types of data</span>
+<span id="cb9-409"><a href="#cb9-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-410"><a href="#cb9-410" aria-hidden="true" tabindex="-1"></a><span class="fu">#### GapEncoder</span></span>
+<span id="cb9-411"><a href="#cb9-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-412"><a href="#cb9-412" aria-hidden="true" tabindex="-1"></a>**Approach**: Estimates latent categories by finding common n-gram patterns</span>
+<span id="cb9-413"><a href="#cb9-413" aria-hidden="true" tabindex="-1"></a>across values, then encodes these patterns as numeric features.</span>
+<span id="cb9-414"><a href="#cb9-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-415"><a href="#cb9-415" aria-hidden="true" tabindex="-1"></a>**Pros:**</span>
+<span id="cb9-416"><a href="#cb9-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-417"><a href="#cb9-417" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Interpretable: Column names reflect the estimated categories</span>
+<span id="cb9-418"><a href="#cb9-418" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Can group similar strings intelligently</span>
+<span id="cb9-419"><a href="#cb9-419" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Reasonable performance across datasets</span>
+<span id="cb9-420"><a href="#cb9-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-421"><a href="#cb9-421" aria-hidden="true" tabindex="-1"></a>**Cons:**</span>
+<span id="cb9-422"><a href="#cb9-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-423"><a href="#cb9-423" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Slower training time compared to <span class="in">`StringEncoder`</span> and <span class="in">`MinHashEncoder`</span></span>
+<span id="cb9-424"><a href="#cb9-424" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Performance is on par with or slightly worse than the faster <span class="in">`StringEncoder`</span></span>
+<span id="cb9-425"><a href="#cb9-425" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Interpretability comes at the cost of training speed</span>
+<span id="cb9-426"><a href="#cb9-426" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>May require more computational resources for large datasets</span>
+<span id="cb9-427"><a href="#cb9-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-428"><a href="#cb9-428" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary and Recommendations</span></span>
+<span id="cb9-429"><a href="#cb9-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-430"><a href="#cb9-430" aria-hidden="true" tabindex="-1"></a>Encoding features effectively is a critical step in preparing data for machine</span>
+<span id="cb9-431"><a href="#cb9-431" aria-hidden="true" tabindex="-1"></a>learning. The skrub library provides multiple options for handling different scenarios:</span>
+<span id="cb9-432"><a href="#cb9-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-433"><a href="#cb9-433" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Start with `StringEncoder`** as a default for high-cardinality categorical</span>
+<span id="cb9-434"><a href="#cb9-434" aria-hidden="true" tabindex="-1"></a>features. It offers the best balance of speed, performance, and robustness across</span>
+<span id="cb9-435"><a href="#cb9-435" aria-hidden="true" tabindex="-1"></a>diverse datasets.</span>
+<span id="cb9-436"><a href="#cb9-436" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Use `OneHotEncoder`** for low-cardinality features (&lt; 40 unique values) to</span>
+<span id="cb9-437"><a href="#cb9-437" aria-hidden="true" tabindex="-1"></a>keep the feature space manageable.</span>
+<span id="cb9-438"><a href="#cb9-438" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Choose `TextEncoder`** if you're working with true textual data (reviews,</span>
+<span id="cb9-439"><a href="#cb9-439" aria-hidden="true" tabindex="-1"></a>comments, descriptions) and have sufficient computational resources.</span>
+<span id="cb9-440"><a href="#cb9-440" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Consider `GapEncoder`** when interpretability is important and </span>
+<span id="cb9-441"><a href="#cb9-441" aria-hidden="true" tabindex="-1"></a>the additional training time can be dealt with. </span>
+<span id="cb9-442"><a href="#cb9-442" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Use `MinHashEncoder`** when you need maximum speed and are working with very</span>
+<span id="cb9-443"><a href="#cb9-443" aria-hidden="true" tabindex="-1"></a>large datasets.</span>
+<span id="cb9-444"><a href="#cb9-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-445"><a href="#cb9-445" aria-hidden="true" tabindex="-1"></a>For numerical features, remember to use <span class="in">`SquashingScaler`</span> for robust handling of</span>
+<span id="cb9-446"><a href="#cb9-446" aria-hidden="true" tabindex="-1"></a>outliers, and for datetime features, extract meaningful components and consider</span>
+<span id="cb9-447"><a href="#cb9-447" aria-hidden="true" tabindex="-1"></a>periodic encoding for cyclical patterns.</span>
+<span id="cb9-448"><a href="#cb9-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-449"><a href="#cb9-449" aria-hidden="true" tabindex="-1"></a>The <span class="in">`TableVectorizer`</span> integrates all these encoders automatically, dispatching columns</span>
+<span id="cb9-450"><a href="#cb9-450" aria-hidden="true" tabindex="-1"></a>to the appropriate encoder based on their data type and cardinality. This automation</span>
+<span id="cb9-451"><a href="#cb9-451" aria-hidden="true" tabindex="-1"></a>makes it easy to process mixed-type datasets efficiently while still allowing</span>
+<span id="cb9-452"><a href="#cb9-452" aria-hidden="true" tabindex="-1"></a>fine-grained control when needed. By default, the <span class="in">`TableVectorizer`</span> uses the </span>
+<span id="cb9-453"><a href="#cb9-453" aria-hidden="true" tabindex="-1"></a><span class="in">`OneHotEncoder`</span> for categorical features with cardinality &lt;= 40, and <span class="in">`StringEncoder`</span></span>
+<span id="cb9-454"><a href="#cb9-454" aria-hidden="true" tabindex="-1"></a>for categorical features with cardinality &gt; 40.</span>
+<span id="cb9-455"><a href="#cb9-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-456"><a href="#cb9-456" aria-hidden="true" tabindex="-1"></a>For a comprehensive empirical comparison of categorical encoding methods, refer to the</span>
+<span id="cb9-457"><a href="#cb9-457" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">categorical encoders benchmark</span><span class="co">](https://skrub-data.org/skrub-materials/pages/notebooks/categorical-encoders/categorical-encoders.html)</span>.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

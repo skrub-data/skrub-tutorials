@@ -6,8 +6,8 @@
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.37">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <title>Skrub Slides – Feature engineering with skrub</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -207,14 +207,19 @@
 </section>
 <section id="under-the-hood-of-the-tablevectorizer-and-tabular_pipeline" class="slide level2">
 <h2>Under the hood of the <code>TableVectorizer</code> and <code>tabular_pipeline</code></h2>
-<p>Both the <code>TableVectorizer</code> and the <code>tabular_pipeline</code> rely on various skrub encoders to feature-engineer the given table: - categorical features need to be converted into numbers - datetime features need to be split in datetime parts - numeric feature need to be scaled</p>
+<p>Both the <code>TableVectorizer</code> and the <code>tabular_pipeline</code> rely on skrub encoders do feature engineering:</p>
+<ul>
+<li>categorical features need to be converted into numbers</li>
+<li>datetime features need to be split in datetime parts</li>
+<li>numeric feature need to be scaled</li>
+</ul>
 <p>In this chapter we will cover the relevant skrub transformers in more detail</p>
 </section>
 <section id="safe-scaling-of-numerical-features" class="slide level2 scrollable">
 <h2>Safe scaling of numerical features</h2>
 <p>Consider a situation where a numerical feature includes large outliers.</p>
 <p>Most values are in range [-2, 2], but some outliers are in [-40, 40]:</p>
-<div id="ec2bdd1c" class="cell" data-execution_count="1">
+<div id="9c51ead4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
 <span id="cb1-2"><a></a>    generate_data_with_outliers,</span>
 <span id="cb1-3"><a></a>    plot_feature_with_outliers</span>
@@ -252,13 +257,13 @@
 <span id="cb2-3"><a></a>scaler <span class="op">=</span> SquashingScaler()</span>
 <span id="cb2-4"><a></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="comparing-the-scalers">Comparing the scalers</h3>
-<div id="c8ad6a36" class="cell" data-execution_count="2">
+<div id="8d90030a" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
 <span id="cb3-2"><a></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure>
-<p><img data-src="07_feature_eng_all_files/figure-html/cell-3-output-1.png" width="815" height="491"></p>
+<p><img data-src="07_feature_eng_all_files/figure-html/cell-3-output-1.png" width="813" height="491"></p>
 </figure>
 </div>
 </div>
@@ -291,7 +296,7 @@
 <p>How to convert these features to numbers?</p>
 <h3 id="one-hot-encoding">One-Hot Encoding</h3>
 <p>Creates binary indicator columns:</p>
-<div id="69bbed72" class="cell" data-execution_count="3">
+<div id="595bb83b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb4-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
 <span id="cb4-3"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -300,26 +305,16 @@
 <span id="cb4-6"><a></a>encoder <span class="op">=</span> OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb4-7"><a></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><strong>Pros</strong>: Intuitive, works well for few categories <strong>Cons</strong>: Explodes with many categories, creates sparse matrices</p>
-<h3 id="ordinal-encoding">Ordinal Encoding</h3>
-<p>Assigns sequential numbers:</p>
-<div id="79fa8e11" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>pd.Categorical(X[<span class="st">"color"</span>]).codes</span>
-<span id="cb5-2"><a></a><span class="co"># red=0, blue=1, etc.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>array([1, 0, 1], dtype=int8)</code></pre>
-</div>
-</div>
-<p><strong>Pros</strong>: Memory efficient <strong>Cons</strong>: Introduces artificial ordering, lacking context</p>
+<p><strong>Pros</strong>: Intuitive, works well for few categories <strong>Cons</strong>: Explodes with many categories, creates sparse matrices, leads to overfitting, worsens model interpretability</p>
 <h3 id="the-challenge-high-cardinality-features">The Challenge: High-Cardinality Features</h3>
 <p>What if you have 1000+ unique values (IDs, free text)?</p>
 <h3 id="how-skrub-deals-with-categorical-features">How skrub deals with categorical features</h3>
 <p>Skrub implements four different strategies: - <code>StringEncoder</code> - <code>TextEncoder</code> - <code>MinHashEncoder</code> - <code>GapEncoder</code></p>
 <h3 id="stringencoder-best-all-rounder">StringEncoder: Best All-Rounder</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> StringEncoder</span>
-<span id="cb7-2"><a></a></span>
-<span id="cb7-3"><a></a>encoder <span class="op">=</span> StringEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb7-4"><a></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> StringEncoder</span>
+<span id="cb5-2"><a></a></span>
+<span id="cb5-3"><a></a>encoder <span class="op">=</span> StringEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-4"><a></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li>Uses TF-IDF + SVD for dimensionality reduction</li>
 <li>Fixed output dimension (n_components)</li>
@@ -328,11 +323,14 @@
 <li>Default in both <code>TableVectorizer</code> and <code>tabular_pipeline</code></li>
 </ul>
 <h3 id="textencoder-for-natural-language">TextEncoder: For Natural Language</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> TextEncoder</span>
-<span id="cb8-2"><a></a></span>
-<span id="cb8-3"><a></a>encoder <span class="op">=</span> TextEncoder()</span>
-<span id="cb8-4"><a></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>Pros</strong>: Captures semantic meaning, works very well on text <strong>Cons</strong>: Very slow, requires heavy dependencies</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> TextEncoder</span>
+<span id="cb6-2"><a></a></span>
+<span id="cb6-3"><a></a>encoder <span class="op">=</span> TextEncoder()</span>
+<span id="cb6-4"><a></a>encoded <span class="op">=</span> ApplyToCols(encoder).fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Captures semantic meaning, works very well on text</li>
+<li>Very slow on CPU, requires sentence-transformers (heavy dependency)</li>
+</ul>
 <h3 class="smaller" id="encoder-comparison">Encoder Comparison</h3>
 <table class="caption-top">
 <thead>
@@ -355,7 +353,7 @@
 <tr class="even">
 <td>StringEncoder</td>
 <td>Fast</td>
-<td>Excellent</td>
+<td>Good</td>
 <td>Low</td>
 <td>Default choice</td>
 </tr>
@@ -401,13 +399,58 @@
 <p>Correct parsing is essential for feature extraction.</p>
 <h3 id="converting-strings-to-datetime">Converting Strings to Datetime</h3>
 <p><strong><code>ToDatetime</code></strong>: Single column transformer with format guessing:</p>
-<div id="fc84e269" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
-<span id="cb9-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb9-3"><a></a></span>
-<span id="cb9-4"><a></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"dates"</span>: [<span class="st">"2023-01-03"</span>, <span class="st">"2023-02-15"</span>]})</span>
-<span id="cb9-5"><a></a>df_dt <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
-<span id="cb9-6"><a></a>df_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cf1ef25e" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
+<span id="cb7-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-3"><a></a></span>
+<span id="cb7-4"><a></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"dates"</span>: [<span class="st">"2023-01-03"</span>, <span class="st">"2023-02-15"</span>]})</span>
+<span id="cb7-5"><a></a>df_dt <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb7-6"><a></a>df_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe caption-top" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">dates</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2023-01-03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2023-02-15</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p><strong><code>Cleaner</code></strong>: Same machinery:</p>
+<div id="5b442373" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb8-2"><a></a></span>
+<span id="cb8-3"><a></a>cleaner <span class="op">=</span> Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>)</span>
+<span id="cb8-4"><a></a>df_clean <span class="op">=</span> cleaner.fit_transform(df)</span>
+<span id="cb8-5"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 <style scoped="">
@@ -446,62 +489,18 @@
 </div>
 </div>
 </div>
-<p><strong><code>Cleaner</code></strong>: Also parses datetimes with custom format:</p>
-<div id="c6e8b631" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
-<span id="cb10-2"><a></a></span>
-<span id="cb10-3"><a></a>cleaner <span class="op">=</span> Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>)</span>
-<span id="cb10-4"><a></a>df_clean <span class="op">=</span> cleaner.fit_transform(df)</span>
-<span id="cb10-5"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">dates</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>2023-01-03</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2023-02-15</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
+<p>Both objects can take a <code>datetime_format</code> if known.</p>
 <h3 class="smaller" id="extracting-datetime-features">Extracting Datetime Features</h3>
 <p>Datetimes must be converted to numerical features:</p>
-<div id="566f8df1" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>df_dt[<span class="st">"year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.year</span>
-<span id="cb11-2"><a></a>df_dt[<span class="st">"month"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.month</span>
-<span id="cb11-3"><a></a>df_dt[<span class="st">"day"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day</span>
-<span id="cb11-4"><a></a>df_dt[<span class="st">"weekday"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.weekday</span>
-<span id="cb11-5"><a></a>df_dt[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day_of_year</span>
-<span id="cb11-6"><a></a>df_dt[<span class="st">"total_seconds"</span>] <span class="op">=</span> (df_dt[<span class="st">"dates"</span>] <span class="op">-</span> pd.Timestamp(<span class="st">"1970-01-01"</span>)) <span class="op">//</span> pd.Timedelta(<span class="st">'1s'</span>)</span>
-<span id="cb11-7"><a></a>df_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div id="b4255af5" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df_dt[<span class="st">"year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.year</span>
+<span id="cb9-2"><a></a>df_dt[<span class="st">"month"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.month</span>
+<span id="cb9-3"><a></a>df_dt[<span class="st">"day"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day</span>
+<span id="cb9-4"><a></a>df_dt[<span class="st">"weekday"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.weekday</span>
+<span id="cb9-5"><a></a>df_dt[<span class="st">"day_of_year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day_of_year</span>
+<span id="cb9-6"><a></a>df_dt[<span class="st">"total_seconds"</span>] <span class="op">=</span> (df_dt[<span class="st">"dates"</span>] <span class="op">-</span> pd.Timestamp(<span class="st">"1970-01-01"</span>)) <span class="op">//</span> pd.Timedelta(<span class="st">'1s'</span>)</span>
+<span id="cb9-7"><a></a>df_dt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -558,19 +557,19 @@
 </div>
 </div>
 <h3 id="simpler-with-datetimeencoder">Simpler with DatetimeEncoder</h3>
-<div id="bd0fc064" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, ApplyToCols</span>
-<span id="cb12-2"><a></a></span>
-<span id="cb12-3"><a></a>de <span class="op">=</span> DatetimeEncoder(</span>
-<span id="cb12-4"><a></a>    add_total_seconds<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-5"><a></a>    add_weekday<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-6"><a></a>    add_day_of_year<span class="op">=</span><span class="va">True</span></span>
-<span id="cb12-7"><a></a>)</span>
-<span id="cb12-8"><a></a></span>
-<span id="cb12-9"><a></a>df_dt <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
-<span id="cb12-10"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
-<span id="cb12-11"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="3ed300a6" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, ApplyToCols</span>
+<span id="cb10-2"><a></a></span>
+<span id="cb10-3"><a></a>de <span class="op">=</span> DatetimeEncoder(</span>
+<span id="cb10-4"><a></a>    add_total_seconds<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-5"><a></a>    add_weekday<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-6"><a></a>    add_day_of_year<span class="op">=</span><span class="va">True</span></span>
+<span id="cb10-7"><a></a>)</span>
+<span id="cb10-8"><a></a></span>
+<span id="cb10-9"><a></a>df_dt <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>).fit_transform(df)</span>
+<span id="cb10-10"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
+<span id="cb10-11"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -631,16 +630,16 @@
 <li>Hour: 0-23, but 23 and 0 are close</li>
 </ul>
 <h3 id="circular-sincos-encoding">Circular (Sin/Cos) Encoding</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-2"><a></a></span>
-<span id="cb13-3"><a></a>df[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
-<span id="cb13-4"><a></a>df[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a></a></span>
+<span id="cb11-3"><a></a>df[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
+<span id="cb11-4"><a></a>df[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Or with <code>DatetimeEncoder</code>:</p>
-<div id="0657474f" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
-<span id="cb14-2"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
-<span id="cb14-3"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div id="42de9fac" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
+<span id="cb12-2"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
+<span id="cb12-3"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -694,11 +693,11 @@
 </div>
 </div>
 <h3 id="spline-encoding-alternative">Spline Encoding Alternative</h3>
-<div id="df3ac930" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"spline"</span>)</span>
-<span id="cb15-2"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
-<span id="cb15-3"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div id="2aa23935" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"spline"</span>)</span>
+<span id="cb13-2"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
+<span id="cb13-3"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -790,14 +789,14 @@
 <h3 id="example-spline-periodic-features">Example: spline periodic features</h3>
 
 <img data-src="images/periodic_features_light_transparent.png" class="r-stretch quarto-figure-center"><p class="caption">example of periodic features generated with splines</p></section>
-<section id="in-summary-2" class="slide level2">
-<h2>In summary</h2>
+<section id="what-we-have-seen-in-this-chapter" class="slide level2">
+<h2>What we have seen in this chapter</h2>
 <ul>
+<li><code>SqushingScaler</code> provides robust and smooth scaling of numeric values with outliers</li>
+<li>The <code>StringEncoder</code> is a good default for encoding strings</li>
+<li>The <code>TextEncoder</code> works well on meaningful text data</li>
 <li>Use <code>ToDatetime</code> or <code>Cleaner</code> to parse string dates</li>
-<li><code>DatetimeEncoder</code> extracts useful features</li>
-<li>Use periodic encoding for cyclical features</li>
-<li>Circular encoding: sin/cos transformation</li>
-<li>Spline encoding: alternative periodic approach</li>
+<li><code>DatetimeEncoder</code> extracts useful features, including periodic features</li>
 </ul>
 
 

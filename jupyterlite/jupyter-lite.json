@@ -2,14 +2,14 @@
   "jupyter-config-data": {
     "appName": "JupyterLite",
     "appUrl": "./lab",
-    "appVersion": "0.7.5",
+    "appVersion": "0.7.6",
     "baseUrl": "./",
     "defaultKernelName": "python",
     "faviconUrl": "./lab/favicon.ico",
     "federated_extensions": [
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.c632334bd55eee9396d9.js",
+        "load": "static/remoteEntry.016fceb1d9e4f15b.js",
         "name": "@jupyter-notebook/lab-extension",
         "style": "./style"
       },
@@ -20,11 +20,11 @@
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.75ef053ae02f40a820e3.js",
+        "load": "static/remoteEntry.da7e918938a99624da5c.js",
         "name": "jupyterlab-jupytext"
       },
       {
-        "load": "static/remoteEntry.bbf25df5110252151416.js",
+        "load": "static/remoteEntry.2a6392a40c19ad8383a0.js",
         "mimeExtension": "./mimeExtension",
         "name": "jupyterlab-plotly"
       },

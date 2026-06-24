@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Riccardo Cappuzzo">
 
-<title>Inria Academy - skrub like a pro – Inria Academy - Skrub like a pro</title>
+<title>Skrub - machine learning with dataframes – Inria Academy - Skrub like a pro</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -75,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-21ca2d58089b899f74b84f303993de13.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a585631caaf8dceca076a51019091dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -165,10 +165,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#setting-up-a-local-environment" id="toc-setting-up-a-local-environment" class="nav-link" data-scroll-target="#setting-up-a-local-environment">Setting up a local environment</a>
   <ul class="collapse">
-  <li><a href="#using-pixi" id="toc-using-pixi" class="nav-link" data-scroll-target="#using-pixi">Using pixi</a></li>
   <li><a href="#using-pip" id="toc-using-pip" class="nav-link" data-scroll-target="#using-pip">Using <code>pip</code></a></li>
   <li><a href="#using-conda" id="toc-using-conda" class="nav-link" data-scroll-target="#using-conda">Using conda</a></li>
   <li><a href="#using-uv" id="toc-using-uv" class="nav-link" data-scroll-target="#using-uv">Using <code>uv</code></a></li>
+  <li><a href="#using-pixi" id="toc-using-pixi" class="nav-link" data-scroll-target="#using-pixi">Using pixi</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -179,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Inria Academy - skrub like a pro</h1>
+<h1 class="title">Skrub - machine learning with dataframes</h1>
 </div>
 
 
@@ -202,12 +202,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This is the website for the <a href="https://www.inria-academy.fr/formation/skrub-like-a-pro-clean-prepare-and-transform-your-data-faster/">Inria Academy course</a> on the <a href="https://skrub-data.org/stable/">skrub package</a>: it contains all the material used for the course, including the datasets and exercises used during the session.</p>
+<p>This website hosts the material used for teaching how to use the <a href="https://skrub-data.org/stable/">skrub package</a>: it contains all the material used for the course, including the datasets and exercises used during the session.</p>
 <p>Choose your learning format:</p>
 <div class="grid">
 <section id="book-format" class="level2 g-col-6">
 <h2 class="anchored" data-anchor-id="book-format">📖 Book Format</h2>
-<p>Complete course material in book format with detailed explanations.</p>
+<p>Complete course material in book format with detailed explanations. The book includes more detail that isn’t covered in the slides.</p>
 <p><a href="book/index.html" class="btn btn-primary">Access the Book →</a></p>
 </section>
 <section id="presentation-slides" class="level2 g-col-6">
@@ -220,10 +220,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="interactive-exercises">💻 Interactive Exercises</h2>
 <p>Try the exercises in your browser with JupyterLite (no installation required).</p>
 <p><a href="jupyterlite/lab/" class="btn btn-success">Launch JupyterLite →</a></p>
+<p>If you want to run the code locally, refer to the <a href="#prepration-and-setup">Preparation and setup</a> section for detailed instructions.</p>
 </section>
 <section id="structure-of-the-course" class="level2">
 <h2 class="anchored" data-anchor-id="structure-of-the-course">Structure of the course</h2>
-<p>The course covers the main features of skrub, from data exploration to pipeline construction, with the notable exclusion of the Data Ops.</p>
+<p>The course covers the main features of skrub, from data exploration to pipeline construction, with a short discussion about Data Ops.</p>
 <p>Each chapter includes a section that describes how a specific feature may assist in building a machine learning pipeline, along with practical code examples.</p>
 <p>Some chapters include exercises for participants to work with the explained features. These exercises are made available in <code>content/exercises</code>, as well as at the end of the respective lesson in <code>content/notebooks</code>.</p>
 <p>The content of the book is split in sections, and each section includes a “final quiz” that covers the subjects covered up to that point.</p>
@@ -247,43 +248,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>All notebooks used in the course are found in <code>content/notebooks</code>, while the exercises are in <code>content/exercises</code>.</p>
 </div>
 </div>
-<section id="using-pixi" class="level3">
-<h3 class="anchored" data-anchor-id="using-pixi">Using pixi</h3>
-<p>The easiest way to set up the environment is by installing and using <a href="https://pixi.sh/latest/installation/">pixi</a>. Follow the platform-specific instructions in the link to install pixi, then open a terminal window in the folder of the repository you cloned.</p>
-<p>Run</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> install</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>to create the environment, followed by</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>to start a Jupyter lab instance.</p>
-</section>
 <section id="using-pip" class="level3">
 <h3 class="anchored" data-anchor-id="using-pip">Using <code>pip</code></h3>
 <p>Create the and activate the environment:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv skrub-tutorial</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> skrub-tutorial/bin/activate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv skrub-tutorial</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> skrub-tutorial/bin/activate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Install the required dependencies using the <code>requirements.txt</code> file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Start the Jupyter lab instance:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="using-conda" class="level3">
 <h3 class="anchored" data-anchor-id="using-conda">Using conda</h3>
 <p>An <code>environment.yaml</code> file is provided to create a conda environment.</p>
 <p>Create and activate the environment with</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yaml</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate skrub-tutorial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yaml</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate skrub-tutorial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then, start a jupyter lab instance:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="using-uv" class="level3">
 <h3 class="anchored" data-anchor-id="using-uv">Using <code>uv</code></h3>
 <p>Create the environment using <code>pyproject.toml</code> as the requirement file.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install <span class="at">-r</span> pyproject.toml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install <span class="at">-r</span> pyproject.toml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Activate the environment that was created in the folder.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Start the Jupyter lab instance:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">jupyter</span> lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="using-pixi" class="level3">
+<h3 class="anchored" data-anchor-id="using-pixi">Using pixi</h3>
+<p>Follow the platform-specific instructions in the link to install <a href="https://pixi.sh/latest/installation/">pixi</a>, then open a terminal window in the folder of the repository you cloned.</p>
+<p>Run</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> install</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>to create the environment, followed by</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run lab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>to start a Jupyter lab instance.</p>
 
 
 </section>
