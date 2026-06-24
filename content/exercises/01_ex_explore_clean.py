@@ -91,10 +91,13 @@ TableReport(df)
 # - Datetimes are parsed properly (hint: use `"%d-%b-%Y"` as the datetime format)
 # - All columns with more than 50% missing values are removed
 # - Numerical features are converted to `float32`
+# 
+# **Hint**: You can write `Cleaner?` in a cell to see the documentation for the 
+# `Cleaner` class.
 
 # %%
 from skrub import Cleaner
-
+# %%
 # Write your answer here
 #
 #
@@ -112,7 +115,7 @@ from skrub import Cleaner
 cleaner = Cleaner(
     drop_if_constant=True,
     drop_null_fraction=0.5,
-    numeric_dtype="float32",
+    cast_to_float32=True,
     datetime_format="%d-%b-%Y",
 )
 

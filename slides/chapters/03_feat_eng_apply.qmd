@@ -96,11 +96,11 @@ Remember that columns that are not selected pass through without any change.
 
 ```{python}
 from skrub import ToDatetime, DatetimeEncoder
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline
 
-encode_datetime = Pipeline(
-    ApplyToCols(ToDatetime(), cols="date"), 
-    ApplyToCols(DatetimeEncoder(), cols="date")
+encode_datetime = make_pipeline(
+    ApplyToCols(ToDatetime(), cols="date"),
+    ApplyToCols(DatetimeEncoder(), cols="date"),
 )
 encode_datetime.fit_transform(df)
 ```
@@ -179,53 +179,6 @@ DropCols("date").fit_transform(df)
 
 More advanced selection rules in the next chapter! 
 
-## Build your own `SingleColumnTransformer` {.smaller}
-Consider an example like this: 
-
-```{python}
-import pandas as pd
-df = pd.DataFrame({'sent': ["AB123", "BD601", "HS014"], 'received': ["AB145", "DU393", "WB988"]})
-df
-```
-
-Given a code like `AB123`, we want to separate the first two letters from the digits. 
-
-## Build your own `SingleColumnTransformer` {.smaller auto-animate="true"}
-The `SingleColumnTransformer` allows to define a transformer with custom rules,
-while `RejectColumn` gives control over the behavior in presence of invalid inputs.
-
-```{python code-line-numbers="|7,15-17"}
-from skrub.core import RejectColumn, SingleColumnTransformer
-
-class ZipcodeParser(SingleColumnTransformer):
-    def fit_transform(self, X, y=None):
-        col_name = X.name
-        if any(X.map(len) != 5):
-            raise RejectColumn("This transformer only takes zip codes of length 5.")
-        else:
-            # extract the first two characters
-            letters = X.map(lambda s: s[:2])
-            try:
-                # extract the last 3 characters and try to convert to int
-                numbers = X.map(lambda s: int(s[2:]))
-            except:
-                raise RejectColumn(
-                    "Input zip codes must consist of two letters followed by three numbers."
-                )
-            return pd.DataFrame(
-                {f"{col_name}_letters": letters, f"{col_name}_numbers": numbers}
-            )
-```
-
-## Build your own `SingleColumnTransformer` {auto-animate="true"}
-
-```{python}
-parser = ApplyToCols(ZipcodeParser(), allow_reject=True)
-parser.fit_transform(df)
-```
-
-
-
 ## What we have seen in this chapter
 
 - `ApplyToCols`: Apply a transformer to columns selected with `cols`, exclude with
@@ -233,4 +186,3 @@ parser.fit_transform(df)
 - Chain transformers with scikit-learn pipelines
 - `allow_reject`: Reject columns that cannot be treated
 - `SelectCols` / `DropCols`: Filter columns with the `cols` parameter
-- `SingleColumnTransformer`: Create a transformer with custom rules

@@ -1,10 +1,10 @@
 # %% [markdown]
 # # Exercise: using selectors together with `ApplyToCols`
-# Consider this example dataframe:
-
 # %%
 %pip install skrub
+
 # %%
+# Consider this example dataframe:
 import pandas as pd
 
 df = pd.DataFrame(
@@ -24,13 +24,15 @@ df
 # Using the skrub selectors and `ApplyToCols`:
 #
 # - Apply the `StandardScaler` to numeric columns, except `"num_id"`.
-# - Apply a `OneHotEncoder` with `sparse_output=False` on all string columns except
-# `"str_id"`.
+# - Apply an `OrdinalEncoder` on all string columns except `"str_id"`.
+# 
+# Use `sklearn.pipeline.make_pipeline` to create a pipeline that applies both 
+# transformations.
+
 
 # %%
-%pip install skrub
 import skrub.selectors as s
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from skrub import ApplyToCols
 from sklearn.pipeline import make_pipeline
 
@@ -47,14 +49,14 @@ from sklearn.pipeline import make_pipeline
 
 # %%
 import skrub.selectors as s
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from skrub import ApplyToCols
 from sklearn.pipeline import make_pipeline
 
 scaler = ApplyToCols(StandardScaler(), cols=s.numeric() - "num_id")
-one_hot = ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string() - "str_id")
+ordinal = ApplyToCols(OrdinalEncoder(), cols=s.string() - "str_id")
 
-transformer = make_pipeline(scaler, one_hot)
+transformer = make_pipeline(scaler, ordinal)
 
 transformer.fit_transform(df)
 

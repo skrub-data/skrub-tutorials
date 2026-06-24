@@ -16,6 +16,8 @@ import skrub.selectors as s
 #
 # - In the first step, the TableVectorizer cleans the data to parse datetimes and other
 # dtypes.
+#   - The `Cleaner` should parse strings as numbers and then convert them to `float32`:
+#   Use the `cast_to_str` and `cast_to_float32` parameters set to `True`.
 # - Numeric features are left untouched, i.e., they use a Passthrough transformer.
 # - String and categorical feature are split into high and low cardinality features.
 # - For this exercise, set the the cardinality `threshold` to 4.
@@ -26,13 +28,13 @@ import skrub.selectors as s
 # - Remember  `cardinality_below` is one of the skrub selectors.
 # - Datetimes are transformed by a default `DatetimeEncoder`.
 # - Everything should be wrapped in a scikit-learn `Pipeline`.
-# - Remember that the order of the operations matters! 
+# - Remember that the order of the operations matters! (hint: categorical encoders
+# convert the data to numeric). 
 #
 # Use the following dataframe to test the result.
 
 # %%
 import pandas as pd
-import datetime
 
 data = {
     "int": [15, 56, 63, 12, 44],
@@ -68,7 +70,10 @@ class PassThrough(SingleColumnTransformer):
 
 # %% [markdown]
 # You can test the correctness of your solution by comparing it with the equivalent
-# `TableVectorizer`:
+# `TableVectorizer`.
+# 
+# The order and name of the columns in the output may differ, but the values should 
+# be the same.
 
 # %%
 from skrub import TableVectorizer
@@ -95,7 +100,7 @@ tv.fit_transform(df)
 
 # %%
 # Solution
-cleaner = ApplyToCols(Cleaner(numeric_dtype="float32"))
+cleaner = ApplyToCols(Cleaner(cast_to_str=True, cast_to_float32=True))
 high_cardinality = ApplyToCols(
     StringEncoder(n_components=2), cols=~s.cardinality_below(4) & (s.string())
 )
@@ -104,10 +109,10 @@ low_cardinality = ApplyToCols(
     cols=s.cardinality_below(4) & s.string(),
 )
 numeric = ApplyToCols(PassThrough(), cols=s.numeric())
-dt = ApplyToCols(DatetimeEncoder(), cols=s.any_date())
+datetime = ApplyToCols(DatetimeEncoder(), cols=s.any_date())
 
 my_table_vectorizer = make_pipeline(
-    cleaner, numeric, high_cardinality, low_cardinality, dt
+    cleaner, numeric, high_cardinality, low_cardinality, datetime
 )
 
 my_table_vectorizer.fit_transform(df)
