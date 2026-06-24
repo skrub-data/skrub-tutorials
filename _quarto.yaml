@@ -1,6 +1,6 @@
 project:
     type: website
-    title: "Inria Academy - Skrub like a pro"
+    title: "Skrub - Machine learning with dataframes"
     output-dir: _build
     pre-render:
        - "jupytext --to notebook ./content/exercises/*.py"
@@ -16,7 +16,7 @@ project:
        - "!slides/**"
 
 website:
-    title: "Inria Academy - Skrub like a pro"
+    title: "Skrub - Machine learning with dataframes"
     navbar:
       left:
           - text: "Home"

@@ -4,7 +4,7 @@ project:
   output-dir: ../_build/book
 
 book:
-  title: "Skrub like a pro - Book"
+  title: "Skrub - Machine learning with dataframes - Book"
   author: "Riccardo Cappuzzo"
   page-navigation: true
   sidebar: false
