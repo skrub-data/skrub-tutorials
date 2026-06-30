@@ -515,7 +515,14 @@
     "href": "chapters/02_cleaning_data.html#an-example-dataframe",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "An example dataframe",
-    "text": "An example dataframe\n\nimport pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": [10.5, 20.3, None, 40.1, 50.2],\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [None, None, None, None, None],\n    }\n)\ndf\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\nall_none\n\n\n\n\n0\n1\n10.5\napple\n03 Jan 2020\nNone\n\n\n1\n2\n20.3\n?\n04 Jan 2020\nNone\n\n\n2\n3\nNaN\nbanana\n05 Jan 2020\nNone\n\n\n3\n4\n40.1\ncherry\n06 Jan 2020\nNone\n\n\n4\n5\n50.2\n?\n07 Jan 2020\nNone"
+    "text": "An example dataframe\n\nimport pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": [10.5, 20.3, None, 40.1, 50.2],\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [None, None, None, None, None],\n    }\n)"
+  },
+  {
+    "objectID": "chapters/02_cleaning_data.html#an-example-dataframe-1",
+    "href": "chapters/02_cleaning_data.html#an-example-dataframe-1",
+    "title": "Preprocessing data with the skrub Cleaner",
+    "section": "An example dataframe",
+    "text": "An example dataframe\n\ndf\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\nall_none\n\n\n\n\n0\n1\n10.5\napple\n03 Jan 2020\nNone\n\n\n1\n2\n20.3\n?\n04 Jan 2020\nNone\n\n\n2\n3\nNaN\nbanana\n05 Jan 2020\nNone\n\n\n3\n4\n40.1\ncherry\n06 Jan 2020\nNone\n\n\n4\n5\n50.2\n?\n07 Jan 2020\nNone"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#there-are-some-issues",
@@ -620,7 +627,14 @@
     "href": "chapters/02_cleaning_data.slides.html#an-example-dataframe",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "An example dataframe",
-    "text": "An example dataframe\n\nimport pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": [10.5, 20.3, None, 40.1, 50.2],\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [None, None, None, None, None],\n    }\n)\ndf\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\nall_none\n\n\n\n\n0\n1\n10.5\napple\n03 Jan 2020\nNone\n\n\n1\n2\n20.3\n?\n04 Jan 2020\nNone\n\n\n2\n3\nNaN\nbanana\n05 Jan 2020\nNone\n\n\n3\n4\n40.1\ncherry\n06 Jan 2020\nNone\n\n\n4\n5\n50.2\n?\n07 Jan 2020\nNone"
+    "text": "An example dataframe\n\nimport pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": [10.5, 20.3, None, 40.1, 50.2],\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [None, None, None, None, None],\n    }\n)"
+  },
+  {
+    "objectID": "chapters/02_cleaning_data.slides.html#an-example-dataframe-1",
+    "href": "chapters/02_cleaning_data.slides.html#an-example-dataframe-1",
+    "title": "Preprocessing data with the skrub Cleaner",
+    "section": "An example dataframe",
+    "text": "An example dataframe\n\ndf\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\nall_none\n\n\n\n\n0\n1\n10.5\napple\n03 Jan 2020\nNone\n\n\n1\n2\n20.3\n?\n04 Jan 2020\nNone\n\n\n2\n3\nNaN\nbanana\n05 Jan 2020\nNone\n\n\n3\n4\n40.1\ncherry\n06 Jan 2020\nNone\n\n\n4\n5\n50.2\n?\n07 Jan 2020\nNone"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#there-are-some-issues",
@@ -816,14 +830,21 @@
     "href": "chapters/00_intro.html#small-intermission-data-leakage-1",
     "title": "Data Preparation with skrub",
     "section": "Small intermission: data leakage",
-    "text": "Small intermission: data leakage\nWhat happens if you try to find the mean over all data?\n\nimputer = SimpleImputer(strategy=\"mean\").set_output(transform=\"pandas\")\ndf_imputed = imputer.fit_transform(df)\nprint(df)\nprint(df_imputed)\n\n    value\n0     1.0\n1     3.0\n2     NaN\n3     5.0\n4    10.0\n5     NaN\n6  1000.0\n7     5.0\n         value\n0     1.000000\n1     3.000000\n2   170.666667\n3     5.000000\n4    10.000000\n5   170.666667\n6  1000.000000\n7     5.000000\n\n\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\nprint(imputer.fit(df_train).transform(df_test))\n\n    value\n5     3.0\n6  1000.0\n7     5.0"
+    "text": "Small intermission: data leakage\nWhat happens if you try to find the mean over all data?\n\nimputer = SimpleImputer(strategy=\"mean\").set_output(transform=\"pandas\")\ndf_imputed = imputer.fit_transform(df)\nprint(df)\nprint(df_imputed)\n\n    value\n0     1.0\n1     3.0\n2     NaN\n3     5.0\n4    10.0\n5     NaN\n6  1000.0\n7     5.0\n         value\n0     1.000000\n1     3.000000\n2   170.666667\n3     5.000000\n4    10.000000\n5   170.666667\n6  1000.000000\n7     5.000000"
+  },
+  {
+    "objectID": "chapters/00_intro.html#small-intermission-data-leakage-2",
+    "href": "chapters/00_intro.html#small-intermission-data-leakage-2",
+    "title": "Data Preparation with skrub",
+    "section": "Small intermission: data leakage",
+    "text": "Small intermission: data leakage\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\nprint(imputer.fit(df_train).transform(df_test))\n\n    value\n5     3.0\n6  1000.0\n7     5.0"
   },
   {
     "objectID": "chapters/00_intro.html#waking-up-from-a-nightmare",
     "href": "chapters/00_intro.html#waking-up-from-a-nightmare",
     "title": "Data Preparation with skrub",
     "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9112 (+/- 0.0161)\nMean test RMSE: 8662.1854 (+/- 1054.8921)"
+    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9097 (+/- 0.0148)\nMean test RMSE: 8737.2094 (+/- 991.5460)"
   },
   {
     "objectID": "chapters/00_intro.html#what-we-saw-in-this-chapter",
@@ -837,7 +858,7 @@
     "href": "chapters/00_intro.html#course-roadmap",
     "title": "Data Preparation with skrub",
     "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nFeature engineering with the skrub encoders\nBuilding dynamic pipelines with the skrub Data Ops (short intro)"
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\n\nIf there is enough time:\n\nFeature engineering with the skrub encoders\nBuilding dynamic pipelines with the skrub Data Ops (short intro)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#a-world-without-skrub",
@@ -935,14 +956,21 @@
     "href": "chapters/00_intro.slides.html#small-intermission-data-leakage-1",
     "title": "Data Preparation with skrub",
     "section": "Small intermission: data leakage",
-    "text": "Small intermission: data leakage\nWhat happens if you try to find the mean over all data?\n\nimputer = SimpleImputer(strategy=\"mean\").set_output(transform=\"pandas\")\ndf_imputed = imputer.fit_transform(df)\nprint(df)\nprint(df_imputed)\n\n    value\n0     1.0\n1     3.0\n2     NaN\n3     5.0\n4    10.0\n5     NaN\n6  1000.0\n7     5.0\n         value\n0     1.000000\n1     3.000000\n2   170.666667\n3     5.000000\n4    10.000000\n5   170.666667\n6  1000.000000\n7     5.000000\n\n\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\nprint(imputer.fit(df_train).transform(df_test))\n\n    value\n5     3.0\n6  1000.0\n7     5.0"
+    "text": "Small intermission: data leakage\nWhat happens if you try to find the mean over all data?\n\nimputer = SimpleImputer(strategy=\"mean\").set_output(transform=\"pandas\")\ndf_imputed = imputer.fit_transform(df)\nprint(df)\nprint(df_imputed)\n\n    value\n0     1.0\n1     3.0\n2     NaN\n3     5.0\n4    10.0\n5     NaN\n6  1000.0\n7     5.0\n         value\n0     1.000000\n1     3.000000\n2   170.666667\n3     5.000000\n4    10.000000\n5   170.666667\n6  1000.000000\n7     5.000000"
+  },
+  {
+    "objectID": "chapters/00_intro.slides.html#small-intermission-data-leakage-2",
+    "href": "chapters/00_intro.slides.html#small-intermission-data-leakage-2",
+    "title": "Data Preparation with skrub",
+    "section": "Small intermission: data leakage",
+    "text": "Small intermission: data leakage\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\nprint(imputer.fit(df_train).transform(df_test))\n\n    value\n5     3.0\n6  1000.0\n7     5.0"
   },
   {
     "objectID": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
     "href": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
     "title": "Data Preparation with skrub",
     "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9112 (+/- 0.0161)\nMean test RMSE: 8662.1854 (+/- 1054.8921)"
+    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9097 (+/- 0.0148)\nMean test RMSE: 8737.2094 (+/- 991.5460)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#what-we-saw-in-this-chapter",
@@ -956,7 +984,7 @@
     "href": "chapters/00_intro.slides.html#course-roadmap",
     "title": "Data Preparation with skrub",
     "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nFeature engineering with the skrub encoders\nBuilding dynamic pipelines with the skrub Data Ops (short intro)"
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\n\nIf there is enough time:\n\nFeature engineering with the skrub encoders\nBuilding dynamic pipelines with the skrub Data Ops (short intro)"
   },
   {
     "objectID": "index.html",
@@ -1012,7 +1040,7 @@
     "href": "chapters/01_exploring_data.slides.html#why-do-we-need-to-explore-data",
     "title": "Exploring dataframes with skrub",
     "section": "Why do we need to explore data?",
-    "text": "Why do we need to explore data?\nBefore any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other. …"
+    "text": "Why do we need to explore data?\nBefore any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#loading-the-data",
@@ -1047,7 +1075,7 @@
     "href": "chapters/01_exploring_data.slides.html#exploring-data-with-the-tablereport",
     "title": "Exploring dataframes with skrub",
     "section": "Exploring data with the TableReport",
-    "text": "Exploring data with the TableReport\nThe TableReport computes various statistics about the given dataframe and presents them in an interactive format:\n\nfrom skrub import TableReport\nTableReport(data)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+    "text": "Exploring data with the TableReport\nThe TableReport computes various statistics about the given dataframe and presents them in an interactive format:\nfrom skrub import TableReport\nTableReport(data)\nRef"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#the-preview-tab",
@@ -1110,7 +1138,7 @@
     "href": "chapters/01_exploring_data.slides.html#exporting-the-tablereport",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport",
-    "text": "Exporting the TableReport\nThe TableReport computes many statistics about a given table. Typically, the interactive view is sufficient when developing with a notebook.\nIt is also possible to export the statistics in various formats to share them, or to use them programmatically.\nThe TableReport can be exported in\n\nstandalone HTML, to retain interactivity\nJSON, for programmatic access\nMarkdown, to obtain a shortened textual summary of the content"
+    "text": "Exporting the TableReport\nThe TableReport computes many statistics about a given table. Typically, the interactive view is sufficient when developing with a notebook.\nIt is also possible to export the statistics in various formats to share them, or to use them programmatically.\nThe TableReport can be exported in\n\nstandalone HTML, to retain interactivity\nJSON, for programmatic access\nMarkdown, to obtain a shortened textual summary of the content (next release!)"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-html",
@@ -1131,7 +1159,7 @@
     "href": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-markdown",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport: Markdown",
-    "text": "Exporting the TableReport: Markdown\nFinally, the report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
+    "text": "Exporting the TableReport: Markdown\n(in the upcoming release!)\nFinally, the report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#what-we-have-seen-in-this-chapter",
@@ -1145,14 +1173,14 @@
     "href": "chapters/01_exploring_data.html",
     "title": "Exploring dataframes with skrub",
     "section": "",
-    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other. …"
+    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other."
   },
   {
     "objectID": "chapters/01_exploring_data.html#why-do-we-need-to-explore-data",
     "href": "chapters/01_exploring_data.html#why-do-we-need-to-explore-data",
     "title": "Exploring dataframes with skrub",
     "section": "",
-    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other. …"
+    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other."
   },
   {
     "objectID": "chapters/01_exploring_data.html#loading-the-data",
@@ -1187,7 +1215,7 @@
     "href": "chapters/01_exploring_data.html#exploring-data-with-the-tablereport",
     "title": "Exploring dataframes with skrub",
     "section": "Exploring data with the TableReport",
-    "text": "Exploring data with the TableReport\nThe TableReport computes various statistics about the given dataframe and presents them in an interactive format:\n\nfrom skrub import TableReport\nTableReport(data)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+    "text": "Exploring data with the TableReport\nThe TableReport computes various statistics about the given dataframe and presents them in an interactive format:\nfrom skrub import TableReport\nTableReport(data)\nRef"
   },
   {
     "objectID": "chapters/01_exploring_data.html#the-preview-tab",
@@ -1250,7 +1278,7 @@
     "href": "chapters/01_exploring_data.html#exporting-the-tablereport",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport",
-    "text": "Exporting the TableReport\nThe TableReport computes many statistics about a given table. Typically, the interactive view is sufficient when developing with a notebook.\nIt is also possible to export the statistics in various formats to share them, or to use them programmatically.\nThe TableReport can be exported in\n\nstandalone HTML, to retain interactivity\nJSON, for programmatic access\nMarkdown, to obtain a shortened textual summary of the content"
+    "text": "Exporting the TableReport\nThe TableReport computes many statistics about a given table. Typically, the interactive view is sufficient when developing with a notebook.\nIt is also possible to export the statistics in various formats to share them, or to use them programmatically.\nThe TableReport can be exported in\n\nstandalone HTML, to retain interactivity\nJSON, for programmatic access\nMarkdown, to obtain a shortened textual summary of the content (next release!)"
   },
   {
     "objectID": "chapters/01_exploring_data.html#exporting-the-tablereport-html",
@@ -1271,7 +1299,7 @@
     "href": "chapters/01_exploring_data.html#exporting-the-tablereport-markdown",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport: Markdown",
-    "text": "Exporting the TableReport: Markdown\nFinally, the report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
+    "text": "Exporting the TableReport: Markdown\n(in the upcoming release!)\nFinally, the report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
   },
   {
     "objectID": "chapters/01_exploring_data.html#what-we-have-seen-in-this-chapter",
