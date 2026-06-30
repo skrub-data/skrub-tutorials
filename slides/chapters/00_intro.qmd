@@ -91,7 +91,7 @@ X_encoded = pd.get_dummies(X_processed, columns=categorical_cols)
 print("\nShape after encoding:", X_encoded.shape)
 ```
 
-## Step 3: Impute missing values {.smaller}
+## Step 3: Impute missing values {.smaller auto-animate="true"}
 
 We impute the missing values in the `gender` column 
 
@@ -168,7 +168,7 @@ print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 - `pd.get_dummies` was executed on the full dataframe, rather than only on the 
 training split, leading to data leakage. 
 
-## Small intermission: data leakage
+## Small intermission: data leakage {auto-animate="true"}
 
 ```{python}
 from sklearn.impute import SimpleImputer
@@ -191,6 +191,8 @@ df_imputed = imputer.fit_transform(df)
 print(df)
 print(df_imputed)
 ```
+
+## Small intermission: data leakage {auto-animate="true"}
 
 The proper way to do it: fit the transformer on the training data, transform 
 the training with the same mean:
@@ -229,9 +231,12 @@ print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 
 1. Data exploration with skrub's `TableReport`
 2. Data cleaning and sanitization with the `Cleaner`
-3. Automatic feature engineering with the `TableVectorizer`
-4. A robust baseline for machine learning tasks with the `tabular_pipeline`
-5. Columnwise operations with `ApplyToCols`
-6. Advanced column selectors and how to use them
+3. Columnwise operations with `ApplyToCols`
+4. Advanced column selectors and how to use them
+5. Automatic feature engineering with the `TableVectorizer`
+6. A robust baseline for machine learning tasks with the `tabular_pipeline`
+
+If there is enough time:
+
 7. Feature engineering with the skrub encoders
 8. Building dynamic pipelines with the skrub Data Ops (short intro)

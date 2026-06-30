@@ -49,7 +49,7 @@ jupytext = ">=1.18.1,<2"
 jupyterquiz = ">=2.9.6.2,<3"
 
 [feature.doc.tasks]
-render = {cmd = "quarto render && cp -r slides/data/dataop_report/ _build/slides/data/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
+render = {cmd = "quarto render && cp -r slides/data/dataop_report/ _build/slides/data/ && cp data/adult_census.html _build/slides/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
 render-book = {cmd = "quarto render book/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
 render-slides = {cmd = "quarto render slides/ && cp -r slides/data/dataop_report/ _build/slides/data/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }}
 

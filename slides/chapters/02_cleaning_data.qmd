@@ -17,7 +17,7 @@ problem it might have.
 
 This can be described broadly as "cleaning" or "sanitizing" the data. 
 
-## An example dataframe
+## An example dataframe {auto-animate="true"}
 ```{python}
 import pandas as pd
 import numpy as np
@@ -37,8 +37,14 @@ df = pd.DataFrame(
         "all_none": [None, None, None, None, None],
     }
 )
+```
+
+## An example dataframe {auto-animate="true"}
+
+```{python}
 df
 ```
+
 
 ## There are some issues!
 - Null values in various columns

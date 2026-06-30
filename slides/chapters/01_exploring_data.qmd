@@ -17,15 +17,12 @@ Before any kind of data processing or usage, we need to know what we are dealing
 
 Useful information includes:
 
-::: {.incremental}
 - The size of the dataset. 
 - The data types and names of the columns. 
 - How values are distributed in each column. 
 - Whether missing values are present, in what measure and where. 
 - Which features are discrete/categorical, and how many categories there are.
 - Whether columns are strongly correlated with each other. 
-...
-:::
 
 ## Loading the data
 ```{python}
@@ -61,10 +58,18 @@ data.describe(include="all")
 The `TableReport` computes various statistics about the given dataframe and presents
 them in an interactive format:
 
-```{python}
+```{.python}
 from skrub import TableReport
 TableReport(data)
 ```
+
+```{python}
+#| echo: false
+from skrub import TableReport
+```
+
+
+[Ref](../adult_census.html)
 
 ## The Preview tab
 The `TableReport` shows all the columns in the dataset, and allows to select and copy the content
@@ -162,7 +167,7 @@ The `TableReport` can be exported in
 
 - standalone **HTML**, to retain interactivity
 - **JSON**, for programmatic access
-- **Markdown**, to obtain a shortened textual summary of the content
+- **Markdown**, to obtain a shortened textual summary of the content (next release!)
 
 ## Exporting the `TableReport`: HTML
 The `TableReport` can be saved on disk as an HTML. 
@@ -190,6 +195,7 @@ format. Distributions can be disabled by setting `plot_distributions=False`.
 :::
 
 ## Exporting the `TableReport`: Markdown {.smaller}
+(in the upcoming release!)
 
 Finally, the report can be exported in summarized form as a Markdown-formatted string:
 
