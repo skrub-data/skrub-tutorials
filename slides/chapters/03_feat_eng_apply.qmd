@@ -29,14 +29,18 @@ df = pd.DataFrame({
 
 ```
 
-## Why Column-Specific Transformations?
+## Why Column-Specific Transformations? {.smaller}
 
+
+::: {.incremental}
 - Some transformers (e.g., the `StandardScaler`) work only on numeric columns
 - Some transformers (e.g., the `OneHotEncoder`) work only on categorical columns
 - Different columns with the same dtype may need to be treated differently (e.g.,
 one has outliers and requires a `RobustScaler`)
 - Some transformations only make sense for a subset of the columns (e.g., parsing
 datetimes)
+:::
+
 
 ## Applying transformers to columns with `ApplyToCols`
 `ApplyToCols` applies a transformer to columns that can be selected by name, or
