@@ -12,37 +12,32 @@ execute:
     echo: true
 ---
 
-#  A world without skrub {.smaller}
+##  A world without skrub {.smaller}
 
+Let's consider a world where skrub does not exist, and all we can do is use 
+pandas and scikit-learn to prepare data for a machine learning model.
 
-::: {.content-hidden when-format="revealjs"}
-Let's begin the lesson by imagining a world without skrub, where we can use 
-only Pandas and scikit-learn to clean data and prepare a machine learning model. 
-:::
+You may already be living in such a world. 
 
-::: {.content-visible when-format="html"}
-
-:::
-
-
+### Load and explore the data
 ```{python}
 import pandas as pd
 import numpy as np
 
 X = pd.read_csv("../data/employee_salaries/data.csv")
-y = pd.read_csv("../data/employee_salaries/target.csv")
+y = pd.read_csv("../data/employee_salaries/target.csv")["current_annual_salary"]
 X.head(5)
 ```
 
-##
+### Explore the target
 Let's take a look at the target:
 ```{python}
 y.head(5)
 ```
 
-This is a numerical column, and our task is predicting the value of `current_annual_salary`.
+This is a **regression** task: we want to predict the value of `current_annual_salary`.
 
-## Strategizing
+### Strategizing
 We can begin by exploring the dataframe with `.describe`, and then think of a 
 plan for pre-processing our data. 
 
@@ -50,22 +45,19 @@ plan for pre-processing our data.
 X.describe(include="all")
 ```
 
-## Our plan
-We want to train a linear regression model (`Ridge`) to predict the salary.
-Therefore, we need to: 
+### Our plan
+We need to: 
 
 - Impute some missing values in the `gender` column.
 - Encode convert categorical features into numerical features. 
 - Convert the column `date_first_hired` into numerical features.
-- Scale numerical features. 
+- Scale numerical features (we'll be using a linear model).
 - Evaluate the performance of the model. 
 
-## Building a traditional pipeline
-Let's build a traditional predictive pipeline following the steps we just discussed. 
+## Feature engineering
+### Step 1: Convert date features to numerical {.smaller}
 
-## Step 1: Convert date features to numerical {.smaller}
-
-Extract numerical features from the `date_first_hired` column.
+We extract numerical features from the `date_first_hired` column.
 
 ```{python}
 # Create a copy to work with
@@ -85,9 +77,9 @@ print("Features after date transformation:")
 print("\nShape:", X_processed.shape)
 ```
 
-## Step 2: Encode categorical features {.smaller}
+### Step 2: Encode categorical features {.smaller}
 
-Encode only the non-numerical categorical features using one-hot encoding.
+We encode all categorical features using one-hot encoding.
 
 ```{python}
 # Identify only the non-numerical (truly categorical) columns
@@ -99,9 +91,19 @@ X_encoded = pd.get_dummies(X_processed, columns=categorical_cols)
 print("\nShape after encoding:", X_encoded.shape)
 ```
 
-## Step 3: Impute missing values {.smaller}
+Notice how the number of features has increased massively due to the large number
+of unique values in some of the columns. 
+The large number of features can cause various issues, ranging from **overfitting**, 
+to performance and memory issues. This is also known as the 
+[Curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality).
 
-We'll impute missing values in the `gender` column using the most frequent strategy.
+Alternative strategies for encoding high-cardinality data (such as text) should
+be employed. 
+
+### Step 3: Impute missing values {.smaller}
+
+We impute the missing values in the `gender` column to fill any gaps. Luckily, 
+this dataframe does not include many missing values. 
 
 ```{python}
 from sklearn.impute import SimpleImputer
@@ -114,9 +116,26 @@ X_encoded_imputed = pd.DataFrame(
 )
 ```
 
-## Step 4: Scale numerical features {.smaller}
+Some models -- like the `Ridge` model we will be using -- cannot handle missing 
+values, and require imputation in order to work. Other models, such as the 
+`HistGradientBoostingClassifier`, do not suffer from this limitation.
 
-Scale numerical features for the Ridge regression model.
+
+::: {.callout-important}
+
+Null values are important! The fact that a value is missing is by itself useful 
+information, and the pattern of missingness is also important.
+
+For this reason, skrub transformers keep missing values as they are to retain the 
+information content. 
+
+:::
+
+
+
+### Step 4: Scale numerical features {.smaller}
+
+Scale numerical features for the `RidgeCV` regression model. 
 
 ```{python}
 from sklearn.preprocessing import StandardScaler
@@ -129,18 +148,29 @@ X_scaled = scaler.fit_transform(X_encoded_imputed)
 X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
 ```
 
-## Step 5: Train Ridge model with cross-validation {.smaller}
+Linear models are strongly affected by numeric features that haven't been scaled, 
+so this step should always be done. The `StandardScaler` scales values by removing
+the mean and scaling to unit variance. 
+   
+
+::: {.callout-warning}
+
+What if you have outliers? Scaling is hard! 
+
+:::
+
+### Step 5: Train Ridge model with cross-validation {.smaller}
 
 Train a `Ridge` regression model and evaluate with cross-validation.
 
 ```{python}
 #| warning: false
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import RidgeCV
 from sklearn.model_selection import cross_val_score, cross_validate
 import numpy as np
 
 # Initialize Ridge model
-ridge = Ridge(alpha=1.0)
+ridge = RidgeCV()
 
 # Perform cross-validation (5-fold)
 cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2", "neg_mean_squared_error"])
@@ -156,26 +186,82 @@ print(
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ``` 
 
-::: {.content-hidden when-format="revealjs"}
+## Looking back
+### "Just ask an agent to write the code" {.smaller}
+That's what I did: I asked an AI agent to turn the "strategizing" section into 
+code, and the result was not good. 
 
-## "Just ask an agent to write the code"
-It's what I did. Here are some of the issues I noticed: 
+In fact, the strategy I suggested is not laid out in the correct order: the agent
+did not spot the problem, followed each item step by step (in the wrong order) and 
+as a result:
 
-- Operations in the wrong order.
-- Trying to impute categorical features without encoding them as numerical values.
-- The datetime feature was encoded as a categorical (i.e, with dummmies).
-- Cells could not be executed in order without proper debugging and re-prompting.
-- `pd.get_dummies` was executed on the full dataframe, rather than only on the 
-training split, leading to data leakage. 
+- Imputation was performed before converting categorical features to numeric values, 
+so it did not impute properly. 
 
-This means that I had to spend time re-prompting the model to get it to run, and 
-that's (intentionally) without removing the leakage. 
+- Datetimes were  not parsed as datetimes before applying `OneHotEncoder`, so 
+they were treated as categorical and encoded as such, rather than being converted
+to numeric features.
+
+- Finally, `pd.get_dummies` was executed on the full dataframe, rather than looking
+for categories only on the training split, and then using those categories on
+the test split: this causes **data leakage** by creating an encoding for 
+categorical features that would appear only in the test set. 
+
+The order of our operations is just as important as the operations themselves,
+and relying blindly on agents can have bad consequences.
+
+## Small intermission: data leakage
+For simplicity, let's use imputation as our example. One-hot leakage works in 
+similar ways. 
+
+This example dataframe is split into training and test split with a 50/50 split. 
+
+```{python}
+from sklearn.impute import SimpleImputer
+import pandas as pd
+df = pd.DataFrame({
+    "value": [1, 3, None, 5, 10, None, 1000, 5, 1, 3]
+})
+
+df_train = df[:4]
+df_test = df[5:]
+```
+
+A common strategy is to impute numeric missing values by finding the mean of the 
+features that are still there. We can do this with `stragegy="mean"`. 
+
+What happens if you try to find the mean over all data? 
+```{python}
+imputer = SimpleImputer(strategy="mean").set_output(transform="pandas")
+df_imputed = imputer.fit_transform(df)
+print(df)
+print()
+print(df_imputed)
+```
+
+The result is that the missing values have been filled with the mean over both 
+the train and test set. The test set happened to contain an outlier, which skewed
+the mean in the training. 
+
+To impute properly and avoid leakage, we want to **fit** the imputer on the 
+training data, and then **transform** the test split using the mean that was learned
+in while fitting. 
+
+```{python}
+print(imputer.fit(df_train).transform(df_test))
+```
+
+
+::: {.callout-important}
+
+This fit-transform paradigm is what scikit-learn (and skrub) uses to avoid data
+leakage.
 
 :::
 
+
 ## Waking up from a nightmare {.smaller}
-Thankfully, we live in a world where we can `import skrub`. Let's see what we can
-get if we use `skrub.tabular_pipeline`. 
+Thankfully, we can `import skrub`:
 ```{python}
 #| warning: false
 from skrub import tabular_pipeline
@@ -195,26 +281,27 @@ print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test
 print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ```
 
-::: {.content-hidden when-format="revealjs"}
-All the code from before, the tokens and the debugging are replaced by a single 
-import that gives better results.
+### What is happening? 
+The `tabular_pipeline` is implementing all the steps we have just covered, except
+in a more robust and battle-tested fashion. Before encoding, the input table is 
+sanitized so that features have the proper dtype, null values are marked as such, 
+and then the appropriate encoder is applied to each column. 
 
-Throughout the tutorial, we will see how each step can be simplified, replaced, or
-improved using skrub features, going through the various features until we get to
-the `tabular_pipeline`. 
-:::
-
-## Roadmap for the course {.smaller}
-We are going to build what could be a typicial pre-processing pipeline: 
-
-1. We will explore the data to identify possible problems and figure out what needs
-to be cleaned.
-2. We will then sanitize the data to address some common problems. 
-3. There will be an intermission on various skrub features that simplify.
-4. Then, we will show how to perform feature engineering using various skrub encoders.
-5. Finally, we will show how we can put everything together.
+The functioning of the `tabular_pipeline` is explored in more detail in a later 
+chapter. 
 
 ## What we saw in this chapter
-- We build a predictive pipeline using traditional tools
+- We built a predictive pipeline using traditional tools
 - We saw some possible shortcomings 
-- We tested skrub's `tabular_pipeline` to avoid some of those issues
+- We tested skrub's `tabular_pipeline` 
+
+## Roadmap for the course {.smaller}
+
+1. Data exploration with skrub's `TableReport`
+2. Data cleaning and sanitization with the `Cleaner`
+3. Columnwise operations with `ApplyToCols`
+4. Advanced column selectors and how to use them
+5. Automatic feature engineering with the `TableVectorizer`
+6. A robust baseline for machine learning tasks with the `tabular_pipeline`
+7. Feature engineering with the skrub encoders
+8. Building dynamic pipelines with the skrub Data Ops (short intro)
