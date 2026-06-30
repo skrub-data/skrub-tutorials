@@ -207,7 +207,12 @@
 </section>
 <section id="the-goal" class="slide level2">
 <h2>The Goal</h2>
-<p>Convert any mixed-type dataframe into numeric features for ML: - Categorical features need to be encoded into features - Datetime features can be transformed into more informative features - Data should be sanitized</p>
+<p>Convert any mixed-type dataframe into numeric features for ML:</p>
+<ul>
+<li>Categorical features need to be encoded into features</li>
+<li>Datetime features can be transformed into more informative features</li>
+<li>Data should be sanitized</li>
+</ul>
 </section>
 <section id="the-solution-tablevectorizer" class="slide level2 scrollable">
 <h2>The solution: <code>TableVectorizer</code></h2>
@@ -219,7 +224,7 @@
 </section>
 <section id="a-toy-example" class="slide level2">
 <h2>A toy example</h2>
-<div id="93736390" class="cell" data-execution_count="1">
+<div id="8c1323fd" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb1-3"><a></a></span>
@@ -283,18 +288,24 @@
 </section>
 <section id="the-cardinality-threshold" class="slide level2">
 <h2>The Cardinality Threshold</h2>
-<div id="6d1970f9" class="cell" data-execution_count="2">
+<div id="5c633889" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Change when categories become "high-cardinality"</span></span>
 <span id="cb2-2"><a></a>tv <span class="op">=</span> TableVectorizer(cardinality_threshold<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="data-cleaning-parameters" class="slide level2">
 <h2>Data cleaning parameters:</h2>
-<p>Same as the <code>Cleaner</code>: - <code>drop_null_fraction</code> - <code>drop_if_constant</code> - <code>datetime_format</code> - <code>null_strings</code></p>
+<p>Same as the <code>Cleaner</code>:</p>
+<ul>
+<li><code>drop_null_fraction</code></li>
+<li><code>drop_if_constant</code></li>
+<li><code>datetime_format</code></li>
+<li><code>null_strings</code></li>
+</ul>
 </section>
 <section id="customizing-transformers" class="slide level2 smaller">
 <h2>Customizing Transformers</h2>
-<div id="d2e81128" class="cell" data-execution_count="3">
+<div id="b1fd5957" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, StringEncoder</span>
 <span id="cb3-2"><a></a></span>
 <span id="cb3-3"><a></a><span class="co"># Add periodic encoding</span></span>
@@ -310,7 +321,7 @@
 </section>
 <section id="applying-to-a-subset-of-columns" class="slide level2">
 <h2>Applying to a subset of columns</h2>
-<div id="ac5b9332" class="cell" data-execution_count="4">
+<div id="4dddc0d3" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb4-3"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
@@ -407,7 +418,7 @@
 <section id="applying-to-a-subset-of-columns-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Applying to a subset of columns</h2>
 <p>We can use <code>ApplyToCols</code> and the skrub selectors:</p>
-<div id="799f0156" class="cell" data-execution_count="5">
+<div id="4e3ffa87" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb5-1" class="hljs-ln-code"><a></a>tv <span class="op">=</span> ApplyToCols(TableVectorizer(), exclude_cols<span class="op">=</span>[<span class="st">"num_id"</span>, <span class="st">"str_id"</span>])</span>
 <span id="cb5-2" class="hljs-ln-code"><a></a>df_enc <span class="op">=</span> tv.fit_transform(df)</span>
 <span id="cb5-3" class="hljs-ln-code"><a></a></span>
@@ -434,7 +445,7 @@ Encoded
 </section>
 <section id="fine-grained-control-specific_transformers" class="slide level2">
 <h2>Fine-Grained Control: specific_transformers</h2>
-<div id="543643e3" class="cell" data-execution_count="6">
+<div id="7b25e288" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a>specific <span class="op">=</span> [(OrdinalEncoder(), [<span class="st">"occupation"</span>])]</span>

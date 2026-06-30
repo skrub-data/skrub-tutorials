@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="smaller anchored" data-anchor-id="manual-pipeline-construction">Manual Pipeline Construction</h2>
 <p>scikit-learn provides either <code>Pipeline</code> or <code>make_pipeline</code> to concatenate transformers and avoid leakage.</p>
 <p>The pipeline takes care of passing the same set of samples to the transformers in sequence.</p>
-<div id="f7545a4d" class="cell" data-execution_count="1">
+<div id="3f67b7c4" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-tabular_pipeline-function" class="level2">
 <h2 class="anchored" data-anchor-id="the-tabular_pipeline-function">The <code>tabular_pipeline</code> Function</h2>
 <p>skrub’s <code>tabular_pipeline</code> returns a pipeline that includes all steps, with tuned defaults depending on the input model.</p>
-<div id="5c674cdc" class="cell" data-execution_count="2">
+<div id="719546a1" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 1: Provide an estimator</span></span>
@@ -281,11 +281,11 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This is unnecessary most of the time!</p>
+<p>This is not necessary most of the time!</p>
 </div>
 </div>
 <div class="fragment">
-<div id="ffbe5b25" class="cell" data-execution_count="3">
+<div id="e367e75e" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -302,11 +302,24 @@ Tip
 </div>
 </div>
 </section>
-<section id="when-to-use-which-approach" class="level2">
-<h2 class="anchored" data-anchor-id="when-to-use-which-approach">When to Use Which Approach</h2>
-<p><strong>Use <code>tabular_pipeline</code></strong> if: - You need a quick baseline for benchmarking/checking if there is a signal - You want a starting point for experimentation - You don’t need custom preprocessing/feature engineering</p>
-<p><strong>Embed a pipeline in <code>tabular_pipeline</code></strong> if : - You need to modify only the end of the pipeline</p>
-<p><strong>Use a manual pipeline</strong> if : - You need fine-grained control over most of the transformations - Your training process includes custom preprocessing steps - You want to experiment with different transformers</p>
+<section id="when-to-use-which-approach" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="when-to-use-which-approach">When to Use Which Approach</h2>
+<p><strong>Use <code>tabular_pipeline</code></strong> if:</p>
+<ul>
+<li>You need a quick baseline for benchmarking/checking if there is a signal</li>
+<li>You want a starting point for experimentation</li>
+<li>You don’t need custom preprocessing/feature engineering</li>
+</ul>
+<p><strong>Embed a pipeline in <code>tabular_pipeline</code></strong> if :</p>
+<ul>
+<li>You need to modify only the end of the pipeline</li>
+</ul>
+<p><strong>Use a manual pipeline</strong> if :</p>
+<ul>
+<li>You need fine-grained control over most of the transformations</li>
+<li>Your training process includes custom preprocessing steps</li>
+<li>You want to experiment with different transformers</li>
+</ul>
 <p>Or… use the skrub Data Ops! (more on that later, maybe)</p>
 </section>
 <section id="example-complete-workflow" class="level2">

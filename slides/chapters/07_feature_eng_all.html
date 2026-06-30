@@ -158,17 +158,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#under-the-hood-of-the-tablevectorizer-and-tabular_pipeline" id="toc-under-the-hood-of-the-tablevectorizer-and-tabular_pipeline" class="nav-link active" data-scroll-target="#under-the-hood-of-the-tablevectorizer-and-tabular_pipeline">Under the hood of the <code>TableVectorizer</code> and <code>tabular_pipeline</code></a></li>
-  <li><a href="#safe-scaling-of-numerical-features" id="toc-safe-scaling-of-numerical-features" class="nav-link" data-scroll-target="#safe-scaling-of-numerical-features">Safe scaling of numerical features</a>
-  <ul class="collapse">
+  <li><a href="#safe-scaling-of-numerical-features" id="toc-safe-scaling-of-numerical-features" class="nav-link" data-scroll-target="#safe-scaling-of-numerical-features">Safe scaling of numerical features</a></li>
   <li><a href="#standardscaler-problems" id="toc-standardscaler-problems" class="nav-link" data-scroll-target="#standardscaler-problems"><code>StandardScaler</code> Problems</a></li>
   <li><a href="#robustscaler" id="toc-robustscaler" class="nav-link" data-scroll-target="#robustscaler"><code>RobustScaler</code></a></li>
   <li><a href="#squashingscaler-best-approach" id="toc-squashingscaler-best-approach" class="nav-link" data-scroll-target="#squashingscaler-best-approach"><code>SquashingScaler</code>: Best Approach</a></li>
   <li><a href="#comparing-the-scalers" id="toc-comparing-the-scalers" class="nav-link" data-scroll-target="#comparing-the-scalers">Comparing the scalers</a></li>
   <li><a href="#how-squashingscaler-works" id="toc-how-squashingscaler-works" class="nav-link" data-scroll-target="#how-squashingscaler-works">How <code>SquashingScaler</code> Works</a></li>
-  </ul></li>
   <li><a href="#in-summary" id="toc-in-summary" class="nav-link" data-scroll-target="#in-summary">In summary:</a></li>
-  <li><a href="#encoding-categorical-features" id="toc-encoding-categorical-features" class="nav-link" data-scroll-target="#encoding-categorical-features">Encoding categorical features</a>
-  <ul class="collapse">
+  <li><a href="#encoding-categorical-features" id="toc-encoding-categorical-features" class="nav-link" data-scroll-target="#encoding-categorical-features">Encoding categorical features</a></li>
   <li><a href="#one-hot-encoding" id="toc-one-hot-encoding" class="nav-link" data-scroll-target="#one-hot-encoding">One-Hot Encoding</a></li>
   <li><a href="#the-challenge-high-cardinality-features" id="toc-the-challenge-high-cardinality-features" class="nav-link" data-scroll-target="#the-challenge-high-cardinality-features">The Challenge: High-Cardinality Features</a></li>
   <li><a href="#how-skrub-deals-with-categorical-features" id="toc-how-skrub-deals-with-categorical-features" class="nav-link" data-scroll-target="#how-skrub-deals-with-categorical-features">How skrub deals with categorical features</a></li>
@@ -176,9 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#textencoder-for-natural-language" id="toc-textencoder-for-natural-language" class="nav-link" data-scroll-target="#textencoder-for-natural-language">TextEncoder: For Natural Language</a></li>
   <li><a href="#encoder-comparison" id="toc-encoder-comparison" class="nav-link" data-scroll-target="#encoder-comparison">Encoder Comparison</a></li>
   <li><a href="#in-summary-1" id="toc-in-summary-1" class="nav-link" data-scroll-target="#in-summary-1">In summary</a></li>
-  </ul></li>
-  <li><a href="#encoding-datetimes" id="toc-encoding-datetimes" class="nav-link" data-scroll-target="#encoding-datetimes">Encoding datetimes</a>
-  <ul class="collapse">
+  <li><a href="#encoding-datetimes" id="toc-encoding-datetimes" class="nav-link" data-scroll-target="#encoding-datetimes">Encoding datetimes</a></li>
   <li><a href="#converting-strings-to-datetime" id="toc-converting-strings-to-datetime" class="nav-link" data-scroll-target="#converting-strings-to-datetime">Converting Strings to Datetime</a></li>
   <li><a href="#extracting-datetime-features" id="toc-extracting-datetime-features" class="nav-link" data-scroll-target="#extracting-datetime-features">Extracting Datetime Features</a></li>
   <li><a href="#simpler-with-datetimeencoder" id="toc-simpler-with-datetimeencoder" class="nav-link" data-scroll-target="#simpler-with-datetimeencoder">Simpler with DatetimeEncoder</a></li>
@@ -186,7 +181,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#circular-sincos-encoding" id="toc-circular-sincos-encoding" class="nav-link" data-scroll-target="#circular-sincos-encoding">Circular (Sin/Cos) Encoding</a></li>
   <li><a href="#spline-encoding-alternative" id="toc-spline-encoding-alternative" class="nav-link" data-scroll-target="#spline-encoding-alternative">Spline Encoding Alternative</a></li>
   <li><a href="#example-spline-periodic-features" id="toc-example-spline-periodic-features" class="nav-link" data-scroll-target="#example-spline-periodic-features">Example: spline periodic features</a></li>
-  </ul></li>
   <li><a href="#what-we-have-seen-in-this-chapter" id="toc-what-we-have-seen-in-this-chapter" class="nav-link" data-scroll-target="#what-we-have-seen-in-this-chapter">What we have seen in this chapter</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="07_feature_eng_all.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
@@ -227,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="safe-scaling-of-numerical-features">Safe scaling of numerical features</h2>
 <p>Consider a situation where a numerical feature includes large outliers.</p>
 <p>Most values are in range [-2, 2], but some outliers are in [-40, 40]:</p>
-<div id="9c51ead4" class="cell" data-execution_count="1">
+<div id="3d8a7895" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    generate_data_with_outliers,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    plot_feature_with_outliers</span>
@@ -244,8 +238,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="standardscaler-problems" class="level3">
-<h3 class="anchored" data-anchor-id="standardscaler-problems"><code>StandardScaler</code> Problems</h3>
+</section>
+<section id="standardscaler-problems" class="level2">
+<h2 class="anchored" data-anchor-id="standardscaler-problems"><code>StandardScaler</code> Problems</h2>
 <ul>
 <li>Uses mean and standard deviation</li>
 <li>Outliers make these statistics unreliable</li>
@@ -253,8 +248,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Inliers get compressed into narrow range</li>
 </ul>
 </section>
-<section id="robustscaler" class="level3">
-<h3 class="anchored" data-anchor-id="robustscaler"><code>RobustScaler</code></h3>
+<section id="robustscaler" class="level2">
+<h2 class="anchored" data-anchor-id="robustscaler"><code>RobustScaler</code></h2>
 <ul>
 <li>Uses percentiles (25th, 75th) instead of mean/std</li>
 <li>More resistant to outliers</li>
@@ -262,17 +257,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Extreme outliers still have large scaled values</li>
 </ul>
 </section>
-<section id="squashingscaler-best-approach" class="level3">
-<h3 class="anchored" data-anchor-id="squashingscaler-best-approach"><code>SquashingScaler</code>: Best Approach</h3>
+<section id="squashingscaler-best-approach" class="level2">
+<h2 class="anchored" data-anchor-id="squashingscaler-best-approach"><code>SquashingScaler</code>: Best Approach</h2>
 <p>Smart outlier handling in skrub:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SquashingScaler</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> SquashingScaler()</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="comparing-the-scalers" class="level3">
-<h3 class="anchored" data-anchor-id="comparing-the-scalers">Comparing the scalers</h3>
-<div id="8d90030a" class="cell" data-execution_count="2">
+<section id="comparing-the-scalers" class="level2">
+<h2 class="anchored" data-anchor-id="comparing-the-scalers">Comparing the scalers</h2>
+<div id="0e617129" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
@@ -284,8 +279,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="how-squashingscaler-works" class="level3">
-<h3 class="anchored" data-anchor-id="how-squashingscaler-works">How <code>SquashingScaler</code> Works</h3>
+<section id="how-squashingscaler-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-squashingscaler-works">How <code>SquashingScaler</code> Works</h2>
 <ol type="1">
 <li>Center the median to 0</li>
 <li>Use quantile-based statistics for scaling</li>
@@ -296,11 +291,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Keep NaN values unchanged</li>
 </ol>
 </section>
-</section>
 <section id="in-summary" class="level2">
 <h2 class="anchored" data-anchor-id="in-summary">In summary:</h2>
-<p>Advantages: - <strong>Outlier-resistant</strong>: Inliers unaffected by outliers - <strong>Bounded output</strong>: Predictable range ideal for neural networks - <strong>Handles edge cases</strong>: Works with infinite values, constant columns - <strong>Preserves NaN</strong>: Missing values stay unchanged</p>
-<p>Disadvantages: - <strong>Non-invertible</strong>: Cannot perfectly reverse transformation</p>
+<p>Advantages:</p>
+<ul>
+<li><strong>Outlier-resistant</strong>: Inliers unaffected by outliers</li>
+<li><strong>Bounded output</strong>: Predictable range ideal for neural networks</li>
+<li><strong>Handles edge cases</strong>: Works with infinite values, constant columns</li>
+<li><strong>Preserves NaN</strong>: Missing values stay unchanged</li>
+</ul>
+<p>Disadvantages:</p>
+<ul>
+<li><strong>Non-invertible</strong>: Cannot perfectly reverse transformation</li>
+</ul>
 </section>
 <section id="encoding-categorical-features" class="level2">
 <h2 class="anchored" data-anchor-id="encoding-categorical-features">Encoding categorical features</h2>
@@ -312,10 +315,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Text: reviews, tweets, comments… …</li>
 </ul>
 <p>How to convert these features to numbers?</p>
-<section id="one-hot-encoding" class="level3">
-<h3 class="anchored" data-anchor-id="one-hot-encoding">One-Hot Encoding</h3>
+</section>
+<section id="one-hot-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="one-hot-encoding">One-Hot Encoding</h2>
 <p>Creates binary indicator columns:</p>
-<div id="595bb83b" class="cell" data-execution_count="3">
+<div id="9a542e60" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -326,16 +330,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><strong>Pros</strong>: Intuitive, works well for few categories <strong>Cons</strong>: Explodes with many categories, creates sparse matrices, leads to overfitting, worsens model interpretability</p>
 </section>
-<section id="the-challenge-high-cardinality-features" class="level3">
-<h3 class="anchored" data-anchor-id="the-challenge-high-cardinality-features">The Challenge: High-Cardinality Features</h3>
+<section id="the-challenge-high-cardinality-features" class="level2">
+<h2 class="anchored" data-anchor-id="the-challenge-high-cardinality-features">The Challenge: High-Cardinality Features</h2>
 <p>What if you have 1000+ unique values (IDs, free text)?</p>
 </section>
-<section id="how-skrub-deals-with-categorical-features" class="level3">
-<h3 class="anchored" data-anchor-id="how-skrub-deals-with-categorical-features">How skrub deals with categorical features</h3>
-<p>Skrub implements four different strategies: - <code>StringEncoder</code> - <code>TextEncoder</code> - <code>MinHashEncoder</code> - <code>GapEncoder</code></p>
+<section id="how-skrub-deals-with-categorical-features" class="level2">
+<h2 class="anchored" data-anchor-id="how-skrub-deals-with-categorical-features">How skrub deals with categorical features</h2>
+<p>Skrub implements four different strategies:</p>
+<ul>
+<li><code>StringEncoder</code></li>
+<li><code>TextEncoder</code></li>
+<li><code>MinHashEncoder</code></li>
+<li><code>GapEncoder</code></li>
+</ul>
 </section>
-<section id="stringencoder-best-all-rounder" class="level3">
-<h3 class="anchored" data-anchor-id="stringencoder-best-all-rounder">StringEncoder: Best All-Rounder</h3>
+<section id="stringencoder-best-all-rounder" class="level2">
+<h2 class="anchored" data-anchor-id="stringencoder-best-all-rounder">StringEncoder: Best All-Rounder</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> StringEncoder</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> StringEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
@@ -348,8 +358,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Default in both <code>TableVectorizer</code> and <code>tabular_pipeline</code></li>
 </ul>
 </section>
-<section id="textencoder-for-natural-language" class="level3">
-<h3 class="anchored" data-anchor-id="textencoder-for-natural-language">TextEncoder: For Natural Language</h3>
+<section id="textencoder-for-natural-language" class="level2">
+<h2 class="anchored" data-anchor-id="textencoder-for-natural-language">TextEncoder: For Natural Language</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TextEncoder</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> TextEncoder()</span>
@@ -359,8 +369,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Very slow on CPU, requires sentence-transformers (heavy dependency)</li>
 </ul>
 </section>
-<section id="encoder-comparison" class="level3 smaller">
-<h3 class="smaller anchored" data-anchor-id="encoder-comparison">Encoder Comparison</h3>
+<section id="encoder-comparison" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="encoder-comparison">Encoder Comparison</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -410,14 +420,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="in-summary-1" class="level3">
-<h3 class="anchored" data-anchor-id="in-summary-1">In summary</h3>
+<section id="in-summary-1" class="level2">
+<h2 class="anchored" data-anchor-id="in-summary-1">In summary</h2>
 <ul>
 <li>Use <code>OneHotEncoder</code> for &lt; 40 unique values</li>
 <li>Use <code>StringEncoder</code> for high-cardinality</li>
 <li>Use <code>TextEncoder</code> for true natural language</li>
 </ul>
-</section>
 </section>
 <section id="encoding-datetimes" class="level2">
 <h2 class="anchored" data-anchor-id="encoding-datetimes">Encoding datetimes</h2>
@@ -429,10 +438,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>“03 Jan 2023” (custom)</li>
 </ul>
 <p>Correct parsing is essential for feature extraction.</p>
-<section id="converting-strings-to-datetime" class="level3">
-<h3 class="anchored" data-anchor-id="converting-strings-to-datetime">Converting Strings to Datetime</h3>
+</section>
+<section id="converting-strings-to-datetime" class="level2">
+<h2 class="anchored" data-anchor-id="converting-strings-to-datetime">Converting Strings to Datetime</h2>
 <p><strong><code>ToDatetime</code></strong>: Single column transformer with format guessing:</p>
-<div id="cf1ef25e" class="cell" data-execution_count="4">
+<div id="e46de290" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -466,7 +476,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><strong><code>Cleaner</code></strong>: Same machinery:</p>
-<div id="5b442373" class="cell" data-execution_count="5">
+<div id="bac27024" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cleaner <span class="op">=</span> Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>)</span>
@@ -500,10 +510,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Both objects can take a <code>datetime_format</code> if known.</p>
 </section>
-<section id="extracting-datetime-features" class="level3 smaller">
-<h3 class="smaller anchored" data-anchor-id="extracting-datetime-features">Extracting Datetime Features</h3>
+<section id="extracting-datetime-features" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="extracting-datetime-features">Extracting Datetime Features</h2>
 <p>Datetimes must be converted to numerical features:</p>
-<div id="b4255af5" class="cell" data-execution_count="6">
+<div id="6559ebd8" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.year</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"month"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.month</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df_dt[<span class="st">"day"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day</span>
@@ -556,9 +566,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="simpler-with-datetimeencoder" class="level3">
-<h3 class="anchored" data-anchor-id="simpler-with-datetimeencoder">Simpler with DatetimeEncoder</h3>
-<div id="3ed300a6" class="cell" data-execution_count="7">
+<section id="simpler-with-datetimeencoder" class="level2">
+<h2 class="anchored" data-anchor-id="simpler-with-datetimeencoder">Simpler with DatetimeEncoder</h2>
+<div id="27f4548c" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, ApplyToCols</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(</span>
@@ -612,8 +622,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="periodic-features" class="level3">
-<h3 class="anchored" data-anchor-id="periodic-features">Periodic Features</h3>
+<section id="periodic-features" class="level2">
+<h2 class="anchored" data-anchor-id="periodic-features">Periodic Features</h2>
 <p>Cyclical patterns need special handling:</p>
 <ul>
 <li>Day of week: 0-6, but 0 and 6 are close</li>
@@ -621,14 +631,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Hour: 0-23, but 23 and 0 are close</li>
 </ul>
 </section>
-<section id="circular-sincos-encoding" class="level3">
-<h3 class="anchored" data-anchor-id="circular-sincos-encoding">Circular (Sin/Cos) Encoding</h3>
+<section id="circular-sincos-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="circular-sincos-encoding">Circular (Sin/Cos) Encoding</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Or with <code>DatetimeEncoder</code>:</p>
-<div id="42de9fac" class="cell" data-execution_count="8">
+<div id="a9616128" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -674,9 +684,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="spline-encoding-alternative" class="level3">
-<h3 class="anchored" data-anchor-id="spline-encoding-alternative">Spline Encoding Alternative</h3>
-<div id="2aa23935" class="cell" data-execution_count="9">
+<section id="spline-encoding-alternative" class="level2">
+<h2 class="anchored" data-anchor-id="spline-encoding-alternative">Spline Encoding Alternative</h2>
+<div id="d34bcf18" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"spline"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -758,15 +768,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="example-spline-periodic-features" class="level3">
-<h3 class="anchored" data-anchor-id="example-spline-periodic-features">Example: spline periodic features</h3>
+<section id="example-spline-periodic-features" class="level2">
+<h2 class="anchored" data-anchor-id="example-spline-periodic-features">Example: spline periodic features</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/periodic_features_light_transparent.png" class="img-fluid figure-img"></p>
 <figcaption>example of periodic features generated with splines</figcaption>
 </figure>
 </div>
-</section>
 </section>
 <section id="what-we-have-seen-in-this-chapter" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-have-seen-in-this-chapter">What we have seen in this chapter</h2>
