@@ -20,6 +20,7 @@ import skrub.selectors as s
 ```
 
 Selectors are used throughout the skrub package:
+
 - `ApplyToCols`
 - `SelectCols`/`DropCols`
 - `.skb.apply()`
@@ -94,6 +95,7 @@ SelectCols(cols=s.glob("metric_*")).fit_transform(df)
 ## Combining Selectors {.smaller}
 
 Selectors can be combined: 
+
 - each selector produces a **set** of columns
 - **set operations** (`&`, `|`, `^`, `-`, `~`) can be used
 to combine selectors

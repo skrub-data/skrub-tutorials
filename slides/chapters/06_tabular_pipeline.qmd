@@ -91,7 +91,7 @@ The pipeline is configured with:
 ## Customizing the pipeline
 
 ::: {.callout-tip}
-This is unnecessary most of the time!
+This is not necessary most of the time!
 :::
 
 
@@ -112,17 +112,20 @@ full_pipeline = tabular_pipeline(model_pipeline)
 
 :::
 
-## When to Use Which Approach
+## When to Use Which Approach {.smaller}
 
 **Use `tabular_pipeline`** if:
+
 - You need a quick baseline for benchmarking/checking if there is a signal
 - You want a starting point for experimentation
 - You don't need custom preprocessing/feature engineering
 
 **Embed a pipeline in `tabular_pipeline`** if :
+
 - You need to modify only the end of the pipeline
 
 **Use a manual pipeline** if :
+
 - You need fine-grained control over most of the transformations
 - Your training process includes custom preprocessing steps
 - You want to experiment with different transformers
