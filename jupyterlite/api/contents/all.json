@@ -2,11 +2,11 @@
   "content": [
     {
       "content": null,
-      "created": "2026-07-01T11:20:46.721836Z",
+      "created": "2026-07-01T12:10:32.633750Z",
       "format": null,
       "hash": null,
       "hash_algorithm": null,
-      "last_modified": "2026-07-01T11:20:46.721836Z",
+      "last_modified": "2026-07-01T12:10:32.633750Z",
       "mimetype": null,
       "name": "data",
       "path": "data",
@@ -16,11 +16,11 @@
     },
     {
       "content": null,
-      "created": "2026-07-01T11:21:39.092795Z",
+      "created": "2026-07-01T12:11:34.651730Z",
       "format": null,
       "hash": null,
       "hash_algorithm": null,
-      "last_modified": "2026-07-01T11:21:39.092795Z",
+      "last_modified": "2026-07-01T12:11:34.651730Z",
       "mimetype": null,
       "name": "notebooks",
       "path": "notebooks",
@@ -29,11 +29,11 @@
       "writable": true
     }
   ],
-  "created": "2026-07-01T11:20:46.726516Z",
+  "created": "2026-07-01T12:10:32.639701Z",
   "format": "json",
   "hash": null,
   "hash_algorithm": null,
-  "last_modified": "2026-07-01T11:20:46.726516Z",
+  "last_modified": "2026-07-01T12:10:32.639701Z",
   "mimetype": null,
   "name": "",
   "path": "",

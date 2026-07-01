@@ -63,11 +63,18 @@
     "text": "💻 Interactive Exercises\nTry the exercises in your browser with JupyterLite (no installation required).\nLaunch JupyterLite →\nIf you want to run the code locally, refer to the Preparation and setup section for detailed instructions."
   },
   {
+    "objectID": "index.html#contacts",
+    "href": "index.html#contacts",
+    "title": "Skrub - machine learning with dataframes",
+    "section": "Contacts",
+    "text": "Contacts\nIf you have questions, contact me at riccardo[dot]cappuzzo[at]inria.fr"
+  },
+  {
     "objectID": "index.html#structure-of-the-course",
     "href": "index.html#structure-of-the-course",
     "title": "Skrub - machine learning with dataframes",
     "section": "Structure of the course",
-    "text": "Structure of the course\nThe course covers the main features of skrub, from data exploration to pipeline construction, with a short discussion about Data Ops.\nEach chapter includes a section that describes how a specific feature may assist in building a machine learning pipeline, along with practical code examples.\nSome chapters include exercises for participants to work with the explained features. These exercises are made available in content/exercises, as well as at the end of the respective lesson in content/notebooks.\nThe content of the book is split in sections, and each section includes a “final quiz” that covers the subjects covered up to that point."
+    "text": "Structure of the course\nThe course covers the main features of skrub, from data exploration to pipeline construction, with a short discussion about Data Ops.\nEach chapter includes a section that describes how a specific feature may assist in building a machine learning pipeline, along with practical code examples.\nSome chapters include exercises for participants to work with the explained features. These exercises are made available in content/exercises, as well as at the end of the respective lesson in content/notebooks."
   },
   {
     "objectID": "index.html#setting-up-a-local-environment",
