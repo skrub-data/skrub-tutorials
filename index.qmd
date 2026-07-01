@@ -36,6 +36,9 @@ Try the exercises in your browser with JupyterLite (no installation required).
 If you want to run the code locally, refer to the [Preparation and setup](#prepration-and-setup)
 section for detailed instructions. 
 
+## Contacts
+If you have questions, contact me at `riccardo[dot]cappuzzo[at]inria.fr`
+
 
 ## Structure of the course
 The course covers the main features of skrub, from data exploration to pipeline 
@@ -47,9 +50,6 @@ in building a machine learning pipeline, along with practical code examples.
 Some chapters include exercises for participants to work with the explained features.
 These exercises are made available in `content/exercises`, as well as at the end
 of the respective lesson in `content/notebooks`. 
-
-The content of the book is split in sections, and each section includes a "final 
-quiz" that covers the subjects covered up to that point.
 
 # Prepration and setup
 First of all, clone the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
