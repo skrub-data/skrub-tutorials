@@ -207,10 +207,11 @@
 <p>Beyond preprocessing and cleaning, ML pipelines need to:</p>
 <ul>
 <li>Add new features via feature engineering</li>
-<li>Handle missing values (possibly via imputation)</li>
-<li>Scale numeric features</li>
+<li>Handle missing values (optional)</li>
+<li>Scale numeric features (also optional)</li>
 <li>Train the model</li>
 </ul>
+<p>We also want to find out if there is a signal to learn in the data.</p>
 </section>
 <section id="reminder-avoiding-data-leakage" class="slide level2">
 <h2>Reminder: avoiding data leakage</h2>
@@ -218,14 +219,14 @@
 <li>We want to prevent data that belongs to the test set from entering the train set.</li>
 <li>Data leakage leads to over-optimistic results.</li>
 <li>Transformers and encoders must be trained exclusively on the training samples.</li>
-<li>A sequence of transformers needs to use the same set of samples for each step, and the samples should not change (kind of…).</li>
 </ul>
+<p>This is why we want a <code>Pipeline</code>!</p>
 </section>
 <section id="manual-pipeline-construction" class="slide level2 smaller">
 <h2>Manual Pipeline Construction</h2>
 <p>scikit-learn provides either <code>Pipeline</code> or <code>make_pipeline</code> to concatenate transformers and avoid leakage.</p>
 <p>The pipeline takes care of passing the same set of samples to the transformers in sequence.</p>
-<div id="3f67b7c4" class="cell" data-execution_count="1">
+<div id="36c3a706" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb1-3"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -243,7 +244,7 @@
 <section id="the-tabular_pipeline-function" class="slide level2">
 <h2>The <code>tabular_pipeline</code> Function</h2>
 <p>skrub’s <code>tabular_pipeline</code> returns a pipeline that includes all steps, with tuned defaults depending on the input model.</p>
-<div id="719546a1" class="cell" data-execution_count="2">
+<div id="aa1b5a5f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="co"># Option 1: Provide an estimator</span></span>
@@ -254,34 +255,14 @@
 <span id="cb2-8"><a></a>model_reg <span class="op">=</span> tabular_pipeline(<span class="st">"regression"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="for-linear-models" class="slide level2">
-<h2>For Linear Models</h2>
-<p>The pipeline is configured with:</p>
-<ul>
-<li><code>TableVectorizer</code> optimized for linear models
-<ul>
-<li><code>DatetimeEncoder</code> with spline-encoded datetimes</li>
-</ul></li>
-<li><code>SimpleImputer</code> (linear models need this)</li>
-<li><code>SquashingScaler</code> for robust scaling</li>
-<li>The estimator (<code>LogisticRegression</code>, <code>Ridge</code>, etc.)</li>
-</ul>
-</section>
-<section id="for-tree-based-models" class="slide level2 smaller">
-<h2>For Tree-Based Models</h2>
-<p>The pipeline is configured with:</p>
-<ul>
-<li><code>TableVectorizer</code> optimized for trees
-<ul>
-<li>Low-cardinality: Keep as categorical (HistGB) or ordinal (RandomForest)</li>
-<li>High-cardinality: StringEncoder</li>
-<li>No spline encoding (unnecessary)</li>
-</ul></li>
-<li>No scaling (trees don’t need scaling)</li>
-<li>No imputation (trees don’t need imputation)</li>
-<li>The estimator</li>
-</ul>
-</section>
+<section id="what-the-pipeline-looks-like-tree-based-model" class="slide level2">
+<h2>What the pipeline looks like: tree-based model</h2>
+
+<img data-src="images/tabular-pipeline.png" class="r-stretch"></section>
+<section id="what-the-pipeline-looks-like-linear-model" class="slide level2">
+<h2>What the pipeline looks like: linear model</h2>
+
+<img data-src="images/tabular-pipeline-linear-regression.png" class="r-stretch"></section>
 <section id="customizing-the-pipeline" class="slide level2">
 <h2>Customizing the pipeline</h2>
 <div class="callout callout-tip callout-titled callout-style-default">
@@ -298,7 +279,7 @@
 </div>
 </div>
 <div class="fragment">
-<div id="e367e75e" class="cell" data-execution_count="3">
+<div id="fd6a2ec6" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb3-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb3-3"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -333,7 +314,7 @@
 <li>Your training process includes custom preprocessing steps</li>
 <li>You want to experiment with different transformers</li>
 </ul>
-<p>Or… use the skrub Data Ops! (more on that later, maybe)</p>
+<p>Or… use the skrub Data Ops!</p>
 </section>
 <section id="example-complete-workflow" class="slide level2">
 <h2>Example: Complete Workflow</h2>

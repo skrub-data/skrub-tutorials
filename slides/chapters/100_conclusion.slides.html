@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -9,7 +9,7 @@
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.9.38">
 
-  <title>Skrub Slides – All the pre-processing in one place: TableVectorizer</title>
+  <title>Skrub Slides – Wrapping up</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -30,72 +30,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    html { -webkit-text-size-adjust: 100%; }
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -190,277 +124,82 @@
       margin-right: 0; 
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
-  
-  <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">All the pre-processing in one place: <code>TableVectorizer</code></h1>
+  <h1 class="title">Wrapping up</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
-<section id="the-goal" class="slide level2">
-<h2>The Goal</h2>
-<p>Convert any mixed-type dataframe into numeric features for ML:</p>
+<section id="on-pre-processing-and-cleaning" class="slide level2">
+<h2>On pre-processing and cleaning…</h2>
 <ul>
-<li>Data should be sanitized (clean nulls, correct dtypes)</li>
-<li>Categorical features need to be encoded into numerical features</li>
-<li>Datetime features can be transformed into more informative features</li>
-<li>The transformer should be <strong>stateful</strong> and <strong>robust</strong></li>
+<li>Data cleaning and pre-processing are hard and time-consuming</li>
+<li>Improper pre-processing can cause issues (reminder: imputation)</li>
+<li>Pre-processing should be part of the entire pipeline to prevent leakage</li>
 </ul>
 </section>
-<section id="the-solution-tablevectorizer" class="slide level2 scrollable">
-<h2>The solution: <code>TableVectorizer</code></h2>
-<p>The <code>TableVectorizer</code> is a transformer that</p>
-<ol type="1">
-<li>Cleans your data to have consistent representation of data types and null values, and</li>
-<li>Encodes all columns depending on their data type and characteristics using good defaults.</li>
-</ol>
-</section>
-<section id="a-toy-example" class="slide level2 smaller">
-<h2>A toy example</h2>
-<div id="af42f4a9" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
-<span id="cb1-3"><a></a></span>
-<span id="cb1-4"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb1-5"><a></a>    <span class="st">"age"</span>: [<span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">35</span>],</span>
-<span id="cb1-6"><a></a>    <span class="st">"salary"</span>: [<span class="dv">50000</span>, <span class="dv">65000</span>, <span class="dv">75000</span>],</span>
-<span id="cb1-7"><a></a>    <span class="st">"hire_date"</span>: [<span class="st">"2020-01-15"</span>, <span class="st">"2021-06-20"</span>, <span class="st">"2022-03-10"</span>],</span>
-<span id="cb1-8"><a></a>    <span class="st">"department"</span>: [<span class="st">"Sales"</span>, <span class="st">"Engineering"</span>, <span class="st">"HR"</span>]</span>
-<span id="cb1-9"><a></a>})</span>
-<span id="cb1-10"><a></a></span>
-<span id="cb1-11"><a></a>tv <span class="op">=</span> TableVectorizer()</span>
-<span id="cb1-12"><a></a>X_numeric <span class="op">=</span> tv.fit_transform(df)</span>
-<span id="cb1-13"><a></a><span class="bu">print</span>(X_numeric)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    age   salary  hire_date_year  hire_date_month  hire_date_day  \
-0  25.0  50000.0          2020.0              1.0           15.0   
-1  30.0  65000.0          2021.0              6.0           20.0   
-2  35.0  75000.0          2022.0              3.0           10.0   
-
-   hire_date_total_seconds  department_Engineering  department_HR  \
-0             1.579046e+09                     0.0            0.0   
-1             1.624147e+09                     1.0            0.0   
-2             1.646870e+09                     0.0            1.0   
-
-   department_Sales  
-0               1.0  
-1               0.0  
-2               0.0  </code></pre>
-</div>
-</div>
-</section>
-<section id="phase-1-cleaning" class="slide level2">
-<h2>Phase 1: Cleaning</h2>
-<p>The <code>TableVectorizer</code> starts by cleaning:</p>
+<section id="how-skrub-helps-with-that" class="slide level2">
+<h2>How skrub helps with that</h2>
 <ul>
-<li>Parse datetime columns (with custom formats)</li>
-<li>Detect numbers written as strings (“123.45”)</li>
-<li>Handle missing value markers (“N/A”, “?”)</li>
-<li>Drop uninformative columns</li>
-<li><strong>Convert all columns to string if they can’t be parsed as float or datetime</strong></li>
-<li><strong>Convert to <code>float32</code> for efficiency</strong></li>
+<li>The <code>Cleaner</code> and <code>TableVectorizer</code> handle pre-processing for you</li>
+<li>Robust defaults handle most common use cases</li>
 </ul>
-<p>In practice, a <code>Cleaner</code> followed by conversion to <code>float32</code>.</p>
 </section>
-<section id="phase-2-column-dispatch" class="slide level2">
-<h2>Phase 2: Column Dispatch</h2>
-<p>After cleaning, columns are routed to appropriate transformers:</p>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Column Type</th>
-<th>Cardinality</th>
-<th>Transformer</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Numeric</td>
-<td>-</td>
-<td>Passthrough</td>
-</tr>
-<tr class="even">
-<td>Datetime</td>
-<td>-</td>
-<td>DatetimeEncoder</td>
-</tr>
-<tr class="odd">
-<td>String/Category</td>
-<td>≤ 40</td>
-<td>OneHotEncoder</td>
-</tr>
-<tr class="even">
-<td>String/Category</td>
-<td>&gt; 40</td>
-<td>StringEncoder</td>
-</tr>
-</tbody>
-</table>
-<div id="9a7f9e0b" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="co"># Change when categories become "high-cardinality"</span></span>
-<span id="cb3-2"><a></a>tv <span class="op">=</span> TableVectorizer(cardinality_threshold<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="customizing-transformers" class="slide level2 smaller">
-<h2>Customizing Transformers</h2>
-<div id="8311e257" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, StringEncoder</span>
-<span id="cb4-2"><a></a></span>
-<span id="cb4-3"><a></a><span class="co"># Add periodic encoding</span></span>
-<span id="cb4-4"><a></a>datetime_enc <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
-<span id="cb4-5"><a></a><span class="co"># Change the number of output components of the StringEncoder</span></span>
-<span id="cb4-6"><a></a>string_enc <span class="op">=</span> StringEncoder(n_components<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb4-7"><a></a></span>
-<span id="cb4-8"><a></a>tv <span class="op">=</span> TableVectorizer(</span>
-<span id="cb4-9"><a></a>    datetime<span class="op">=</span>datetime_enc,</span>
-<span id="cb4-10"><a></a>    high_cardinality<span class="op">=</span>string_enc</span>
-<span id="cb4-11"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="applying-to-a-subset-of-columns" class="slide level2">
-<h2>Applying to a subset of columns</h2>
-<div id="166693a3" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb5-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
-<span id="cb5-3"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb5-4"><a></a></span>
-<span id="cb5-5"><a></a>df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb5-6"><a></a>    {</span>
-<span id="cb5-7"><a></a>        <span class="st">"metric_1"</span>: [<span class="fl">10.5</span>, <span class="fl">20.3</span>, <span class="fl">30.1</span>, <span class="fl">40.2</span>],</span>
-<span id="cb5-8"><a></a>        <span class="st">"metric_2"</span>: [<span class="fl">5.1</span>, <span class="fl">15.6</span>, <span class="va">None</span>, <span class="fl">35.8</span>],</span>
-<span id="cb5-9"><a></a>        <span class="st">"metric_3"</span>: [<span class="fl">1.1</span>, <span class="fl">3.3</span>, <span class="fl">2.6</span>, <span class="fl">.8</span>],</span>
-<span id="cb5-10"><a></a>        <span class="st">"num_id"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>],</span>
-<span id="cb5-11"><a></a>        <span class="st">"str_id"</span>: [<span class="st">"A101"</span>, <span class="st">"A102"</span>, <span class="st">"A103"</span>, <span class="st">"A104"</span>],</span>
-<span id="cb5-12"><a></a>    }</span>
-<span id="cb5-13"><a></a>)</span>
-<span id="cb5-14"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">metric_1</th>
-<th data-quarto-table-cell-role="th">metric_2</th>
-<th data-quarto-table-cell-role="th">metric_3</th>
-<th data-quarto-table-cell-role="th">num_id</th>
-<th data-quarto-table-cell-role="th">str_id</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>10.5</td>
-<td>5.1</td>
-<td>1.1</td>
-<td>101</td>
-<td>A101</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>20.3</td>
-<td>15.6</td>
-<td>3.3</td>
-<td>102</td>
-<td>A102</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>30.1</td>
-<td>NaN</td>
-<td>2.6</td>
-<td>103</td>
-<td>A103</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>40.2</td>
-<td>35.8</td>
-<td>0.8</td>
-<td>104</td>
-<td>A104</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-<section id="applying-to-a-subset-of-columns-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Applying to a subset of columns</h2>
-<p>We can use <code>ApplyToCols</code> and the skrub selectors:</p>
-<div id="452d0d2a" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb6-1" class="hljs-ln-code"><a></a>tv <span class="op">=</span> ApplyToCols(TableVectorizer(), exclude_cols<span class="op">=</span>[<span class="st">"num_id"</span>, <span class="st">"str_id"</span>])</span>
-<span id="cb6-2" class="hljs-ln-code"><a></a>df_enc <span class="op">=</span> tv.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="02ecfddd" class="cell" data-execution_count="6">
-<div class="cell-output cell-output-stdout">
-<pre><code>Original
-   num_id str_id
-0     101   A101
-1     102   A102
-2     103   A103
-3     104   A104
-
-Encoded
-   num_id str_id
-0     101   A101
-1     102   A102
-2     103   A103
-3     104   A104</code></pre>
-</div>
-</div>
-</section>
-<section id="fine-grained-control-specific_transformers" class="slide level2">
-<h2>Fine-Grained Control: specific_transformers</h2>
-<div class="callout callout-tip callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<p><strong>Tip</strong></p>
-</div>
-<div class="callout-content">
-<p>Use this only if you have a specific column that needs to be transformed by a specific custom-made transformer.</p>
-</div>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>specific <span class="op">=</span> [(CustomTransformer(), [<span class="st">"occupation"</span>])]</span>
-<span id="cb8-2"><a></a>specific <span class="op">=</span> [(<span class="st">"passthrough"</span>, [<span class="st">"num_id"</span>])]</span>
-<span id="cb8-3"><a></a>tv <span class="op">=</span> TableVectorizer(specific_transformers<span class="op">=</span>specific)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Columns in <code>specific_transformers</code> are forwarded directly to the transformer without any cleaning or parsing.</p>
-</section>
-<section id="what-we-have-seen-in-this-chapter" class="slide level2">
-<h2>What we have seen in this chapter</h2>
+<section id="on-data-exploration" class="slide level2">
+<h2>On data exploration</h2>
 <ul>
-<li>One object – the <code>TableVectorizer</code> – handles preprocessing and feature engineering</li>
-<li>Column types are detected, and columns are encoded accordingly</li>
-<li>Cleaning and encoding operations can be customized based on the use case</li>
-<li>Per-column behavior can be set with <code>ApplyToCols</code></li>
+<li>Even before you start cleaning, you need to find out what’s in your data</li>
+<li>What dtypes? Are there nulls? What kind of information are you dealing with?</li>
+</ul>
+</section>
+<section id="how-skrub-helps-with-that-1" class="slide level2">
+<h2>How skrub helps with that</h2>
+<ul>
+<li>The <code>TableReport</code> computes various statistics about any given dataframe</li>
+<li>The statistics are presented with an interactive view</li>
+<li>Stats, distributions, column associations are available from the same view</li>
+<li>All stats can also be exported to be used by other tools</li>
+</ul>
+</section>
+<section id="on-transforming-columns" class="slide level2">
+<h2>On transforming columns</h2>
+<ul>
+<li>Not all columns are made equal</li>
+<li>Some need to be scaled, some need to be encoded, some need to be dropped</li>
+<li>Some should just be left alone</li>
+<li>Selecting columns is not always straightforward</li>
+</ul>
+</section>
+<section id="how-skrub-helps-with-that-2" class="slide level2">
+<h2>How skrub helps with that</h2>
+<ul>
+<li><code>ApplyToCols</code> lets you apply a specific transformer to a selection of columns</li>
+<li>It’s possible to exclude columns from a selection and not pass them to the transformer</li>
+<li>The skrub <strong>selectors</strong> can be used to build advanced column selection rules</li>
+<li>Selectors produce sets of columns that can be combined with set operations</li>
+<li>Selectors are used throughout the library</li>
+</ul>
+</section>
+<section id="on-feature-engineering-and-model-building" class="slide level2">
+<h2>On feature engineering and model building</h2>
+<ul>
+<li>Feature engineering requires time and is dtype dependent</li>
+<li>Data should be prepared so that the proper transformers are applied to the right columns</li>
+</ul>
+</section>
+<section id="how-skrub-helps-with-that-3" class="slide level2">
+<h2>How skrub helps with that</h2>
+<ul>
+<li>The <code>TableVectorizer</code> cleans the data before applying column specific transformers</li>
+<li>Categorical columns are encoded based on how many unique values they include</li>
+<li>The <code>tabular_pipeline</code> builds a pipeline that acts as a good baseline for further analysis</li>
+<li>The pipeline includes a <code>TableVectorizer</code> and a prediction model</li>
 </ul>
 
 

@@ -219,7 +219,7 @@
 <h2>Safe scaling of numerical features</h2>
 <p>Consider a situation where a numerical feature includes large outliers.</p>
 <p>Most values are in range [-2, 2], but some outliers are in [-40, 40]:</p>
-<div id="3d8a7895" class="cell" data-execution_count="1">
+<div id="46596182" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> (</span>
 <span id="cb1-2"><a></a>    generate_data_with_outliers,</span>
 <span id="cb1-3"><a></a>    plot_feature_with_outliers</span>
@@ -265,7 +265,7 @@
 </section>
 <section id="comparing-the-scalers" class="slide level2">
 <h2>Comparing the scalers</h2>
-<div id="0e617129" class="cell" data-execution_count="2">
+<div id="c2b6a853" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> helpers <span class="im">import</span> scale_feature_and_plot</span>
 <span id="cb3-2"><a></a>scale_feature_and_plot(values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
@@ -281,7 +281,6 @@
 <h2>How <code>SquashingScaler</code> Works</h2>
 <ol type="1">
 <li>Center the median to 0</li>
-<li>Use quantile-based statistics for scaling</li>
 <li>Fill constant columns with 0s</li>
 <li>Apply a smooth squashing function</li>
 <li>Constrain output to [-3, 3] (default)</li>
@@ -317,7 +316,7 @@
 <section id="one-hot-encoding" class="slide level2">
 <h2>One-Hot Encoding</h2>
 <p>Creates binary indicator columns:</p>
-<div id="9a542e60" class="cell" data-execution_count="3">
+<div id="73bbbd57" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb4-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
 <span id="cb4-3"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
@@ -440,7 +439,7 @@
 <section id="converting-strings-to-datetime" class="slide level2">
 <h2>Converting Strings to Datetime</h2>
 <p><strong><code>ToDatetime</code></strong>: Single column transformer with format guessing:</p>
-<div id="e46de290" class="cell" data-execution_count="4">
+<div id="86f227fe" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb7-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-3"><a></a></span>
@@ -486,7 +485,7 @@
 </div>
 </div>
 <p><strong><code>Cleaner</code></strong>: Same machinery:</p>
-<div id="bac27024" class="cell" data-execution_count="5">
+<div id="77031ae0" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb8-2"><a></a></span>
 <span id="cb8-3"><a></a>cleaner <span class="op">=</span> Cleaner(datetime_format<span class="op">=</span><span class="st">"</span><span class="sc">%d</span><span class="st"> %B %Y"</span>)</span>
@@ -535,7 +534,7 @@
 <section id="extracting-datetime-features" class="slide level2 smaller">
 <h2>Extracting Datetime Features</h2>
 <p>Datetimes must be converted to numerical features:</p>
-<div id="6559ebd8" class="cell" data-execution_count="6">
+<div id="81b60d51" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>df_dt[<span class="st">"year"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.year</span>
 <span id="cb9-2"><a></a>df_dt[<span class="st">"month"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.month</span>
 <span id="cb9-3"><a></a>df_dt[<span class="st">"day"</span>] <span class="op">=</span> df_dt[<span class="st">"dates"</span>].dt.day</span>
@@ -602,7 +601,7 @@
 </section>
 <section id="simpler-with-datetimeencoder" class="slide level2">
 <h2>Simpler with DatetimeEncoder</h2>
-<div id="27f4548c" class="cell" data-execution_count="7">
+<div id="3e79af77" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> DatetimeEncoder, ApplyToCols</span>
 <span id="cb10-2"><a></a></span>
 <span id="cb10-3"><a></a>de <span class="op">=</span> DatetimeEncoder(</span>
@@ -684,7 +683,7 @@
 <span id="cb11-3"><a></a>df[<span class="st">"weekday_sin"</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span>
 <span id="cb11-4"><a></a>df[<span class="st">"weekday_cos"</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> df[<span class="st">"weekday"</span>] <span class="op">/</span> <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Or with <code>DatetimeEncoder</code>:</p>
-<div id="a9616128" class="cell" data-execution_count="8">
+<div id="1c29b7a3" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"circular"</span>)</span>
 <span id="cb12-2"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
 <span id="cb12-3"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -744,7 +743,7 @@
 </section>
 <section id="spline-encoding-alternative" class="slide level2">
 <h2>Spline Encoding Alternative</h2>
-<div id="d34bcf18" class="cell" data-execution_count="9">
+<div id="ddd1afc0" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>de <span class="op">=</span> DatetimeEncoder(periodic_encoding<span class="op">=</span><span class="st">"spline"</span>)</span>
 <span id="cb13-2"><a></a>df_enc <span class="op">=</span> ApplyToCols(de, cols<span class="op">=</span><span class="st">"dates"</span>).fit_transform(df_dt)</span>
 <span id="cb13-3"><a></a>df_enc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

@@ -158,8 +158,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#reminder-avoiding-data-leakage" id="toc-reminder-avoiding-data-leakage" class="nav-link" data-scroll-target="#reminder-avoiding-data-leakage">Reminder: avoiding data leakage</a></li>
   <li><a href="#manual-pipeline-construction" id="toc-manual-pipeline-construction" class="nav-link" data-scroll-target="#manual-pipeline-construction">Manual Pipeline Construction</a></li>
   <li><a href="#the-tabular_pipeline-function" id="toc-the-tabular_pipeline-function" class="nav-link" data-scroll-target="#the-tabular_pipeline-function">The <code>tabular_pipeline</code> Function</a></li>
-  <li><a href="#for-linear-models" id="toc-for-linear-models" class="nav-link" data-scroll-target="#for-linear-models">For Linear Models</a></li>
-  <li><a href="#for-tree-based-models" id="toc-for-tree-based-models" class="nav-link" data-scroll-target="#for-tree-based-models">For Tree-Based Models</a></li>
+  <li><a href="#what-the-pipeline-looks-like-tree-based-model" id="toc-what-the-pipeline-looks-like-tree-based-model" class="nav-link" data-scroll-target="#what-the-pipeline-looks-like-tree-based-model">What the pipeline looks like: tree-based model</a></li>
+  <li><a href="#what-the-pipeline-looks-like-linear-model" id="toc-what-the-pipeline-looks-like-linear-model" class="nav-link" data-scroll-target="#what-the-pipeline-looks-like-linear-model">What the pipeline looks like: linear model</a></li>
   <li><a href="#customizing-the-pipeline" id="toc-customizing-the-pipeline" class="nav-link" data-scroll-target="#customizing-the-pipeline">Customizing the pipeline</a></li>
   <li><a href="#when-to-use-which-approach" id="toc-when-to-use-which-approach" class="nav-link" data-scroll-target="#when-to-use-which-approach">When to Use Which Approach</a></li>
   <li><a href="#example-complete-workflow" id="toc-example-complete-workflow" class="nav-link" data-scroll-target="#example-complete-workflow">Example: Complete Workflow</a></li>
@@ -194,10 +194,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Beyond preprocessing and cleaning, ML pipelines need to:</p>
 <ul>
 <li>Add new features via feature engineering</li>
-<li>Handle missing values (possibly via imputation)</li>
-<li>Scale numeric features</li>
+<li>Handle missing values (optional)</li>
+<li>Scale numeric features (also optional)</li>
 <li>Train the model</li>
 </ul>
+<p>We also want to find out if there is a signal to learn in the data.</p>
 </section>
 <section id="reminder-avoiding-data-leakage" class="level2">
 <h2 class="anchored" data-anchor-id="reminder-avoiding-data-leakage">Reminder: avoiding data leakage</h2>
@@ -205,14 +206,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>We want to prevent data that belongs to the test set from entering the train set.</li>
 <li>Data leakage leads to over-optimistic results.</li>
 <li>Transformers and encoders must be trained exclusively on the training samples.</li>
-<li>A sequence of transformers needs to use the same set of samples for each step, and the samples should not change (kind of…).</li>
 </ul>
+<p>This is why we want a <code>Pipeline</code>!</p>
 </section>
 <section id="manual-pipeline-construction" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="manual-pipeline-construction">Manual Pipeline Construction</h2>
 <p>scikit-learn provides either <code>Pipeline</code> or <code>make_pipeline</code> to concatenate transformers and avoid leakage.</p>
 <p>The pipeline takes care of passing the same set of samples to the transformers in sequence.</p>
-<div id="3f67b7c4" class="cell" data-execution_count="1">
+<div id="36c3a706" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -230,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-tabular_pipeline-function" class="level2">
 <h2 class="anchored" data-anchor-id="the-tabular_pipeline-function">The <code>tabular_pipeline</code> Function</h2>
 <p>skrub’s <code>tabular_pipeline</code> returns a pipeline that includes all steps, with tuned defaults depending on the input model.</p>
-<div id="719546a1" class="cell" data-execution_count="2">
+<div id="aa1b5a5f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Option 1: Provide an estimator</span></span>
@@ -241,33 +242,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>model_reg <span class="op">=</span> tabular_pipeline(<span class="st">"regression"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="for-linear-models" class="level2">
-<h2 class="anchored" data-anchor-id="for-linear-models">For Linear Models</h2>
-<p>The pipeline is configured with:</p>
-<ul>
-<li><code>TableVectorizer</code> optimized for linear models
-<ul>
-<li><code>DatetimeEncoder</code> with spline-encoded datetimes</li>
-</ul></li>
-<li><code>SimpleImputer</code> (linear models need this)</li>
-<li><code>SquashingScaler</code> for robust scaling</li>
-<li>The estimator (<code>LogisticRegression</code>, <code>Ridge</code>, etc.)</li>
-</ul>
+<section id="what-the-pipeline-looks-like-tree-based-model" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-pipeline-looks-like-tree-based-model">What the pipeline looks like: tree-based model</h2>
+<p><img src="images/tabular-pipeline.png" class="img-fluid"></p>
 </section>
-<section id="for-tree-based-models" class="level2 smaller">
-<h2 class="smaller anchored" data-anchor-id="for-tree-based-models">For Tree-Based Models</h2>
-<p>The pipeline is configured with:</p>
-<ul>
-<li><code>TableVectorizer</code> optimized for trees
-<ul>
-<li>Low-cardinality: Keep as categorical (HistGB) or ordinal (RandomForest)</li>
-<li>High-cardinality: StringEncoder</li>
-<li>No spline encoding (unnecessary)</li>
-</ul></li>
-<li>No scaling (trees don’t need scaling)</li>
-<li>No imputation (trees don’t need imputation)</li>
-<li>The estimator</li>
-</ul>
+<section id="what-the-pipeline-looks-like-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-pipeline-looks-like-linear-model">What the pipeline looks like: linear model</h2>
+<p><img src="images/tabular-pipeline-linear-regression.png" class="img-fluid"></p>
 </section>
 <section id="customizing-the-pipeline" class="level2">
 <h2 class="anchored" data-anchor-id="customizing-the-pipeline">Customizing the pipeline</h2>
@@ -285,7 +266,7 @@ Tip
 </div>
 </div>
 <div class="fragment">
-<div id="e367e75e" class="cell" data-execution_count="3">
+<div id="fd6a2ec6" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -320,7 +301,7 @@ Tip
 <li>Your training process includes custom preprocessing steps</li>
 <li>You want to experiment with different transformers</li>
 </ul>
-<p>Or… use the skrub Data Ops! (more on that later, maybe)</p>
+<p>Or… use the skrub Data Ops!</p>
 </section>
 <section id="example-complete-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="example-complete-workflow">Example: Complete Workflow</h2>

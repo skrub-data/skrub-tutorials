@@ -160,15 +160,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#why-column-specific-transformations" id="toc-why-column-specific-transformations" class="nav-link active" data-scroll-target="#why-column-specific-transformations">Why Column-Specific Transformations?</a></li>
   <li><a href="#why-column-specific-transformations-1" id="toc-why-column-specific-transformations-1" class="nav-link" data-scroll-target="#why-column-specific-transformations-1">Why Column-Specific Transformations?</a></li>
   <li><a href="#applying-transformers-to-columns-with-applytocols" id="toc-applying-transformers-to-columns-with-applytocols" class="nav-link" data-scroll-target="#applying-transformers-to-columns-with-applytocols">Applying transformers to columns with <code>ApplyToCols</code></a></li>
-  <li><a href="#example-applytocols-with-a-single-column-transformer" id="toc-example-applytocols-with-a-single-column-transformer" class="nav-link" data-scroll-target="#example-applytocols-with-a-single-column-transformer">Example: <code>ApplyToCols</code> with a single column transformer</a></li>
-  <li><a href="#example-applytocols-with-a-regular-transformer" id="toc-example-applytocols-with-a-regular-transformer" class="nav-link" data-scroll-target="#example-applytocols-with-a-regular-transformer">Example: <code>ApplyToCols</code> with a regular transformer</a></li>
+  <li><a href="#example-applytocols-to-encode" id="toc-example-applytocols-to-encode" class="nav-link" data-scroll-target="#example-applytocols-to-encode">Example: <code>ApplyToCols</code> to encode</a></li>
+  <li><a href="#example-applytocols-to-decompose" id="toc-example-applytocols-to-decompose" class="nav-link" data-scroll-target="#example-applytocols-to-decompose">Example: <code>ApplyToCols</code> to decompose</a></li>
   <li><a href="#exclude-specific-columns" id="toc-exclude-specific-columns" class="nav-link" data-scroll-target="#exclude-specific-columns">Exclude specific columns</a></li>
   <li><a href="#chaining-transformers" id="toc-chaining-transformers" class="nav-link" data-scroll-target="#chaining-transformers">Chaining Transformers</a></li>
-  <li><a href="#example-encode-and-reduce-dimensionality" id="toc-example-encode-and-reduce-dimensionality" class="nav-link" data-scroll-target="#example-encode-and-reduce-dimensionality">Example: encode and reduce dimensionality</a></li>
   <li><a href="#example-convert-to-datetime-and-encode" id="toc-example-convert-to-datetime-and-encode" class="nav-link" data-scroll-target="#example-convert-to-datetime-and-encode">Example: convert to datetime and encode</a></li>
   <li><a href="#order-matters" id="toc-order-matters" class="nav-link" data-scroll-target="#order-matters">Order Matters!</a></li>
   <li><a href="#the-allow_reject-parameter" id="toc-the-allow_reject-parameter" class="nav-link" data-scroll-target="#the-allow_reject-parameter">The <code>allow_reject</code> Parameter</a></li>
-  <li><a href="#the-allow_reject-parameter-1" id="toc-the-allow_reject-parameter-1" class="nav-link" data-scroll-target="#the-allow_reject-parameter-1">The <code>allow_reject</code> Parameter</a></li>
   <li><a href="#selection-operations" id="toc-selection-operations" class="nav-link" data-scroll-target="#selection-operations">Selection Operations</a></li>
   <li><a href="#selection-operations-1" id="toc-selection-operations-1" class="nav-link" data-scroll-target="#selection-operations-1">Selection Operations</a></li>
   <li><a href="#selection-operations-2" id="toc-selection-operations-2" class="nav-link" data-scroll-target="#selection-operations-2">Selection Operations</a></li>
@@ -201,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="why-column-specific-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="why-column-specific-transformations">Why Column-Specific Transformations?</h2>
 <p>Different columns must be handled in different ways.</p>
-<div id="7b987864" class="cell" data-execution_count="1">
+<div id="8af861a8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols, DropCols</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -209,8 +207,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"user_id"</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>],</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>,<span class="st">"14 April 2023"</span> ],</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>, <span class="st">"Rome"</span>],</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric_1"</span>: [<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>],</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric_2"</span>: [<span class="dv">3</span>, <span class="dv">22</span>, <span class="dv">45</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric_1"</span>: [<span class="fl">10.3</span>, <span class="fl">20.7</span>, <span class="fl">30.8</span>],</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric_2"</span>: [<span class="fl">3.5</span>, <span class="fl">22.3</span>, <span class="fl">45.1</span>]</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
@@ -220,22 +218,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul class="incremental">
 <li>Some transformers (e.g., the <code>StandardScaler</code>) work only on numeric columns</li>
 <li>Some transformers (e.g., the <code>OneHotEncoder</code>) work only on categorical columns</li>
-<li>Different columns with the same dtype may need to be treated differently (e.g., one has outliers and requires a <code>RobustScaler</code>)</li>
+<li>Different columns with the same dtype may need to be treated differently (e.g., one has outliers and requires a <code>RobustScaler</code>, an integer ID should not be scaled)</li>
 <li>Some transformations only make sense for a subset of the columns (e.g., parsing datetimes)</li>
 </ul>
 </div>
 </section>
-<section id="applying-transformers-to-columns-with-applytocols" class="level2">
-<h2 class="anchored" data-anchor-id="applying-transformers-to-columns-with-applytocols">Applying transformers to columns with <code>ApplyToCols</code></h2>
-<p><code>ApplyToCols</code> applies a transformer to columns that can be selected by name, or with filters.</p>
-<div id="d5512bfc" class="cell" data-execution_count="2">
+<section id="applying-transformers-to-columns-with-applytocols" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="applying-transformers-to-columns-with-applytocols">Applying transformers to columns with <code>ApplyToCols</code></h2>
+<p><code>ApplyToCols</code> is a <strong>meta-transformer</strong>: it applies a transformer to columns that can be selected by name, or with filters.</p>
+<p>Depending on the transformer, <code>ApplyToCols</code> either clones it and applies a copy to each column, or forwards all the columns to the same transformer.</p>
+<p>Columns that are not selected pass through without changes.</p>
+<div id="558c4be5" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ordinal <span class="op">=</span> ApplyToCols(OrdinalEncoder(), cols<span class="op">=</span><span class="st">"city"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>transformed <span class="op">=</span> ordinal.fit_transform(df)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ordinal <span class="op">=</span> ApplyToCols(OrdinalEncoder(), cols<span class="op">=</span><span class="st">"city"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>transformed <span class="op">=</span> ordinal.fit_transform(df)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -256,24 +255,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th data-quarto-table-cell-role="th">0</th>
 <td>0</td>
 <td>03 January 2023</td>
-<td>10</td>
-<td>3</td>
+<td>10.3</td>
+<td>3.5</td>
 <td>1.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>1</td>
 <td>04 February 2023</td>
-<td>20</td>
-<td>22</td>
+<td>20.7</td>
+<td>22.3</td>
 <td>0.0</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>2</td>
 <td>14 April 2023</td>
-<td>30</td>
-<td>45</td>
+<td>30.8</td>
+<td>45.1</td>
 <td>2.0</td>
 </tr>
 </tbody>
@@ -283,22 +282,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="example-applytocols-with-a-single-column-transformer" class="level2">
-<h2 class="anchored" data-anchor-id="example-applytocols-with-a-single-column-transformer">Example: <code>ApplyToCols</code> with a single column transformer</h2>
+<section id="example-applytocols-to-encode" class="level2">
+<h2 class="anchored" data-anchor-id="example-applytocols-to-encode">Example: <code>ApplyToCols</code> to encode</h2>
+<p><code>ApplyToCols(OneHotEncoder(), cols=["Name", "Desc"])</code></p>
 <p><img src="./images/ex_ApplyToCols.png" class="img-fluid"></p>
 </section>
-<section id="example-applytocols-with-a-regular-transformer" class="level2">
-<h2 class="anchored" data-anchor-id="example-applytocols-with-a-regular-transformer">Example: <code>ApplyToCols</code> with a regular transformer</h2>
+<section id="example-applytocols-to-decompose" class="level2">
+<h2 class="anchored" data-anchor-id="example-applytocols-to-decompose">Example: <code>ApplyToCols</code> to decompose</h2>
+<p><code>ApplyToCols(PCA(), cols=s.glob("metric_*"))</code></p>
 <p><img src="./images/ex_ApplyToFrame.png" class="img-fluid"></p>
 </section>
 <section id="exclude-specific-columns" class="level2">
 <h2 class="anchored" data-anchor-id="exclude-specific-columns">Exclude specific columns</h2>
 <p>For example, apply the <code>StandardScaler</code> only to the <code>metric_*</code> columns, excluding the column <code>user_id</code>.</p>
-<div id="5c978b8f" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric(), exclude_cols<span class="op">=</span><span class="st">"user_id"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>scaler.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="52c34192" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric(), exclude_cols<span class="op">=</span><span class="st">"user_id"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>scaler.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -320,24 +322,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>0</td>
 <td>03 January 2023</td>
 <td>Paris</td>
-<td>-1.224745</td>
-<td>-1.184075</td>
+<td>-1.230675</td>
+<td>-1.183668</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>1</td>
 <td>04 February 2023</td>
 <td>London</td>
-<td>0.000000</td>
-<td>-0.077644</td>
+<td>0.011948</td>
+<td>-0.078389</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>2</td>
 <td>14 April 2023</td>
 <td>Rome</td>
-<td>1.224745</td>
-<td>1.261720</td>
+<td>1.218727</td>
+<td>1.262056</td>
 </tr>
 </tbody>
 </table>
@@ -348,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="chaining-transformers" class="level2">
 <h2 class="anchored" data-anchor-id="chaining-transformers">Chaining Transformers</h2>
-<p>Use a scikit-learn <code>Pipeline to concatenate multiple transformers, when wrapped in</code>ApplyToCols`:</p>
+<p>Use a scikit-learn <code>Pipeline</code> to concatenate multiple transformers, when wrapped in <code>ApplyToCols</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -371,92 +373,23 @@ Tip
 </div>
 </div>
 </section>
-<section id="example-encode-and-reduce-dimensionality" class="level2">
-<h2 class="anchored" data-anchor-id="example-encode-and-reduce-dimensionality">Example: encode and reduce dimensionality</h2>
-<div id="4b53121a" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>n_patients <span class="op">=</span> <span class="dv">5</span> </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"patient_id"</span>: [<span class="ss">f"P</span><span class="sc">{</span>i<span class="sc">:03d}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_patients)],</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"age"</span>: np.random.randint(<span class="dv">18</span>, <span class="dv">80</span>, size<span class="op">=</span>n_patients),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sex"</span>: np.random.choice([<span class="st">"M"</span>, <span class="st">"F"</span>], size<span class="op">=</span>n_patients),</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>select <span class="op">=</span> SelectCols(<span class="st">"patient_id"</span>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>))</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="bu">reduce</span> <span class="op">=</span> ApplyToCols(PCA(n_components<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> make_pipeline(select, encode, <span class="bu">reduce</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>dft<span class="op">=</span> transform.fit_transform(df)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>dft.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">pca0</th>
-<th data-quarto-table-cell-role="th">pca1</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>-7.404359e-17</td>
-<td>1.802674e-16</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>-4.389383e-16</td>
-<td>8.660254e-01</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>8.164966e-01</td>
-<td>-2.886751e-01</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>-4.082483e-01</td>
-<td>-2.886751e-01</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>-4.082483e-01</td>
-<td>-2.886751e-01</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
 <section id="example-convert-to-datetime-and-encode" class="level2">
 <h2 class="anchored" data-anchor-id="example-convert-to-datetime-and-encode">Example: convert to datetime and encode</h2>
-<div id="c51dbf23" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>encode_datetime <span class="op">=</span> make_pipeline(</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(ToDatetime(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(DatetimeEncoder(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>encode_datetime.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div id="496fa041" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>encode_datetime <span class="op">=</span> make_pipeline(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(ToDatetime(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(DatetimeEncoder(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>encode_datetime.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
 
@@ -501,165 +434,51 @@ Tip
 <section id="order-matters" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="order-matters">Order Matters!</h2>
 <p>Transformers should be ordered carefully:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode first, then scale</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>transform_1 <span class="op">=</span> make_pipeline(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string()),</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># vs. Scale first, then encode</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>transform_2 <span class="op">=</span> make_pipeline(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric()),</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode first, then scale</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>transform_1 <span class="op">=</span> make_pipeline(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string()),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Strings are now numbers! </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># vs. Scale first, then encode</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>transform_2 <span class="op">=</span> make_pipeline(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric()),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Strings haven't been touched</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="the-allow_reject-parameter" class="level2">
 <h2 class="anchored" data-anchor-id="the-allow_reject-parameter">The <code>allow_reject</code> Parameter</h2>
 <p>When <code>allow_reject=True</code>, columns that can’t be transformed are passed through:</p>
-<div id="089702e0" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="b431872b" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>This is useful when you don’t know if a column may be rejected or not (common when parsing types).</p>
-</section>
-<section id="the-allow_reject-parameter-1" class="level2">
-<h2 class="anchored" data-anchor-id="the-allow_reject-parameter-1">The <code>allow_reject</code> Parameter</h2>
-<p>When <code>allow_reject=False</code>, columns that can’t be transformed raise an exception:</p>
-<div id="a0242931" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">RejectColumn</span>                              Traceback (most recent call last)
-<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[7]</span><span class="ansi-green-fg">, line 4</span>
-<span class="ansi-green-fg">      1</span> <span style="font-weight:bold;color:rgb(0,135,0)">from</span> skrub <span style="font-weight:bold;color:rgb(0,135,0)">import</span> ApplyToCols, ToDatetime
-<span class="ansi-green-fg">      2</span> 
-<span class="ansi-green-fg">      3</span> with_reject = ApplyToCols(ToDatetime(), allow_reject=<span style="font-weight:bold;color:rgb(0,135,0)">False</span>)
-<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">4</span> result = with_reject.fit_transform(df)
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/_set_output.py:319</span>, in <span class="ansi-cyan-fg">_wrap_method_output.&lt;locals&gt;.wrapped</span><span class="ansi-blue-fg">(self, X, *args, **kwargs)</span>
-<span class="ansi-green-fg">    317</span> <span style="color:rgb(175,0,255)">@wraps</span>(f)
-<span class="ansi-green-fg">    318</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg">wrapped</span>(<span style="color:rgb(0,135,0)">self</span>, X, *args, **kwargs):
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">319</span>     data_to_wrap = <span class="ansi-black-fg ansi-yellow-bg">f</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">X</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">args</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    320</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">isinstance</span>(data_to_wrap, <span style="color:rgb(0,135,0)">tuple</span>):
-<span class="ansi-green-fg">    321</span>         <span style="font-style:italic;color:rgb(95,135,135)"># only wrap the first output for cross decomposition</span>
-<span class="ansi-green-fg">    322</span>         return_tuple = (
-<span class="ansi-green-fg">    323</span>             _wrap_data_with_container(method, data_to_wrap[<span class="ansi-green-fg">0</span>], X, <span style="color:rgb(0,135,0)">self</span>),
-<span class="ansi-green-fg">    324</span>             *data_to_wrap[<span class="ansi-green-fg">1</span>:],
-<span class="ansi-green-fg">    325</span>         )
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/skrub/_apply_to_cols.py:380</span>, in <span class="ansi-cyan-fg">ApplyToCols.fit_transform</span><span class="ansi-blue-fg">(self, X, y, **kwargs)</span>
-<span class="ansi-green-fg">    365</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">TypeError</span>(
-<span class="ansi-green-fg">    366</span>         <span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Invalid value for </span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">keep_original</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">: </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span><span style="color:rgb(0,135,0)">self</span>.keep_original<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span class="ansi-yellow-fg">. </span><span class="ansi-yellow-fg">"</span>
-<span class="ansi-green-fg">    367</span>         <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Expected a boolean.</span><span class="ansi-yellow-fg">"</span>
-<span class="ansi-green-fg">    368</span>     )
-<span class="ansi-green-fg">    370</span> <span style="color:rgb(0,135,0)">self</span>._wrapped_transformer = wrap_transformer(
-<span class="ansi-green-fg">    371</span>     <span style="color:rgb(0,135,0)">self</span>.transformer,
-<span class="ansi-green-fg">    372</span>     cols=<span style="color:rgb(0,135,0)">self</span>.cols,
-<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    378</span>     columnwise=<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">auto</span><span class="ansi-yellow-fg">"</span>,
-<span class="ansi-green-fg">    379</span> )
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">380</span> X_transformed = <span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">_wrapped_transformer</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">fit_transform</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">X</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">y</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    382</span> <span style="color:rgb(0,135,0)">self</span>.all_inputs_ = <span style="color:rgb(0,135,0)">self</span>._wrapped_transformer.all_inputs_
-<span class="ansi-green-fg">    383</span> <span style="color:rgb(0,135,0)">self</span>.used_inputs_ = <span style="color:rgb(0,135,0)">self</span>._wrapped_transformer.used_inputs_
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/sklearn/utils/_set_output.py:319</span>, in <span class="ansi-cyan-fg">_wrap_method_output.&lt;locals&gt;.wrapped</span><span class="ansi-blue-fg">(self, X, *args, **kwargs)</span>
-<span class="ansi-green-fg">    317</span> <span style="color:rgb(175,0,255)">@wraps</span>(f)
-<span class="ansi-green-fg">    318</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg">wrapped</span>(<span style="color:rgb(0,135,0)">self</span>, X, *args, **kwargs):
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">319</span>     data_to_wrap = <span class="ansi-black-fg ansi-yellow-bg">f</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">X</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">args</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    320</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">isinstance</span>(data_to_wrap, <span style="color:rgb(0,135,0)">tuple</span>):
-<span class="ansi-green-fg">    321</span>         <span style="font-style:italic;color:rgb(95,135,135)"># only wrap the first output for cross decomposition</span>
-<span class="ansi-green-fg">    322</span>         return_tuple = (
-<span class="ansi-green-fg">    323</span>             _wrap_data_with_container(method, data_to_wrap[<span class="ansi-green-fg">0</span>], X, <span style="color:rgb(0,135,0)">self</span>),
-<span class="ansi-green-fg">    324</span>             *data_to_wrap[<span class="ansi-green-fg">1</span>:],
-<span class="ansi-green-fg">    325</span>         )
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/skrub/_apply_to_each_col.py:319</span>, in <span class="ansi-cyan-fg">ApplyToEachCol.fit_transform</span><span class="ansi-blue-fg">(self, X, y, **kwargs)</span>
-<span class="ansi-green-fg">    317</span> parallel = Parallel(n_jobs=<span style="color:rgb(0,135,0)">self</span>.n_jobs)
-<span class="ansi-green-fg">    318</span> func = delayed(_fit_transform_column)
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">319</span> results = <span class="ansi-black-fg ansi-yellow-bg">parallel</span><span class="ansi-black-fg ansi-yellow-bg">(</span>
-<span class="ansi-green-fg">    320</span> <span class="ansi-black-fg ansi-yellow-bg">    </span><span class="ansi-black-fg ansi-yellow-bg">func</span><span class="ansi-black-fg ansi-yellow-bg">(</span>
-<span class="ansi-green-fg">    321</span> <span class="ansi-black-fg ansi-yellow-bg">        </span><span class="ansi-black-fg ansi-yellow-bg">sbd</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">col</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">X</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">col_name</span><span class="ansi-black-fg ansi-yellow-bg">)</span><span class="ansi-black-fg ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    322</span> <span class="ansi-black-fg ansi-yellow-bg">        </span><span class="ansi-black-fg ansi-yellow-bg">y</span><span class="ansi-black-fg ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    323</span> <span class="ansi-black-fg ansi-yellow-bg">        </span><span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">_columns</span><span class="ansi-black-fg ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    324</span> <span class="ansi-black-fg ansi-yellow-bg">        </span><span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">transformer</span><span class="ansi-black-fg ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    325</span> <span class="ansi-black-fg ansi-yellow-bg">        </span><span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">allow_reject</span><span class="ansi-black-fg ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    326</span> <span class="ansi-black-fg ansi-yellow-bg">        </span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">,</span>
-<span class="ansi-green-fg">    327</span> <span class="ansi-black-fg ansi-yellow-bg">    </span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    328</span> <span class="ansi-black-fg ansi-yellow-bg">    </span><span class="ansi-black-fg ansi-yellow-bg ansi-bold">for</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">col_name</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg ansi-bold">in</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">all_columns</span>
-<span class="ansi-green-fg">    329</span> <span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    330</span> <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)">self</span>._process_fit_transform_results(results, X)
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/joblib/parallel.py:1986</span>, in <span class="ansi-cyan-fg">Parallel.__call__</span><span class="ansi-blue-fg">(self, iterable)</span>
-<span class="ansi-green-fg">   1984</span>     output = <span style="color:rgb(0,135,0)">self</span>._get_sequential_output(iterable)
-<span class="ansi-green-fg">   1985</span>     <span style="color:rgb(0,135,0)">next</span>(output)
-<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1986</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> output <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">self</span>.return_generator <span style="font-weight:bold;color:rgb(0,135,0)">else</span> <span class="ansi-black-fg ansi-yellow-bg">list</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">output</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">   1988</span> <span style="font-style:italic;color:rgb(95,135,135)"># Let's create an ID that uniquely identifies the current call. If the</span>
-<span class="ansi-green-fg">   1989</span> <span style="font-style:italic;color:rgb(95,135,135)"># call is interrupted early and that the same instance is immediately</span>
-<span class="ansi-green-fg">   1990</span> <span style="font-style:italic;color:rgb(95,135,135)"># reused, this id will be used to prevent workers that were</span>
-<span class="ansi-green-fg">   1991</span> <span style="font-style:italic;color:rgb(95,135,135)"># concurrently finalizing a task from the previous call to run the</span>
-<span class="ansi-green-fg">   1992</span> <span style="font-style:italic;color:rgb(95,135,135)"># callback.</span>
-<span class="ansi-green-fg">   1993</span> <span style="font-weight:bold;color:rgb(0,135,0)">with</span> <span style="color:rgb(0,135,0)">self</span>._lock:
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/joblib/parallel.py:1914</span>, in <span class="ansi-cyan-fg">Parallel._get_sequential_output</span><span class="ansi-blue-fg">(self, iterable)</span>
-<span class="ansi-green-fg">   1912</span> <span style="color:rgb(0,135,0)">self</span>.n_dispatched_batches += <span class="ansi-green-fg">1</span>
-<span class="ansi-green-fg">   1913</span> <span style="color:rgb(0,135,0)">self</span>.n_dispatched_tasks += <span class="ansi-green-fg">1</span>
-<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1914</span> res = <span class="ansi-black-fg ansi-yellow-bg">func</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">args</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">   1915</span> <span style="color:rgb(0,135,0)">self</span>.n_completed_tasks += <span class="ansi-green-fg">1</span>
-<span class="ansi-green-fg">   1916</span> <span style="color:rgb(0,135,0)">self</span>.print_progress()
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/skrub/_apply_to_each_col.py:441</span>, in <span class="ansi-cyan-fg">_fit_transform_column</span><span class="ansi-blue-fg">(column, y, columns_to_handle, transformer, allow_reject, kwargs)</span>
-<span class="ansi-green-fg">    439</span> allowed = (RejectColumn,) <span style="font-weight:bold;color:rgb(0,135,0)">if</span> allow_reject <span style="font-weight:bold;color:rgb(0,135,0)">else</span> ()
-<span class="ansi-green-fg">    440</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">441</span>     output = <span class="ansi-black-fg ansi-yellow-bg">transformer</span><span class="ansi-black-fg ansi-yellow-bg">.</span><span class="ansi-black-fg ansi-yellow-bg">fit_transform</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">transformer_input</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">y</span><span class="ansi-black-fg ansi-yellow-bg">=</span><span class="ansi-black-fg ansi-yellow-bg">y</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    442</span> <span style="font-weight:bold;color:rgb(0,135,0)">except</span> allowed:
-<span class="ansi-green-fg">    443</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> col_name, [column], <span style="font-weight:bold;color:rgb(0,135,0)">None</span>
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/skrub/_single_column_transformer.py:273</span>, in <span class="ansi-cyan-fg">_wrap_add_check_single_column.&lt;locals&gt;.fit_transform</span><span class="ansi-blue-fg">(self, X, y, **kwargs)</span>
-<span class="ansi-green-fg">    270</span> <span style="color:rgb(175,0,255)">@functools</span>.wraps(f)
-<span class="ansi-green-fg">    271</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg">fit_transform</span>(<span style="color:rgb(0,135,0)">self</span>, X, y=<span style="font-weight:bold;color:rgb(0,135,0)">None</span>, **kwargs):
-<span class="ansi-green-fg">    272</span>     X = <span style="color:rgb(0,135,0)">self</span>._check_single_column(X, f.<span class="ansi-blue-fg">__name__</span>)
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">273</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span class="ansi-black-fg ansi-yellow-bg">f</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">self</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">X</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">y</span><span class="ansi-black-fg ansi-yellow-bg">=</span><span class="ansi-black-fg ansi-yellow-bg">y</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">*</span><span class="ansi-black-fg ansi-yellow-bg">kwargs</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
-
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/skrub-tutorials/.pixi/envs/doc/lib/python3.14/site-packages/skrub/_to_datetime.py:403</span>, in <span class="ansi-cyan-fg">ToDatetime.fit_transform</span><span class="ansi-blue-fg">(***failed resolving arguments***)</span>
-<span class="ansi-green-fg">    401</span> datetime_format = <span style="color:rgb(0,135,0)">self</span>._get_datetime_format(column)
-<span class="ansi-green-fg">    402</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> datetime_format <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
-<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">403</span>     <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> RejectColumn(
-<span class="ansi-green-fg">    404</span>         <span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Could not find a datetime format for column </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>sbd.name(column)<span style="font-weight:bold;color:rgb(175,95,135)">!r}</span><span class="ansi-yellow-fg">.</span><span class="ansi-yellow-fg">"</span>
-<span class="ansi-green-fg">    405</span>     )
-<span class="ansi-green-fg">    407</span> <span style="color:rgb(0,135,0)">self</span>.format_ = datetime_format
-<span class="ansi-green-fg">    408</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
-
-<span class="ansi-red-fg">RejectColumn</span>: Could not find a datetime format for column 'city'.
-Transformer ToDatetime.fit_transform failed on column 'city'. See above for the full traceback.</pre>
-</div>
-</div>
-</div>
+<p>This is useful when you don’t know if a column may be rejected or not (e.g., you don’t know which columns are acually datetimes).</p>
 </section>
 <section id="selection-operations" class="level2">
 <h2 class="anchored" data-anchor-id="selection-operations">Selection Operations</h2>
 <p><code>SelectCols</code> and <code>DropCols</code> filter columns based on rules:</p>
-<div id="91e918f1" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols, DropCols</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="e4aacd14" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols, DropCols</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="selection-operations-1" class="level2" data-auto-animate="true">
 <h2 data-auto-animate="true" class="anchored" data-anchor-id="selection-operations-1">Selection Operations</h2>
-<div id="e1184eca" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># By name</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>SelectCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div id="7b76a442" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># By name</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>SelectCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -688,9 +507,9 @@ Transformer ToDatetime.fit_transform failed on column 'city'. See above for the 
 </section>
 <section id="selection-operations-2" class="level2" data-auto-animate="true">
 <h2 data-auto-animate="true" class="anchored" data-anchor-id="selection-operations-2">Selection Operations</h2>
-<div id="f7824141" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>DropCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div id="2ce677c9" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>DropCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
