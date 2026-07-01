@@ -72,12 +72,11 @@ scale_feature_and_plot(values)
 ## How `SquashingScaler` Works
 
 1. Center the median to 0
-2. Use quantile-based statistics for scaling
-3. Fill constant columns with 0s
-4. Apply a smooth squashing function
-5. Constrain output to [-3, 3] (default)
-6. Map infinite values to boundaries
-7. Keep NaN values unchanged
+2. Fill constant columns with 0s
+3. Apply a smooth squashing function
+4. Constrain output to [-3, 3] (default)
+5. Map infinite values to boundaries
+6. Keep NaN values unchanged
 
 ## In summary: 
 

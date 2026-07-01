@@ -23,8 +23,8 @@ df = pd.DataFrame({
     "user_id": [0, 1, 2],
     "date": ["03 January 2023", "04 February 2023","14 April 2023" ],
     "city": ["Paris", "London", "Rome"],
-    "metric_1": [10, 20, 30],
-    "metric_2": [3, 22, 45]
+    "metric_1": [10.3, 20.7, 30.8],
+    "metric_2": [3.5, 22.3, 45.1]
 })
 
 ```
@@ -36,19 +36,23 @@ df = pd.DataFrame({
 - Some transformers (e.g., the `StandardScaler`) work only on numeric columns
 - Some transformers (e.g., the `OneHotEncoder`) work only on categorical columns
 - Different columns with the same dtype may need to be treated differently (e.g.,
-one has outliers and requires a `RobustScaler`)
+one has outliers and requires a `RobustScaler`, an integer ID should not be scaled)
 - Some transformations only make sense for a subset of the columns (e.g., parsing
 datetimes)
 :::
 
 
-## Applying transformers to columns with `ApplyToCols`
-`ApplyToCols` applies a transformer to columns that can be selected by name, or
-with filters. 
+## Applying transformers to columns with `ApplyToCols` {.smaller}
+`ApplyToCols` is a **meta-transformer**: it applies a transformer to columns 
+that can be selected by name, or with filters. 
+
+Depending on the transformer, `ApplyToCols` either clones it and applies a copy
+to each column, or forwards all the columns to the same transformer. 
+
+Columns that are not selected pass through without changes.
 
 ```{python}
 from skrub import ApplyToCols
-import skrub.selectors as s
 from sklearn.preprocessing import OrdinalEncoder
 
 ordinal = ApplyToCols(OrdinalEncoder(), cols="city")
@@ -56,10 +60,14 @@ transformed = ordinal.fit_transform(df)
 transformed
 ```
 
-## Example: `ApplyToCols` with a single column transformer
+## Example: `ApplyToCols` to encode
+`ApplyToCols(OneHotEncoder(), cols=["Name", "Desc"])`
+
 ![](./images/ex_ApplyToCols.png)
 
-## Example: `ApplyToCols` with a regular transformer
+## Example: `ApplyToCols` to decompose
+`ApplyToCols(PCA(), cols=s.glob("metric_*"))`
+
 ![](./images/ex_ApplyToFrame.png)
 
 ## Exclude specific columns
@@ -67,6 +75,7 @@ For example, apply the `StandardScaler` only to the `metric_*` columns, excludin
 the column `user_id`.
 
 ```{python}
+import skrub.selectors as s
 from sklearn.preprocessing import StandardScaler
 
 scaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols="user_id")
@@ -75,7 +84,7 @@ scaler.fit_transform(df)
 
 ## Chaining Transformers
 
-Use a scikit-learn `Pipeline to concatenate multiple transformers, when
+Use a scikit-learn `Pipeline` to concatenate multiple transformers, when
 wrapped in `ApplyToCols`:
 
 ```{.python}
@@ -95,32 +104,6 @@ transform = make_pipeline(select, encode, reduce)
 Remember that columns that are not selected **pass through** without any change. 
 
 :::
-
-## Example: encode and reduce dimensionality
-```{python}
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.decomposition import PCA
-from skrub import SelectCols
-import numpy as np
-
-n_patients = 5 
-
-df = pd.DataFrame({
-    "patient_id": [f"P{i:03d}" for i in range(n_patients)],
-    "age": np.random.randint(18, 80, size=n_patients),
-    "sex": np.random.choice(["M", "F"], size=n_patients),
-})
-
-select = SelectCols("patient_id")
-encode = ApplyToCols(OneHotEncoder(sparse_output=False))
-reduce = ApplyToCols(PCA(n_components=2))
-
-transform = make_pipeline(select, encode, reduce)
-dft= transform.fit_transform(df)
-dft.head(5)
-```
-
 
 ## Example: convert to datetime and encode
 
@@ -149,12 +132,14 @@ Transformers should be ordered carefully:
 # Encode first, then scale
 transform_1 = make_pipeline(
     ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),
+    # Strings are now numbers! 
     ApplyToCols(StandardScaler(), cols=s.numeric())
 )
 
 # vs. Scale first, then encode
 transform_2 = make_pipeline(
     ApplyToCols(StandardScaler(), cols=s.numeric()),
+    # Strings haven't been touched
     ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
 )
 ```
@@ -171,20 +156,8 @@ with_reject = ApplyToCols(ToDatetime(), allow_reject=True)
 result = with_reject.fit_transform(df)
 ```
 
-This is useful when you don't know if a column may be rejected or not (common
-when parsing types). 
-
-## The `allow_reject` Parameter
-
-When `allow_reject=False`, columns that can't be transformed raise an exception:
-
-```{python}
-#| error: true
-from skrub import ApplyToCols, ToDatetime
-
-with_reject = ApplyToCols(ToDatetime(), allow_reject=False)
-result = with_reject.fit_transform(df)
-```
+This is useful when you don't know if a column may be rejected or not (e.g., 
+you don't know which columns are acually datetimes). 
 
 ## Selection Operations
 

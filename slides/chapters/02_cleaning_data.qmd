@@ -105,7 +105,7 @@ df_clean
 
 ## The alternative: `skrub.Cleaner` {auto-animate="true"}
 The cleaned version of the dataframe is now marking missing values
-correctly, and that the datetime column has been parsed:
+correctly, and the datetime column has been parsed as such:
 
 ```{python}
 df_clean.info()
@@ -116,24 +116,19 @@ df_clean.info()
 1. It replaces strings used to represent null values with `None`
 2. It removes uninformative columns
 3. It tries to parse datetime columns
-4. It converts columns to string, unless they have an informative type
-5. It parses strings like ` "1234.6"` to numbers
+4. It parses strings like ` "1234.6"` to numbers (more in the next release!)
 
 ## Note on intended usage 
 
 ::: {.callout-tip}
 
 The `Cleaner` is intended to be used early on when pre-processing, so it avoids
-altering the input dataframe too much.
-
-The `Cleaner` tries to move from less-informative dtypes (e.g., generic strings)
-to more-informative types (e.g., datetimes). 
+altering the input dataframe too much, and tries to move from **less-informative** 
+dtypes (e.g., generic strings) to **more-informative** types (e.g., datetimes). 
 
 :::
 
 The assumption is that complex transformations are done in later steps by the user.
-
-This is different from what is done by the `TableVectorizer`.
 
 ## Data cleaning parameters:
 

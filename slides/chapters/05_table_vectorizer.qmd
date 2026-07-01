@@ -15,9 +15,10 @@ format:
 
 Convert any mixed-type dataframe into numeric features for ML:
 
-- Categorical features need to be encoded into features
+- Data should be sanitized (clean nulls, correct dtypes)
+- Categorical features need to be encoded into numerical features
 - Datetime features can be transformed into more informative features
-- Data should be sanitized
+- The transformer should be **stateful** and **robust**
 
 ## The solution: `TableVectorizer`
 The `TableVectorizer` is a transformer that 
@@ -27,7 +28,7 @@ and
 2. Encodes all columns depending on their data type and characteristics using good
 defaults. 
 
-## A toy example
+## A toy example {.smaller}
 ```{python}
 import pandas as pd
 from skrub import TableVectorizer
@@ -36,11 +37,12 @@ df = pd.DataFrame({
     "age": [25, 30, 35],
     "salary": [50000, 65000, 75000],
     "hire_date": ["2020-01-15", "2021-06-20", "2022-03-10"],
-    "department": ["Sales", "Engineering", "Sales"]
+    "department": ["Sales", "Engineering", "HR"]
 })
 
 tv = TableVectorizer()
 X_numeric = tv.fit_transform(df)
+print(X_numeric)
 ```
 
 ## Phase 1: Cleaning
@@ -51,7 +53,8 @@ The `TableVectorizer` starts by cleaning:
 - Detect numbers written as strings ("123.45")
 - Handle missing value markers ("N/A", "?")
 - Drop uninformative columns
-- Convert to `float32` for efficiency
+- **Convert all columns to string if they can't be parsed as float or datetime**
+- **Convert to `float32` for efficiency**
 
 In practice, a `Cleaner` followed by conversion to `float32`. 
 
@@ -66,20 +69,10 @@ After cleaning, columns are routed to appropriate transformers:
 | String/Category | ≤ 40 | OneHotEncoder |
 | String/Category | > 40 | StringEncoder |
 
-## The Cardinality Threshold
-
 ```{python}
 # Change when categories become "high-cardinality"
 tv = TableVectorizer(cardinality_threshold=10)
 ```
-
-## Data cleaning parameters:
-Same as the `Cleaner`:
-
-- `drop_null_fraction`
-- `drop_if_constant`
-- `datetime_format`
-- `null_strings`
 
 ## Customizing Transformers {.smaller}
 
@@ -111,8 +104,6 @@ df = pd.DataFrame(
         "metric_3": [1.1, 3.3, 2.6, .8],
         "num_id": [101, 102, 103, 104],
         "str_id": ["A101", "A102", "A103", "A104"],
-        "description": ["apple", None, "cherry", "date"],
-        "name": ["Alice", "Bob", "Charlie", "David"],
     }
 )
 df
@@ -123,7 +114,9 @@ We can use `ApplyToCols` and the skrub selectors:
 ```{python}
 tv = ApplyToCols(TableVectorizer(), exclude_cols=["num_id", "str_id"])
 df_enc = tv.fit_transform(df)
-
+```
+```{python}
+#| echo: false
 print("Original")
 print(df[["num_id", "str_id"]])
 print("\nEncoded")
@@ -132,10 +125,17 @@ print(df_enc[["num_id", "str_id"]])
 
 ## Fine-Grained Control: specific_transformers
 
-```{python}
-from sklearn.preprocessing import OrdinalEncoder
 
-specific = [(OrdinalEncoder(), ["occupation"])]
+::: {.callout-tip}
+
+Use this only if you have a specific column that needs to be transformed by a 
+specific custom-made transformer. 
+
+:::
+
+
+```{.python}
+specific = [(CustomTransformer(), ["occupation"])]
 specific = [("passthrough", ["num_id"])]
 tv = TableVectorizer(specific_transformers=specific)
 ```

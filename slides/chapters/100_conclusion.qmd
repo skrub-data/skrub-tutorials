@@ -1,0 +1,57 @@
+---
+title: "Wrapping up"
+format:
+    html:
+        toc: true
+    revealjs:
+        slide-number: true
+        toc: false
+        code-fold: false
+        code-tools: true
+
+---
+
+## On pre-processing and cleaning...
+- Data cleaning and pre-processing are hard and time-consuming
+- Improper pre-processing can cause issues (reminder: imputation)
+- Pre-processing should be part of the entire pipeline to prevent leakage
+
+## How skrub helps with that
+- The `Cleaner` and `TableVectorizer` handle pre-processing for you
+- Robust defaults handle most common use cases
+
+## On data exploration
+- Even before you start cleaning, you need to find out what's in your data
+- What dtypes? Are there nulls? What kind of information are you dealing with? 
+
+## How skrub helps with that 
+- The `TableReport` computes various statistics about any given dataframe
+- The statistics are presented with an interactive view
+- Stats, distributions, column associations are available from the same view
+- All stats can also be exported to be used by other tools
+
+## On transforming columns
+- Not all columns are made equal
+- Some need to be scaled, some need to be encoded, some need to be dropped
+- Some should just be left alone 
+- Selecting columns is not always straightforward
+
+## How skrub helps with that 
+- `ApplyToCols` lets you apply a specific transformer to a selection of columns
+- It's possible to exclude columns from a selection and not pass them to the 
+transformer
+- The skrub **selectors** can be used to build advanced column selection rules
+- Selectors produce sets of columns that can be combined with set operations
+- Selectors are used throughout the library
+
+## On feature engineering and model building
+- Feature engineering requires time and is dtype dependent
+- Data should be prepared so that the proper transformers are applied to the right
+columns
+
+## How skrub helps with that 
+- The `TableVectorizer` cleans the data before applying column specific transformers
+- Categorical columns are encoded based on how many unique values they include
+- The `tabular_pipeline` builds a pipeline that acts as a good baseline for further
+analysis
+- The pipeline includes a `TableVectorizer` and a prediction model

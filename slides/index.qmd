@@ -26,5 +26,5 @@ format: html
 - [Chapter 7: Skrub transformers for feature engineering](chapters/07_feature_eng_all.slides.html)
 - Exercise 4 
 
-## Section 6: Building dynamic pipeline with Data Ops
-- [Chapter 9: Data Ops](chapters/08_data_ops.slides.html)
+## Section 6: Conclusion
+- [Wrapping up](chapters/100_conclusion.qmd)

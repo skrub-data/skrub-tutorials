@@ -22,9 +22,9 @@ import skrub.selectors as s
 Selectors are used throughout the skrub package:
 
 - `ApplyToCols`
+- `TableReport` filters
 - `SelectCols`/`DropCols`
 - `.skb.apply()`
-- `TableReport`
 
 ## Example: Select String Columns
 
@@ -116,7 +116,7 @@ s.all() - "datetime-col"
 
 ```
 
-## Extracting Selected Columns
+## Using selectors with pandas dataframes
 
 Get the list of selected columns:
 
@@ -125,22 +125,25 @@ df = pd.DataFrame(
     {
         "age": [25, 30, 35],
         "name": ["Alice", None, "Charlie"],
-        "city": ["NYC", "LA", "Chicago"],
     }
 )
 
 selector = s.has_nulls()
 columns_with_nulls = selector.expand(df)
+print(columns_with_nulls)
 
-# Use in dataframe operations: capitalize columns with nulls
-df[columns_with_nulls].apply(lambda x : x.str.upper())
+# Use in dataframe operations: drop columns with nulls
+df.drop(columns=columns_with_nulls)
 ```
 
 ## Custom Selectors: Filter by Condition
+Define a function that takes **one column** as input and returns `True`/`False` 
+as output (depending on if the column is selected or not)
+
 
 ```{python}
-def more_nulls_than(col, threshold=0.5):
-    return col.isnull().sum() / len(col) > threshold
+def more_nulls_than_half(col):
+    return col.isnull().sum() / len(col) > 0.5
 
 df = pd.DataFrame(
     {
@@ -149,7 +152,7 @@ df = pd.DataFrame(
     }
 )
 
-selector = s.filter(more_nulls_than, threshold=0.5)
+selector = s.filter(more_nulls_than_half)
 s.select(df, selector)
 ```
 
@@ -159,11 +162,8 @@ The `TableReport` can use selectors (or simply column names) to focus only on
 specific columns:
 
 ```{python}
-import skrub.selectors as s
 from skrub import TableReport
-custom_filter = {
-    "metrics": s.glob("metric_*")
-}
+custom_filter = {"metrics": s.glob("metric_*")}
 
 df = pd.DataFrame({
     "patient_id": [101, 102, 103],
@@ -181,5 +181,4 @@ TableReport(df, column_filters=custom_filter)
 - Selectors can be combined with logical operators as "sets of columns"
 - `expand()` extracts selected column names
 - `s.filter()` can be used to create custom selectors for domain-specific logic
-- `ApplyToCols`, `SelectCols`, `DropCols`, `.skb.apply()` can use selectors to 
-filter columns
+- `ApplyToCols` and `TableReport` can use selectors to filter columns

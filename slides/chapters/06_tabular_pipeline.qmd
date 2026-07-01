@@ -16,16 +16,19 @@ format:
 Beyond preprocessing and cleaning, ML pipelines need to:
 
 - Add new features via feature engineering
-- Handle missing values (possibly via imputation)
-- Scale numeric features
+- Handle missing values (optional)
+- Scale numeric features (also optional)
 - Train the model
+
+We also want to find out if there is a signal to learn in the data.
+
 
 ## Reminder: avoiding data leakage
 - We want to prevent data that belongs to the test set from entering the train set.
 - Data leakage leads to over-optimistic results. 
 - Transformers and encoders must be trained exclusively on the training samples.
-- A sequence of transformers needs to use the same set of samples for each step,
-and the samples should not change (kind of...).
+
+This is why we want a `Pipeline`! 
 
 ## Manual Pipeline Construction {.smaller}
 scikit-learn provides either `Pipeline` or `make_pipeline` to concatenate transformers
@@ -65,27 +68,13 @@ model_clf = tabular_pipeline("classification")
 model_reg = tabular_pipeline("regression")
 ```
 
-## For Linear Models
+## What the pipeline looks like: tree-based model
 
-The pipeline is configured with:
+![](images/tabular-pipeline.png)
 
-- `TableVectorizer` optimized for linear models
-    - `DatetimeEncoder` with spline-encoded datetimes
-- `SimpleImputer` (linear models need this)
-- `SquashingScaler` for robust scaling
-- The estimator (`LogisticRegression`, `Ridge`, etc.)
 
-## For Tree-Based Models {.smaller}
-
-The pipeline is configured with:
-
-- `TableVectorizer` optimized for trees
-  - Low-cardinality: Keep as categorical (HistGB) or ordinal (RandomForest)
-  - High-cardinality: StringEncoder
-  - No spline encoding (unnecessary)
-- No scaling (trees don't need scaling)
-- No imputation (trees don't need imputation)
-- The estimator
+## What the pipeline looks like: linear model
+![](images/tabular-pipeline-linear-regression.png)
 
 
 ## Customizing the pipeline
@@ -130,7 +119,7 @@ full_pipeline = tabular_pipeline(model_pipeline)
 - Your training process includes custom preprocessing steps
 - You want to experiment with different transformers
 
-Or... use the skrub Data Ops! (more on that later, maybe)
+Or... use the skrub Data Ops! 
 
 ## Example: Complete Workflow
 

@@ -50,7 +50,7 @@ We need to:
 
 - Impute some missing values in the `gender` column.
 - Encode convert categorical features into numerical features. 
-- Convert the column `date_first_hired` into numerical features.
+- Convert the column `date_first_hired` into numerical features (year, month, day etc.).
 - Scale numerical features (we'll be using a linear model).
 - Evaluate the performance of the model. 
 
@@ -82,7 +82,7 @@ print("\nShape:", X_processed.shape)
 We encode all categorical features using one-hot encoding.
 
 ```{python}
-# Identify only the non-numerical (truly categorical) columns
+# Find the categorical columns
 categorical_cols = X_processed.select_dtypes(include=['object']).columns.tolist()
 print("Categorical columns to encode:", categorical_cols)
 
@@ -102,8 +102,10 @@ be employed.
 
 ### Step 3: Impute missing values {.smaller}
 
-We impute the missing values in the `gender` column to fill any gaps. Luckily, 
-this dataframe does not include many missing values. 
+We impute the missing values in the `gender` column to fill any gaps.
+In this case, this dataframe does not include many missing values, and 
+they're concentrated in a single categorical column, so we fill missing
+values with the "most frequent" strategy. 
 
 ```{python}
 from sklearn.impute import SimpleImputer
@@ -131,11 +133,21 @@ information content.
 
 :::
 
+Example:
 
+Consider a dataset about **employment**, which among others includes the column 
+**current position**. 
+A missing value in this column likely indicates **unemployment**, and imputing it 
+with a strategy like "most frequent" would introduce wrong information about the 
+sample and lead the model to wrong conclusions. 
 
 ### Step 4: Scale numerical features {.smaller}
 
-Scale numerical features for the `RidgeCV` regression model. 
+Linear models are strongly affected by numeric features that haven't been scaled, 
+so this step should always be done. The `StandardScaler` scales values by removing
+the mean and scaling to unit variance. 
+
+So, here we scale numerical features for the `RidgeCV` regression model:
 
 ```{python}
 from sklearn.preprocessing import StandardScaler
@@ -148,20 +160,18 @@ X_scaled = scaler.fit_transform(X_encoded_imputed)
 X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
 ```
 
-Linear models are strongly affected by numeric features that haven't been scaled, 
-so this step should always be done. The `StandardScaler` scales values by removing
-the mean and scaling to unit variance. 
-   
 
 ::: {.callout-warning}
 
-What if you have outliers? Scaling is hard! 
+Outliers (values very far from the mean) make scaling hard to do. **Robust scaling**
+is needed. 
 
 :::
 
 ### Step 5: Train Ridge model with cross-validation {.smaller}
 
-Train a `Ridge` regression model and evaluate with cross-validation.
+For this example we want to train a `RidgeCV` regression model and evaluate the 
+model's performance with cross-validation.
 
 ```{python}
 #| warning: false
@@ -210,9 +220,12 @@ categorical features that would appear only in the test set.
 The order of our operations is just as important as the operations themselves,
 and relying blindly on agents can have bad consequences.
 
-## Small intermission: data leakage
-For simplicity, let's use imputation as our example. One-hot leakage works in 
-similar ways. 
+**Disclaimer**: advanced models probably would not fall in the same pitfalls, or
+would be able to self-correct to an extent. The main point still stands.
+
+## Small intermission: data leakage and fit/transform
+For simplicity, let's try to impute values in a series as our example. 
+One-hot leakage works in similar ways. 
 
 This example dataframe is split into training and test split with a 50/50 split. 
 
@@ -220,10 +233,10 @@ This example dataframe is split into training and test split with a 50/50 split.
 from sklearn.impute import SimpleImputer
 import pandas as pd
 df = pd.DataFrame({
-    "value": [1, 3, None, 5, 10, None, 1000, 5, 1, 3]
+    "value": [1, 3, None, 5, 10, None, 1000, 5]
 })
 
-df_train = df[:4]
+df_train = df[:5]
 df_test = df[5:]
 ```
 
@@ -234,10 +247,9 @@ What happens if you try to find the mean over all data?
 ```{python}
 imputer = SimpleImputer(strategy="mean").set_output(transform="pandas")
 df_imputed = imputer.fit_transform(df)
-print(df)
-print()
-print(df_imputed)
 ```
+
+![](images/fit-transform-impute-1.png)
 
 The result is that the missing values have been filled with the mean over both 
 the train and test set. The test set happened to contain an outlier, which skewed
@@ -250,6 +262,9 @@ in while fitting.
 ```{python}
 print(imputer.fit(df_train).transform(df_test))
 ```
+
+![](images/fit-transform-impute-2.png)
+![](images/fit-transform-impute-3.png)
 
 
 ::: {.callout-important}
@@ -286,6 +301,8 @@ The `tabular_pipeline` is implementing all the steps we have just covered, excep
 in a more robust and battle-tested fashion. Before encoding, the input table is 
 sanitized so that features have the proper dtype, null values are marked as such, 
 and then the appropriate encoder is applied to each column. 
+
+![](images/tabular-pipeline.png){fig-align="center"}
 
 The functioning of the `tabular_pipeline` is explored in more detail in a later 
 chapter. 
