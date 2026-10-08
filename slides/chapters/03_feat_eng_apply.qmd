@@ -16,7 +16,6 @@ format:
 Different columns must be handled in different ways. 
 
 ```{python}
-from skrub import SelectCols, DropCols
 import pandas as pd
 
 df = pd.DataFrame({
@@ -36,18 +35,14 @@ df = pd.DataFrame({
 - Some transformers (e.g., the `StandardScaler`) work only on numeric columns
 - Some transformers (e.g., the `OneHotEncoder`) work only on categorical columns
 - Different columns with the same dtype may need to be treated differently (e.g.,
-one has outliers and requires a `RobustScaler`, an integer ID should not be scaled)
-- Some transformations only make sense for a subset of the columns (e.g., parsing
-datetimes)
+an integer ID should not be scaled)
+- Some transformations only make sense for a subset of the columns (e.g., extracting
+the year from datetimes)
 :::
 
 
 ## Applying transformers to columns with `ApplyToCols` {.smaller}
-`ApplyToCols` is a **meta-transformer**: it applies a transformer to columns 
-that can be selected by name, or with filters. 
-
-Depending on the transformer, `ApplyToCols` either clones it and applies a copy
-to each column, or forwards all the columns to the same transformer. 
+`ApplyToCols` is a **meta-transformer**: it applies a transformer to selected columns.
 
 Columns that are not selected pass through without changes.
 
@@ -70,9 +65,14 @@ transformed
 
 ![](./images/ex_ApplyToFrame.png)
 
-## Exclude specific columns
-For example, apply the `StandardScaler` only to the `metric_*` columns, excluding
+## Exclude specific columns {.smaller}
+
+::: {.callout-note}
+
+Apply the `StandardScaler` only to the `metric_*` columns, excluding
 the column `user_id`.
+
+:::
 
 ```{python}
 import skrub.selectors as s
@@ -82,7 +82,7 @@ scaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols="user_id")
 scaler.fit_transform(df)
 ```
 
-## Chaining Transformers
+## Chaining Transformers {.smaller}
 
 Use a scikit-learn `Pipeline` to concatenate multiple transformers, when
 wrapped in `ApplyToCols`:
@@ -145,7 +145,20 @@ transform_2 = make_pipeline(
 ```
 
 
-## The `allow_reject` Parameter
+::: {.callout-tip}
+
+This is particularly important if you use expensive models to generate features! 
+
+:::
+
+## Handling columns that can't be transformed
+
+- It is not always possible to know a priori if a transformer can handle a column. 
+- The default behavior is to **reject columns** that can't be handled. 
+- In some situations, it is expected that some columns will be rejected (e.g., 
+if the transformer needs to detect the column dtype)
+
+## Handling columns that can't be transformed
 
 When `allow_reject=True`, columns that can't be transformed are passed through:
 
@@ -156,36 +169,23 @@ with_reject = ApplyToCols(ToDatetime(), allow_reject=True)
 result = with_reject.fit_transform(df)
 ```
 
-This is useful when you don't know if a column may be rejected or not (e.g., 
-you don't know which columns are acually datetimes). 
+## Define custom transformers to use with `ApplyToCols`
+- Some columns need specific transformations
+- You can define your transformer and have it work seamlessly with `ApplyToCols`
 
-## Selection Operations
+```python
+from skrub.core import RejectColumn, SingleColumnTransformer
+class CustomTransformer(SingleColumnTransformer):
+    def __init__(self):
+        return
+    def fit_transform(self, X, y=None):
+        ... do something
 
-`SelectCols` and `DropCols` filter columns based on rules:
-
-```{python}
-from skrub import SelectCols, DropCols
-import pandas as pd
-
-df = pd.DataFrame({
-    "date": ["03 January 2023", "04 February 2023"],
-    "city": ["Paris", "London"],
-    "values": [10, 20]
-})
+        if ... # the column can't be handled
+            raise RejectColumn(...)
+        return transformed
 ```
 
-## Selection Operations {auto-animate="true"}
-```{python}
-# By name
-SelectCols("date").fit_transform(df)
-```
-
-## Selection Operations {auto-animate="true"}
-```{python}
-DropCols("date").fit_transform(df)
-```
-
-More advanced selection rules in the next chapter! 
 
 ## What we have seen in this chapter
 
@@ -193,4 +193,3 @@ More advanced selection rules in the next chapter!
 `exclude_cols`
 - Chain transformers with scikit-learn pipelines
 - `allow_reject`: Reject columns that cannot be treated
-- `SelectCols` / `DropCols`: Filter columns with the `cols` parameter

@@ -15,8 +15,8 @@ format:
 
 Convert any mixed-type dataframe into numeric features for ML:
 
-- Data should be sanitized (clean nulls, correct dtypes)
-- Categorical features need to be encoded into numerical features
+- Data should be **sanitized** (clean nulls, correct dtypes)
+- Categorical features need to be **encoded** into numerical features
 - Datetime features can be transformed into more informative features
 - The transformer should be **stateful** and **robust**
 
@@ -45,7 +45,7 @@ X_numeric = tv.fit_transform(df)
 print(X_numeric)
 ```
 
-## Phase 1: Cleaning
+## Phase 1: Cleaning {.smaller}
 
 The `TableVectorizer` starts by cleaning:
 
@@ -56,7 +56,12 @@ The `TableVectorizer` starts by cleaning:
 - **Convert all columns to string if they can't be parsed as float or datetime**
 - **Convert to `float32` for efficiency**
 
+
+::: {.callout-tip}
+
 In practice, a `Cleaner` followed by conversion to `float32`. 
+
+:::
 
 ## Phase 2: Column Dispatch
 
@@ -76,21 +81,26 @@ tv = TableVectorizer(cardinality_threshold=10)
 
 ## Customizing Transformers {.smaller}
 
-```{python}
-from skrub import DatetimeEncoder, StringEncoder
+```{.python}
+from skrub import DatetimeEncoder, LLMEncoder
 
 # Add periodic encoding
 datetime_enc = DatetimeEncoder(periodic_encoding="circular")
-# Change the number of output components of the StringEncoder
-string_enc = StringEncoder(n_components=10)
+# Use a pre-trained language model
+llm_enc = LLMEncoder()
 
 tv = TableVectorizer(
     datetime=datetime_enc,
-    high_cardinality=string_enc
+    high_cardinality=llm_enc
 )
 ```
 
-## Applying to a subset of columns
+## Applying to a subset of columns {.smaller}
+
+::: {.columns}
+
+::: {.column}
+
 
 ```{python}
 import pandas as pd
@@ -106,10 +116,13 @@ df = pd.DataFrame(
         "str_id": ["A101", "A102", "A103", "A104"],
     }
 )
-df
 ```
 
-## Applying to a subset of columns {auto-animate="true"}
+
+:::
+
+::: {.column}
+
 We can use `ApplyToCols` and the skrub selectors: 
 ```{python}
 tv = ApplyToCols(TableVectorizer(), exclude_cols=["num_id", "str_id"])
@@ -123,8 +136,40 @@ print("\nEncoded")
 print(df_enc[["num_id", "str_id"]])
 ```
 
-## Fine-Grained Control: specific_transformers
+:::
 
+:::
+
+## Opening the black box{.smaller}
+
+
+::: {.columns}
+
+::: {.column}
+Plain text: `describe_transformations_`
+
+```{python}
+tv = TableVectorizer().fit(df)
+print(tv.describe_transformations())
+```
+
+:::
+
+::: {.column}
+
+Retrieve the actual transformers, column by column: `all_processing_steps_`
+
+```{python}
+from pprint import pprint
+tv = TableVectorizer().fit(df)
+pprint(tv.all_processing_steps_)
+```
+
+:::
+
+:::
+
+## Fine-Grained Control: specific_transformers
 
 ::: {.callout-tip}
 
@@ -140,13 +185,15 @@ specific = [("passthrough", ["num_id"])]
 tv = TableVectorizer(specific_transformers=specific)
 ```
 
-Columns in `specific_transformers` are forwarded directly to the transformer without
-any cleaning or parsing. 
+Columns in `specific_transformers` are forwarded directly to the transformer **without
+any cleaning or parsing.**
 
 
-## What we have seen in this chapter 
+## What we have seen in this chapter  {.smaller}
 
 - One object -- the `TableVectorizer` -- handles preprocessing and feature engineering
 - Column types are detected, and columns are encoded accordingly
 - Cleaning and encoding operations can be customized based on the use case
 - Per-column behavior can be set with `ApplyToCols`
+- The transformations are accessible via `describe_transformations()` and 
+`all_processing_steps_` 

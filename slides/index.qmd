@@ -27,4 +27,4 @@ format: html
 - Exercise 4 
 
 ## Section 6: Conclusion
-- [Wrapping up](chapters/100_conclusion.qmd)
+- [Wrapping up](chapters/100_conclusion.html)

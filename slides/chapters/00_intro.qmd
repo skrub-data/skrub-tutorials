@@ -49,9 +49,6 @@ This is a **regression** task: we want to predict the value of `current_annual_s
 We can begin by exploring the dataframe with `.describe`, and then think of a 
 plan for pre-processing our data. 
 
-
-
-
 ```{python}
 X.describe(include="all")
 ```
@@ -155,12 +152,9 @@ X_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)
 ::: {.callout-warning}
 
 Outliers (values very far from the mean) make scaling hard to do. **Robust scaling**
-is needed. 
+may be needed. 
 
 :::
-
-
-
 
 ## Step 5: Train Ridge model with cross-validation {.smaller}
 
@@ -176,26 +170,25 @@ import numpy as np
 ridge = RidgeCV()
 
 # Perform cross-validation (5-fold)
-cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2", "neg_mean_squared_error"])
-
-# Convert MSE to RMSE
-test_rmse = np.sqrt(-cv_results["test_neg_mean_squared_error"])
+cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2"])
 
 # Display results
 print("Cross-Validation Results:")
 print(
     f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
 )
-print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 ``` 
 
 ## "Just ask an agent to write the code" {.smaller}
+
+::: {.incremental}
 - Operations in the wrong order.
-- Trying to impute categorical features without converting them to numeric values.
 - The datetime feature was treated like a categorical feature.
+- Trying to impute categorical features without converting them to numeric values.
 - Cells could not be executed in order without proper debugging and re-prompting.
 - `pd.get_dummies` was executed on the full dataframe, rather than only on the 
-training split, leading to data leakage. 
+training split, leading to **data leakage**. 
+:::
 
 ## Intermission: data leakage and fit/transform {auto-animate="true"}
 
@@ -288,6 +281,7 @@ print(imputer.fit(df_train).transform(df_test))
 
 :::
 
+## Back on track! 
 
 
 ## Waking up from a nightmare {.smaller}
@@ -297,18 +291,15 @@ Thankfully, we can `import skrub`:
 from skrub import tabular_pipeline
 
 # Perform cross-validation (5-fold)
-cv_results = cross_validate(tabular_pipeline("regression"), X, y, cv=5, 
-                            scoring=['r2', 'neg_mean_squared_error'],
-                            return_train_score=True)
-
-# Convert MSE to RMSE
-train_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])
-test_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])
-
+cv_results = cross_validate(tabular_pipeline("regression"), X, y, cv=5, scoring=["r2"])
 # Display results
 print("Cross-Validation Results:")
-print(f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})")
-print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
+print(
+    f"tabular_pipeline: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+)
+print(
+    f"Ridge: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+)
 ```
 
 ## What's in the `tabular_pipeline`
@@ -319,11 +310,22 @@ print(f"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})")
 There isn't a clear separation between "pre-processing", "feature engineering"
 and "learning".
 
+::: {.fragment}
+
 If you learn something while pre-processing your training data
 ("this is a datetime"), you need to apply that knowledge to the test data. 
 
+:::
+
+
+::: {.fragment}
+
 This is why skrub provides **transformers**, rather than **functions**: transformers
 are stateful and can be used in pipelines, functions are not. 
+
+:::
+
+
 
 ## What we saw in this chapter
 - We built a predictive pipeline using traditional tools
@@ -340,7 +342,5 @@ are stateful and can be used in pipelines, functions are not.
 4. Advanced column selectors and how to use them
 5. Automatic feature engineering with the `TableVectorizer`
 6. A robust baseline for machine learning tasks with the `tabular_pipeline`
+7. Beyond pipelines: skrub Data Ops
 
-If there is enough time:
-
-7. Feature engineering with the skrub encoders

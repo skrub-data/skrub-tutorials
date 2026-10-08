@@ -12,20 +12,19 @@ format:
 ---
 
 ## Introduction
-Once a table has been explored, the next step is addressing any
-problem it might have.
+Once a table has been explored, the next step is transforming it into something
+that can be handled more easily. 
 
 This can be described broadly as "cleaning" or "sanitizing" the data. 
 
 ## An example dataframe {auto-animate="true"}
 ```{python}
 import pandas as pd
-import numpy as np
 
 df = pd.DataFrame(
     {
         "numerical_1": [1, 2, 3, 4, 5],
-        "numerical_2": [10.5, 20.3, None, 40.1, 50.2],
+        "numerical_2": pd.Series([10.5, 20.3, "?", 40.1, 50.2]).astype(str),
         "string_column": ["apple", "?", "banana", "cherry", "?"],
         "datetime_column": [
             "03 Jan 2020",
@@ -34,15 +33,9 @@ df = pd.DataFrame(
             "06 Jan 2020",
             "07 Jan 2020",
         ],
-        "all_none": [None, None, None, None, None],
+        "all_none": ["?", "?", "?", "?", "?"],
     }
 )
-```
-
-## An example dataframe {auto-animate="true"}
-
-```{python}
-df
 ```
 
 
@@ -53,17 +46,26 @@ df
 - There is a column that is fully empty 
 
 
-## Cleaning with pandas
+## Cleaning with pandas {.smaller}
 First, let's look at the datatypes detected by pandas:
 ```{python}
 df.info()
 ```
 
-Missing values were not detected properly ("?" was treated as a string), 
-the datetime wasn't parsed as datetimes.
+
+::: {.fragment}
+
+- Missing values were not detected properly: `"?"` was treated as a string
+- One of the numerical columns has string dtype
+- The `all_none` column shows no null values because of "?"
+- The datetime is still treated as object
+
+:::
 
 ## Cleaning with pandas {.smaller}
 ```{python}
+import numpy as np
+
 # Parse the datetime strings with a specific format
 df['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')
 
@@ -93,9 +95,6 @@ df_clean
 
 ## The alternative: `skrub.Cleaner`
 
-By default, the `Cleaner` applies various transformations that can sanitize many
-common use cases:
-
 ```{python}
 from skrub import Cleaner
 df_clean = Cleaner().fit_transform(df)
@@ -116,7 +115,7 @@ df_clean.info()
 1. It replaces strings used to represent null values with `None`
 2. It removes uninformative columns
 3. It tries to parse datetime columns
-4. It parses strings like ` "1234.6"` to numbers (more in the next release!)
+4. It parses strings like ` "1234.6"` to numbers
 
 ## Note on intended usage 
 
@@ -128,7 +127,14 @@ dtypes (e.g., generic strings) to **more-informative** types (e.g., datetimes).
 
 :::
 
+
+::: {.fragment}
+
+
 The assumption is that complex transformations are done in later steps by the user.
+
+:::
+
 
 ## Data cleaning parameters:
 
@@ -141,37 +147,15 @@ cleaner = Cleaner(
 )
 ```
 
-## Under the hood: `DropUninformative` {.smaller}
-The `Cleaner` uses heuristics to detect columns that are unlikely to bring information useful to a ML model. 
-
-This is done by the `DropUninformative` transformer, which  marks a columns as "uninformative" if:
-
-- It contains more nulls than a certain fraction (1.0 by default)
-- It contains only one value (and no missing values)
-
-## An example for `DropUninformative`
+## Bonus: convert numeric columns with European separators
 ```{python}
-import pandas as pd
-import numpy as np
+from skrub import ToFloat
+s = pd.Series(["4 567,89", "12 567,89"], name="x")
+print(s)
+d = ToFloat(decimal=",", thousand=" ").fit_transform(s)
+print(d)
 
-df2 = pd.DataFrame({
-    "id": [101, 102, 103, 104, 105],
-    "age": [34, 28, 45, 52, 39],
-    "salary": [70000, None, 85000, None, None], 
-    "department": ["HR", "Finance", "IT", "HR", "Finance"],
-    "constant_col": ["active"] * 5,  # single constant value
-})
-df2
 ```
-
-## An example for `DropUninformative` {auto-animate="true"}
-```{python}
-from skrub import ApplyToCols, DropUninformative
-
-drop = ApplyToCols(DropUninformative(drop_if_constant=True, drop_null_fraction=0.5))
-drop.fit_transform(df2)
-```
-
 
 ## What we have seen in this chapter 
 - The `Cleaner` automates common data cleaning steps.

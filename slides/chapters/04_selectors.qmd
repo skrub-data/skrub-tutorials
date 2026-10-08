@@ -23,15 +23,11 @@ Selectors are used throughout the skrub package:
 
 - `ApplyToCols`
 - `TableReport` filters
-- `SelectCols`/`DropCols`
 - `.skb.apply()`
 
-## Example: Select String Columns
-
-We can use `SelectCols` to choose which columns to keep:
+## Example: Select String Columns {.smaller}
 
 ```{python}
-from skrub import SelectCols
 import pandas as pd
 
 df = pd.DataFrame({
@@ -40,12 +36,36 @@ df = pd.DataFrame({
     "city": ["NYC", "LA", "Chicago"]
 })
 
-SelectCols(cols=s.string()).fit_transform(df)
 ```
 
-## Selecting by Data Type
+::: {.columns}
 
-Some of the available selectors:
+::: {.column}
+
+`s.select()` to select columns:
+
+```{python}
+s.select(df, s.string())
+```
+
+:::
+
+::: {.column}
+
+
+... and `s.drop()` to remove them:
+
+```{python}
+s.drop(df, s.string())
+```
+
+:::
+
+:::
+
+
+
+## Selecting by Data Type
 
 - `.numeric()`: Numeric columns (int or float)
 - `.integer()`: Integer columns only
@@ -60,8 +80,10 @@ Some of the available selectors:
 
 - `.all()`: All columns
 - `.has_nulls()`: Columns with more than a given threshold of nulls (default=0)
-- `.cardinality_below(threshold)`: Few unique values
+- `.cardinality_below(threshold)`: fewer than `threshold` unique values
 - `.has_dtype()`: Columns that have the provided dtype
+
+## Example: select list columns with `has_dtype`
 
 ```{python}
 import polars as pl
@@ -72,15 +94,25 @@ df.dtypes
 
 ```{python}
 sel = s.has_dtype(pl.List)
-SelectCols(cols=sel).fit_transform(df)
+s.select(df, sel)
 ```
 
 
-## Selecting by Name
+## Selecting by Name {.smaller}
+
+
+::: {.columns}
+
+::: {.column}
+
 
 - `.cols("name")`: Specific column name(s)
 - `.glob("pattern*")`: Unix shell-style globbing
 - `.regex("pattern")`: Regular expressions
+
+:::
+
+::: {.column}
 
 ```{python}
 df = pd.DataFrame({
@@ -89,8 +121,15 @@ df = pd.DataFrame({
     "metric_2": [3, 5, 10],
 })
 
-SelectCols(cols=s.glob("metric_*")).fit_transform(df)
+s.select(df, s.glob("metric_*"))
 ```
+
+
+:::
+
+:::
+
+
 
 ## Combining Selectors {.smaller}
 
@@ -116,30 +155,78 @@ s.all() - "datetime-col"
 
 ```
 
-## Using selectors with pandas dataframes
+## Combining Selectors: `.all()` {auto-animate="true"}
 
-Get the list of selected columns:
+![](./images/s-all.png)
+
+## Combining Selectors: NOT {auto-animate="true"}
+
+![](./images/not-s-numeric.png)
+
+## Combining Selectors: AND {auto-animate="true"}
+
+![](./images/s-numeric-and-has-nulls.png)
+
+## Combining Selectors: OR {auto-animate="true"}
+
+![](./images/s-any-date-or-string.png)
+
+## Multiple aggregations in pandas with selectors{.smaller}
+
+
+::: {.columns}
+
+::: {.column}
+
+Define a selector: only numeric columns except the "id"
 
 ```{python}
 df = pd.DataFrame(
     {
-        "age": [25, 30, 35],
-        "name": ["Alice", None, "Charlie"],
+        "id": [1, 2, 3, 4],
+        "group": ["A", "A", "B", "B"],
+        "str": ["foo", "bar", "baz", "qux"],
+        "value1": [1, 2, 30, 40],
+        "value2": [5, 6, 7, 8],
     }
 )
 
-selector = s.has_nulls()
-columns_with_nulls = selector.expand(df)
-print(columns_with_nulls)
-
-# Use in dataframe operations: drop columns with nulls
-df.drop(columns=columns_with_nulls)
+# pick the numeric columns to aggregate, except the id
+only_num = (s.numeric() - "id")
 ```
 
-## Custom Selectors: Filter by Condition
+:::
+
+::: {.column}
+
+```{python}
+aggs = {col: ["mean", "sum"] for col in only_num.expand(df)}
+df.groupby("group").agg(aggs)
+```
+
+:::
+
+:::
+
+
+
+
+## Using selectors to aggregate pandas dataframes {.smaller}
+
+New columns are handled by the selector:
+
+```{python}
+# new columns, same selector
+df["value3"] = [100, 200, 300, 400]
+df["note"] = ["a", "b", "c", "d"]
+
+aggs = {col: ["mean", "sum"] for col in only_num.expand(df)}
+df.groupby("group").agg(aggs)
+```
+
+## Custom Selectors: Filter by Condition {.smaller}
 Define a function that takes **one column** as input and returns `True`/`False` 
 as output (depending on if the column is selected or not)
-
 
 ```{python}
 def more_nulls_than_half(col):
@@ -156,7 +243,7 @@ selector = s.filter(more_nulls_than_half)
 s.select(df, selector)
 ```
 
-## Using selectors with the `TableReport`
+## Using selectors with the `TableReport` {.smaller}
 
 The `TableReport` can use selectors (or simply column names) to focus only on 
 specific columns:
@@ -175,10 +262,11 @@ TableReport(df, column_filters=custom_filter)
 ```
 
 
-## What we have seen in this chapters
+## What we have seen in this chapter
 
 - Selectors can be used for flexible, reusable column selection
 - Selectors can be combined with logical operators as "sets of columns"
-- `expand()` extracts selected column names
+- `expand()` extracts selected column names and can be used with 
+dataframe libraries
 - `s.filter()` can be used to create custom selectors for domain-specific logic
 - `ApplyToCols` and `TableReport` can use selectors to filter columns

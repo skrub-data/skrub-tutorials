@@ -15,14 +15,12 @@ format:
 ## Why do we need to explore data? {.smaller}
 Before any kind of data processing or usage, we need to know what we are dealing with. 
 
-Useful information includes:
-
-- The size of the dataset. 
-- The data types and names of the columns. 
-- How values are distributed in each column. 
-- Whether missing values are present, in what measure and where. 
+- How big is the dataframe?
+- What kind of data types are we dealing with? Only numeric, mixed types? 
+- How are values distrbuted in each column? 
+- Missing values: are there any? How many? Where?
 - Which features are discrete/categorical, and how many categories there are.
-- Whether columns are strongly correlated with each other. 
+- Are there correlated columns?
 
 ## Loading the data
 ```{python}
@@ -122,9 +120,7 @@ detection, you should not rely exclusively on what the `TableReport` shows.
 :::
 
 ## Filtering the displayed columns
-Pre-made column filters are also available, allowing to select columns by dtype 
-or other characteristics. Filters are shared across tabs. 
-It is also possible to define custom filters to select only specific columns:
+It is possible to filter columns with pre-made filters, or define custom filters:
 
 ```{python}
 my_filter = {"only_education": ["education", "education-num"]}
@@ -133,7 +129,6 @@ TableReport(data, column_filters=my_filter)
 ```
 
 Skrub selectors can be used for that (more on that later).
-
 
 ## Exploring the target variable {.smaller}
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
@@ -145,7 +140,7 @@ TableReport(target)
 
 ## Working with big tables
 Plot generation and computation of associations are very expensive operations, so
-it may be beneficial to disable them while working with very big tables.
+so they can be disabled for big tables.
 
 Use the `plot_distributions` and `compute_associations` parameters to do so: 
 
@@ -175,7 +170,7 @@ a Jupyter notebok or a python interactive console.
 :::
 
 ## Exporting the `TableReport`: JSON
-It is also possible to export the report in JSON format:
+It is possible to export the report in JSON format:
 
 ```{.python}
 json_str = TableReport(data).json()
@@ -183,15 +178,13 @@ json_str = TableReport(data).json()
 
 ::: {.callout-important}
 
-If the report is generating distribution plots, the JSON will include them in SVG 
-format. Distributions can be disabled by setting `plot_distributions=False`. 
+The JSON report contains everything needed to rebuild a report, including plots. 
+If the plots are not needed, disable them with `plot_distributions=False`. 
 
 :::
 
 ## Exporting the `TableReport`: Markdown {.smaller}
-(in the upcoming release!)
-
-Finally, the report can be exported in summarized form as a Markdown-formatted string:
+The report can be exported in summarized form as a Markdown-formatted string:
 
 ```python
 md_str = TableReport(data).markdown()
@@ -199,7 +192,6 @@ md_str = TableReport(data).markdown()
 with open("report.md", "w") as fp:
     fp.write(md_str)
 ```
-
 
 ::: {.callout-warning}
 
@@ -209,8 +201,13 @@ of the report to an agent if the dataset is large, or if its content is not trus
 
 :::
 
+## Exporting the `TableReport`: python dict {.smaller}
+The report can also be exported as a python dict to use the statistics it measures
+in a python script:
 
-
+```python
+tr_dict = TableReport(data, plot_distributions=False).dict()
+```
 
 ## What we have seen in this chapter {.smaller}
 
@@ -219,4 +216,4 @@ of the report to an agent if the dataset is large, or if its content is not trus
 - Detecting nulls, outliers, and highly correlated columns at a glance
 - Filtering columns by type or characteristics using built-in filters
 - Adjusting `TableReport` settings for large datasets to optimize performance
-- Saving and exporting reports as HTML, JSON, and Markdown files
+- Saving and exporting reports as HTML, JSON, Markdown and python dicts

@@ -13,7 +13,7 @@ format:
 
 ## Building a baseline model with preprocessing
 
-Beyond preprocessing and cleaning, ML pipelines need to:
+Beyond preprocessing and cleaning, machine learning pipelines need to:
 
 - Add new features via feature engineering
 - Handle missing values (optional)
@@ -27,6 +27,7 @@ We also want to find out if there is a signal to learn in the data.
 - We want to prevent data that belongs to the test set from entering the train set.
 - Data leakage leads to over-optimistic results. 
 - Transformers and encoders must be trained exclusively on the training samples.
+- Remember: pre-processing is part of the entire design! 
 
 This is why we want a `Pipeline`! 
 
@@ -57,11 +58,13 @@ model = make_pipeline(
 skrub's `tabular_pipeline` returns a pipeline that includes all steps, with 
 tuned defaults depending on the input model. 
 
-```{python}
+```{.python}
 from skrub import tabular_pipeline
+from tabicl import TabICLRegressor
 
 # Option 1: Provide an estimator
 model = tabular_pipeline(LogisticRegression())
+model_tabicl = tabular_pipeline(TabICLRegressor())
 
 # Option 2: Use preset strings
 model_clf = tabular_pipeline("classification")
@@ -76,6 +79,8 @@ model_reg = tabular_pipeline("regression")
 ## What the pipeline looks like: linear model
 ![](images/tabular-pipeline-linear-regression.png)
 
+## What the pipeline looks like: TabICL
+![](images/tabular_pipeline_tabicl.png)
 
 ## Customizing the pipeline
 
@@ -101,7 +106,7 @@ full_pipeline = tabular_pipeline(model_pipeline)
 
 :::
 
-## When to Use Which Approach {.smaller}
+## Customizing the `tabular_pipeline` {.smaller}
 
 **Use `tabular_pipeline`** if:
 
@@ -112,6 +117,12 @@ full_pipeline = tabular_pipeline(model_pipeline)
 **Embed a pipeline in `tabular_pipeline`** if :
 
 - You need to modify only the end of the pipeline
+```python
+# Create a pipeline that includes two steps
+model_pipeline = make_pipeline(PCA(n_components=20), Ridge())
+# Pass the new model to tabular_pipeline
+full_pipeline = tabular_pipeline(model_pipeline)
+```
 
 **Use a manual pipeline** if :
 
@@ -140,6 +151,7 @@ That's it!
 
 - Always use pipelines to prevent data leakage
 - `TableVectorizer` handles most of the feature engineering
-- Manual pipelines give full control
-- `tabular_pipeline` provides a good baseline with good defaults
-- Provide a model, or `"classification"` or `"regression"`
+- The `tabular_pipeline` uses good defaults based on the type of estimator used
+- Pass a model (`LogisticRegression()`, `TabICLRegressor()`), or a string ("regression", 
+"classification")
+- Use manual pipelines to retain full control

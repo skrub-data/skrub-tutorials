@@ -17,10 +17,11 @@ polars = ">=1.35.1,<2"
 scikit-learn = ">=1.7.2,<2"
 seaborn = ">=0.13.2,<0.14"
 pyarrow = ">=22.0.0,<23"
-jupyterlab = ">=4.5.0,<5"
+jupyterlab = "*"
 notebook = ">=7.5.0,<8"
 jupytext = ">=1.19.1,<2"
 plotly = "*"
+jupyter = "*"
 
 [pypi-dependencies]
 skrub = {git = "git+https://github.com/skrub-data/skrub.git"}
