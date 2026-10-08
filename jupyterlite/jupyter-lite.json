@@ -2,29 +2,35 @@
   "jupyter-config-data": {
     "appName": "JupyterLite",
     "appUrl": "./lab",
-    "appVersion": "0.7.6",
+    "appVersion": "0.8.5",
     "baseUrl": "./",
+    "contentsAllJsonFile": "all.json",
     "defaultKernelName": "python",
     "faviconUrl": "./lab/favicon.ico",
     "federated_extensions": [
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.016fceb1d9e4f15b.js",
+        "load": "static/remoteEntry.0e3a9446c28b8713.js",
         "name": "@jupyter-notebook/lab-extension",
         "style": "./style"
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.75ddd7589fd94926c419.js",
+        "load": "static/remoteEntry.c8c9eed2cdefdeac.js",
+        "name": "@jupyter-widgets/jupyterlab-manager"
+      },
+      {
+        "extension": "./extension",
+        "load": "static/remoteEntry.abcac41d5ca77040.js",
         "name": "@jupyterlite/pyodide-kernel-extension"
       },
       {
         "extension": "./extension",
-        "load": "static/remoteEntry.da7e918938a99624da5c.js",
+        "load": "static/remoteEntry.4e3e87029586a924.js",
         "name": "jupyterlab-jupytext"
       },
       {
-        "load": "static/remoteEntry.2a6392a40c19ad8383a0.js",
+        "load": "static/remoteEntry.1dda3c8f6e5cd2a3.js",
         "mimeExtension": "./mimeExtension",
         "name": "jupyterlab-plotly"
       },
@@ -414,8 +420,18 @@
     "litePluginSettings": {
       "@jupyterlite/pyodide-kernel-extension:kernel": {
         "pipliteUrls": [
-          "./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=d4147101a35e1f311a860b1b8976d601b6afcad0e777ffb7946bd9ca3fdefbd6"
+          "./extensions/@jupyterlite/pyodide-kernel-extension/static/pypi/all.json?sha256=94e75a51d1c49df7d0c23591188ff4a7ca5475efe7332814b3e5c4b980ef5a71"
         ]
+      }
+    },
+    "versionInfo": {
+      "@jupyter-notebook/application": {
+        "label": "Jupyter Notebook",
+        "version": "7.6.3"
+      },
+      "@jupyterlab/application": {
+        "label": "JupyterLab",
+        "version": "4.6.4"
       }
     }
   },

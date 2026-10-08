@@ -97,7 +97,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b49444de5e07115d1c97c740e2613f4a.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -204,7 +204,7 @@
 </section>
 <section id="building-a-baseline-model-with-preprocessing" class="slide level2">
 <h2>Building a baseline model with preprocessing</h2>
-<p>Beyond preprocessing and cleaning, ML pipelines need to:</p>
+<p>Beyond preprocessing and cleaning, machine learning pipelines need to:</p>
 <ul>
 <li>Add new features via feature engineering</li>
 <li>Handle missing values (optional)</li>
@@ -219,6 +219,7 @@
 <li>We want to prevent data that belongs to the test set from entering the train set.</li>
 <li>Data leakage leads to over-optimistic results.</li>
 <li>Transformers and encoders must be trained exclusively on the training samples.</li>
+<li>Remember: pre-processing is part of the entire design!</li>
 </ul>
 <p>This is why we want a <code>Pipeline</code>!</p>
 </section>
@@ -226,7 +227,7 @@
 <h2>Manual Pipeline Construction</h2>
 <p>scikit-learn provides either <code>Pipeline</code> or <code>make_pipeline</code> to concatenate transformers and avoid leakage.</p>
 <p>The pipeline takes care of passing the same set of samples to the transformers in sequence.</p>
-<div id="36c3a706" class="cell" data-execution_count="1">
+<div id="ec4f17a1" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb1-3"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -244,16 +245,16 @@
 <section id="the-tabular_pipeline-function" class="slide level2">
 <h2>The <code>tabular_pipeline</code> Function</h2>
 <p>skrub’s <code>tabular_pipeline</code> returns a pipeline that includes all steps, with tuned defaults depending on the input model.</p>
-<div id="aa1b5a5f" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
-<span id="cb2-2"><a></a></span>
-<span id="cb2-3"><a></a><span class="co"># Option 1: Provide an estimator</span></span>
-<span id="cb2-4"><a></a>model <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
-<span id="cb2-5"><a></a></span>
-<span id="cb2-6"><a></a><span class="co"># Option 2: Use preset strings</span></span>
-<span id="cb2-7"><a></a>model_clf <span class="op">=</span> tabular_pipeline(<span class="st">"classification"</span>)</span>
-<span id="cb2-8"><a></a>model_reg <span class="op">=</span> tabular_pipeline(<span class="st">"regression"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
+<span id="cb2-2"><a></a><span class="im">from</span> tabicl <span class="im">import</span> TabICLRegressor</span>
+<span id="cb2-3"><a></a></span>
+<span id="cb2-4"><a></a><span class="co"># Option 1: Provide an estimator</span></span>
+<span id="cb2-5"><a></a>model <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
+<span id="cb2-6"><a></a>model_tabicl <span class="op">=</span> tabular_pipeline(TabICLRegressor())</span>
+<span id="cb2-7"><a></a></span>
+<span id="cb2-8"><a></a><span class="co"># Option 2: Use preset strings</span></span>
+<span id="cb2-9"><a></a>model_clf <span class="op">=</span> tabular_pipeline(<span class="st">"classification"</span>)</span>
+<span id="cb2-10"><a></a>model_reg <span class="op">=</span> tabular_pipeline(<span class="st">"regression"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="what-the-pipeline-looks-like-tree-based-model" class="slide level2">
 <h2>What the pipeline looks like: tree-based model</h2>
@@ -263,6 +264,10 @@
 <h2>What the pipeline looks like: linear model</h2>
 
 <img data-src="images/tabular-pipeline-linear-regression.png" class="r-stretch"></section>
+<section id="what-the-pipeline-looks-like-tabicl" class="slide level2">
+<h2>What the pipeline looks like: TabICL</h2>
+
+<img data-src="images/tabular_pipeline_tabicl.png" class="r-stretch"></section>
 <section id="customizing-the-pipeline" class="slide level2">
 <h2>Customizing the pipeline</h2>
 <div class="callout callout-tip callout-titled callout-style-default">
@@ -279,7 +284,7 @@
 </div>
 </div>
 <div class="fragment">
-<div id="fd6a2ec6" class="cell" data-execution_count="3">
+<div id="6df4d641" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb3-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb3-3"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -290,14 +295,14 @@
 <span id="cb3-8"><a></a><span class="co"># Pass the new model to tabular_pipeline</span></span>
 <span id="cb3-9"><a></a>full_pipeline <span class="op">=</span> tabular_pipeline(model_pipeline)</span>
 <span id="cb3-10"><a></a>[name <span class="cf">for</span> name, _ <span class="kw">in</span> full_pipeline.steps]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pipeline']</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']</code></pre>
 </div>
 </div>
 </div>
 </section>
-<section id="when-to-use-which-approach" class="slide level2 smaller">
-<h2>When to Use Which Approach</h2>
+<section id="customizing-the-tabular_pipeline" class="slide level2 smaller">
+<h2>Customizing the <code>tabular_pipeline</code></h2>
 <p><strong>Use <code>tabular_pipeline</code></strong> if:</p>
 <ul>
 <li>You need a quick baseline for benchmarking/checking if there is a signal</li>
@@ -308,6 +313,10 @@
 <ul>
 <li>You need to modify only the end of the pipeline</li>
 </ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Create a pipeline that includes two steps</span></span>
+<span id="cb5-2"><a></a>model_pipeline <span class="op">=</span> make_pipeline(PCA(n_components<span class="op">=</span><span class="dv">20</span>), Ridge())</span>
+<span id="cb5-3"><a></a><span class="co"># Pass the new model to tabular_pipeline</span></span>
+<span id="cb5-4"><a></a>full_pipeline <span class="op">=</span> tabular_pipeline(model_pipeline)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Use a manual pipeline</strong> if :</p>
 <ul>
 <li>You need fine-grained control over most of the transformations</li>
@@ -318,14 +327,14 @@
 </section>
 <section id="example-complete-workflow" class="slide level2">
 <h2>Example: Complete Workflow</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
-<span id="cb5-2"><a></a></span>
-<span id="cb5-3"><a></a><span class="co"># Create pipeline</span></span>
-<span id="cb5-4"><a></a>model <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
-<span id="cb5-5"><a></a></span>
-<span id="cb5-6"><a></a><span class="co"># Evaluate with cross-validation</span></span>
-<span id="cb5-7"><a></a>scores <span class="op">=</span> cross_val_score(model, X, y, cv<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb5-8"><a></a><span class="bu">print</span>(<span class="ss">f"Score: </span><span class="sc">{</span>scores<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
+<span id="cb6-2"><a></a></span>
+<span id="cb6-3"><a></a><span class="co"># Create pipeline</span></span>
+<span id="cb6-4"><a></a>model <span class="op">=</span> tabular_pipeline(LogisticRegression())</span>
+<span id="cb6-5"><a></a></span>
+<span id="cb6-6"><a></a><span class="co"># Evaluate with cross-validation</span></span>
+<span id="cb6-7"><a></a>scores <span class="op">=</span> cross_val_score(model, X, y, cv<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb6-8"><a></a><span class="bu">print</span>(<span class="ss">f"Score: </span><span class="sc">{</span>scores<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That’s it!</p>
 </section>
 <section id="what-we-have-seen-in-this-chapter" class="slide level2">
@@ -333,9 +342,9 @@
 <ul>
 <li>Always use pipelines to prevent data leakage</li>
 <li><code>TableVectorizer</code> handles most of the feature engineering</li>
-<li>Manual pipelines give full control</li>
-<li><code>tabular_pipeline</code> provides a good baseline with good defaults</li>
-<li>Provide a model, or <code>"classification"</code> or <code>"regression"</code></li>
+<li>The <code>tabular_pipeline</code> uses good defaults based on the type of estimator used</li>
+<li>Pass a model (<code>LogisticRegression()</code>, <code>TabICLRegressor()</code>), or a string (“regression”, “classification”)</li>
+<li>Use manual pipelines to retain full control</li>
 </ul>
 
 

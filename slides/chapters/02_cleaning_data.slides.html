@@ -97,7 +97,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b49444de5e07115d1c97c740e2613f4a.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -207,109 +207,29 @@
 </section>
 <section id="introduction" class="slide level2">
 <h2>Introduction</h2>
-<p>Once a table has been explored, the next step is addressing any problem it might have.</p>
+<p>Once a table has been explored, the next step is transforming it into something that can be handled more easily.</p>
 <p>This can be described broadly as “cleaning” or “sanitizing” the data.</p>
 </section>
 <section id="an-example-dataframe" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">An example dataframe</h2>
-<div id="e132c705" class="cell" data-execution_count="1">
+<div id="9598cbaf" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb1-1" class="hljs-ln-code"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2" class="hljs-ln-code"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3" class="hljs-ln-code"><a></a></span>
-<span id="cb1-4" class="hljs-ln-code"><a></a>df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb1-5" class="hljs-ln-code"><a></a>    {</span>
-<span id="cb1-6" class="hljs-ln-code"><a></a>        <span class="st">"numerical_1"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
-<span id="cb1-7" class="hljs-ln-code"><a></a>        <span class="st">"numerical_2"</span>: [<span class="fl">10.5</span>, <span class="fl">20.3</span>, <span class="va">None</span>, <span class="fl">40.1</span>, <span class="fl">50.2</span>],</span>
-<span id="cb1-8" class="hljs-ln-code"><a></a>        <span class="st">"string_column"</span>: [<span class="st">"apple"</span>, <span class="st">"?"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>, <span class="st">"?"</span>],</span>
-<span id="cb1-9" class="hljs-ln-code"><a></a>        <span class="st">"datetime_column"</span>: [</span>
-<span id="cb1-10" class="hljs-ln-code"><a></a>            <span class="st">"03 Jan 2020"</span>,</span>
-<span id="cb1-11" class="hljs-ln-code"><a></a>            <span class="st">"04 Jan 2020"</span>,</span>
-<span id="cb1-12" class="hljs-ln-code"><a></a>            <span class="st">"05 Jan 2020"</span>,</span>
-<span id="cb1-13" class="hljs-ln-code"><a></a>            <span class="st">"06 Jan 2020"</span>,</span>
-<span id="cb1-14" class="hljs-ln-code"><a></a>            <span class="st">"07 Jan 2020"</span>,</span>
-<span id="cb1-15" class="hljs-ln-code"><a></a>        ],</span>
-<span id="cb1-16" class="hljs-ln-code"><a></a>        <span class="st">"all_none"</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>],</span>
-<span id="cb1-17" class="hljs-ln-code"><a></a>    }</span>
-<span id="cb1-18" class="hljs-ln-code"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="an-example-dataframe-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">An example dataframe</h2>
-<div id="c7d7d3e6" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb2-1" class="hljs-ln-code"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">numerical_1</th>
-<th data-quarto-table-cell-role="th">numerical_2</th>
-<th data-quarto-table-cell-role="th">string_column</th>
-<th data-quarto-table-cell-role="th">datetime_column</th>
-<th data-quarto-table-cell-role="th">all_none</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>1</td>
-<td>10.5</td>
-<td>apple</td>
-<td>03 Jan 2020</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>2</td>
-<td>20.3</td>
-<td>?</td>
-<td>04 Jan 2020</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>3</td>
-<td>NaN</td>
-<td>banana</td>
-<td>05 Jan 2020</td>
-<td>None</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>4</td>
-<td>40.1</td>
-<td>cherry</td>
-<td>06 Jan 2020</td>
-<td>None</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>5</td>
-<td>50.2</td>
-<td>?</td>
-<td>07 Jan 2020</td>
-<td>None</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
+<span id="cb1-2" class="hljs-ln-code"><a></a></span>
+<span id="cb1-3" class="hljs-ln-code"><a></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb1-4" class="hljs-ln-code"><a></a>    {</span>
+<span id="cb1-5" class="hljs-ln-code"><a></a>        <span class="st">"numerical_1"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
+<span id="cb1-6" class="hljs-ln-code"><a></a>        <span class="st">"numerical_2"</span>: pd.Series([<span class="fl">10.5</span>, <span class="fl">20.3</span>, <span class="st">"?"</span>, <span class="fl">40.1</span>, <span class="fl">50.2</span>]).astype(<span class="bu">str</span>),</span>
+<span id="cb1-7" class="hljs-ln-code"><a></a>        <span class="st">"string_column"</span>: [<span class="st">"apple"</span>, <span class="st">"?"</span>, <span class="st">"banana"</span>, <span class="st">"cherry"</span>, <span class="st">"?"</span>],</span>
+<span id="cb1-8" class="hljs-ln-code"><a></a>        <span class="st">"datetime_column"</span>: [</span>
+<span id="cb1-9" class="hljs-ln-code"><a></a>            <span class="st">"03 Jan 2020"</span>,</span>
+<span id="cb1-10" class="hljs-ln-code"><a></a>            <span class="st">"04 Jan 2020"</span>,</span>
+<span id="cb1-11" class="hljs-ln-code"><a></a>            <span class="st">"05 Jan 2020"</span>,</span>
+<span id="cb1-12" class="hljs-ln-code"><a></a>            <span class="st">"06 Jan 2020"</span>,</span>
+<span id="cb1-13" class="hljs-ln-code"><a></a>            <span class="st">"07 Jan 2020"</span>,</span>
+<span id="cb1-14" class="hljs-ln-code"><a></a>        ],</span>
+<span id="cb1-15" class="hljs-ln-code"><a></a>        <span class="st">"all_none"</span>: [<span class="st">"?"</span>, <span class="st">"?"</span>, <span class="st">"?"</span>, <span class="st">"?"</span>, <span class="st">"?"</span>],</span>
+<span id="cb1-16" class="hljs-ln-code"><a></a>    }</span>
+<span id="cb1-17" class="hljs-ln-code"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="there-are-some-issues" class="slide level2">
@@ -321,57 +241,66 @@
 <li>There is a column that is fully empty</li>
 </ul>
 </section>
-<section id="cleaning-with-pandas" class="slide level2">
+<section id="cleaning-with-pandas" class="slide level2 smaller">
 <h2>Cleaning with pandas</h2>
 <p>First, let’s look at the datatypes detected by pandas:</p>
-<div id="da370aa5" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="ddca409f" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 5 entries, 0 to 4
 Data columns (total 5 columns):
- #   Column           Non-Null Count  Dtype  
----  ------           --------------  -----  
- 0   numerical_1      5 non-null      int64  
- 1   numerical_2      4 non-null      float64
- 2   string_column    5 non-null      object 
- 3   datetime_column  5 non-null      object 
- 4   all_none         0 non-null      object 
-dtypes: float64(1), int64(1), object(3)
+ #   Column           Non-Null Count  Dtype 
+---  ------           --------------  ----- 
+ 0   numerical_1      5 non-null      int64 
+ 1   numerical_2      5 non-null      object
+ 2   string_column    5 non-null      object
+ 3   datetime_column  5 non-null      object
+ 4   all_none         5 non-null      object
+dtypes: int64(1), object(4)
 memory usage: 332.0+ bytes</code></pre>
 </div>
 </div>
-<p>Missing values were not detected properly (“?” was treated as a string), the datetime wasn’t parsed as datetimes.</p>
+<div class="fragment">
+<ul>
+<li>Missing values were not detected properly: <code>"?"</code> was treated as a string</li>
+<li>One of the numerical columns has string dtype</li>
+<li>The <code>all_none</code> column shows no null values because of “?”</li>
+<li>The datetime is still treated as object</li>
+</ul>
+</div>
 </section>
 <section id="cleaning-with-pandas-1" class="slide level2 smaller">
 <h2>Cleaning with pandas</h2>
-<div id="1748847d" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Parse the datetime strings with a specific format</span></span>
-<span id="cb5-2"><a></a>df[<span class="st">'datetime_column'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime_column'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st"> %b %Y'</span>)</span>
-<span id="cb5-3"><a></a></span>
-<span id="cb5-4"><a></a><span class="co"># Drop columns with only a single unique value</span></span>
-<span id="cb5-5"><a></a>df_clean <span class="op">=</span> df.loc[:, df.nunique(dropna<span class="op">=</span><span class="va">True</span>) <span class="op">&gt;</span> <span class="dv">1</span>]</span>
-<span id="cb5-6"><a></a></span>
-<span id="cb5-7"><a></a><span class="co"># Replace "?" with np.nan in all string columns</span></span>
-<span id="cb5-8"><a></a>df_clean <span class="op">=</span> df_clean.replace(<span class="st">"?"</span>, np.nan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="efef9388" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a></a></span>
+<span id="cb4-3"><a></a><span class="co"># Parse the datetime strings with a specific format</span></span>
+<span id="cb4-4"><a></a>df[<span class="st">'datetime_column'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime_column'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st"> %b %Y'</span>)</span>
+<span id="cb4-5"><a></a></span>
+<span id="cb4-6"><a></a><span class="co"># Drop columns with only a single unique value</span></span>
+<span id="cb4-7"><a></a>df_clean <span class="op">=</span> df.loc[:, df.nunique(dropna<span class="op">=</span><span class="va">True</span>) <span class="op">&gt;</span> <span class="dv">1</span>]</span>
+<span id="cb4-8"><a></a></span>
+<span id="cb4-9"><a></a><span class="co"># Replace "?" with np.nan in all string columns</span></span>
+<span id="cb4-10"><a></a>df_clean <span class="op">=</span> df_clean.replace(<span class="st">"?"</span>, np.nan)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="cleaning-with-pandas-2" class="slide level2 smaller">
 <h2>Cleaning with pandas</h2>
-<div id="f93d2037" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="co"># Function to drop columns with only missing values or empty strings</span></span>
-<span id="cb6-2"><a></a><span class="kw">def</span> drop_empty_columns(df):</span>
-<span id="cb6-3"><a></a>    <span class="co"># Drop columns with only missing values</span></span>
-<span id="cb6-4"><a></a>    df_clean <span class="op">=</span> df.dropna(axis<span class="op">=</span><span class="dv">1</span>, how<span class="op">=</span><span class="st">'all'</span>)</span>
-<span id="cb6-5"><a></a>    <span class="co"># Drop columns with only empty strings</span></span>
-<span id="cb6-6"><a></a>    empty_string_cols <span class="op">=</span> df_clean.columns[df_clean.eq(<span class="st">''</span>).<span class="bu">all</span>()]</span>
-<span id="cb6-7"><a></a>    df_clean <span class="op">=</span> df_clean.drop(columns<span class="op">=</span>empty_string_cols)</span>
-<span id="cb6-8"><a></a>    <span class="cf">return</span> df_clean</span>
-<span id="cb6-9"><a></a></span>
-<span id="cb6-10"><a></a><span class="co"># Apply the function to the DataFrame</span></span>
-<span id="cb6-11"><a></a>df_clean <span class="op">=</span> drop_empty_columns(df_clean)</span>
-<span id="cb6-12"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div id="41072a27" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Function to drop columns with only missing values or empty strings</span></span>
+<span id="cb5-2"><a></a><span class="kw">def</span> drop_empty_columns(df):</span>
+<span id="cb5-3"><a></a>    <span class="co"># Drop columns with only missing values</span></span>
+<span id="cb5-4"><a></a>    df_clean <span class="op">=</span> df.dropna(axis<span class="op">=</span><span class="dv">1</span>, how<span class="op">=</span><span class="st">'all'</span>)</span>
+<span id="cb5-5"><a></a>    <span class="co"># Drop columns with only empty strings</span></span>
+<span id="cb5-6"><a></a>    empty_string_cols <span class="op">=</span> df_clean.columns[df_clean.eq(<span class="st">''</span>).<span class="bu">all</span>()]</span>
+<span id="cb5-7"><a></a>    df_clean <span class="op">=</span> df_clean.drop(columns<span class="op">=</span>empty_string_cols)</span>
+<span id="cb5-8"><a></a>    <span class="cf">return</span> df_clean</span>
+<span id="cb5-9"><a></a></span>
+<span id="cb5-10"><a></a><span class="co"># Apply the function to the DataFrame</span></span>
+<span id="cb5-11"><a></a>df_clean <span class="op">=</span> drop_empty_columns(df_clean)</span>
+<span id="cb5-12"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -442,12 +371,11 @@ memory usage: 332.0+ bytes</code></pre>
 </section>
 <section id="the-alternative-skrub.cleaner" class="slide level2">
 <h2>The alternative: <code>skrub.Cleaner</code></h2>
-<p>By default, the <code>Cleaner</code> applies various transformations that can sanitize many common use cases:</p>
-<div id="10757e07" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
-<span id="cb7-2"><a></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
-<span id="cb7-3"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div id="ca75e8fc" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
+<span id="cb6-2"><a></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
+<span id="cb6-3"><a></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 <style scoped="">
     .dataframe tbody tr th:only-of-type {
@@ -491,7 +419,7 @@ memory usage: 332.0+ bytes</code></pre>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>3</td>
-<td>NaN</td>
+<td>None</td>
 <td>banana</td>
 <td>2020-01-05</td>
 </tr>
@@ -519,8 +447,8 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="the-alternative-skrub.cleaner-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">The alternative: <code>skrub.Cleaner</code></h2>
 <p>The cleaned version of the dataframe is now marking missing values correctly, and the datetime column has been parsed as such:</p>
-<div id="01dfec0d" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb8-1" class="hljs-ln-code"><a></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="773f8141" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb7-1" class="hljs-ln-code"><a></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 5 entries, 0 to 4
@@ -528,10 +456,10 @@ Data columns (total 4 columns):
  #   Column           Non-Null Count  Dtype         
 ---  ------           --------------  -----         
  0   numerical_1      5 non-null      int64         
- 1   numerical_2      4 non-null      float64       
+ 1   numerical_2      4 non-null      object        
  2   string_column    3 non-null      object        
  3   datetime_column  5 non-null      datetime64[ns]
-dtypes: datetime64[ns](1), float64(1), int64(1), object(1)
+dtypes: datetime64[ns](1), int64(1), object(2)
 memory usage: 292.0+ bytes</code></pre>
 </div>
 </div>
@@ -542,7 +470,7 @@ memory usage: 292.0+ bytes</code></pre>
 <li>It replaces strings used to represent null values with <code>None</code></li>
 <li>It removes uninformative columns</li>
 <li>It tries to parse datetime columns</li>
-<li>It parses strings like <code>"1234.6"</code> to numbers (more in the next release!)</li>
+<li>It parses strings like <code>"1234.6"</code> to numbers</li>
 </ol>
 </section>
 <section id="note-on-intended-usage" class="slide level2">
@@ -560,184 +488,36 @@ memory usage: 292.0+ bytes</code></pre>
 </div>
 </div>
 </div>
+<div class="fragment">
 <p>The assumption is that complex transformations are done in later steps by the user.</p>
+</div>
 </section>
 <section id="data-cleaning-parameters" class="slide level2">
 <h2>Data cleaning parameters:</h2>
-<div id="c6d9119f" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>cleaner <span class="op">=</span> Cleaner(</span>
-<span id="cb10-2"><a></a>    drop_null_fraction<span class="op">=</span><span class="fl">0.9</span>,  <span class="co"># Drop columns 90% null</span></span>
-<span id="cb10-3"><a></a>    drop_if_constant<span class="op">=</span><span class="va">True</span>,   <span class="co"># Drop constant columns</span></span>
-<span id="cb10-4"><a></a>    datetime_format<span class="op">=</span><span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>,  <span class="co"># Specific datetime format</span></span>
-<span id="cb10-5"><a></a>    null_strings<span class="op">=</span>[<span class="st">"UKN"</span>, <span class="st">"unknown"</span>, <span class="st">"missing"</span>] <span class="co"># Custom strings to mark null values</span></span>
-<span id="cb10-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="acef41c4" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>cleaner <span class="op">=</span> Cleaner(</span>
+<span id="cb9-2"><a></a>    drop_null_fraction<span class="op">=</span><span class="fl">0.9</span>,  <span class="co"># Drop columns 90% null</span></span>
+<span id="cb9-3"><a></a>    drop_if_constant<span class="op">=</span><span class="va">True</span>,   <span class="co"># Drop constant columns</span></span>
+<span id="cb9-4"><a></a>    datetime_format<span class="op">=</span><span class="st">"%Y-%m-</span><span class="sc">%d</span><span class="st">"</span>,  <span class="co"># Specific datetime format</span></span>
+<span id="cb9-5"><a></a>    null_strings<span class="op">=</span>[<span class="st">"UKN"</span>, <span class="st">"unknown"</span>, <span class="st">"missing"</span>] <span class="co"># Custom strings to mark null values</span></span>
+<span id="cb9-6"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="under-the-hood-dropuninformative" class="slide level2 smaller">
-<h2>Under the hood: <code>DropUninformative</code></h2>
-<p>The <code>Cleaner</code> uses heuristics to detect columns that are unlikely to bring information useful to a ML model.</p>
-<p>This is done by the <code>DropUninformative</code> transformer, which marks a columns as “uninformative” if:</p>
-<ul>
-<li>It contains more nulls than a certain fraction (1.0 by default)</li>
-<li>It contains only one value (and no missing values)</li>
-</ul>
-</section>
-<section id="an-example-for-dropuninformative" class="slide level2">
-<h2>An example for <code>DropUninformative</code></h2>
-<div id="e684e8f1" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb11-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb11-3"><a></a></span>
-<span id="cb11-4"><a></a>df2 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb11-5"><a></a>    <span class="st">"id"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>, <span class="dv">104</span>, <span class="dv">105</span>],</span>
-<span id="cb11-6"><a></a>    <span class="st">"age"</span>: [<span class="dv">34</span>, <span class="dv">28</span>, <span class="dv">45</span>, <span class="dv">52</span>, <span class="dv">39</span>],</span>
-<span id="cb11-7"><a></a>    <span class="st">"salary"</span>: [<span class="dv">70000</span>, <span class="va">None</span>, <span class="dv">85000</span>, <span class="va">None</span>, <span class="va">None</span>], </span>
-<span id="cb11-8"><a></a>    <span class="st">"department"</span>: [<span class="st">"HR"</span>, <span class="st">"Finance"</span>, <span class="st">"IT"</span>, <span class="st">"HR"</span>, <span class="st">"Finance"</span>],</span>
-<span id="cb11-9"><a></a>    <span class="st">"constant_col"</span>: [<span class="st">"active"</span>] <span class="op">*</span> <span class="dv">5</span>,  <span class="co"># single constant value</span></span>
-<span id="cb11-10"><a></a>})</span>
-<span id="cb11-11"><a></a>df2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">id</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">salary</th>
-<th data-quarto-table-cell-role="th">department</th>
-<th data-quarto-table-cell-role="th">constant_col</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>101</td>
-<td>34</td>
-<td>70000.0</td>
-<td>HR</td>
-<td>active</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>102</td>
-<td>28</td>
-<td>NaN</td>
-<td>Finance</td>
-<td>active</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>103</td>
-<td>45</td>
-<td>85000.0</td>
-<td>IT</td>
-<td>active</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>104</td>
-<td>52</td>
-<td>NaN</td>
-<td>HR</td>
-<td>active</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>105</td>
-<td>39</td>
-<td>NaN</td>
-<td>Finance</td>
-<td>active</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-<section id="an-example-for-dropuninformative-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">An example for <code>DropUninformative</code></h2>
-<div id="706a77e7" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb12-1" class="hljs-ln-code"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, DropUninformative</span>
-<span id="cb12-2" class="hljs-ln-code"><a></a></span>
-<span id="cb12-3" class="hljs-ln-code"><a></a>drop <span class="op">=</span> ApplyToCols(DropUninformative(drop_if_constant<span class="op">=</span><span class="va">True</span>, drop_null_fraction<span class="op">=</span><span class="fl">0.5</span>))</span>
-<span id="cb12-4" class="hljs-ln-code"><a></a>drop.fit_transform(df2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">id</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">department</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>101</td>
-<td>34</td>
-<td>HR</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>102</td>
-<td>28</td>
-<td>Finance</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>103</td>
-<td>45</td>
-<td>IT</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>104</td>
-<td>52</td>
-<td>HR</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>105</td>
-<td>39</td>
-<td>Finance</td>
-</tr>
-</tbody>
-</table>
-
-</div>
+<section id="bonus-convert-numeric-columns-with-european-separators" class="slide level2">
+<h2>Bonus: convert numeric columns with European separators</h2>
+<div id="ef6e6d50" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ToFloat</span>
+<span id="cb10-2"><a></a>s <span class="op">=</span> pd.Series([<span class="st">"4 567,89"</span>, <span class="st">"12 567,89"</span>], name<span class="op">=</span><span class="st">"x"</span>)</span>
+<span id="cb10-3"><a></a><span class="bu">print</span>(s)</span>
+<span id="cb10-4"><a></a>d <span class="op">=</span> ToFloat(decimal<span class="op">=</span><span class="st">","</span>, thousand<span class="op">=</span><span class="st">" "</span>).fit_transform(s)</span>
+<span id="cb10-5"><a></a><span class="bu">print</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0     4 567,89
+1    12 567,89
+Name: x, dtype: object
+0     4567.890137
+1    12567.889648
+Name: x, dtype: float32</code></pre>
 </div>
 </div>
 </section>

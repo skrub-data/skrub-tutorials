@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a585631caaf8dceca076a51019091dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-af0b5a157174cb675ad7c53d3a367904.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -172,6 +172,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#intermission-data-leakage-and-fittransform" id="toc-intermission-data-leakage-and-fittransform" class="nav-link" data-scroll-target="#intermission-data-leakage-and-fittransform">Intermission: data leakage and fit/transform</a></li>
   <li><a href="#intermission-data-leakage-and-fittransform-1" id="toc-intermission-data-leakage-and-fittransform-1" class="nav-link" data-scroll-target="#intermission-data-leakage-and-fittransform-1">Intermission: data leakage and fit/transform</a></li>
   <li><a href="#intermission-data-leakage-and-fittransform-2" id="toc-intermission-data-leakage-and-fittransform-2" class="nav-link" data-scroll-target="#intermission-data-leakage-and-fittransform-2">Intermission: data leakage and fit/transform</a></li>
+  <li><a href="#back-on-track" id="toc-back-on-track" class="nav-link" data-scroll-target="#back-on-track">Back on track!</a></li>
   <li><a href="#waking-up-from-a-nightmare" id="toc-waking-up-from-a-nightmare" class="nav-link" data-scroll-target="#waking-up-from-a-nightmare">Waking up from a nightmare</a></li>
   <li><a href="#whats-in-the-tabular_pipeline" id="toc-whats-in-the-tabular_pipeline" class="nav-link" data-scroll-target="#whats-in-the-tabular_pipeline">What’s in the <code>tabular_pipeline</code></a></li>
   <li><a href="#pre-processing-is-part-of-the-pipeline" id="toc-pre-processing-is-part-of-the-pipeline" class="nav-link" data-scroll-target="#pre-processing-is-part-of-the-pipeline">Pre-processing is part of the pipeline!</a></li>
@@ -222,7 +223,7 @@ Note
 </section>
 <section id="load-and-explore-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-and-explore-the-data">Load and explore the data</h2>
-<div id="f79a46f0" class="cell" data-execution_count="1">
+<div id="e2c0dc01" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -313,7 +314,7 @@ Note
 <section id="explore-the-target" class="level2">
 <h2 class="anchored" data-anchor-id="explore-the-target">Explore the target</h2>
 <p>Let’s take a look at the target:</p>
-<div id="dca40376" class="cell" data-execution_count="2">
+<div id="b72e0c78" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>0     69222.18
@@ -329,7 +330,7 @@ Name: current_annual_salary, dtype: float64</code></pre>
 <section id="strategizing" class="level2">
 <h2 class="anchored" data-anchor-id="strategizing">Strategizing</h2>
 <p>We can begin by exploring the dataframe with <code>.describe</code>, and then think of a plan for pre-processing our data.</p>
-<div id="a73b8546" class="cell" data-execution_count="3">
+<div id="b16db5c6" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>X.describe(include<span class="op">=</span><span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -492,7 +493,7 @@ Name: current_annual_salary, dtype: float64</code></pre>
 <section id="step-1-convert-date-features-to-numerical" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="step-1-convert-date-features-to-numerical">Step 1: Convert date features to numerical</h2>
 <p>We extract numerical features from the <code>date_first_hired</code> column.</p>
-<div id="898df6c5" class="cell" data-execution_count="4">
+<div id="091f17d1" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a copy to work with</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X_processed <span class="op">=</span> X.copy()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -518,7 +519,7 @@ Shape: (9228, 9)</code></pre>
 <section id="step-2-encode-categorical-features" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="step-2-encode-categorical-features">Step 2: Encode categorical features</h2>
 <p>We encode the categorical features using one-hot encoding.</p>
-<div id="1aff5205" class="cell" data-execution_count="5">
+<div id="382a6204" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the categorical columns</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> X_processed.select_dtypes(include<span class="op">=</span>[<span class="st">'object'</span>]).columns.tolist()</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Categorical columns to encode:"</span>, categorical_cols)</span>
@@ -537,7 +538,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <h2 class="smaller anchored" data-auto-animate="true" data-anchor-id="step-3-impute-missing-values">Step 3: Impute missing values</h2>
 <p>Some models cannot handle missing values.</p>
 <p>We impute the missing values in the <code>gender</code> column:</p>
-<div id="2af62a39" class="cell" data-execution_count="6">
+<div id="1f65fa14" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute missing values with most frequent value</span></span>
@@ -571,7 +572,7 @@ Important
 <h2 class="smaller anchored" data-anchor-id="step-4-scale-numerical-features">Step 4: Scale numerical features</h2>
 <p>Some models work better when all the numeric features have comparable scale.</p>
 <p><code>RidgeCV</code> is one of them, so we need to scale numerical features.</p>
-<div id="98e370c5" class="cell" data-execution_count="7">
+<div id="5955a3ea" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the scaler</span></span>
@@ -591,14 +592,14 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Outliers (values very far from the mean) make scaling hard to do. <strong>Robust scaling</strong> is needed.</p>
+<p>Outliers (values very far from the mean) make scaling hard to do. <strong>Robust scaling</strong> may be needed.</p>
 </div>
 </div>
 </section>
 <section id="step-5-train-ridge-model-with-cross-validation" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="step-5-train-ridge-model-with-cross-validation">Step 5: Train Ridge model with cross-validation</h2>
 <p>Train a <code>RidgeCV</code> regression model and evaluate with cross-validation.</p>
-<div id="f53ffda1" class="cell" data-execution_count="8">
+<div id="e234f295" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> RidgeCV</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, cross_validate</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -607,37 +608,34 @@ Warning
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ridge <span class="op">=</span> RidgeCV()</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform cross-validation (5-fold)</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>cv_results <span class="op">=</span> cross_validate(ridge, X_scaled, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span>[<span class="st">"r2"</span>, <span class="st">"neg_mean_squared_error"</span>])</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>cv_results <span class="op">=</span> cross_validate(ridge, X_scaled, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span>[<span class="st">"r2"</span>])</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert MSE to RMSE</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>test_rmse <span class="op">=</span> np.sqrt(<span class="op">-</span>cv_results[<span class="st">"test_neg_mean_squared_error"</span>])</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cross-Validation Results:"</span>)</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"Mean test R²: </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean test RMSE: </span><span class="sc">{</span>test_rmse<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>test_rmse<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cross-Validation Results:"</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"Mean test R²: </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cross-Validation Results:
-Mean test R²: 0.8731 (+/- 0.0276)
-Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
+Mean test R²: 0.8731 (+/- 0.0276)</code></pre>
 </div>
 </div>
 </section>
 <section id="just-ask-an-agent-to-write-the-code" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="just-ask-an-agent-to-write-the-code">“Just ask an agent to write the code”</h2>
-<ul>
+<div class="incremental">
+<ul class="incremental">
 <li>Operations in the wrong order.</li>
-<li>Trying to impute categorical features without converting them to numeric values.</li>
 <li>The datetime feature was treated like a categorical feature.</li>
+<li>Trying to impute categorical features without converting them to numeric values.</li>
 <li>Cells could not be executed in order without proper debugging and re-prompting.</li>
-<li><code>pd.get_dummies</code> was executed on the full dataframe, rather than only on the training split, leading to data leakage.</li>
+<li><code>pd.get_dummies</code> was executed on the full dataframe, rather than only on the training split, leading to <strong>data leakage</strong>.</li>
 </ul>
+</div>
 </section>
 <section id="intermission-data-leakage-and-fittransform" class="level2" data-auto-animate="true">
 <h2 data-auto-animate="true" class="anchored" data-anchor-id="intermission-data-leakage-and-fittransform">Intermission: data leakage and fit/transform</h2>
-<div id="3b41789f" class="cell" data-execution_count="9">
+<div id="11eba79e" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
@@ -649,7 +647,7 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 </div>
 <div class="columns">
 <div class="column">
-<div id="07dd081b" class="cell" data-execution_count="10">
+<div id="861d67c6" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_train</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
@@ -690,7 +688,7 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 </div>
 </div>
 </div><div class="column">
-<div id="df4d6415" class="cell" data-execution_count="11">
+<div id="6216f608" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
@@ -730,7 +728,7 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 <p>What happens if you try to find the mean over all data?</p>
 <div class="columns">
 <div class="column">
-<div id="1e3738bf" class="cell" data-execution_count="12">
+<div id="4b605670" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>imputer <span class="op">=</span> SimpleImputer(strategy<span class="op">=</span><span class="st">"mean"</span>).set_output(transform<span class="op">=</span><span class="st">"pandas"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df_imputed <span class="op">=</span> imputer.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -744,7 +742,7 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 <p>The proper way to do it: fit the transformer on the training data, transform the training with the same mean:</p>
 <div class="columns">
 <div class="column">
-<div id="5f124525" class="cell" data-execution_count="13">
+<div id="f3c7a8d5" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(imputer.fit(df_train).transform(df_test))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     value
@@ -758,29 +756,29 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 </div>
 </div>
 </section>
+<section id="back-on-track" class="level2">
+<h2 class="anchored" data-anchor-id="back-on-track">Back on track!</h2>
+</section>
 <section id="waking-up-from-a-nightmare" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="waking-up-from-a-nightmare">Waking up from a nightmare</h2>
 <p>Thankfully, we can <code>import skrub</code>:</p>
-<div id="44384443" class="cell" data-execution_count="14">
+<div id="8effbe1c" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform cross-validation (5-fold)</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>cv_results <span class="op">=</span> cross_validate(tabular_pipeline(<span class="st">"regression"</span>), X, y, cv<span class="op">=</span><span class="dv">5</span>, </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                            scoring<span class="op">=</span>[<span class="st">'r2'</span>, <span class="st">'neg_mean_squared_error'</span>],</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                            return_train_score<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert MSE to RMSE</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>train_rmse <span class="op">=</span> np.sqrt(<span class="op">-</span>cv_results[<span class="st">'train_neg_mean_squared_error'</span>])</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>test_rmse <span class="op">=</span> np.sqrt(<span class="op">-</span>cv_results[<span class="st">'test_neg_mean_squared_error'</span>])</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cross-Validation Results:"</span>)</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean test R²: </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span>)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean test RMSE: </span><span class="sc">{</span>test_rmse<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>test_rmse<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>cv_results <span class="op">=</span> cross_validate(tabular_pipeline(<span class="st">"regression"</span>), X, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span>[<span class="st">"r2"</span>])</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Display results</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cross-Validation Results:"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"tabular_pipeline: Mean test R²: </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"Ridge: Mean test R²: </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>cv_results[<span class="st">'test_r2'</span>]<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cross-Validation Results:
-Mean test R²: 0.9105 (+/- 0.0145)
-Mean test RMSE: 8696.1651 (+/- 973.8721)</code></pre>
+tabular_pipeline: Mean test R²: 0.9101 (+/- 0.0163)
+Ridge: Mean test R²: 0.9101 (+/- 0.0163)</code></pre>
 </div>
 </div>
 </section>
@@ -795,8 +793,12 @@ Mean test RMSE: 8696.1651 (+/- 973.8721)</code></pre>
 <section id="pre-processing-is-part-of-the-pipeline" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="pre-processing-is-part-of-the-pipeline">Pre-processing is part of the pipeline!</h2>
 <p>There isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.</p>
+<div class="fragment">
 <p>If you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.</p>
+</div>
+<div class="fragment">
 <p>This is why skrub provides <strong>transformers</strong>, rather than <strong>functions</strong>: transformers are stateful and can be used in pipelines, functions are not.</p>
+</div>
 </section>
 <section id="what-we-saw-in-this-chapter" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-saw-in-this-chapter">What we saw in this chapter</h2>
@@ -817,10 +819,7 @@ Mean test RMSE: 8696.1651 (+/- 973.8721)</code></pre>
 <li>Advanced column selectors and how to use them</li>
 <li>Automatic feature engineering with the <code>TableVectorizer</code></li>
 <li>A robust baseline for machine learning tasks with the <code>tabular_pipeline</code></li>
-</ol>
-<p>If there is enough time:</p>
-<ol start="7" type="1">
-<li>Feature engineering with the skrub encoders</li>
+<li>Beyond pipelines: skrub Data Ops</li>
 </ol>
 
 

@@ -508,7 +508,7 @@
     "href": "chapters/05_table_vectorizer.html#phase-1-cleaning",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "Phase 1: Cleaning",
-    "text": "Phase 1: Cleaning\nThe TableVectorizer starts by cleaning:\n\nParse datetime columns (with custom formats)\nDetect numbers written as strings (“123.45”)\nHandle missing value markers (“N/A”, “?”)\nDrop uninformative columns\nConvert all columns to string if they can’t be parsed as float or datetime\nConvert to float32 for efficiency\n\nIn practice, a Cleaner followed by conversion to float32."
+    "text": "Phase 1: Cleaning\nThe TableVectorizer starts by cleaning:\n\nParse datetime columns (with custom formats)\nDetect numbers written as strings (“123.45”)\nHandle missing value markers (“N/A”, “?”)\nDrop uninformative columns\nConvert all columns to string if they can’t be parsed as float or datetime\nConvert to float32 for efficiency\n\n\n\n\n\n\n\nTip\n\n\n\nIn practice, a Cleaner followed by conversion to float32."
   },
   {
     "objectID": "chapters/05_table_vectorizer.html#phase-2-column-dispatch",
@@ -522,21 +522,21 @@
     "href": "chapters/05_table_vectorizer.html#customizing-transformers",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "Customizing Transformers",
-    "text": "Customizing Transformers\n\nfrom skrub import DatetimeEncoder, StringEncoder\n\n# Add periodic encoding\ndatetime_enc = DatetimeEncoder(periodic_encoding=\"circular\")\n# Change the number of output components of the StringEncoder\nstring_enc = StringEncoder(n_components=10)\n\ntv = TableVectorizer(\n    datetime=datetime_enc,\n    high_cardinality=string_enc\n)"
+    "text": "Customizing Transformers\nfrom skrub import DatetimeEncoder, LLMEncoder\n\n# Add periodic encoding\ndatetime_enc = DatetimeEncoder(periodic_encoding=\"circular\")\n# Use a pre-trained language model\nllm_enc = LLMEncoder()\n\ntv = TableVectorizer(\n    datetime=datetime_enc,\n    high_cardinality=llm_enc\n)"
   },
   {
     "objectID": "chapters/05_table_vectorizer.html#applying-to-a-subset-of-columns",
     "href": "chapters/05_table_vectorizer.html#applying-to-a-subset-of-columns",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "Applying to a subset of columns",
-    "text": "Applying to a subset of columns\n\nimport pandas as pd\nfrom skrub import ApplyToCols\nimport skrub.selectors as s\n\ndf = pd.DataFrame(\n    {\n        \"metric_1\": [10.5, 20.3, 30.1, 40.2],\n        \"metric_2\": [5.1, 15.6, None, 35.8],\n        \"metric_3\": [1.1, 3.3, 2.6, .8],\n        \"num_id\": [101, 102, 103, 104],\n        \"str_id\": [\"A101\", \"A102\", \"A103\", \"A104\"],\n    }\n)\ndf\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\nmetric_3\nnum_id\nstr_id\n\n\n\n\n0\n10.5\n5.1\n1.1\n101\nA101\n\n\n1\n20.3\n15.6\n3.3\n102\nA102\n\n\n2\n30.1\nNaN\n2.6\n103\nA103\n\n\n3\n40.2\n35.8\n0.8\n104\nA104"
+    "text": "Applying to a subset of columns\n\n\n\nimport pandas as pd\nfrom skrub import ApplyToCols\nimport skrub.selectors as s\n\ndf = pd.DataFrame(\n    {\n        \"metric_1\": [10.5, 20.3, 30.1, 40.2],\n        \"metric_2\": [5.1, 15.6, None, 35.8],\n        \"metric_3\": [1.1, 3.3, 2.6, .8],\n        \"num_id\": [101, 102, 103, 104],\n        \"str_id\": [\"A101\", \"A102\", \"A103\", \"A104\"],\n    }\n)\n\n\nWe can use ApplyToCols and the skrub selectors:\n\ntv = ApplyToCols(TableVectorizer(), exclude_cols=[\"num_id\", \"str_id\"])\ndf_enc = tv.fit_transform(df)\n\n\n\nOriginal\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104\n\nEncoded\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104"
   },
   {
-    "objectID": "chapters/05_table_vectorizer.html#applying-to-a-subset-of-columns-1",
-    "href": "chapters/05_table_vectorizer.html#applying-to-a-subset-of-columns-1",
+    "objectID": "chapters/05_table_vectorizer.html#opening-the-black-box",
+    "href": "chapters/05_table_vectorizer.html#opening-the-black-box",
     "title": "All the pre-processing in one place: TableVectorizer",
-    "section": "Applying to a subset of columns",
-    "text": "Applying to a subset of columns\nWe can use ApplyToCols and the skrub selectors:\n\ntv = ApplyToCols(TableVectorizer(), exclude_cols=[\"num_id\", \"str_id\"])\ndf_enc = tv.fit_transform(df)\n\n\n\nOriginal\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104\n\nEncoded\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104"
+    "section": "Opening the black box",
+    "text": "Opening the black box\n\n\nPlain text: describe_transformations_\n\ntv = TableVectorizer().fit(df)\nprint(tv.describe_transformations())\n\nPreprocessors\n=============\nNull values cleaned (1 columns):\n    - str_id\n\nProcessors by type\n==================\nPassThrough (numeric - 4 columns):\n    - metric_1\n    - metric_2\n    - metric_3\n    - num_id\nNo datetime columns have been detected.\nOneHotEncoder (low_cardinality - 1 columns):\n    - str_id\nNo high_cardinality columns have been detected.\n\n\n\nRetrieve the actual transformers, column by column: all_processing_steps_\n\nfrom pprint import pprint\ntv = TableVectorizer().fit(df)\npprint(tv.all_processing_steps_)\n\n{'metric_1': [DropUninformative(),\n              ToFloat(),\n              PassThrough(),\n              {'metric_1': ToFloat()}],\n 'metric_2': [DropUninformative(),\n              ToFloat(),\n              PassThrough(),\n              {'metric_2': ToFloat()}],\n 'metric_3': [DropUninformative(),\n              ToFloat(),\n              PassThrough(),\n              {'metric_3': ToFloat()}],\n 'num_id': [DropUninformative(),\n            ToFloat(),\n            PassThrough(),\n            {'num_id': ToFloat()}],\n 'str_id': [CleanNullStrings(),\n            DropUninformative(),\n            ToStr(),\n            OneHotEncoder(drop='if_binary', dtype='float32', handle_unknown='ignore',\n              sparse_output=False),\n            {'str_id_A101': ToFloat(), 'str_id_A102': ToFloat(), ...}]}"
   },
   {
     "objectID": "chapters/05_table_vectorizer.html#fine-grained-control-specific_transformers",
@@ -550,7 +550,7 @@
     "href": "chapters/05_table_vectorizer.html#what-we-have-seen-in-this-chapter",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nOne object – the TableVectorizer – handles preprocessing and feature engineering\nColumn types are detected, and columns are encoded accordingly\nCleaning and encoding operations can be customized based on the use case\nPer-column behavior can be set with ApplyToCols"
+    "text": "What we have seen in this chapter\n\nOne object – the TableVectorizer – handles preprocessing and feature engineering\nColumn types are detected, and columns are encoded accordingly\nCleaning and encoding operations can be customized based on the use case\nPer-column behavior can be set with ApplyToCols\nThe transformations are accessible via describe_transformations() and all_processing_steps_"
   },
   {
     "objectID": "chapters/05_table_vectorizer.slides.html#the-goal",
@@ -578,7 +578,7 @@
     "href": "chapters/05_table_vectorizer.slides.html#phase-1-cleaning",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "Phase 1: Cleaning",
-    "text": "Phase 1: Cleaning\nThe TableVectorizer starts by cleaning:\n\nParse datetime columns (with custom formats)\nDetect numbers written as strings (“123.45”)\nHandle missing value markers (“N/A”, “?”)\nDrop uninformative columns\nConvert all columns to string if they can’t be parsed as float or datetime\nConvert to float32 for efficiency\n\nIn practice, a Cleaner followed by conversion to float32."
+    "text": "Phase 1: Cleaning\nThe TableVectorizer starts by cleaning:\n\nParse datetime columns (with custom formats)\nDetect numbers written as strings (“123.45”)\nHandle missing value markers (“N/A”, “?”)\nDrop uninformative columns\nConvert all columns to string if they can’t be parsed as float or datetime\nConvert to float32 for efficiency\n\n\n\n\n\n\n\nTip\n\n\nIn practice, a Cleaner followed by conversion to float32."
   },
   {
     "objectID": "chapters/05_table_vectorizer.slides.html#phase-2-column-dispatch",
@@ -592,21 +592,21 @@
     "href": "chapters/05_table_vectorizer.slides.html#customizing-transformers",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "Customizing Transformers",
-    "text": "Customizing Transformers\n\nfrom skrub import DatetimeEncoder, StringEncoder\n\n# Add periodic encoding\ndatetime_enc = DatetimeEncoder(periodic_encoding=\"circular\")\n# Change the number of output components of the StringEncoder\nstring_enc = StringEncoder(n_components=10)\n\ntv = TableVectorizer(\n    datetime=datetime_enc,\n    high_cardinality=string_enc\n)"
+    "text": "Customizing Transformers\nfrom skrub import DatetimeEncoder, LLMEncoder\n\n# Add periodic encoding\ndatetime_enc = DatetimeEncoder(periodic_encoding=\"circular\")\n# Use a pre-trained language model\nllm_enc = LLMEncoder()\n\ntv = TableVectorizer(\n    datetime=datetime_enc,\n    high_cardinality=llm_enc\n)"
   },
   {
     "objectID": "chapters/05_table_vectorizer.slides.html#applying-to-a-subset-of-columns",
     "href": "chapters/05_table_vectorizer.slides.html#applying-to-a-subset-of-columns",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "Applying to a subset of columns",
-    "text": "Applying to a subset of columns\n\nimport pandas as pd\nfrom skrub import ApplyToCols\nimport skrub.selectors as s\n\ndf = pd.DataFrame(\n    {\n        \"metric_1\": [10.5, 20.3, 30.1, 40.2],\n        \"metric_2\": [5.1, 15.6, None, 35.8],\n        \"metric_3\": [1.1, 3.3, 2.6, .8],\n        \"num_id\": [101, 102, 103, 104],\n        \"str_id\": [\"A101\", \"A102\", \"A103\", \"A104\"],\n    }\n)\ndf\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\nmetric_3\nnum_id\nstr_id\n\n\n\n\n0\n10.5\n5.1\n1.1\n101\nA101\n\n\n1\n20.3\n15.6\n3.3\n102\nA102\n\n\n2\n30.1\nNaN\n2.6\n103\nA103\n\n\n3\n40.2\n35.8\n0.8\n104\nA104"
+    "text": "Applying to a subset of columns\n\n\n\nimport pandas as pd\nfrom skrub import ApplyToCols\nimport skrub.selectors as s\n\ndf = pd.DataFrame(\n    {\n        \"metric_1\": [10.5, 20.3, 30.1, 40.2],\n        \"metric_2\": [5.1, 15.6, None, 35.8],\n        \"metric_3\": [1.1, 3.3, 2.6, .8],\n        \"num_id\": [101, 102, 103, 104],\n        \"str_id\": [\"A101\", \"A102\", \"A103\", \"A104\"],\n    }\n)\n\n\nWe can use ApplyToCols and the skrub selectors:\n\ntv = ApplyToCols(TableVectorizer(), exclude_cols=[\"num_id\", \"str_id\"])\ndf_enc = tv.fit_transform(df)\n\n\n\nOriginal\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104\n\nEncoded\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104"
   },
   {
-    "objectID": "chapters/05_table_vectorizer.slides.html#applying-to-a-subset-of-columns-1",
-    "href": "chapters/05_table_vectorizer.slides.html#applying-to-a-subset-of-columns-1",
+    "objectID": "chapters/05_table_vectorizer.slides.html#opening-the-black-box",
+    "href": "chapters/05_table_vectorizer.slides.html#opening-the-black-box",
     "title": "All the pre-processing in one place: TableVectorizer",
-    "section": "Applying to a subset of columns",
-    "text": "Applying to a subset of columns\nWe can use ApplyToCols and the skrub selectors:\n\ntv = ApplyToCols(TableVectorizer(), exclude_cols=[\"num_id\", \"str_id\"])\ndf_enc = tv.fit_transform(df)\n\n\n\nOriginal\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104\n\nEncoded\n   num_id str_id\n0     101   A101\n1     102   A102\n2     103   A103\n3     104   A104"
+    "section": "Opening the black box",
+    "text": "Opening the black box\n\n\nPlain text: describe_transformations_\n\ntv = TableVectorizer().fit(df)\nprint(tv.describe_transformations())\n\nPreprocessors\n=============\nNull values cleaned (1 columns):\n    - str_id\n\nProcessors by type\n==================\nPassThrough (numeric - 4 columns):\n    - metric_1\n    - metric_2\n    - metric_3\n    - num_id\nNo datetime columns have been detected.\nOneHotEncoder (low_cardinality - 1 columns):\n    - str_id\nNo high_cardinality columns have been detected.\n\n\n\nRetrieve the actual transformers, column by column: all_processing_steps_\n\nfrom pprint import pprint\ntv = TableVectorizer().fit(df)\npprint(tv.all_processing_steps_)\n\n{'metric_1': [DropUninformative(),\n              ToFloat(),\n              PassThrough(),\n              {'metric_1': ToFloat()}],\n 'metric_2': [DropUninformative(),\n              ToFloat(),\n              PassThrough(),\n              {'metric_2': ToFloat()}],\n 'metric_3': [DropUninformative(),\n              ToFloat(),\n              PassThrough(),\n              {'metric_3': ToFloat()}],\n 'num_id': [DropUninformative(),\n            ToFloat(),\n            PassThrough(),\n            {'num_id': ToFloat()}],\n 'str_id': [CleanNullStrings(),\n            DropUninformative(),\n            ToStr(),\n            OneHotEncoder(drop='if_binary', dtype='float32', handle_unknown='ignore',\n              sparse_output=False),\n            {'str_id_A101': ToFloat(), 'str_id_A102': ToFloat(), ...}]}"
   },
   {
     "objectID": "chapters/05_table_vectorizer.slides.html#fine-grained-control-specific_transformers",
@@ -620,35 +620,35 @@
     "href": "chapters/05_table_vectorizer.slides.html#what-we-have-seen-in-this-chapter",
     "title": "All the pre-processing in one place: TableVectorizer",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nOne object – the TableVectorizer – handles preprocessing and feature engineering\nColumn types are detected, and columns are encoded accordingly\nCleaning and encoding operations can be customized based on the use case\nPer-column behavior can be set with ApplyToCols"
+    "text": "What we have seen in this chapter\n\nOne object – the TableVectorizer – handles preprocessing and feature engineering\nColumn types are detected, and columns are encoded accordingly\nCleaning and encoding operations can be customized based on the use case\nPer-column behavior can be set with ApplyToCols\nThe transformations are accessible via describe_transformations() and all_processing_steps_"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html",
     "href": "chapters/03_feat_eng_apply.html",
     "title": "Column-specific transformers",
     "section": "",
-    "text": "Different columns must be handled in different ways.\n\nfrom skrub import SelectCols, DropCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"user_id\": [0, 1, 2],\n    \"date\": [\"03 January 2023\", \"04 February 2023\",\"14 April 2023\" ],\n    \"city\": [\"Paris\", \"London\", \"Rome\"],\n    \"metric_1\": [10.3, 20.7, 30.8],\n    \"metric_2\": [3.5, 22.3, 45.1]\n})"
+    "text": "Different columns must be handled in different ways.\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"user_id\": [0, 1, 2],\n    \"date\": [\"03 January 2023\", \"04 February 2023\",\"14 April 2023\" ],\n    \"city\": [\"Paris\", \"London\", \"Rome\"],\n    \"metric_1\": [10.3, 20.7, 30.8],\n    \"metric_2\": [3.5, 22.3, 45.1]\n})"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html#why-column-specific-transformations",
     "href": "chapters/03_feat_eng_apply.html#why-column-specific-transformations",
     "title": "Column-specific transformers",
     "section": "",
-    "text": "Different columns must be handled in different ways.\n\nfrom skrub import SelectCols, DropCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"user_id\": [0, 1, 2],\n    \"date\": [\"03 January 2023\", \"04 February 2023\",\"14 April 2023\" ],\n    \"city\": [\"Paris\", \"London\", \"Rome\"],\n    \"metric_1\": [10.3, 20.7, 30.8],\n    \"metric_2\": [3.5, 22.3, 45.1]\n})"
+    "text": "Different columns must be handled in different ways.\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"user_id\": [0, 1, 2],\n    \"date\": [\"03 January 2023\", \"04 February 2023\",\"14 April 2023\" ],\n    \"city\": [\"Paris\", \"London\", \"Rome\"],\n    \"metric_1\": [10.3, 20.7, 30.8],\n    \"metric_2\": [3.5, 22.3, 45.1]\n})"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html#why-column-specific-transformations-1",
     "href": "chapters/03_feat_eng_apply.html#why-column-specific-transformations-1",
     "title": "Column-specific transformers",
     "section": "Why Column-Specific Transformations?",
-    "text": "Why Column-Specific Transformations?\n\n\nSome transformers (e.g., the StandardScaler) work only on numeric columns\nSome transformers (e.g., the OneHotEncoder) work only on categorical columns\nDifferent columns with the same dtype may need to be treated differently (e.g., one has outliers and requires a RobustScaler, an integer ID should not be scaled)\nSome transformations only make sense for a subset of the columns (e.g., parsing datetimes)"
+    "text": "Why Column-Specific Transformations?\n\n\nSome transformers (e.g., the StandardScaler) work only on numeric columns\nSome transformers (e.g., the OneHotEncoder) work only on categorical columns\nDifferent columns with the same dtype may need to be treated differently (e.g., an integer ID should not be scaled)\nSome transformations only make sense for a subset of the columns (e.g., extracting the year from datetimes)"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html#applying-transformers-to-columns-with-applytocols",
     "href": "chapters/03_feat_eng_apply.html#applying-transformers-to-columns-with-applytocols",
     "title": "Column-specific transformers",
     "section": "Applying transformers to columns with ApplyToCols",
-    "text": "Applying transformers to columns with ApplyToCols\nApplyToCols is a meta-transformer: it applies a transformer to columns that can be selected by name, or with filters.\nDepending on the transformer, ApplyToCols either clones it and applies a copy to each column, or forwards all the columns to the same transformer.\nColumns that are not selected pass through without changes.\n\nfrom skrub import ApplyToCols\nfrom sklearn.preprocessing import OrdinalEncoder\n\nordinal = ApplyToCols(OrdinalEncoder(), cols=\"city\")\ntransformed = ordinal.fit_transform(df)\ntransformed\n\n\n\n\n\n\n\n\nuser_id\ndate\nmetric_1\nmetric_2\ncity\n\n\n\n\n0\n0\n03 January 2023\n10.3\n3.5\n1.0\n\n\n1\n1\n04 February 2023\n20.7\n22.3\n0.0\n\n\n2\n2\n14 April 2023\n30.8\n45.1\n2.0"
+    "text": "Applying transformers to columns with ApplyToCols\nApplyToCols is a meta-transformer: it applies a transformer to selected columns.\nColumns that are not selected pass through without changes.\n\nfrom skrub import ApplyToCols\nfrom sklearn.preprocessing import OrdinalEncoder\n\nordinal = ApplyToCols(OrdinalEncoder(), cols=\"city\")\ntransformed = ordinal.fit_transform(df)\ntransformed\n\n\n\n\n\n\n\n\nuser_id\ndate\nmetric_1\nmetric_2\ncity\n\n\n\n\n0\n0\n03 January 2023\n10.3\n3.5\n1.0\n\n\n1\n1\n04 February 2023\n20.7\n22.3\n0.0\n\n\n2\n2\n14 April 2023\n30.8\n45.1\n2.0"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html#example-applytocols-to-encode",
@@ -669,7 +669,7 @@
     "href": "chapters/03_feat_eng_apply.html#exclude-specific-columns",
     "title": "Column-specific transformers",
     "section": "Exclude specific columns",
-    "text": "Exclude specific columns\nFor example, apply the StandardScaler only to the metric_* columns, excluding the column user_id.\n\nimport skrub.selectors as s\nfrom sklearn.preprocessing import StandardScaler\n\nscaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols=\"user_id\")\nscaler.fit_transform(df)\n\n\n\n\n\n\n\n\nuser_id\ndate\ncity\nmetric_1\nmetric_2\n\n\n\n\n0\n0\n03 January 2023\nParis\n-1.230675\n-1.183668\n\n\n1\n1\n04 February 2023\nLondon\n0.011948\n-0.078389\n\n\n2\n2\n14 April 2023\nRome\n1.218727\n1.262056"
+    "text": "Exclude specific columns\n\n\n\n\n\n\nNote\n\n\n\nApply the StandardScaler only to the metric_* columns, excluding the column user_id.\n\n\n\nimport skrub.selectors as s\nfrom sklearn.preprocessing import StandardScaler\n\nscaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols=\"user_id\")\nscaler.fit_transform(df)\n\n\n\n\n\n\n\n\nuser_id\ndate\ncity\nmetric_1\nmetric_2\n\n\n\n\n0\n0\n03 January 2023\nParis\n-1.230675\n-1.183668\n\n\n1\n1\n04 February 2023\nLondon\n0.011948\n-0.078389\n\n\n2\n2\n14 April 2023\nRome\n1.218727\n1.262056"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html#chaining-transformers",
@@ -690,63 +690,56 @@
     "href": "chapters/03_feat_eng_apply.html#order-matters",
     "title": "Column-specific transformers",
     "section": "Order Matters!",
-    "text": "Order Matters!\nTransformers should be ordered carefully:\n# Encode first, then scale\ntransform_1 = make_pipeline(\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),\n    # Strings are now numbers! \n    ApplyToCols(StandardScaler(), cols=s.numeric())\n)\n\n# vs. Scale first, then encode\ntransform_2 = make_pipeline(\n    ApplyToCols(StandardScaler(), cols=s.numeric()),\n    # Strings haven't been touched\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())\n)"
+    "text": "Order Matters!\nTransformers should be ordered carefully:\n# Encode first, then scale\ntransform_1 = make_pipeline(\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),\n    # Strings are now numbers! \n    ApplyToCols(StandardScaler(), cols=s.numeric())\n)\n\n# vs. Scale first, then encode\ntransform_2 = make_pipeline(\n    ApplyToCols(StandardScaler(), cols=s.numeric()),\n    # Strings haven't been touched\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())\n)\n\n\n\n\n\n\nTip\n\n\n\nThis is particularly important if you use expensive models to generate features!"
   },
   {
-    "objectID": "chapters/03_feat_eng_apply.html#the-allow_reject-parameter",
-    "href": "chapters/03_feat_eng_apply.html#the-allow_reject-parameter",
+    "objectID": "chapters/03_feat_eng_apply.html#handling-columns-that-cant-be-transformed",
+    "href": "chapters/03_feat_eng_apply.html#handling-columns-that-cant-be-transformed",
     "title": "Column-specific transformers",
-    "section": "The allow_reject Parameter",
-    "text": "The allow_reject Parameter\nWhen allow_reject=True, columns that can’t be transformed are passed through:\n\nfrom skrub import ApplyToCols, ToDatetime\n\nwith_reject = ApplyToCols(ToDatetime(), allow_reject=True)\nresult = with_reject.fit_transform(df)\n\nThis is useful when you don’t know if a column may be rejected or not (e.g., you don’t know which columns are acually datetimes)."
+    "section": "Handling columns that can’t be transformed",
+    "text": "Handling columns that can’t be transformed\n\nIt is not always possible to know a priori if a transformer can handle a column.\nThe default behavior is to reject columns that can’t be handled.\nIn some situations, it is expected that some columns will be rejected (e.g., if the transformer needs to detect the column dtype)"
   },
   {
-    "objectID": "chapters/03_feat_eng_apply.html#selection-operations",
-    "href": "chapters/03_feat_eng_apply.html#selection-operations",
+    "objectID": "chapters/03_feat_eng_apply.html#handling-columns-that-cant-be-transformed-1",
+    "href": "chapters/03_feat_eng_apply.html#handling-columns-that-cant-be-transformed-1",
     "title": "Column-specific transformers",
-    "section": "Selection Operations",
-    "text": "Selection Operations\nSelectCols and DropCols filter columns based on rules:\n\nfrom skrub import SelectCols, DropCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"date\": [\"03 January 2023\", \"04 February 2023\"],\n    \"city\": [\"Paris\", \"London\"],\n    \"values\": [10, 20]\n})"
+    "section": "Handling columns that can’t be transformed",
+    "text": "Handling columns that can’t be transformed\nWhen allow_reject=True, columns that can’t be transformed are passed through:\n\nfrom skrub import ApplyToCols, ToDatetime\n\nwith_reject = ApplyToCols(ToDatetime(), allow_reject=True)\nresult = with_reject.fit_transform(df)"
   },
   {
-    "objectID": "chapters/03_feat_eng_apply.html#selection-operations-1",
-    "href": "chapters/03_feat_eng_apply.html#selection-operations-1",
+    "objectID": "chapters/03_feat_eng_apply.html#define-custom-transformers-to-use-with-applytocols",
+    "href": "chapters/03_feat_eng_apply.html#define-custom-transformers-to-use-with-applytocols",
     "title": "Column-specific transformers",
-    "section": "Selection Operations",
-    "text": "Selection Operations\n\n# By name\nSelectCols(\"date\").fit_transform(df)\n\n\n\n\n\n\n\n\ndate\n\n\n\n\n0\n03 January 2023\n\n\n1\n04 February 2023"
-  },
-  {
-    "objectID": "chapters/03_feat_eng_apply.html#selection-operations-2",
-    "href": "chapters/03_feat_eng_apply.html#selection-operations-2",
-    "title": "Column-specific transformers",
-    "section": "Selection Operations",
-    "text": "Selection Operations\n\nDropCols(\"date\").fit_transform(df)\n\n\n\n\n\n\n\n\ncity\nvalues\n\n\n\n\n0\nParis\n10\n\n\n1\nLondon\n20\n\n\n\n\n\n\n\nMore advanced selection rules in the next chapter!"
+    "section": "Define custom transformers to use with ApplyToCols",
+    "text": "Define custom transformers to use with ApplyToCols\n\nSome columns need specific transformations\nYou can define your transformer and have it work seamlessly with ApplyToCols\n\nfrom skrub.core import RejectColumn, SingleColumnTransformer\nclass CustomTransformer(SingleColumnTransformer):\n    def __init__(self):\n        return\n    def fit_transform(self, X, y=None):\n        ... do something\n\n        if ... # the column can't be handled\n            raise RejectColumn(...)\n        return transformed"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/03_feat_eng_apply.html#what-we-have-seen-in-this-chapter",
     "title": "Column-specific transformers",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nApplyToCols: Apply a transformer to columns selected with cols, exclude with exclude_cols\nChain transformers with scikit-learn pipelines\nallow_reject: Reject columns that cannot be treated\nSelectCols / DropCols: Filter columns with the cols parameter"
+    "text": "What we have seen in this chapter\n\nApplyToCols: Apply a transformer to columns selected with cols, exclude with exclude_cols\nChain transformers with scikit-learn pipelines\nallow_reject: Reject columns that cannot be treated"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.slides.html#why-column-specific-transformations",
     "href": "chapters/03_feat_eng_apply.slides.html#why-column-specific-transformations",
     "title": "Column-specific transformers",
     "section": "Why Column-Specific Transformations?",
-    "text": "Why Column-Specific Transformations?\nDifferent columns must be handled in different ways.\n\nfrom skrub import SelectCols, DropCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"user_id\": [0, 1, 2],\n    \"date\": [\"03 January 2023\", \"04 February 2023\",\"14 April 2023\" ],\n    \"city\": [\"Paris\", \"London\", \"Rome\"],\n    \"metric_1\": [10.3, 20.7, 30.8],\n    \"metric_2\": [3.5, 22.3, 45.1]\n})"
+    "text": "Why Column-Specific Transformations?\nDifferent columns must be handled in different ways.\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"user_id\": [0, 1, 2],\n    \"date\": [\"03 January 2023\", \"04 February 2023\",\"14 April 2023\" ],\n    \"city\": [\"Paris\", \"London\", \"Rome\"],\n    \"metric_1\": [10.3, 20.7, 30.8],\n    \"metric_2\": [3.5, 22.3, 45.1]\n})"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.slides.html#why-column-specific-transformations-1",
     "href": "chapters/03_feat_eng_apply.slides.html#why-column-specific-transformations-1",
     "title": "Column-specific transformers",
     "section": "Why Column-Specific Transformations?",
-    "text": "Why Column-Specific Transformations?\n\nSome transformers (e.g., the StandardScaler) work only on numeric columns\nSome transformers (e.g., the OneHotEncoder) work only on categorical columns\nDifferent columns with the same dtype may need to be treated differently (e.g., one has outliers and requires a RobustScaler, an integer ID should not be scaled)\nSome transformations only make sense for a subset of the columns (e.g., parsing datetimes)"
+    "text": "Why Column-Specific Transformations?\n\nSome transformers (e.g., the StandardScaler) work only on numeric columns\nSome transformers (e.g., the OneHotEncoder) work only on categorical columns\nDifferent columns with the same dtype may need to be treated differently (e.g., an integer ID should not be scaled)\nSome transformations only make sense for a subset of the columns (e.g., extracting the year from datetimes)"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.slides.html#applying-transformers-to-columns-with-applytocols",
     "href": "chapters/03_feat_eng_apply.slides.html#applying-transformers-to-columns-with-applytocols",
     "title": "Column-specific transformers",
     "section": "Applying transformers to columns with ApplyToCols",
-    "text": "Applying transformers to columns with ApplyToCols\nApplyToCols is a meta-transformer: it applies a transformer to columns that can be selected by name, or with filters.\nDepending on the transformer, ApplyToCols either clones it and applies a copy to each column, or forwards all the columns to the same transformer.\nColumns that are not selected pass through without changes.\n\nfrom skrub import ApplyToCols\nfrom sklearn.preprocessing import OrdinalEncoder\n\nordinal = ApplyToCols(OrdinalEncoder(), cols=\"city\")\ntransformed = ordinal.fit_transform(df)\ntransformed\n\n\n\n\n\n\n\n\nuser_id\ndate\nmetric_1\nmetric_2\ncity\n\n\n\n\n0\n0\n03 January 2023\n10.3\n3.5\n1.0\n\n\n1\n1\n04 February 2023\n20.7\n22.3\n0.0\n\n\n2\n2\n14 April 2023\n30.8\n45.1\n2.0"
+    "text": "Applying transformers to columns with ApplyToCols\nApplyToCols is a meta-transformer: it applies a transformer to selected columns.\nColumns that are not selected pass through without changes.\n\nfrom skrub import ApplyToCols\nfrom sklearn.preprocessing import OrdinalEncoder\n\nordinal = ApplyToCols(OrdinalEncoder(), cols=\"city\")\ntransformed = ordinal.fit_transform(df)\ntransformed\n\n\n\n\n\n\n\n\nuser_id\ndate\nmetric_1\nmetric_2\ncity\n\n\n\n\n0\n0\n03 January 2023\n10.3\n3.5\n1.0\n\n\n1\n1\n04 February 2023\n20.7\n22.3\n0.0\n\n\n2\n2\n14 April 2023\n30.8\n45.1\n2.0"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.slides.html#example-applytocols-to-encode",
@@ -767,7 +760,7 @@
     "href": "chapters/03_feat_eng_apply.slides.html#exclude-specific-columns",
     "title": "Column-specific transformers",
     "section": "Exclude specific columns",
-    "text": "Exclude specific columns\nFor example, apply the StandardScaler only to the metric_* columns, excluding the column user_id.\n\nimport skrub.selectors as s\nfrom sklearn.preprocessing import StandardScaler\n\nscaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols=\"user_id\")\nscaler.fit_transform(df)\n\n\n\n\n\n\n\n\nuser_id\ndate\ncity\nmetric_1\nmetric_2\n\n\n\n\n0\n0\n03 January 2023\nParis\n-1.230675\n-1.183668\n\n\n1\n1\n04 February 2023\nLondon\n0.011948\n-0.078389\n\n\n2\n2\n14 April 2023\nRome\n1.218727\n1.262056"
+    "text": "Exclude specific columns\n\n\n\n\n\n\nNote\n\n\nApply the StandardScaler only to the metric_* columns, excluding the column user_id.\n\n\n\n\nimport skrub.selectors as s\nfrom sklearn.preprocessing import StandardScaler\n\nscaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols=\"user_id\")\nscaler.fit_transform(df)\n\n\n\n\n\n\n\n\nuser_id\ndate\ncity\nmetric_1\nmetric_2\n\n\n\n\n0\n0\n03 January 2023\nParis\n-1.230675\n-1.183668\n\n\n1\n1\n04 February 2023\nLondon\n0.011948\n-0.078389\n\n\n2\n2\n14 April 2023\nRome\n1.218727\n1.262056"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.slides.html#chaining-transformers",
@@ -788,56 +781,49 @@
     "href": "chapters/03_feat_eng_apply.slides.html#order-matters",
     "title": "Column-specific transformers",
     "section": "Order Matters!",
-    "text": "Order Matters!\nTransformers should be ordered carefully:\n# Encode first, then scale\ntransform_1 = make_pipeline(\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),\n    # Strings are now numbers! \n    ApplyToCols(StandardScaler(), cols=s.numeric())\n)\n\n# vs. Scale first, then encode\ntransform_2 = make_pipeline(\n    ApplyToCols(StandardScaler(), cols=s.numeric()),\n    # Strings haven't been touched\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())\n)"
+    "text": "Order Matters!\nTransformers should be ordered carefully:\n# Encode first, then scale\ntransform_1 = make_pipeline(\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string()),\n    # Strings are now numbers! \n    ApplyToCols(StandardScaler(), cols=s.numeric())\n)\n\n# vs. Scale first, then encode\ntransform_2 = make_pipeline(\n    ApplyToCols(StandardScaler(), cols=s.numeric()),\n    # Strings haven't been touched\n    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())\n)\n\n\n\n\n\n\nTip\n\n\nThis is particularly important if you use expensive models to generate features!"
   },
   {
-    "objectID": "chapters/03_feat_eng_apply.slides.html#the-allow_reject-parameter",
-    "href": "chapters/03_feat_eng_apply.slides.html#the-allow_reject-parameter",
+    "objectID": "chapters/03_feat_eng_apply.slides.html#handling-columns-that-cant-be-transformed",
+    "href": "chapters/03_feat_eng_apply.slides.html#handling-columns-that-cant-be-transformed",
     "title": "Column-specific transformers",
-    "section": "The allow_reject Parameter",
-    "text": "The allow_reject Parameter\nWhen allow_reject=True, columns that can’t be transformed are passed through:\n\nfrom skrub import ApplyToCols, ToDatetime\n\nwith_reject = ApplyToCols(ToDatetime(), allow_reject=True)\nresult = with_reject.fit_transform(df)\n\nThis is useful when you don’t know if a column may be rejected or not (e.g., you don’t know which columns are acually datetimes)."
+    "section": "Handling columns that can’t be transformed",
+    "text": "Handling columns that can’t be transformed\n\nIt is not always possible to know a priori if a transformer can handle a column.\nThe default behavior is to reject columns that can’t be handled.\nIn some situations, it is expected that some columns will be rejected (e.g., if the transformer needs to detect the column dtype)"
   },
   {
-    "objectID": "chapters/03_feat_eng_apply.slides.html#selection-operations",
-    "href": "chapters/03_feat_eng_apply.slides.html#selection-operations",
+    "objectID": "chapters/03_feat_eng_apply.slides.html#handling-columns-that-cant-be-transformed-1",
+    "href": "chapters/03_feat_eng_apply.slides.html#handling-columns-that-cant-be-transformed-1",
     "title": "Column-specific transformers",
-    "section": "Selection Operations",
-    "text": "Selection Operations\nSelectCols and DropCols filter columns based on rules:\n\nfrom skrub import SelectCols, DropCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"date\": [\"03 January 2023\", \"04 February 2023\"],\n    \"city\": [\"Paris\", \"London\"],\n    \"values\": [10, 20]\n})"
+    "section": "Handling columns that can’t be transformed",
+    "text": "Handling columns that can’t be transformed\nWhen allow_reject=True, columns that can’t be transformed are passed through:\n\nfrom skrub import ApplyToCols, ToDatetime\n\nwith_reject = ApplyToCols(ToDatetime(), allow_reject=True)\nresult = with_reject.fit_transform(df)"
   },
   {
-    "objectID": "chapters/03_feat_eng_apply.slides.html#selection-operations-1",
-    "href": "chapters/03_feat_eng_apply.slides.html#selection-operations-1",
+    "objectID": "chapters/03_feat_eng_apply.slides.html#define-custom-transformers-to-use-with-applytocols",
+    "href": "chapters/03_feat_eng_apply.slides.html#define-custom-transformers-to-use-with-applytocols",
     "title": "Column-specific transformers",
-    "section": "Selection Operations",
-    "text": "Selection Operations\n\n# By name\nSelectCols(\"date\").fit_transform(df)\n\n\n\n\n\n\n\n\ndate\n\n\n\n\n0\n03 January 2023\n\n\n1\n04 February 2023"
-  },
-  {
-    "objectID": "chapters/03_feat_eng_apply.slides.html#selection-operations-2",
-    "href": "chapters/03_feat_eng_apply.slides.html#selection-operations-2",
-    "title": "Column-specific transformers",
-    "section": "Selection Operations",
-    "text": "Selection Operations\n\nDropCols(\"date\").fit_transform(df)\n\n\n\n\n\n\n\n\ncity\nvalues\n\n\n\n\n0\nParis\n10\n\n\n1\nLondon\n20\n\n\n\n\n\n\n\nMore advanced selection rules in the next chapter!"
+    "section": "Define custom transformers to use with ApplyToCols",
+    "text": "Define custom transformers to use with ApplyToCols\n\nSome columns need specific transformations\nYou can define your transformer and have it work seamlessly with ApplyToCols\n\nfrom skrub.core import RejectColumn, SingleColumnTransformer\nclass CustomTransformer(SingleColumnTransformer):\n    def __init__(self):\n        return\n    def fit_transform(self, X, y=None):\n        ... do something\n\n        if ... # the column can't be handled\n            raise RejectColumn(...)\n        return transformed"
   },
   {
     "objectID": "chapters/03_feat_eng_apply.slides.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/03_feat_eng_apply.slides.html#what-we-have-seen-in-this-chapter",
     "title": "Column-specific transformers",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nApplyToCols: Apply a transformer to columns selected with cols, exclude with exclude_cols\nChain transformers with scikit-learn pipelines\nallow_reject: Reject columns that cannot be treated\nSelectCols / DropCols: Filter columns with the cols parameter"
+    "text": "What we have seen in this chapter\n\nApplyToCols: Apply a transformer to columns selected with cols, exclude with exclude_cols\nChain transformers with scikit-learn pipelines\nallow_reject: Reject columns that cannot be treated"
   },
   {
     "objectID": "chapters/01_exploring_data.html",
     "href": "chapters/01_exploring_data.html",
     "title": "Exploring dataframes with skrub",
     "section": "",
-    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other."
+    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\n\nHow big is the dataframe?\nWhat kind of data types are we dealing with? Only numeric, mixed types?\nHow are values distrbuted in each column?\nMissing values: are there any? How many? Where?\nWhich features are discrete/categorical, and how many categories there are.\nAre there correlated columns?"
   },
   {
     "objectID": "chapters/01_exploring_data.html#why-do-we-need-to-explore-data",
     "href": "chapters/01_exploring_data.html#why-do-we-need-to-explore-data",
     "title": "Exploring dataframes with skrub",
     "section": "",
-    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other."
+    "text": "Before any kind of data processing or usage, we need to know what we are dealing with.\n\nHow big is the dataframe?\nWhat kind of data types are we dealing with? Only numeric, mixed types?\nHow are values distrbuted in each column?\nMissing values: are there any? How many? Where?\nWhich features are discrete/categorical, and how many categories there are.\nAre there correlated columns?"
   },
   {
     "objectID": "chapters/01_exploring_data.html#loading-the-data",
@@ -914,7 +900,7 @@
     "href": "chapters/01_exploring_data.html#filtering-the-displayed-columns",
     "title": "Exploring dataframes with skrub",
     "section": "Filtering the displayed columns",
-    "text": "Filtering the displayed columns\nPre-made column filters are also available, allowing to select columns by dtype or other characteristics. Filters are shared across tabs. It is also possible to define custom filters to select only specific columns:\n\nmy_filter = {\"only_education\": [\"education\", \"education-num\"]}\n\nTableReport(data, column_filters=my_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\nSkrub selectors can be used for that (more on that later)."
+    "text": "Filtering the displayed columns\nIt is possible to filter columns with pre-made filters, or define custom filters:\n\nmy_filter = {\"only_education\": [\"education\", \"education-num\"]}\n\nTableReport(data, column_filters=my_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\nSkrub selectors can be used for that (more on that later)."
   },
   {
     "objectID": "chapters/01_exploring_data.html#exploring-the-target-variable",
@@ -928,7 +914,7 @@
     "href": "chapters/01_exploring_data.html#working-with-big-tables",
     "title": "Exploring dataframes with skrub",
     "section": "Working with big tables",
-    "text": "Working with big tables\nPlot generation and computation of associations are very expensive operations, so it may be beneficial to disable them while working with very big tables.\nUse the plot_distributions and compute_associations parameters to do so:\n\nTableReport(\n    data, plot_distributions=False, compute_associations=False, open_tab=\"distributions\"\n)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+    "text": "Working with big tables\nPlot generation and computation of associations are very expensive operations, so so they can be disabled for big tables.\nUse the plot_distributions and compute_associations parameters to do so:\n\nTableReport(\n    data, plot_distributions=False, compute_associations=False, open_tab=\"distributions\"\n)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
     "objectID": "chapters/01_exploring_data.html#exporting-the-tablereport",
@@ -949,28 +935,35 @@
     "href": "chapters/01_exploring_data.html#exporting-the-tablereport-json",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport: JSON",
-    "text": "Exporting the TableReport: JSON\nIt is also possible to export the report in JSON format:\njson_str = TableReport(data).json()\n\n\n\n\n\n\nImportant\n\n\n\nIf the report is generating distribution plots, the JSON will include them in SVG format. Distributions can be disabled by setting plot_distributions=False."
+    "text": "Exporting the TableReport: JSON\nIt is possible to export the report in JSON format:\njson_str = TableReport(data).json()\n\n\n\n\n\n\nImportant\n\n\n\nThe JSON report contains everything needed to rebuild a report, including plots. If the plots are not needed, disable them with plot_distributions=False."
   },
   {
     "objectID": "chapters/01_exploring_data.html#exporting-the-tablereport-markdown",
     "href": "chapters/01_exploring_data.html#exporting-the-tablereport-markdown",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport: Markdown",
-    "text": "Exporting the TableReport: Markdown\n(in the upcoming release!)\nFinally, the report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
+    "text": "Exporting the TableReport: Markdown\nThe report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
+  },
+  {
+    "objectID": "chapters/01_exploring_data.html#exporting-the-tablereport-python-dict",
+    "href": "chapters/01_exploring_data.html#exporting-the-tablereport-python-dict",
+    "title": "Exploring dataframes with skrub",
+    "section": "Exporting the TableReport: python dict",
+    "text": "Exporting the TableReport: python dict\nThe report can also be exported as a python dict to use the statistics it measures in a python script:\ntr_dict = TableReport(data, plot_distributions=False).dict()"
   },
   {
     "objectID": "chapters/01_exploring_data.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/01_exploring_data.html#what-we-have-seen-in-this-chapter",
     "title": "Exploring dataframes with skrub",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nCreating and configuring a TableReport for fast, interactive data exploration\nExploring column statistics, value distributions, and associations visually\nDetecting nulls, outliers, and highly correlated columns at a glance\nFiltering columns by type or characteristics using built-in filters\nAdjusting TableReport settings for large datasets to optimize performance\nSaving and exporting reports as HTML, JSON, and Markdown files"
+    "text": "What we have seen in this chapter\n\nCreating and configuring a TableReport for fast, interactive data exploration\nExploring column statistics, value distributions, and associations visually\nDetecting nulls, outliers, and highly correlated columns at a glance\nFiltering columns by type or characteristics using built-in filters\nAdjusting TableReport settings for large datasets to optimize performance\nSaving and exporting reports as HTML, JSON, Markdown and python dicts"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#why-do-we-need-to-explore-data",
     "href": "chapters/01_exploring_data.slides.html#why-do-we-need-to-explore-data",
     "title": "Exploring dataframes with skrub",
     "section": "Why do we need to explore data?",
-    "text": "Why do we need to explore data?\nBefore any kind of data processing or usage, we need to know what we are dealing with.\nUseful information includes:\n\nThe size of the dataset.\nThe data types and names of the columns.\nHow values are distributed in each column.\nWhether missing values are present, in what measure and where.\nWhich features are discrete/categorical, and how many categories there are.\nWhether columns are strongly correlated with each other."
+    "text": "Why do we need to explore data?\nBefore any kind of data processing or usage, we need to know what we are dealing with.\n\nHow big is the dataframe?\nWhat kind of data types are we dealing with? Only numeric, mixed types?\nHow are values distrbuted in each column?\nMissing values: are there any? How many? Where?\nWhich features are discrete/categorical, and how many categories there are.\nAre there correlated columns?"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#loading-the-data",
@@ -1047,7 +1040,7 @@
     "href": "chapters/01_exploring_data.slides.html#filtering-the-displayed-columns",
     "title": "Exploring dataframes with skrub",
     "section": "Filtering the displayed columns",
-    "text": "Filtering the displayed columns\nPre-made column filters are also available, allowing to select columns by dtype or other characteristics. Filters are shared across tabs. It is also possible to define custom filters to select only specific columns:\n\nmy_filter = {\"only_education\": [\"education\", \"education-num\"]}\n\nTableReport(data, column_filters=my_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\nSkrub selectors can be used for that (more on that later)."
+    "text": "Filtering the displayed columns\nIt is possible to filter columns with pre-made filters, or define custom filters:\n\nmy_filter = {\"only_education\": [\"education\", \"education-num\"]}\n\nTableReport(data, column_filters=my_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\").\n    \n\n\n\n\n\nSkrub selectors can be used for that (more on that later)."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#exploring-the-target-variable",
@@ -1061,7 +1054,7 @@
     "href": "chapters/01_exploring_data.slides.html#working-with-big-tables",
     "title": "Exploring dataframes with skrub",
     "section": "Working with big tables",
-    "text": "Working with big tables\nPlot generation and computation of associations are very expensive operations, so it may be beneficial to disable them while working with very big tables.\nUse the plot_distributions and compute_associations parameters to do so:\n\nTableReport(\n    data, plot_distributions=False, compute_associations=False, open_tab=\"distributions\"\n)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
+    "text": "Working with big tables\nPlot generation and computation of associations are very expensive operations, so so they can be disabled for big tables.\nUse the plot_distributions and compute_associations parameters to do so:\n\nTableReport(\n    data, plot_distributions=False, compute_associations=False, open_tab=\"distributions\"\n)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#exporting-the-tablereport",
@@ -1082,21 +1075,28 @@
     "href": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-json",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport: JSON",
-    "text": "Exporting the TableReport: JSON\nIt is also possible to export the report in JSON format:\njson_str = TableReport(data).json()\n\n\n\n\n\n\nImportant\n\n\nIf the report is generating distribution plots, the JSON will include them in SVG format. Distributions can be disabled by setting plot_distributions=False."
+    "text": "Exporting the TableReport: JSON\nIt is possible to export the report in JSON format:\njson_str = TableReport(data).json()\n\n\n\n\n\n\nImportant\n\n\nThe JSON report contains everything needed to rebuild a report, including plots. If the plots are not needed, disable them with plot_distributions=False."
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-markdown",
     "href": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-markdown",
     "title": "Exploring dataframes with skrub",
     "section": "Exporting the TableReport: Markdown",
-    "text": "Exporting the TableReport: Markdown\n(in the upcoming release!)\nFinally, the report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
+    "text": "Exporting the TableReport: Markdown\nThe report can be exported in summarized form as a Markdown-formatted string:\nmd_str = TableReport(data).markdown()\n\nwith open(\"report.md\", \"w\") as fp:\n    fp.write(md_str)\n\n\n\n\n\n\nWarning\n\n\nThe TableReport does not do any sanitization of the input data, and prints out column names and most frequent values as part of the output. Do not feed the content of the report to an agent if the dataset is large, or if its content is not trusted."
+  },
+  {
+    "objectID": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-python-dict",
+    "href": "chapters/01_exploring_data.slides.html#exporting-the-tablereport-python-dict",
+    "title": "Exploring dataframes with skrub",
+    "section": "Exporting the TableReport: python dict",
+    "text": "Exporting the TableReport: python dict\nThe report can also be exported as a python dict to use the statistics it measures in a python script:\ntr_dict = TableReport(data, plot_distributions=False).dict()"
   },
   {
     "objectID": "chapters/01_exploring_data.slides.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/01_exploring_data.slides.html#what-we-have-seen-in-this-chapter",
     "title": "Exploring dataframes with skrub",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nCreating and configuring a TableReport for fast, interactive data exploration\nExploring column statistics, value distributions, and associations visually\nDetecting nulls, outliers, and highly correlated columns at a glance\nFiltering columns by type or characteristics using built-in filters\nAdjusting TableReport settings for large datasets to optimize performance\nSaving and exporting reports as HTML, JSON, and Markdown files"
+    "text": "What we have seen in this chapter\n\nCreating and configuring a TableReport for fast, interactive data exploration\nExploring column statistics, value distributions, and associations visually\nDetecting nulls, outliers, and highly correlated columns at a glance\nFiltering columns by type or characteristics using built-in filters\nAdjusting TableReport settings for large datasets to optimize performance\nSaving and exporting reports as HTML, JSON, Markdown and python dicts"
   },
   {
     "objectID": "index.html",
@@ -1215,21 +1215,21 @@
     "href": "chapters/00_intro.slides.html#step-4-scale-numerical-features",
     "title": "Data Preparation with skrub",
     "section": "Step 4: Scale numerical features",
-    "text": "Step 4: Scale numerical features\nSome models work better when all the numeric features have comparable scale.\nRidgeCV is one of them, so we need to scale numerical features.\n\nfrom sklearn.preprocessing import StandardScaler\n\n# Initialize the scaler\nscaler = StandardScaler()\n\n# Fit and transform the data\nX_scaled = scaler.fit_transform(X_encoded_imputed)\nX_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)\n\n\n\n\n\n\n\nWarning\n\n\nOutliers (values very far from the mean) make scaling hard to do. Robust scaling is needed."
+    "text": "Step 4: Scale numerical features\nSome models work better when all the numeric features have comparable scale.\nRidgeCV is one of them, so we need to scale numerical features.\n\nfrom sklearn.preprocessing import StandardScaler\n\n# Initialize the scaler\nscaler = StandardScaler()\n\n# Fit and transform the data\nX_scaled = scaler.fit_transform(X_encoded_imputed)\nX_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)\n\n\n\n\n\n\n\nWarning\n\n\nOutliers (values very far from the mean) make scaling hard to do. Robust scaling may be needed."
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-5-train-ridge-model-with-cross-validation",
     "href": "chapters/00_intro.slides.html#step-5-train-ridge-model-with-cross-validation",
     "title": "Data Preparation with skrub",
     "section": "Step 5: Train Ridge model with cross-validation",
-    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\", \"neg_mean_squared_error\"])\n\n# Convert MSE to RMSE\ntest_rmse = np.sqrt(-cv_results[\"test_neg_mean_squared_error\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)\nMean test RMSE: 10329.8687 (+/- 1421.8752)"
+    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
     "href": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
     "title": "Data Preparation with skrub",
     "section": "“Just ask an agent to write the code”",
-    "text": "“Just ask an agent to write the code”\n\nOperations in the wrong order.\nTrying to impute categorical features without converting them to numeric values.\nThe datetime feature was treated like a categorical feature.\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
+    "text": "“Just ask an agent to write the code”\n\nOperations in the wrong order.\nThe datetime feature was treated like a categorical feature.\nTrying to impute categorical features without converting them to numeric values.\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
   },
   {
     "objectID": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform",
@@ -1253,11 +1253,18 @@
     "text": "Intermission: data leakage and fit/transform\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\n\n\nprint(imputer.fit(df_train).transform(df_test))\n\n     value\n5     4.75\n6  1000.00\n7     5.00"
   },
   {
+    "objectID": "chapters/00_intro.slides.html#back-on-track",
+    "href": "chapters/00_intro.slides.html#back-on-track",
+    "title": "Data Preparation with skrub",
+    "section": "Back on track!",
+    "text": "Back on track!"
+  },
+  {
     "objectID": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
     "href": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
     "title": "Data Preparation with skrub",
     "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9105 (+/- 0.0145)\nMean test RMSE: 8696.1651 (+/- 973.8721)"
+    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, scoring=[\"r2\"])\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"tabular_pipeline: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(\n    f\"Ridge: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\ntabular_pipeline: Mean test R²: 0.9101 (+/- 0.0163)\nRidge: Mean test R²: 0.9101 (+/- 0.0163)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#whats-in-the-tabular_pipeline",
@@ -1271,7 +1278,7 @@
     "href": "chapters/00_intro.slides.html#pre-processing-is-part-of-the-pipeline",
     "title": "Data Preparation with skrub",
     "section": "Pre-processing is part of the pipeline!",
-    "text": "Pre-processing is part of the pipeline!\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
+    "text": "Pre-processing is part of the pipeline!\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\n\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\n\n\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
   },
   {
     "objectID": "chapters/00_intro.slides.html#what-we-saw-in-this-chapter",
@@ -1285,7 +1292,7 @@
     "href": "chapters/00_intro.slides.html#course-roadmap",
     "title": "Data Preparation with skrub",
     "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\n\nIf there is enough time:\n\nFeature engineering with the skrub encoders"
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nBeyond pipelines: skrub Data Ops"
   },
   {
     "objectID": "chapters/00_intro.html",
@@ -1362,21 +1369,21 @@
     "href": "chapters/00_intro.html#step-4-scale-numerical-features",
     "title": "Data Preparation with skrub",
     "section": "Step 4: Scale numerical features",
-    "text": "Step 4: Scale numerical features\nSome models work better when all the numeric features have comparable scale.\nRidgeCV is one of them, so we need to scale numerical features.\n\nfrom sklearn.preprocessing import StandardScaler\n\n# Initialize the scaler\nscaler = StandardScaler()\n\n# Fit and transform the data\nX_scaled = scaler.fit_transform(X_encoded_imputed)\nX_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)\n\n\n\n\n\n\n\nWarning\n\n\n\nOutliers (values very far from the mean) make scaling hard to do. Robust scaling is needed."
+    "text": "Step 4: Scale numerical features\nSome models work better when all the numeric features have comparable scale.\nRidgeCV is one of them, so we need to scale numerical features.\n\nfrom sklearn.preprocessing import StandardScaler\n\n# Initialize the scaler\nscaler = StandardScaler()\n\n# Fit and transform the data\nX_scaled = scaler.fit_transform(X_encoded_imputed)\nX_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)\n\n\n\n\n\n\n\nWarning\n\n\n\nOutliers (values very far from the mean) make scaling hard to do. Robust scaling may be needed."
   },
   {
     "objectID": "chapters/00_intro.html#step-5-train-ridge-model-with-cross-validation",
     "href": "chapters/00_intro.html#step-5-train-ridge-model-with-cross-validation",
     "title": "Data Preparation with skrub",
     "section": "Step 5: Train Ridge model with cross-validation",
-    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\", \"neg_mean_squared_error\"])\n\n# Convert MSE to RMSE\ntest_rmse = np.sqrt(-cv_results[\"test_neg_mean_squared_error\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)\nMean test RMSE: 10329.8687 (+/- 1421.8752)"
+    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)"
   },
   {
     "objectID": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
     "href": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
     "title": "Data Preparation with skrub",
     "section": "“Just ask an agent to write the code”",
-    "text": "“Just ask an agent to write the code”\n\nOperations in the wrong order.\nTrying to impute categorical features without converting them to numeric values.\nThe datetime feature was treated like a categorical feature.\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
+    "text": "“Just ask an agent to write the code”\n\n\nOperations in the wrong order.\nThe datetime feature was treated like a categorical feature.\nTrying to impute categorical features without converting them to numeric values.\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
   },
   {
     "objectID": "chapters/00_intro.html#intermission-data-leakage-and-fittransform",
@@ -1400,11 +1407,18 @@
     "text": "Intermission: data leakage and fit/transform\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\n\n\nprint(imputer.fit(df_train).transform(df_test))\n\n     value\n5     4.75\n6  1000.00\n7     5.00"
   },
   {
+    "objectID": "chapters/00_intro.html#back-on-track",
+    "href": "chapters/00_intro.html#back-on-track",
+    "title": "Data Preparation with skrub",
+    "section": "Back on track!",
+    "text": "Back on track!"
+  },
+  {
     "objectID": "chapters/00_intro.html#waking-up-from-a-nightmare",
     "href": "chapters/00_intro.html#waking-up-from-a-nightmare",
     "title": "Data Preparation with skrub",
     "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, \n                            scoring=['r2', 'neg_mean_squared_error'],\n                            return_train_score=True)\n\n# Convert MSE to RMSE\ntrain_rmse = np.sqrt(-cv_results['train_neg_mean_squared_error'])\ntest_rmse = np.sqrt(-cv_results['test_neg_mean_squared_error'])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\")\nprint(f\"Mean test RMSE: {test_rmse.mean():.4f} (+/- {test_rmse.std():.4f})\")\n\nCross-Validation Results:\nMean test R²: 0.9105 (+/- 0.0145)\nMean test RMSE: 8696.1651 (+/- 973.8721)"
+    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, scoring=[\"r2\"])\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"tabular_pipeline: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(\n    f\"Ridge: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\ntabular_pipeline: Mean test R²: 0.9101 (+/- 0.0163)\nRidge: Mean test R²: 0.9101 (+/- 0.0163)"
   },
   {
     "objectID": "chapters/00_intro.html#whats-in-the-tabular_pipeline",
@@ -1418,7 +1432,7 @@
     "href": "chapters/00_intro.html#pre-processing-is-part-of-the-pipeline",
     "title": "Data Preparation with skrub",
     "section": "Pre-processing is part of the pipeline!",
-    "text": "Pre-processing is part of the pipeline!\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
+    "text": "Pre-processing is part of the pipeline!\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\n\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\n\n\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
   },
   {
     "objectID": "chapters/00_intro.html#what-we-saw-in-this-chapter",
@@ -1432,28 +1446,21 @@
     "href": "chapters/00_intro.html#course-roadmap",
     "title": "Data Preparation with skrub",
     "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\n\nIf there is enough time:\n\nFeature engineering with the skrub encoders"
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nBeyond pipelines: skrub Data Ops"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#introduction",
     "href": "chapters/02_cleaning_data.slides.html#introduction",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Introduction",
-    "text": "Introduction\nOnce a table has been explored, the next step is addressing any problem it might have.\nThis can be described broadly as “cleaning” or “sanitizing” the data."
+    "text": "Introduction\nOnce a table has been explored, the next step is transforming it into something that can be handled more easily.\nThis can be described broadly as “cleaning” or “sanitizing” the data."
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#an-example-dataframe",
     "href": "chapters/02_cleaning_data.slides.html#an-example-dataframe",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "An example dataframe",
-    "text": "An example dataframe\n\nimport pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": [10.5, 20.3, None, 40.1, 50.2],\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [None, None, None, None, None],\n    }\n)"
-  },
-  {
-    "objectID": "chapters/02_cleaning_data.slides.html#an-example-dataframe-1",
-    "href": "chapters/02_cleaning_data.slides.html#an-example-dataframe-1",
-    "title": "Preprocessing data with the skrub Cleaner",
-    "section": "An example dataframe",
-    "text": "An example dataframe\n\ndf\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\nall_none\n\n\n\n\n0\n1\n10.5\napple\n03 Jan 2020\nNone\n\n\n1\n2\n20.3\n?\n04 Jan 2020\nNone\n\n\n2\n3\nNaN\nbanana\n05 Jan 2020\nNone\n\n\n3\n4\n40.1\ncherry\n06 Jan 2020\nNone\n\n\n4\n5\n50.2\n?\n07 Jan 2020\nNone"
+    "text": "An example dataframe\n\nimport pandas as pd\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": pd.Series([10.5, 20.3, \"?\", 40.1, 50.2]).astype(str),\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [\"?\", \"?\", \"?\", \"?\", \"?\"],\n    }\n)"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#there-are-some-issues",
@@ -1467,14 +1474,14 @@
     "href": "chapters/02_cleaning_data.slides.html#cleaning-with-pandas",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Cleaning with pandas",
-    "text": "Cleaning with pandas\nFirst, let’s look at the datatypes detected by pandas:\n\ndf.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 5 columns):\n #   Column           Non-Null Count  Dtype  \n---  ------           --------------  -----  \n 0   numerical_1      5 non-null      int64  \n 1   numerical_2      4 non-null      float64\n 2   string_column    5 non-null      object \n 3   datetime_column  5 non-null      object \n 4   all_none         0 non-null      object \ndtypes: float64(1), int64(1), object(3)\nmemory usage: 332.0+ bytes\n\n\nMissing values were not detected properly (“?” was treated as a string), the datetime wasn’t parsed as datetimes."
+    "text": "Cleaning with pandas\nFirst, let’s look at the datatypes detected by pandas:\n\ndf.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 5 columns):\n #   Column           Non-Null Count  Dtype \n---  ------           --------------  ----- \n 0   numerical_1      5 non-null      int64 \n 1   numerical_2      5 non-null      object\n 2   string_column    5 non-null      object\n 3   datetime_column  5 non-null      object\n 4   all_none         5 non-null      object\ndtypes: int64(1), object(4)\nmemory usage: 332.0+ bytes\n\n\n\n\nMissing values were not detected properly: \"?\" was treated as a string\nOne of the numerical columns has string dtype\nThe all_none column shows no null values because of “?”\nThe datetime is still treated as object"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#cleaning-with-pandas-1",
     "href": "chapters/02_cleaning_data.slides.html#cleaning-with-pandas-1",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Cleaning with pandas",
-    "text": "Cleaning with pandas\n\n# Parse the datetime strings with a specific format\ndf['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')\n\n# Drop columns with only a single unique value\ndf_clean = df.loc[:, df.nunique(dropna=True) &gt; 1]\n\n# Replace \"?\" with np.nan in all string columns\ndf_clean = df_clean.replace(\"?\", np.nan)"
+    "text": "Cleaning with pandas\n\nimport numpy as np\n\n# Parse the datetime strings with a specific format\ndf['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')\n\n# Drop columns with only a single unique value\ndf_clean = df.loc[:, df.nunique(dropna=True) &gt; 1]\n\n# Replace \"?\" with np.nan in all string columns\ndf_clean = df_clean.replace(\"?\", np.nan)"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#cleaning-with-pandas-2",
@@ -1488,28 +1495,28 @@
     "href": "chapters/02_cleaning_data.slides.html#the-alternative-skrub.cleaner",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "The alternative: skrub.Cleaner",
-    "text": "The alternative: skrub.Cleaner\nBy default, the Cleaner applies various transformations that can sanitize many common use cases:\n\nfrom skrub import Cleaner\ndf_clean = Cleaner().fit_transform(df)\ndf_clean\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\n\n\n\n\n0\n1\n10.5\napple\n2020-01-03\n\n\n1\n2\n20.3\nNone\n2020-01-04\n\n\n2\n3\nNaN\nbanana\n2020-01-05\n\n\n3\n4\n40.1\ncherry\n2020-01-06\n\n\n4\n5\n50.2\nNone\n2020-01-07"
+    "text": "The alternative: skrub.Cleaner\n\nfrom skrub import Cleaner\ndf_clean = Cleaner().fit_transform(df)\ndf_clean\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\n\n\n\n\n0\n1\n10.5\napple\n2020-01-03\n\n\n1\n2\n20.3\nNone\n2020-01-04\n\n\n2\n3\nNone\nbanana\n2020-01-05\n\n\n3\n4\n40.1\ncherry\n2020-01-06\n\n\n4\n5\n50.2\nNone\n2020-01-07"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#the-alternative-skrub.cleaner-1",
     "href": "chapters/02_cleaning_data.slides.html#the-alternative-skrub.cleaner-1",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "The alternative: skrub.Cleaner",
-    "text": "The alternative: skrub.Cleaner\nThe cleaned version of the dataframe is now marking missing values correctly, and the datetime column has been parsed as such:\n\ndf_clean.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 4 columns):\n #   Column           Non-Null Count  Dtype         \n---  ------           --------------  -----         \n 0   numerical_1      5 non-null      int64         \n 1   numerical_2      4 non-null      float64       \n 2   string_column    3 non-null      object        \n 3   datetime_column  5 non-null      datetime64[ns]\ndtypes: datetime64[ns](1), float64(1), int64(1), object(1)\nmemory usage: 292.0+ bytes"
+    "text": "The alternative: skrub.Cleaner\nThe cleaned version of the dataframe is now marking missing values correctly, and the datetime column has been parsed as such:\n\ndf_clean.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 4 columns):\n #   Column           Non-Null Count  Dtype         \n---  ------           --------------  -----         \n 0   numerical_1      5 non-null      int64         \n 1   numerical_2      4 non-null      object        \n 2   string_column    3 non-null      object        \n 3   datetime_column  5 non-null      datetime64[ns]\ndtypes: datetime64[ns](1), int64(1), object(2)\nmemory usage: 292.0+ bytes"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#what-does-the-cleaner-do-in-practice",
     "href": "chapters/02_cleaning_data.slides.html#what-does-the-cleaner-do-in-practice",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "What does the Cleaner do in practice?",
-    "text": "What does the Cleaner do in practice?\n\nIt replaces strings used to represent null values with None\nIt removes uninformative columns\nIt tries to parse datetime columns\nIt parses strings like \"1234.6\" to numbers (more in the next release!)"
+    "text": "What does the Cleaner do in practice?\n\nIt replaces strings used to represent null values with None\nIt removes uninformative columns\nIt tries to parse datetime columns\nIt parses strings like \"1234.6\" to numbers"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#note-on-intended-usage",
     "href": "chapters/02_cleaning_data.slides.html#note-on-intended-usage",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Note on intended usage",
-    "text": "Note on intended usage\n\n\n\n\n\n\nTip\n\n\nThe Cleaner is intended to be used early on when pre-processing, so it avoids altering the input dataframe too much, and tries to move from less-informative dtypes (e.g., generic strings) to more-informative types (e.g., datetimes).\n\n\n\nThe assumption is that complex transformations are done in later steps by the user."
+    "text": "Note on intended usage\n\n\n\n\n\n\nTip\n\n\nThe Cleaner is intended to be used early on when pre-processing, so it avoids altering the input dataframe too much, and tries to move from less-informative dtypes (e.g., generic strings) to more-informative types (e.g., datetimes).\n\n\n\n\nThe assumption is that complex transformations are done in later steps by the user."
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#data-cleaning-parameters",
@@ -1519,25 +1526,11 @@
     "text": "Data cleaning parameters:\n\ncleaner = Cleaner(\n    drop_null_fraction=0.9,  # Drop columns 90% null\n    drop_if_constant=True,   # Drop constant columns\n    datetime_format=\"%Y-%m-%d\",  # Specific datetime format\n    null_strings=[\"UKN\", \"unknown\", \"missing\"] # Custom strings to mark null values\n)"
   },
   {
-    "objectID": "chapters/02_cleaning_data.slides.html#under-the-hood-dropuninformative",
-    "href": "chapters/02_cleaning_data.slides.html#under-the-hood-dropuninformative",
+    "objectID": "chapters/02_cleaning_data.slides.html#bonus-convert-numeric-columns-with-european-separators",
+    "href": "chapters/02_cleaning_data.slides.html#bonus-convert-numeric-columns-with-european-separators",
     "title": "Preprocessing data with the skrub Cleaner",
-    "section": "Under the hood: DropUninformative",
-    "text": "Under the hood: DropUninformative\nThe Cleaner uses heuristics to detect columns that are unlikely to bring information useful to a ML model.\nThis is done by the DropUninformative transformer, which marks a columns as “uninformative” if:\n\nIt contains more nulls than a certain fraction (1.0 by default)\nIt contains only one value (and no missing values)"
-  },
-  {
-    "objectID": "chapters/02_cleaning_data.slides.html#an-example-for-dropuninformative",
-    "href": "chapters/02_cleaning_data.slides.html#an-example-for-dropuninformative",
-    "title": "Preprocessing data with the skrub Cleaner",
-    "section": "An example for DropUninformative",
-    "text": "An example for DropUninformative\n\nimport pandas as pd\nimport numpy as np\n\ndf2 = pd.DataFrame({\n    \"id\": [101, 102, 103, 104, 105],\n    \"age\": [34, 28, 45, 52, 39],\n    \"salary\": [70000, None, 85000, None, None], \n    \"department\": [\"HR\", \"Finance\", \"IT\", \"HR\", \"Finance\"],\n    \"constant_col\": [\"active\"] * 5,  # single constant value\n})\ndf2\n\n\n\n\n\n\n\n\nid\nage\nsalary\ndepartment\nconstant_col\n\n\n\n\n0\n101\n34\n70000.0\nHR\nactive\n\n\n1\n102\n28\nNaN\nFinance\nactive\n\n\n2\n103\n45\n85000.0\nIT\nactive\n\n\n3\n104\n52\nNaN\nHR\nactive\n\n\n4\n105\n39\nNaN\nFinance\nactive"
-  },
-  {
-    "objectID": "chapters/02_cleaning_data.slides.html#an-example-for-dropuninformative-1",
-    "href": "chapters/02_cleaning_data.slides.html#an-example-for-dropuninformative-1",
-    "title": "Preprocessing data with the skrub Cleaner",
-    "section": "An example for DropUninformative",
-    "text": "An example for DropUninformative\n\nfrom skrub import ApplyToCols, DropUninformative\n\ndrop = ApplyToCols(DropUninformative(drop_if_constant=True, drop_null_fraction=0.5))\ndrop.fit_transform(df2)\n\n\n\n\n\n\n\n\nid\nage\ndepartment\n\n\n\n\n0\n101\n34\nHR\n\n\n1\n102\n28\nFinance\n\n\n2\n103\n45\nIT\n\n\n3\n104\n52\nHR\n\n\n4\n105\n39\nFinance"
+    "section": "Bonus: convert numeric columns with European separators",
+    "text": "Bonus: convert numeric columns with European separators\n\nfrom skrub import ToFloat\ns = pd.Series([\"4 567,89\", \"12 567,89\"], name=\"x\")\nprint(s)\nd = ToFloat(decimal=\",\", thousand=\" \").fit_transform(s)\nprint(d)\n\n0     4 567,89\n1    12 567,89\nName: x, dtype: object\n0     4567.890137\n1    12567.889648\nName: x, dtype: float32"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#what-we-have-seen-in-this-chapter",
@@ -1551,28 +1544,21 @@
     "href": "chapters/02_cleaning_data.html",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "",
-    "text": "Once a table has been explored, the next step is addressing any problem it might have.\nThis can be described broadly as “cleaning” or “sanitizing” the data."
+    "text": "Once a table has been explored, the next step is transforming it into something that can be handled more easily.\nThis can be described broadly as “cleaning” or “sanitizing” the data."
   },
   {
     "objectID": "chapters/02_cleaning_data.html#introduction",
     "href": "chapters/02_cleaning_data.html#introduction",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "",
-    "text": "Once a table has been explored, the next step is addressing any problem it might have.\nThis can be described broadly as “cleaning” or “sanitizing” the data."
+    "text": "Once a table has been explored, the next step is transforming it into something that can be handled more easily.\nThis can be described broadly as “cleaning” or “sanitizing” the data."
   },
   {
     "objectID": "chapters/02_cleaning_data.html#an-example-dataframe",
     "href": "chapters/02_cleaning_data.html#an-example-dataframe",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "An example dataframe",
-    "text": "An example dataframe\n\nimport pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": [10.5, 20.3, None, 40.1, 50.2],\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [None, None, None, None, None],\n    }\n)"
-  },
-  {
-    "objectID": "chapters/02_cleaning_data.html#an-example-dataframe-1",
-    "href": "chapters/02_cleaning_data.html#an-example-dataframe-1",
-    "title": "Preprocessing data with the skrub Cleaner",
-    "section": "An example dataframe",
-    "text": "An example dataframe\n\ndf\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\nall_none\n\n\n\n\n0\n1\n10.5\napple\n03 Jan 2020\nNone\n\n\n1\n2\n20.3\n?\n04 Jan 2020\nNone\n\n\n2\n3\nNaN\nbanana\n05 Jan 2020\nNone\n\n\n3\n4\n40.1\ncherry\n06 Jan 2020\nNone\n\n\n4\n5\n50.2\n?\n07 Jan 2020\nNone"
+    "text": "An example dataframe\n\nimport pandas as pd\n\ndf = pd.DataFrame(\n    {\n        \"numerical_1\": [1, 2, 3, 4, 5],\n        \"numerical_2\": pd.Series([10.5, 20.3, \"?\", 40.1, 50.2]).astype(str),\n        \"string_column\": [\"apple\", \"?\", \"banana\", \"cherry\", \"?\"],\n        \"datetime_column\": [\n            \"03 Jan 2020\",\n            \"04 Jan 2020\",\n            \"05 Jan 2020\",\n            \"06 Jan 2020\",\n            \"07 Jan 2020\",\n        ],\n        \"all_none\": [\"?\", \"?\", \"?\", \"?\", \"?\"],\n    }\n)"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#there-are-some-issues",
@@ -1586,14 +1572,14 @@
     "href": "chapters/02_cleaning_data.html#cleaning-with-pandas",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Cleaning with pandas",
-    "text": "Cleaning with pandas\nFirst, let’s look at the datatypes detected by pandas:\n\ndf.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 5 columns):\n #   Column           Non-Null Count  Dtype  \n---  ------           --------------  -----  \n 0   numerical_1      5 non-null      int64  \n 1   numerical_2      4 non-null      float64\n 2   string_column    5 non-null      object \n 3   datetime_column  5 non-null      object \n 4   all_none         0 non-null      object \ndtypes: float64(1), int64(1), object(3)\nmemory usage: 332.0+ bytes\n\n\nMissing values were not detected properly (“?” was treated as a string), the datetime wasn’t parsed as datetimes."
+    "text": "Cleaning with pandas\nFirst, let’s look at the datatypes detected by pandas:\n\ndf.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 5 columns):\n #   Column           Non-Null Count  Dtype \n---  ------           --------------  ----- \n 0   numerical_1      5 non-null      int64 \n 1   numerical_2      5 non-null      object\n 2   string_column    5 non-null      object\n 3   datetime_column  5 non-null      object\n 4   all_none         5 non-null      object\ndtypes: int64(1), object(4)\nmemory usage: 332.0+ bytes\n\n\n\n\nMissing values were not detected properly: \"?\" was treated as a string\nOne of the numerical columns has string dtype\nThe all_none column shows no null values because of “?”\nThe datetime is still treated as object"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#cleaning-with-pandas-1",
     "href": "chapters/02_cleaning_data.html#cleaning-with-pandas-1",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Cleaning with pandas",
-    "text": "Cleaning with pandas\n\n# Parse the datetime strings with a specific format\ndf['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')\n\n# Drop columns with only a single unique value\ndf_clean = df.loc[:, df.nunique(dropna=True) &gt; 1]\n\n# Replace \"?\" with np.nan in all string columns\ndf_clean = df_clean.replace(\"?\", np.nan)"
+    "text": "Cleaning with pandas\n\nimport numpy as np\n\n# Parse the datetime strings with a specific format\ndf['datetime_column'] = pd.to_datetime(df['datetime_column'], format='%d %b %Y')\n\n# Drop columns with only a single unique value\ndf_clean = df.loc[:, df.nunique(dropna=True) &gt; 1]\n\n# Replace \"?\" with np.nan in all string columns\ndf_clean = df_clean.replace(\"?\", np.nan)"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#cleaning-with-pandas-2",
@@ -1607,28 +1593,28 @@
     "href": "chapters/02_cleaning_data.html#the-alternative-skrub.cleaner",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "The alternative: skrub.Cleaner",
-    "text": "The alternative: skrub.Cleaner\nBy default, the Cleaner applies various transformations that can sanitize many common use cases:\n\nfrom skrub import Cleaner\ndf_clean = Cleaner().fit_transform(df)\ndf_clean\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\n\n\n\n\n0\n1\n10.5\napple\n2020-01-03\n\n\n1\n2\n20.3\nNone\n2020-01-04\n\n\n2\n3\nNaN\nbanana\n2020-01-05\n\n\n3\n4\n40.1\ncherry\n2020-01-06\n\n\n4\n5\n50.2\nNone\n2020-01-07"
+    "text": "The alternative: skrub.Cleaner\n\nfrom skrub import Cleaner\ndf_clean = Cleaner().fit_transform(df)\ndf_clean\n\n\n\n\n\n\n\n\nnumerical_1\nnumerical_2\nstring_column\ndatetime_column\n\n\n\n\n0\n1\n10.5\napple\n2020-01-03\n\n\n1\n2\n20.3\nNone\n2020-01-04\n\n\n2\n3\nNone\nbanana\n2020-01-05\n\n\n3\n4\n40.1\ncherry\n2020-01-06\n\n\n4\n5\n50.2\nNone\n2020-01-07"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#the-alternative-skrub.cleaner-1",
     "href": "chapters/02_cleaning_data.html#the-alternative-skrub.cleaner-1",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "The alternative: skrub.Cleaner",
-    "text": "The alternative: skrub.Cleaner\nThe cleaned version of the dataframe is now marking missing values correctly, and the datetime column has been parsed as such:\n\ndf_clean.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 4 columns):\n #   Column           Non-Null Count  Dtype         \n---  ------           --------------  -----         \n 0   numerical_1      5 non-null      int64         \n 1   numerical_2      4 non-null      float64       \n 2   string_column    3 non-null      object        \n 3   datetime_column  5 non-null      datetime64[ns]\ndtypes: datetime64[ns](1), float64(1), int64(1), object(1)\nmemory usage: 292.0+ bytes"
+    "text": "The alternative: skrub.Cleaner\nThe cleaned version of the dataframe is now marking missing values correctly, and the datetime column has been parsed as such:\n\ndf_clean.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 5 entries, 0 to 4\nData columns (total 4 columns):\n #   Column           Non-Null Count  Dtype         \n---  ------           --------------  -----         \n 0   numerical_1      5 non-null      int64         \n 1   numerical_2      4 non-null      object        \n 2   string_column    3 non-null      object        \n 3   datetime_column  5 non-null      datetime64[ns]\ndtypes: datetime64[ns](1), int64(1), object(2)\nmemory usage: 292.0+ bytes"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#what-does-the-cleaner-do-in-practice",
     "href": "chapters/02_cleaning_data.html#what-does-the-cleaner-do-in-practice",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "What does the Cleaner do in practice?",
-    "text": "What does the Cleaner do in practice?\n\nIt replaces strings used to represent null values with None\nIt removes uninformative columns\nIt tries to parse datetime columns\nIt parses strings like \"1234.6\" to numbers (more in the next release!)"
+    "text": "What does the Cleaner do in practice?\n\nIt replaces strings used to represent null values with None\nIt removes uninformative columns\nIt tries to parse datetime columns\nIt parses strings like \"1234.6\" to numbers"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#note-on-intended-usage",
     "href": "chapters/02_cleaning_data.html#note-on-intended-usage",
     "title": "Preprocessing data with the skrub Cleaner",
     "section": "Note on intended usage",
-    "text": "Note on intended usage\n\n\n\n\n\n\nTip\n\n\n\nThe Cleaner is intended to be used early on when pre-processing, so it avoids altering the input dataframe too much, and tries to move from less-informative dtypes (e.g., generic strings) to more-informative types (e.g., datetimes).\n\n\nThe assumption is that complex transformations are done in later steps by the user."
+    "text": "Note on intended usage\n\n\n\n\n\n\nTip\n\n\n\nThe Cleaner is intended to be used early on when pre-processing, so it avoids altering the input dataframe too much, and tries to move from less-informative dtypes (e.g., generic strings) to more-informative types (e.g., datetimes).\n\n\n\nThe assumption is that complex transformations are done in later steps by the user."
   },
   {
     "objectID": "chapters/02_cleaning_data.html#data-cleaning-parameters",
@@ -1638,25 +1624,11 @@
     "text": "Data cleaning parameters:\n\ncleaner = Cleaner(\n    drop_null_fraction=0.9,  # Drop columns 90% null\n    drop_if_constant=True,   # Drop constant columns\n    datetime_format=\"%Y-%m-%d\",  # Specific datetime format\n    null_strings=[\"UKN\", \"unknown\", \"missing\"] # Custom strings to mark null values\n)"
   },
   {
-    "objectID": "chapters/02_cleaning_data.html#under-the-hood-dropuninformative",
-    "href": "chapters/02_cleaning_data.html#under-the-hood-dropuninformative",
+    "objectID": "chapters/02_cleaning_data.html#bonus-convert-numeric-columns-with-european-separators",
+    "href": "chapters/02_cleaning_data.html#bonus-convert-numeric-columns-with-european-separators",
     "title": "Preprocessing data with the skrub Cleaner",
-    "section": "Under the hood: DropUninformative",
-    "text": "Under the hood: DropUninformative\nThe Cleaner uses heuristics to detect columns that are unlikely to bring information useful to a ML model.\nThis is done by the DropUninformative transformer, which marks a columns as “uninformative” if:\n\nIt contains more nulls than a certain fraction (1.0 by default)\nIt contains only one value (and no missing values)"
-  },
-  {
-    "objectID": "chapters/02_cleaning_data.html#an-example-for-dropuninformative",
-    "href": "chapters/02_cleaning_data.html#an-example-for-dropuninformative",
-    "title": "Preprocessing data with the skrub Cleaner",
-    "section": "An example for DropUninformative",
-    "text": "An example for DropUninformative\n\nimport pandas as pd\nimport numpy as np\n\ndf2 = pd.DataFrame({\n    \"id\": [101, 102, 103, 104, 105],\n    \"age\": [34, 28, 45, 52, 39],\n    \"salary\": [70000, None, 85000, None, None], \n    \"department\": [\"HR\", \"Finance\", \"IT\", \"HR\", \"Finance\"],\n    \"constant_col\": [\"active\"] * 5,  # single constant value\n})\ndf2\n\n\n\n\n\n\n\n\nid\nage\nsalary\ndepartment\nconstant_col\n\n\n\n\n0\n101\n34\n70000.0\nHR\nactive\n\n\n1\n102\n28\nNaN\nFinance\nactive\n\n\n2\n103\n45\n85000.0\nIT\nactive\n\n\n3\n104\n52\nNaN\nHR\nactive\n\n\n4\n105\n39\nNaN\nFinance\nactive"
-  },
-  {
-    "objectID": "chapters/02_cleaning_data.html#an-example-for-dropuninformative-1",
-    "href": "chapters/02_cleaning_data.html#an-example-for-dropuninformative-1",
-    "title": "Preprocessing data with the skrub Cleaner",
-    "section": "An example for DropUninformative",
-    "text": "An example for DropUninformative\n\nfrom skrub import ApplyToCols, DropUninformative\n\ndrop = ApplyToCols(DropUninformative(drop_if_constant=True, drop_null_fraction=0.5))\ndrop.fit_transform(df2)\n\n\n\n\n\n\n\n\nid\nage\ndepartment\n\n\n\n\n0\n101\n34\nHR\n\n\n1\n102\n28\nFinance\n\n\n2\n103\n45\nIT\n\n\n3\n104\n52\nHR\n\n\n4\n105\n39\nFinance"
+    "section": "Bonus: convert numeric columns with European separators",
+    "text": "Bonus: convert numeric columns with European separators\n\nfrom skrub import ToFloat\ns = pd.Series([\"4 567,89\", \"12 567,89\"], name=\"x\")\nprint(s)\nd = ToFloat(decimal=\",\", thousand=\" \").fit_transform(s)\nprint(d)\n\n0     4 567,89\n1    12 567,89\nName: x, dtype: object\n0     4567.890137\n1    12567.889648\nName: x, dtype: float32"
   },
   {
     "objectID": "chapters/02_cleaning_data.html#what-we-have-seen-in-this-chapter",
@@ -1670,35 +1642,42 @@
     "href": "chapters/04_selectors.slides.html#introduction-to-selectors",
     "title": "Choose your columns with selectors",
     "section": "Introduction to Selectors",
-    "text": "Introduction to Selectors\nComplex column selection beyond simple name lists:\n\nimport skrub.selectors as s\n\nSelectors are used throughout the skrub package:\n\nApplyToCols\nTableReport filters\nSelectCols/DropCols\n.skb.apply()"
+    "text": "Introduction to Selectors\nComplex column selection beyond simple name lists:\n\nimport skrub.selectors as s\n\nSelectors are used throughout the skrub package:\n\nApplyToCols\nTableReport filters\n.skb.apply()"
   },
   {
     "objectID": "chapters/04_selectors.slides.html#example-select-string-columns",
     "href": "chapters/04_selectors.slides.html#example-select-string-columns",
     "title": "Choose your columns with selectors",
     "section": "Example: Select String Columns",
-    "text": "Example: Select String Columns\nWe can use SelectCols to choose which columns to keep:\n\nfrom skrub import SelectCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"age\": [25, 30, 35],\n    \"name\": [\"Alice\", None, \"Charlie\"],\n    \"city\": [\"NYC\", \"LA\", \"Chicago\"]\n})\n\nSelectCols(cols=s.string()).fit_transform(df)\n\n\n\n\n\n\n\n\nname\ncity\n\n\n\n\n0\nAlice\nNYC\n\n\n1\nNone\nLA\n\n\n2\nCharlie\nChicago"
+    "text": "Example: Select String Columns\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"age\": [25, 30, 35],\n    \"name\": [\"Alice\", None, \"Charlie\"],\n    \"city\": [\"NYC\", \"LA\", \"Chicago\"]\n})\n\n\n\ns.select() to select columns:\n\ns.select(df, s.string())\n\n\n\n\n\n\n\n\nname\ncity\n\n\n\n\n0\nAlice\nNYC\n\n\n1\nNone\nLA\n\n\n2\nCharlie\nChicago\n\n\n\n\n\n\n\n\n… and s.drop() to remove them:\n\ns.drop(df, s.string())\n\n\n\n\n\n\n\n\nage\n\n\n\n\n0\n25\n\n\n1\n30\n\n\n2\n35"
   },
   {
     "objectID": "chapters/04_selectors.slides.html#selecting-by-data-type",
     "href": "chapters/04_selectors.slides.html#selecting-by-data-type",
     "title": "Choose your columns with selectors",
     "section": "Selecting by Data Type",
-    "text": "Selecting by Data Type\nSome of the available selectors:\n\n.numeric(): Numeric columns (int or float)\n.integer(): Integer columns only\n.float(): Floating-point columns\n.string(): String columns\n.categorical(): Categorical columns\n.any_date(): Date or datetime columns\n.boolean(): Boolean columns"
+    "text": "Selecting by Data Type\n\n.numeric(): Numeric columns (int or float)\n.integer(): Integer columns only\n.float(): Floating-point columns\n.string(): String columns\n.categorical(): Categorical columns\n.any_date(): Date or datetime columns\n.boolean(): Boolean columns"
   },
   {
     "objectID": "chapters/04_selectors.slides.html#selecting-by-characteristics",
     "href": "chapters/04_selectors.slides.html#selecting-by-characteristics",
     "title": "Choose your columns with selectors",
     "section": "Selecting by Characteristics",
-    "text": "Selecting by Characteristics\n\n.all(): All columns\n.has_nulls(): Columns with more than a given threshold of nulls (default=0)\n.cardinality_below(threshold): Few unique values\n.has_dtype(): Columns that have the provided dtype\n\n\nimport polars as pl\n\ndf = pl.DataFrame({\"A\": [[1,2], [1,2,3]], \"B\": [\"A\", \"B\"]})\ndf.dtypes\n\n[List(Int64), String]\n\n\n\nsel = s.has_dtype(pl.List)\nSelectCols(cols=sel).fit_transform(df)\n\n\nshape: (2, 1)\n\n\n\nA\n\n\nlist[i64]\n\n\n\n\n[1, 2]\n\n\n[1, 2, 3]"
+    "text": "Selecting by Characteristics\n\n.all(): All columns\n.has_nulls(): Columns with more than a given threshold of nulls (default=0)\n.cardinality_below(threshold): fewer than threshold unique values\n.has_dtype(): Columns that have the provided dtype"
+  },
+  {
+    "objectID": "chapters/04_selectors.slides.html#example-select-list-columns-with-has_dtype",
+    "href": "chapters/04_selectors.slides.html#example-select-list-columns-with-has_dtype",
+    "title": "Choose your columns with selectors",
+    "section": "Example: select list columns with has_dtype",
+    "text": "Example: select list columns with has_dtype\n\nimport polars as pl\n\ndf = pl.DataFrame({\"A\": [[1,2], [1,2,3]], \"B\": [\"A\", \"B\"]})\ndf.dtypes\n\n[List(Int64), String]\n\n\n\nsel = s.has_dtype(pl.List)\ns.select(df, sel)\n\n\nshape: (2, 1)\n\n\n\nA\n\n\nlist[i64]\n\n\n\n\n[1, 2]\n\n\n[1, 2, 3]"
   },
   {
     "objectID": "chapters/04_selectors.slides.html#selecting-by-name",
     "href": "chapters/04_selectors.slides.html#selecting-by-name",
     "title": "Choose your columns with selectors",
     "section": "Selecting by Name",
-    "text": "Selecting by Name\n\n.cols(\"name\"): Specific column name(s)\n.glob(\"pattern*\"): Unix shell-style globbing\n.regex(\"pattern\"): Regular expressions\n\n\ndf = pd.DataFrame({\n    \"patient_id\": [101, 102, 103],\n    \"metric_1\": [0.3, 0.3, 0.6],\n    \"metric_2\": [3, 5, 10],\n})\n\nSelectCols(cols=s.glob(\"metric_*\")).fit_transform(df)\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\n\n\n\n\n0\n0.3\n3\n\n\n1\n0.3\n5\n\n\n2\n0.6\n10"
+    "text": "Selecting by Name\n\n\n\n.cols(\"name\"): Specific column name(s)\n.glob(\"pattern*\"): Unix shell-style globbing\n.regex(\"pattern\"): Regular expressions\n\n\n\ndf = pd.DataFrame({\n    \"patient_id\": [101, 102, 103],\n    \"metric_1\": [0.3, 0.3, 0.6],\n    \"metric_2\": [3, 5, 10],\n})\n\ns.select(df, s.glob(\"metric_*\"))\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\n\n\n\n\n0\n0.3\n3\n\n\n1\n0.3\n5\n\n\n2\n0.6\n10"
   },
   {
     "objectID": "chapters/04_selectors.slides.html#combining-selectors",
@@ -1708,11 +1687,46 @@
     "text": "Combining Selectors\nSelectors can be combined:\n\neach selector produces a set of columns\nset operations (&, |, ^, -, ~) can be used to combine selectors\ncolumn names or lists of columns can be used directly\n\n# Inverse: NOT numeric\n~s.numeric()\n\n# OR: datetime columns OR string columns OR the columns in a list\ns.any_date() | s.string() | [\"date\", \"datetime-col\"]\n\n# AND: string columns without nulls\ns.string() & ~s.has_nulls()\n\n# Exclude: all columns except \"datetime-col\"\ns.all() - \"datetime-col\""
   },
   {
-    "objectID": "chapters/04_selectors.slides.html#using-selectors-with-pandas-dataframes",
-    "href": "chapters/04_selectors.slides.html#using-selectors-with-pandas-dataframes",
+    "objectID": "chapters/04_selectors.slides.html#combining-selectors-.all",
+    "href": "chapters/04_selectors.slides.html#combining-selectors-.all",
     "title": "Choose your columns with selectors",
-    "section": "Using selectors with pandas dataframes",
-    "text": "Using selectors with pandas dataframes\nGet the list of selected columns:\n\ndf = pd.DataFrame(\n    {\n        \"age\": [25, 30, 35],\n        \"name\": [\"Alice\", None, \"Charlie\"],\n    }\n)\n\nselector = s.has_nulls()\ncolumns_with_nulls = selector.expand(df)\nprint(columns_with_nulls)\n\n# Use in dataframe operations: drop columns with nulls\ndf.drop(columns=columns_with_nulls)\n\n['name']\n\n\n\n\n\n\n\n\n\nage\n\n\n\n\n0\n25\n\n\n1\n30\n\n\n2\n35"
+    "section": "Combining Selectors: .all()",
+    "text": "Combining Selectors: .all()"
+  },
+  {
+    "objectID": "chapters/04_selectors.slides.html#combining-selectors-not",
+    "href": "chapters/04_selectors.slides.html#combining-selectors-not",
+    "title": "Choose your columns with selectors",
+    "section": "Combining Selectors: NOT",
+    "text": "Combining Selectors: NOT"
+  },
+  {
+    "objectID": "chapters/04_selectors.slides.html#combining-selectors-and",
+    "href": "chapters/04_selectors.slides.html#combining-selectors-and",
+    "title": "Choose your columns with selectors",
+    "section": "Combining Selectors: AND",
+    "text": "Combining Selectors: AND"
+  },
+  {
+    "objectID": "chapters/04_selectors.slides.html#combining-selectors-or",
+    "href": "chapters/04_selectors.slides.html#combining-selectors-or",
+    "title": "Choose your columns with selectors",
+    "section": "Combining Selectors: OR",
+    "text": "Combining Selectors: OR"
+  },
+  {
+    "objectID": "chapters/04_selectors.slides.html#multiple-aggregations-in-pandas-with-selectors",
+    "href": "chapters/04_selectors.slides.html#multiple-aggregations-in-pandas-with-selectors",
+    "title": "Choose your columns with selectors",
+    "section": "Multiple aggregations in pandas with selectors",
+    "text": "Multiple aggregations in pandas with selectors\n\n\nDefine a selector: only numeric columns except the “id”\n\ndf = pd.DataFrame(\n    {\n        \"id\": [1, 2, 3, 4],\n        \"group\": [\"A\", \"A\", \"B\", \"B\"],\n        \"str\": [\"foo\", \"bar\", \"baz\", \"qux\"],\n        \"value1\": [1, 2, 30, 40],\n        \"value2\": [5, 6, 7, 8],\n    }\n)\n\n# pick the numeric columns to aggregate, except the id\nonly_num = (s.numeric() - \"id\")\n\n\n\naggs = {col: [\"mean\", \"sum\"] for col in only_num.expand(df)}\ndf.groupby(\"group\").agg(aggs)\n\n\n\n\n\n\n\n\nvalue1\nvalue2\n\n\n\nmean\nsum\nmean\nsum\n\n\ngroup\n\n\n\n\n\n\n\n\nA\n1.5\n3\n5.5\n11\n\n\nB\n35.0\n70\n7.5\n15"
+  },
+  {
+    "objectID": "chapters/04_selectors.slides.html#using-selectors-to-aggregate-pandas-dataframes",
+    "href": "chapters/04_selectors.slides.html#using-selectors-to-aggregate-pandas-dataframes",
+    "title": "Choose your columns with selectors",
+    "section": "Using selectors to aggregate pandas dataframes",
+    "text": "Using selectors to aggregate pandas dataframes\nNew columns are handled by the selector:\n\n# new columns, same selector\ndf[\"value3\"] = [100, 200, 300, 400]\ndf[\"note\"] = [\"a\", \"b\", \"c\", \"d\"]\n\naggs = {col: [\"mean\", \"sum\"] for col in only_num.expand(df)}\ndf.groupby(\"group\").agg(aggs)\n\n\n\n\n\n\n\n\nvalue1\nvalue2\nvalue3\n\n\n\nmean\nsum\nmean\nsum\nmean\nsum\n\n\ngroup\n\n\n\n\n\n\n\n\n\n\nA\n1.5\n3\n5.5\n11\n150.0\n300\n\n\nB\n35.0\n70\n7.5\n15\n350.0\n700"
   },
   {
     "objectID": "chapters/04_selectors.slides.html#custom-selectors-filter-by-condition",
@@ -1729,53 +1743,60 @@
     "text": "Using selectors with the TableReport\nThe TableReport can use selectors (or simply column names) to focus only on specific columns:\n\nfrom skrub import TableReport\ncustom_filter = {\"metrics\": s.glob(\"metric_*\")}\n\ndf = pd.DataFrame({\n    \"patient_id\": [101, 102, 103],\n    \"metric_1\": [0.3, 0.3, 0.6],\n    \"metric_2\": [3, 5, 10],\n})\n\nTableReport(df, column_filters=custom_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
-    "objectID": "chapters/04_selectors.slides.html#what-we-have-seen-in-this-chapters",
-    "href": "chapters/04_selectors.slides.html#what-we-have-seen-in-this-chapters",
+    "objectID": "chapters/04_selectors.slides.html#what-we-have-seen-in-this-chapter",
+    "href": "chapters/04_selectors.slides.html#what-we-have-seen-in-this-chapter",
     "title": "Choose your columns with selectors",
-    "section": "What we have seen in this chapters",
-    "text": "What we have seen in this chapters\n\nSelectors can be used for flexible, reusable column selection\nSelectors can be combined with logical operators as “sets of columns”\nexpand() extracts selected column names\ns.filter() can be used to create custom selectors for domain-specific logic\nApplyToCols and TableReport can use selectors to filter columns"
+    "section": "What we have seen in this chapter",
+    "text": "What we have seen in this chapter\n\nSelectors can be used for flexible, reusable column selection\nSelectors can be combined with logical operators as “sets of columns”\nexpand() extracts selected column names and can be used with dataframe libraries\ns.filter() can be used to create custom selectors for domain-specific logic\nApplyToCols and TableReport can use selectors to filter columns"
   },
   {
     "objectID": "chapters/04_selectors.html",
     "href": "chapters/04_selectors.html",
     "title": "Choose your columns with selectors",
     "section": "",
-    "text": "Complex column selection beyond simple name lists:\n\nimport skrub.selectors as s\n\nSelectors are used throughout the skrub package:\n\nApplyToCols\nTableReport filters\nSelectCols/DropCols\n.skb.apply()"
+    "text": "Complex column selection beyond simple name lists:\n\nimport skrub.selectors as s\n\nSelectors are used throughout the skrub package:\n\nApplyToCols\nTableReport filters\n.skb.apply()"
   },
   {
     "objectID": "chapters/04_selectors.html#introduction-to-selectors",
     "href": "chapters/04_selectors.html#introduction-to-selectors",
     "title": "Choose your columns with selectors",
     "section": "",
-    "text": "Complex column selection beyond simple name lists:\n\nimport skrub.selectors as s\n\nSelectors are used throughout the skrub package:\n\nApplyToCols\nTableReport filters\nSelectCols/DropCols\n.skb.apply()"
+    "text": "Complex column selection beyond simple name lists:\n\nimport skrub.selectors as s\n\nSelectors are used throughout the skrub package:\n\nApplyToCols\nTableReport filters\n.skb.apply()"
   },
   {
     "objectID": "chapters/04_selectors.html#example-select-string-columns",
     "href": "chapters/04_selectors.html#example-select-string-columns",
     "title": "Choose your columns with selectors",
     "section": "Example: Select String Columns",
-    "text": "Example: Select String Columns\nWe can use SelectCols to choose which columns to keep:\n\nfrom skrub import SelectCols\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"age\": [25, 30, 35],\n    \"name\": [\"Alice\", None, \"Charlie\"],\n    \"city\": [\"NYC\", \"LA\", \"Chicago\"]\n})\n\nSelectCols(cols=s.string()).fit_transform(df)\n\n\n\n\n\n\n\n\nname\ncity\n\n\n\n\n0\nAlice\nNYC\n\n\n1\nNone\nLA\n\n\n2\nCharlie\nChicago"
+    "text": "Example: Select String Columns\n\nimport pandas as pd\n\ndf = pd.DataFrame({\n    \"age\": [25, 30, 35],\n    \"name\": [\"Alice\", None, \"Charlie\"],\n    \"city\": [\"NYC\", \"LA\", \"Chicago\"]\n})\n\n\n\ns.select() to select columns:\n\ns.select(df, s.string())\n\n\n\n\n\n\n\n\nname\ncity\n\n\n\n\n0\nAlice\nNYC\n\n\n1\nNone\nLA\n\n\n2\nCharlie\nChicago\n\n\n\n\n\n\n\n\n… and s.drop() to remove them:\n\ns.drop(df, s.string())\n\n\n\n\n\n\n\n\nage\n\n\n\n\n0\n25\n\n\n1\n30\n\n\n2\n35"
   },
   {
     "objectID": "chapters/04_selectors.html#selecting-by-data-type",
     "href": "chapters/04_selectors.html#selecting-by-data-type",
     "title": "Choose your columns with selectors",
     "section": "Selecting by Data Type",
-    "text": "Selecting by Data Type\nSome of the available selectors:\n\n.numeric(): Numeric columns (int or float)\n.integer(): Integer columns only\n.float(): Floating-point columns\n.string(): String columns\n.categorical(): Categorical columns\n.any_date(): Date or datetime columns\n.boolean(): Boolean columns"
+    "text": "Selecting by Data Type\n\n.numeric(): Numeric columns (int or float)\n.integer(): Integer columns only\n.float(): Floating-point columns\n.string(): String columns\n.categorical(): Categorical columns\n.any_date(): Date or datetime columns\n.boolean(): Boolean columns"
   },
   {
     "objectID": "chapters/04_selectors.html#selecting-by-characteristics",
     "href": "chapters/04_selectors.html#selecting-by-characteristics",
     "title": "Choose your columns with selectors",
     "section": "Selecting by Characteristics",
-    "text": "Selecting by Characteristics\n\n.all(): All columns\n.has_nulls(): Columns with more than a given threshold of nulls (default=0)\n.cardinality_below(threshold): Few unique values\n.has_dtype(): Columns that have the provided dtype\n\n\nimport polars as pl\n\ndf = pl.DataFrame({\"A\": [[1,2], [1,2,3]], \"B\": [\"A\", \"B\"]})\ndf.dtypes\n\n[List(Int64), String]\n\n\n\nsel = s.has_dtype(pl.List)\nSelectCols(cols=sel).fit_transform(df)\n\n\nshape: (2, 1)\n\n\n\nA\n\n\nlist[i64]\n\n\n\n\n[1, 2]\n\n\n[1, 2, 3]"
+    "text": "Selecting by Characteristics\n\n.all(): All columns\n.has_nulls(): Columns with more than a given threshold of nulls (default=0)\n.cardinality_below(threshold): fewer than threshold unique values\n.has_dtype(): Columns that have the provided dtype"
+  },
+  {
+    "objectID": "chapters/04_selectors.html#example-select-list-columns-with-has_dtype",
+    "href": "chapters/04_selectors.html#example-select-list-columns-with-has_dtype",
+    "title": "Choose your columns with selectors",
+    "section": "Example: select list columns with has_dtype",
+    "text": "Example: select list columns with has_dtype\n\nimport polars as pl\n\ndf = pl.DataFrame({\"A\": [[1,2], [1,2,3]], \"B\": [\"A\", \"B\"]})\ndf.dtypes\n\n[List(Int64), String]\n\n\n\nsel = s.has_dtype(pl.List)\ns.select(df, sel)\n\n\nshape: (2, 1)\n\n\n\nA\n\n\nlist[i64]\n\n\n\n\n[1, 2]\n\n\n[1, 2, 3]"
   },
   {
     "objectID": "chapters/04_selectors.html#selecting-by-name",
     "href": "chapters/04_selectors.html#selecting-by-name",
     "title": "Choose your columns with selectors",
     "section": "Selecting by Name",
-    "text": "Selecting by Name\n\n.cols(\"name\"): Specific column name(s)\n.glob(\"pattern*\"): Unix shell-style globbing\n.regex(\"pattern\"): Regular expressions\n\n\ndf = pd.DataFrame({\n    \"patient_id\": [101, 102, 103],\n    \"metric_1\": [0.3, 0.3, 0.6],\n    \"metric_2\": [3, 5, 10],\n})\n\nSelectCols(cols=s.glob(\"metric_*\")).fit_transform(df)\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\n\n\n\n\n0\n0.3\n3\n\n\n1\n0.3\n5\n\n\n2\n0.6\n10"
+    "text": "Selecting by Name\n\n\n\n.cols(\"name\"): Specific column name(s)\n.glob(\"pattern*\"): Unix shell-style globbing\n.regex(\"pattern\"): Regular expressions\n\n\n\ndf = pd.DataFrame({\n    \"patient_id\": [101, 102, 103],\n    \"metric_1\": [0.3, 0.3, 0.6],\n    \"metric_2\": [3, 5, 10],\n})\n\ns.select(df, s.glob(\"metric_*\"))\n\n\n\n\n\n\n\n\nmetric_1\nmetric_2\n\n\n\n\n0\n0.3\n3\n\n\n1\n0.3\n5\n\n\n2\n0.6\n10"
   },
   {
     "objectID": "chapters/04_selectors.html#combining-selectors",
@@ -1785,11 +1806,46 @@
     "text": "Combining Selectors\nSelectors can be combined:\n\neach selector produces a set of columns\nset operations (&, |, ^, -, ~) can be used to combine selectors\ncolumn names or lists of columns can be used directly\n\n# Inverse: NOT numeric\n~s.numeric()\n\n# OR: datetime columns OR string columns OR the columns in a list\ns.any_date() | s.string() | [\"date\", \"datetime-col\"]\n\n# AND: string columns without nulls\ns.string() & ~s.has_nulls()\n\n# Exclude: all columns except \"datetime-col\"\ns.all() - \"datetime-col\""
   },
   {
-    "objectID": "chapters/04_selectors.html#using-selectors-with-pandas-dataframes",
-    "href": "chapters/04_selectors.html#using-selectors-with-pandas-dataframes",
+    "objectID": "chapters/04_selectors.html#combining-selectors-.all",
+    "href": "chapters/04_selectors.html#combining-selectors-.all",
     "title": "Choose your columns with selectors",
-    "section": "Using selectors with pandas dataframes",
-    "text": "Using selectors with pandas dataframes\nGet the list of selected columns:\n\ndf = pd.DataFrame(\n    {\n        \"age\": [25, 30, 35],\n        \"name\": [\"Alice\", None, \"Charlie\"],\n    }\n)\n\nselector = s.has_nulls()\ncolumns_with_nulls = selector.expand(df)\nprint(columns_with_nulls)\n\n# Use in dataframe operations: drop columns with nulls\ndf.drop(columns=columns_with_nulls)\n\n['name']\n\n\n\n\n\n\n\n\n\nage\n\n\n\n\n0\n25\n\n\n1\n30\n\n\n2\n35"
+    "section": "Combining Selectors: .all()",
+    "text": "Combining Selectors: .all()"
+  },
+  {
+    "objectID": "chapters/04_selectors.html#combining-selectors-not",
+    "href": "chapters/04_selectors.html#combining-selectors-not",
+    "title": "Choose your columns with selectors",
+    "section": "Combining Selectors: NOT",
+    "text": "Combining Selectors: NOT"
+  },
+  {
+    "objectID": "chapters/04_selectors.html#combining-selectors-and",
+    "href": "chapters/04_selectors.html#combining-selectors-and",
+    "title": "Choose your columns with selectors",
+    "section": "Combining Selectors: AND",
+    "text": "Combining Selectors: AND"
+  },
+  {
+    "objectID": "chapters/04_selectors.html#combining-selectors-or",
+    "href": "chapters/04_selectors.html#combining-selectors-or",
+    "title": "Choose your columns with selectors",
+    "section": "Combining Selectors: OR",
+    "text": "Combining Selectors: OR"
+  },
+  {
+    "objectID": "chapters/04_selectors.html#multiple-aggregations-in-pandas-with-selectors",
+    "href": "chapters/04_selectors.html#multiple-aggregations-in-pandas-with-selectors",
+    "title": "Choose your columns with selectors",
+    "section": "Multiple aggregations in pandas with selectors",
+    "text": "Multiple aggregations in pandas with selectors\n\n\nDefine a selector: only numeric columns except the “id”\n\ndf = pd.DataFrame(\n    {\n        \"id\": [1, 2, 3, 4],\n        \"group\": [\"A\", \"A\", \"B\", \"B\"],\n        \"str\": [\"foo\", \"bar\", \"baz\", \"qux\"],\n        \"value1\": [1, 2, 30, 40],\n        \"value2\": [5, 6, 7, 8],\n    }\n)\n\n# pick the numeric columns to aggregate, except the id\nonly_num = (s.numeric() - \"id\")\n\n\n\naggs = {col: [\"mean\", \"sum\"] for col in only_num.expand(df)}\ndf.groupby(\"group\").agg(aggs)\n\n\n\n\n\n\n\n\nvalue1\nvalue2\n\n\n\nmean\nsum\nmean\nsum\n\n\ngroup\n\n\n\n\n\n\n\n\nA\n1.5\n3\n5.5\n11\n\n\nB\n35.0\n70\n7.5\n15"
+  },
+  {
+    "objectID": "chapters/04_selectors.html#using-selectors-to-aggregate-pandas-dataframes",
+    "href": "chapters/04_selectors.html#using-selectors-to-aggregate-pandas-dataframes",
+    "title": "Choose your columns with selectors",
+    "section": "Using selectors to aggregate pandas dataframes",
+    "text": "Using selectors to aggregate pandas dataframes\nNew columns are handled by the selector:\n\n# new columns, same selector\ndf[\"value3\"] = [100, 200, 300, 400]\ndf[\"note\"] = [\"a\", \"b\", \"c\", \"d\"]\n\naggs = {col: [\"mean\", \"sum\"] for col in only_num.expand(df)}\ndf.groupby(\"group\").agg(aggs)\n\n\n\n\n\n\n\n\nvalue1\nvalue2\nvalue3\n\n\n\nmean\nsum\nmean\nsum\nmean\nsum\n\n\ngroup\n\n\n\n\n\n\n\n\n\n\nA\n1.5\n3\n5.5\n11\n150.0\n300\n\n\nB\n35.0\n70\n7.5\n15\n350.0\n700"
   },
   {
     "objectID": "chapters/04_selectors.html#custom-selectors-filter-by-condition",
@@ -1806,25 +1862,25 @@
     "text": "Using selectors with the TableReport\nThe TableReport can use selectors (or simply column names) to focus only on specific columns:\n\nfrom skrub import TableReport\ncustom_filter = {\"metrics\": s.glob(\"metric_*\")}\n\ndf = pd.DataFrame({\n    \"patient_id\": [101, 102, 103],\n    \"metric_1\": [0.3, 0.3, 0.6],\n    \"metric_2\": [3, 5, 10],\n})\n\nTableReport(df, column_filters=custom_filter)\n\n\n    \n\n    \n    \n\n    \n\n\n\n    Please enable javascript\n    \n        The skrub table reports need javascript to display correctly. If you are\n        displaying a report in a Jupyter notebook and you see this message, you may need to\n        re-execute the cell or to trust the notebook (button on the top right or\n        \"File &gt; Trust notebook\")."
   },
   {
-    "objectID": "chapters/04_selectors.html#what-we-have-seen-in-this-chapters",
-    "href": "chapters/04_selectors.html#what-we-have-seen-in-this-chapters",
+    "objectID": "chapters/04_selectors.html#what-we-have-seen-in-this-chapter",
+    "href": "chapters/04_selectors.html#what-we-have-seen-in-this-chapter",
     "title": "Choose your columns with selectors",
-    "section": "What we have seen in this chapters",
-    "text": "What we have seen in this chapters\n\nSelectors can be used for flexible, reusable column selection\nSelectors can be combined with logical operators as “sets of columns”\nexpand() extracts selected column names\ns.filter() can be used to create custom selectors for domain-specific logic\nApplyToCols and TableReport can use selectors to filter columns"
+    "section": "What we have seen in this chapter",
+    "text": "What we have seen in this chapter\n\nSelectors can be used for flexible, reusable column selection\nSelectors can be combined with logical operators as “sets of columns”\nexpand() extracts selected column names and can be used with dataframe libraries\ns.filter() can be used to create custom selectors for domain-specific logic\nApplyToCols and TableReport can use selectors to filter columns"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#building-a-baseline-model-with-preprocessing",
     "href": "chapters/06_tabular_pipeline.slides.html#building-a-baseline-model-with-preprocessing",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "Building a baseline model with preprocessing",
-    "text": "Building a baseline model with preprocessing\nBeyond preprocessing and cleaning, ML pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
+    "text": "Building a baseline model with preprocessing\nBeyond preprocessing and cleaning, machine learning pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#reminder-avoiding-data-leakage",
     "href": "chapters/06_tabular_pipeline.slides.html#reminder-avoiding-data-leakage",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "Reminder: avoiding data leakage",
-    "text": "Reminder: avoiding data leakage\n\nWe want to prevent data that belongs to the test set from entering the train set.\nData leakage leads to over-optimistic results.\nTransformers and encoders must be trained exclusively on the training samples.\n\nThis is why we want a Pipeline!"
+    "text": "Reminder: avoiding data leakage\n\nWe want to prevent data that belongs to the test set from entering the train set.\nData leakage leads to over-optimistic results.\nTransformers and encoders must be trained exclusively on the training samples.\nRemember: pre-processing is part of the entire design!\n\nThis is why we want a Pipeline!"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#manual-pipeline-construction",
@@ -1838,7 +1894,7 @@
     "href": "chapters/06_tabular_pipeline.slides.html#the-tabular_pipeline-function",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "The tabular_pipeline Function",
-    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\n\nfrom skrub import tabular_pipeline\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\")\nmodel_reg = tabular_pipeline(\"regression\")"
+    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\nfrom skrub import tabular_pipeline\nfrom tabicl import TabICLRegressor\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\nmodel_tabicl = tabular_pipeline(TabICLRegressor())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\")\nmodel_reg = tabular_pipeline(\"regression\")"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tree-based-model",
@@ -1855,18 +1911,25 @@
     "text": "What the pipeline looks like: linear model"
   },
   {
+    "objectID": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tabicl",
+    "href": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tabicl",
+    "title": "Building a complete machine learning pipeline with skrub",
+    "section": "What the pipeline looks like: TabICL",
+    "text": "What the pipeline looks like: TabICL"
+  },
+  {
     "objectID": "chapters/06_tabular_pipeline.slides.html#customizing-the-pipeline",
     "href": "chapters/06_tabular_pipeline.slides.html#customizing-the-pipeline",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "Customizing the pipeline",
-    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\nThis is not necessary most of the time!\n\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pipeline']"
+    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\nThis is not necessary most of the time!\n\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']"
   },
   {
-    "objectID": "chapters/06_tabular_pipeline.slides.html#when-to-use-which-approach",
-    "href": "chapters/06_tabular_pipeline.slides.html#when-to-use-which-approach",
+    "objectID": "chapters/06_tabular_pipeline.slides.html#customizing-the-tabular_pipeline",
+    "href": "chapters/06_tabular_pipeline.slides.html#customizing-the-tabular_pipeline",
     "title": "Building a complete machine learning pipeline with skrub",
-    "section": "When to Use Which Approach",
-    "text": "When to Use Which Approach\nUse tabular_pipeline if:\n\nYou need a quick baseline for benchmarking/checking if there is a signal\nYou want a starting point for experimentation\nYou don’t need custom preprocessing/feature engineering\n\nEmbed a pipeline in tabular_pipeline if :\n\nYou need to modify only the end of the pipeline\n\nUse a manual pipeline if :\n\nYou need fine-grained control over most of the transformations\nYour training process includes custom preprocessing steps\nYou want to experiment with different transformers\n\nOr… use the skrub Data Ops!"
+    "section": "Customizing the tabular_pipeline",
+    "text": "Customizing the tabular_pipeline\nUse tabular_pipeline if:\n\nYou need a quick baseline for benchmarking/checking if there is a signal\nYou want a starting point for experimentation\nYou don’t need custom preprocessing/feature engineering\n\nEmbed a pipeline in tabular_pipeline if :\n\nYou need to modify only the end of the pipeline\n\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\nUse a manual pipeline if :\n\nYou need fine-grained control over most of the transformations\nYour training process includes custom preprocessing steps\nYou want to experiment with different transformers\n\nOr… use the skrub Data Ops!"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#example-complete-workflow",
@@ -1880,28 +1943,28 @@
     "href": "chapters/06_tabular_pipeline.slides.html#what-we-have-seen-in-this-chapter",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage\nTableVectorizer handles most of the feature engineering\nManual pipelines give full control\ntabular_pipeline provides a good baseline with good defaults\nProvide a model, or \"classification\" or \"regression\""
+    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage\nTableVectorizer handles most of the feature engineering\nThe tabular_pipeline uses good defaults based on the type of estimator used\nPass a model (LogisticRegression(), TabICLRegressor()), or a string (“regression”, “classification”)\nUse manual pipelines to retain full control"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html",
     "href": "chapters/06_tabular_pipeline.html",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "",
-    "text": "Beyond preprocessing and cleaning, ML pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
+    "text": "Beyond preprocessing and cleaning, machine learning pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#building-a-baseline-model-with-preprocessing",
     "href": "chapters/06_tabular_pipeline.html#building-a-baseline-model-with-preprocessing",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "",
-    "text": "Beyond preprocessing and cleaning, ML pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
+    "text": "Beyond preprocessing and cleaning, machine learning pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#reminder-avoiding-data-leakage",
     "href": "chapters/06_tabular_pipeline.html#reminder-avoiding-data-leakage",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "Reminder: avoiding data leakage",
-    "text": "Reminder: avoiding data leakage\n\nWe want to prevent data that belongs to the test set from entering the train set.\nData leakage leads to over-optimistic results.\nTransformers and encoders must be trained exclusively on the training samples.\n\nThis is why we want a Pipeline!"
+    "text": "Reminder: avoiding data leakage\n\nWe want to prevent data that belongs to the test set from entering the train set.\nData leakage leads to over-optimistic results.\nTransformers and encoders must be trained exclusively on the training samples.\nRemember: pre-processing is part of the entire design!\n\nThis is why we want a Pipeline!"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#manual-pipeline-construction",
@@ -1915,7 +1978,7 @@
     "href": "chapters/06_tabular_pipeline.html#the-tabular_pipeline-function",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "The tabular_pipeline Function",
-    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\n\nfrom skrub import tabular_pipeline\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\")\nmodel_reg = tabular_pipeline(\"regression\")"
+    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\nfrom skrub import tabular_pipeline\nfrom tabicl import TabICLRegressor\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\nmodel_tabicl = tabular_pipeline(TabICLRegressor())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\")\nmodel_reg = tabular_pipeline(\"regression\")"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tree-based-model",
@@ -1932,18 +1995,25 @@
     "text": "What the pipeline looks like: linear model"
   },
   {
+    "objectID": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tabicl",
+    "href": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tabicl",
+    "title": "Building a complete machine learning pipeline with skrub",
+    "section": "What the pipeline looks like: TabICL",
+    "text": "What the pipeline looks like: TabICL"
+  },
+  {
     "objectID": "chapters/06_tabular_pipeline.html#customizing-the-pipeline",
     "href": "chapters/06_tabular_pipeline.html#customizing-the-pipeline",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "Customizing the pipeline",
-    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\n\nThis is not necessary most of the time!\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pipeline']"
+    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\n\nThis is not necessary most of the time!\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']"
   },
   {
-    "objectID": "chapters/06_tabular_pipeline.html#when-to-use-which-approach",
-    "href": "chapters/06_tabular_pipeline.html#when-to-use-which-approach",
+    "objectID": "chapters/06_tabular_pipeline.html#customizing-the-tabular_pipeline",
+    "href": "chapters/06_tabular_pipeline.html#customizing-the-tabular_pipeline",
     "title": "Building a complete machine learning pipeline with skrub",
-    "section": "When to Use Which Approach",
-    "text": "When to Use Which Approach\nUse tabular_pipeline if:\n\nYou need a quick baseline for benchmarking/checking if there is a signal\nYou want a starting point for experimentation\nYou don’t need custom preprocessing/feature engineering\n\nEmbed a pipeline in tabular_pipeline if :\n\nYou need to modify only the end of the pipeline\n\nUse a manual pipeline if :\n\nYou need fine-grained control over most of the transformations\nYour training process includes custom preprocessing steps\nYou want to experiment with different transformers\n\nOr… use the skrub Data Ops!"
+    "section": "Customizing the tabular_pipeline",
+    "text": "Customizing the tabular_pipeline\nUse tabular_pipeline if:\n\nYou need a quick baseline for benchmarking/checking if there is a signal\nYou want a starting point for experimentation\nYou don’t need custom preprocessing/feature engineering\n\nEmbed a pipeline in tabular_pipeline if :\n\nYou need to modify only the end of the pipeline\n\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\nUse a manual pipeline if :\n\nYou need fine-grained control over most of the transformations\nYour training process includes custom preprocessing steps\nYou want to experiment with different transformers\n\nOr… use the skrub Data Ops!"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#example-complete-workflow",
@@ -1957,7 +2027,7 @@
     "href": "chapters/06_tabular_pipeline.html#what-we-have-seen-in-this-chapter",
     "title": "Building a complete machine learning pipeline with skrub",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage\nTableVectorizer handles most of the feature engineering\nManual pipelines give full control\ntabular_pipeline provides a good baseline with good defaults\nProvide a model, or \"classification\" or \"regression\""
+    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage\nTableVectorizer handles most of the feature engineering\nThe tabular_pipeline uses good defaults based on the type of estimator used\nPass a model (LogisticRegression(), TabICLRegressor()), or a string (“regression”, “classification”)\nUse manual pipelines to retain full control"
   },
   {
     "objectID": "chapters/08_data_ops.slides.html#skrub-dataops",

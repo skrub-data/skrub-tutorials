@@ -97,7 +97,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-b49444de5e07115d1c97c740e2613f4a.css">
   <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -208,17 +208,16 @@
 <section id="why-column-specific-transformations" class="slide level2">
 <h2>Why Column-Specific Transformations?</h2>
 <p>Different columns must be handled in different ways.</p>
-<div id="8af861a8" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols, DropCols</span>
-<span id="cb1-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a></a></span>
-<span id="cb1-4"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb1-5"><a></a>    <span class="st">"user_id"</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>],</span>
-<span id="cb1-6"><a></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>,<span class="st">"14 April 2023"</span> ],</span>
-<span id="cb1-7"><a></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>, <span class="st">"Rome"</span>],</span>
-<span id="cb1-8"><a></a>    <span class="st">"metric_1"</span>: [<span class="fl">10.3</span>, <span class="fl">20.7</span>, <span class="fl">30.8</span>],</span>
-<span id="cb1-9"><a></a>    <span class="st">"metric_2"</span>: [<span class="fl">3.5</span>, <span class="fl">22.3</span>, <span class="fl">45.1</span>]</span>
-<span id="cb1-10"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="58431568" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a></a></span>
+<span id="cb1-3"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-4"><a></a>    <span class="st">"user_id"</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>],</span>
+<span id="cb1-5"><a></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>,<span class="st">"14 April 2023"</span> ],</span>
+<span id="cb1-6"><a></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>, <span class="st">"Rome"</span>],</span>
+<span id="cb1-7"><a></a>    <span class="st">"metric_1"</span>: [<span class="fl">10.3</span>, <span class="fl">20.7</span>, <span class="fl">30.8</span>],</span>
+<span id="cb1-8"><a></a>    <span class="st">"metric_2"</span>: [<span class="fl">3.5</span>, <span class="fl">22.3</span>, <span class="fl">45.1</span>]</span>
+<span id="cb1-9"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="why-column-specific-transformations-1" class="slide level2 smaller">
@@ -226,16 +225,15 @@
 <ul>
 <li class="fragment">Some transformers (e.g., the <code>StandardScaler</code>) work only on numeric columns</li>
 <li class="fragment">Some transformers (e.g., the <code>OneHotEncoder</code>) work only on categorical columns</li>
-<li class="fragment">Different columns with the same dtype may need to be treated differently (e.g., one has outliers and requires a <code>RobustScaler</code>, an integer ID should not be scaled)</li>
-<li class="fragment">Some transformations only make sense for a subset of the columns (e.g., parsing datetimes)</li>
+<li class="fragment">Different columns with the same dtype may need to be treated differently (e.g., an integer ID should not be scaled)</li>
+<li class="fragment">Some transformations only make sense for a subset of the columns (e.g., extracting the year from datetimes)</li>
 </ul>
 </section>
 <section id="applying-transformers-to-columns-with-applytocols" class="slide level2 smaller">
 <h2>Applying transformers to columns with <code>ApplyToCols</code></h2>
-<p><code>ApplyToCols</code> is a <strong>meta-transformer</strong>: it applies a transformer to columns that can be selected by name, or with filters.</p>
-<p>Depending on the transformer, <code>ApplyToCols</code> either clones it and applies a copy to each column, or forwards all the columns to the same transformer.</p>
+<p><code>ApplyToCols</code> is a <strong>meta-transformer</strong>: it applies a transformer to selected columns.</p>
 <p>Columns that are not selected pass through without changes.</p>
-<div id="558c4be5" class="cell" data-execution_count="2">
+<div id="d292e4ef" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb2-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
 <span id="cb2-3"><a></a></span>
@@ -311,10 +309,22 @@
 <p><code>ApplyToCols(PCA(), cols=s.glob("metric_*"))</code></p>
 
 <img data-src="./images/ex_ApplyToFrame.png" class="r-stretch"></section>
-<section id="exclude-specific-columns" class="slide level2">
+<section id="exclude-specific-columns" class="slide level2 smaller">
 <h2>Exclude specific columns</h2>
-<p>For example, apply the <code>StandardScaler</code> only to the <code>metric_*</code> columns, excluding the column <code>user_id</code>.</p>
-<div id="52c34192" class="cell" data-execution_count="3">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Apply the <code>StandardScaler</code> only to the <code>metric_*</code> columns, excluding the column <code>user_id</code>.</p>
+</div>
+</div>
+</div>
+<div id="b3f2e8c1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb3-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb3-3"><a></a></span>
@@ -379,7 +389,7 @@
 </div>
 </div>
 </section>
-<section id="chaining-transformers" class="slide level2">
+<section id="chaining-transformers" class="slide level2 smaller">
 <h2>Chaining Transformers</h2>
 <p>Use a scikit-learn <code>Pipeline</code> to concatenate multiple transformers, when wrapped in <code>ApplyToCols</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -406,7 +416,7 @@
 </section>
 <section id="example-convert-to-datetime-and-encode" class="slide level2">
 <h2>Example: convert to datetime and encode</h2>
-<div id="496fa041" class="cell" data-execution_count="4">
+<div id="63d6a683" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
 <span id="cb5-2"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb5-3"><a></a></span>
@@ -490,122 +500,54 @@
 <span id="cb6-11"><a></a>    <span class="co"># Strings haven't been touched</span></span>
 <span id="cb6-12"><a></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
 <span id="cb6-13"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>This is particularly important if you use expensive models to generate features!</p>
+</div>
+</div>
+</div>
 </section>
-<section id="the-allow_reject-parameter" class="slide level2">
-<h2>The <code>allow_reject</code> Parameter</h2>
+<section id="handling-columns-that-cant-be-transformed" class="slide level2">
+<h2>Handling columns that can’t be transformed</h2>
+<ul>
+<li>It is not always possible to know a priori if a transformer can handle a column.</li>
+<li>The default behavior is to <strong>reject columns</strong> that can’t be handled.</li>
+<li>In some situations, it is expected that some columns will be rejected (e.g., if the transformer needs to detect the column dtype)</li>
+</ul>
+</section>
+<section id="handling-columns-that-cant-be-transformed-1" class="slide level2">
+<h2>Handling columns that can’t be transformed</h2>
 <p>When <code>allow_reject=True</code>, columns that can’t be transformed are passed through:</p>
-<div id="b431872b" class="cell" data-execution_count="5">
+<div id="b9439e6a" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb7-4"><a></a>result <span class="op">=</span> with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>This is useful when you don’t know if a column may be rejected or not (e.g., you don’t know which columns are acually datetimes).</p>
 </section>
-<section id="selection-operations" class="slide level2">
-<h2>Selection Operations</h2>
-<p><code>SelectCols</code> and <code>DropCols</code> filter columns based on rules:</p>
-<div id="e4aacd14" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SelectCols, DropCols</span>
-<span id="cb8-2"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb8-3"><a></a></span>
-<span id="cb8-4"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb8-5"><a></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
-<span id="cb8-6"><a></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
-<span id="cb8-7"><a></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
-<span id="cb8-8"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="selection-operations-1" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Selection Operations</h2>
-<div id="7b76a442" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb9-1" class="hljs-ln-code"><a></a><span class="co"># By name</span></span>
-<span id="cb9-2" class="hljs-ln-code"><a></a>SelectCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">date</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>03 January 2023</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>04 February 2023</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-<section id="selection-operations-2" class="slide level2" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Selection Operations</h2>
-<div id="2ce677c9" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb10-1" class="hljs-ln-code"><a></a>DropCols(<span class="st">"date"</span>).fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe caption-top" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">city</th>
-<th data-quarto-table-cell-role="th">values</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>Paris</td>
-<td>10</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>London</td>
-<td>20</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>More advanced selection rules in the next chapter!</p>
+<section id="define-custom-transformers-to-use-with-applytocols" class="slide level2">
+<h2>Define custom transformers to use with <code>ApplyToCols</code></h2>
+<ul>
+<li>Some columns need specific transformations</li>
+<li>You can define your transformer and have it work seamlessly with <code>ApplyToCols</code></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">from</span> skrub.core <span class="im">import</span> RejectColumn, SingleColumnTransformer</span>
+<span id="cb8-2"><a></a><span class="kw">class</span> CustomTransformer(SingleColumnTransformer):</span>
+<span id="cb8-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb8-4"><a></a>        <span class="cf">return</span></span>
+<span id="cb8-5"><a></a>    <span class="kw">def</span> fit_transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb8-6"><a></a>        ... do something</span>
+<span id="cb8-7"><a></a></span>
+<span id="cb8-8"><a></a>        <span class="cf">if</span> ... <span class="co"># the column can't be handled</span></span>
+<span id="cb8-9"><a></a>            <span class="cf">raise</span> RejectColumn(...)</span>
+<span id="cb8-10"><a></a>        <span class="cf">return</span> transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="what-we-have-seen-in-this-chapter" class="slide level2">
 <h2>What we have seen in this chapter</h2>
@@ -613,7 +555,6 @@
 <li><code>ApplyToCols</code>: Apply a transformer to columns selected with <code>cols</code>, exclude with <code>exclude_cols</code></li>
 <li>Chain transformers with scikit-learn pipelines</li>
 <li><code>allow_reject</code>: Reject columns that cannot be treated</li>
-<li><code>SelectCols</code> / <code>DropCols</code>: Filter columns with the <code>cols</code> parameter</li>
 </ul>
 
 
