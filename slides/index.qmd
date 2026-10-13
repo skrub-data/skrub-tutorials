@@ -22,6 +22,9 @@ format: html
 - [Chapter 6: Strong ML baselines: `tabular_pipeline`](chapters/06_tabular_pipeline.slides.html)
 - Exercise 3
 
+## Section 5: Data Ops
+- [Chapter 7: Data Ops](chapters/08_data_ops.qmd)
+
 ## Section 5: Feature Engineering with skrub
 - [Chapter 7: Skrub transformers for feature engineering](chapters/07_feature_eng_all.slides.html)
 - Exercise 4 

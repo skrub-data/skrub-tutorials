@@ -11,148 +11,224 @@ format:
 
 ---
 
-## Skrub DataOps
+## When pipelines aren't enough ... 
 
-::: {.incremental}
-- Extend the `scikit-learn` machinery to multi-table operations 
-- Take care of data leakage
-- Store stateful objects in the pipeline (including encoders and trasformers)
-- Track all operations with a computational graph (a *Data Ops plan*)
-- Allow tuning any operation in the plan
-- Can be persisted and shared easily 
+## {.smaller}
+
+:::: {.columns}
+
+::: {.column width="44%"}
+
+**Textbook ML**
+
+<br>
+
+$X \in \mathbb{R}^{n \times p},\ y \in \mathbb{R}^n$
+
+$\hat{y} = f_{\hat{\theta}}(X)$
+
+<br>
+
+```{=html}
+<pre><code class="language-python">estimator = <span style="outline: 3px transparent; outline-offset: 1px;">TabICLRegressor()</span>
+
+cross_validate(estimator, X, y)
+
+estimator.fit(X_train, y_train)
+estimator.predict(X_new)</code></pre>
+```
 :::
 
-## How do DataOps work, though?  {.smaller}
-DataOps **wrap** around *user operations*, where user operations are:
+::: {.column width="55%"}
+**Data-Science Practice**
 
-- any dataframe operation (e.g., merge, group by, aggregate etc.)
-- scikit-learn estimators (a Random Forest, RidgeCV etc.)
-- custom user code (load data from a path, fetch from an URL etc.)
+![](images/electricity-load-graph.svg)
+:::
+
+::::
+
+## {.smaller}
+
+:::: {.columns}
+
+::: {.column width="44%"}
+
+**Textbook ML**
+
+<br>
+
+$X \in \mathbb{R}^{n \times p},\ y \in \mathbb{R}^n$
+
+$\hat{y} = f_{\hat{\theta}}(X)$
+
+<br>
+
+```{=html}
+<pre><code class="language-python">estimator = TabICLRegressor()
+
+cross_validate(estimator, <span style="outline: 3px solid #2a52a8; outline-offset: 1px;">X</span>, <span style="outline: 3px solid #c04a10; outline-offset: 1px;">y</span>)
+
+estimator.fit(X_train, y_train)
+estimator.predict(X_new)</code></pre>
+```
+:::
+
+::: {.column width="55%"}
+**Data-Science Practice**
+
+![](images/electricity-load-highlighted-Xy-graph.svg)
+:::
+
+::::
+
+## {.smaller}
+
+:::: {.columns}
+
+::: {.column width="44%"}
+
+**Textbook ML**
+
+<br>
+
+$X \in \mathbb{R}^{n \times p},\ y \in \mathbb{R}^n$
+
+$\hat{y} = f_{\hat{\theta}}(X)$
+
+<br>
+
+```{=html}
+<pre><code class="language-python">estimator = <span style="outline: 3px solid blue; outline-offset: 1px;">TabICLRegressor()</span>
+
+cross_validate(estimator, X, y)
+
+estimator.fit(X_train, y_train)
+estimator.predict(X_new)</code></pre>
+```
+:::
+
+::: {.column width="55%"}
+**Data-Science Practice**
+
+![](images/electricity-load-highlighted-apply-graph.svg)
+:::
+
+::::
+
+## Basic pipelines have limitations! {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Limitations
+
+::: {.fragment fragment-index=1}
+- Pipelines require a single feature matrix and a target
+:::
+
+::: {.fragment fragment-index=2}
+- Multiple tables as inputs are not supported
+:::
+
+::: {.fragment fragment-index=3}
+- The number of samples cannot change inside a pipeline
+:::
+
+
+:::
+
+::: {.column width="50%"}
+
+### Reality
+
+::: {.fragment fragment-index=1}
+- In some cases, the feature matrix needs to be assembled within the pipeline
+:::
+
+::: {.fragment fragment-index=2}
+- Relational databases require joins and aggregations
+:::
+
+
+::: {.fragment fragment-index=3}
+- The number of samples may be altered (e.g., by aggregating rows)
+:::
+
+
+:::
+
+::::
+
+
+## With Data Ops... {.smaller}
+
+Seamless **Data wrangling:** filtering, resampling, aggregations, joins, ...
+
+- Cross-validate without [**data leaks**]{style="color: #1a5a8a; font-weight: bold;"}.
+- [**Tune choices**]{style="color: #1a5a8a; font-weight: bold;"} with validation scores.
+- Replay on [**new inputs**]{style="color: #1a5a8a; font-weight: bold;"}.
+
 
 ::: {.fragment}
 
-::: {.callout-important}
-DataOps _record_ user operations, so that they can later be _replayed_ in the same
-order and with the same arguments on unseen data. 
+::: {.callout-note icon=false style="font-size: 1em;"}
+### DataOps
+
+- All the goodies of the scikit-learn framework: `fit()` & `predict()`, cross-validation, hyperparameter tuning, serialization.
+- Without the usual restrictions & while supporting **arbitrary data processing**.
+  [Multiple inputs, feature & target construction, filtering samples, dynamic arguments for CV splitters & scorers, etc.]{style="font-size: 0.8em; color: gray;"}
+- And more: Optuna integration, dynamic previews, pipeline inspection, ...
 :::
-::: 
-
-## Starting with the `DataOps` {auto-animate="true"} 
-
-```{python}
-#| echo: true
-import skrub
-data = skrub.datasets.fetch_credit_fraud()
-
-baskets = skrub.var("baskets", data.baskets)
-products = skrub.var("products", data.products) # add a new variable
-
-X = baskets[["ID"]].skb.mark_as_X()
-y = baskets["fraud_flag"].skb.mark_as_y()
-```
-
-- `baskets` and `products` represent inputs to the pipeline.
-- Skrub tracks `X` and `y` so that training and test splits are never mixed. 
-
-## Applying a transformer {auto-animate="true"}
-```{python}
-# | echo: true
-from skrub import selectors as s
-
-vectorizer = skrub.TableVectorizer(
-    high_cardinality=skrub.StringEncoder()
-)
-vectorized_products = products.skb.apply(
-    vectorizer, cols=s.all() - "basket_ID"
-)
-```
-
-##  Executing dataframe operations {auto-animate="true"}
-```{python}
-#| echo: true
-aggregated_products = vectorized_products.groupby(
-    "basket_ID"
-).agg("mean").reset_index()
-
-features = X.merge(
-    aggregated_products, left_on="ID", right_on="basket_ID"
-)
-features = features.drop(columns=["ID", "basket_ID"])
-```
-
-##  Applying a ML model {auto-animate="true"}
-```{python}
-#| echo: true
-from sklearn.ensemble import ExtraTreesClassifier  
-predictions = features.skb.apply(
-    ExtraTreesClassifier(n_jobs=-1), y=y
-)
-```
-
-## Inspecting the Data Ops plan
-```{.python}
-predictions.skb.full_report()
-```
-<br/>
-
-<a href="../data/dataop_report/index.html" target="_blank">Execution report</a>
-
-Each node:
-
-- Shows a preview of the data resulting from the operation
-- Reports the location in the code where the code is defined
-- Can include node names and descriptions
-- Shows the run time of each node 
-
-## Exporting the plan in a `learner` {.smaller}
-The **Learner** is an estimator that takes a dictionary as input rather
-than just `X` and `y`. 
-
-
-::: {.fragment}
-
-```{python}
-#| echo: true
-learner = predictions.skb.make_learner(fitted=True)
-```
 
 :::
 
 
-::: {.fragment}
-Then, the `learner` can be pickled ...
+## Basic example {.smaller auto-animate="true"}
 
-```{python}
-import pickle 
 
-learner_bytes = pickle.dumps(learner)
+::: {.columns}
+
+::: {.column width=60%}
+
+
+Declare the pipeline
+
+```python
+data_path = skrub.var("data_path")
+data = data_path.skb.apply_func(pd.read_csv)
+X = data.drop(columns="target", errors="ignore").skb.mark_as_X()
+y = data["target"].skb.mark_as_y()
+pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)
 ```
 
-```{.python}
-import pickle
+Cross-validate
 
-with open("learner.bin", "wb") as fp:
-    pickle.dump(learner, fp)
+```python
+pred.skb.cross_validate({"data_path": "historical_data.csv"})
 ```
-```{python}
-loaded_learner = pickle.loads(learner_bytes)
+
+Make a "learner" (object with `fit()` & `predict()`)
+
+```python
+learner = pred.skb.make_learner().fit({"data_path": "historical_data.csv"})
+learner.predict({"data_path": "new_data.csv"})
 ```
+
 
 :::
 
-::: {.fragment}
-... loaded and applied to new data:
+::: {.column width=40%}
 
-```{.python}
-with open("learner.bin", "rb") as fp:
-    loaded_learner = pickle.load(fp)
-data = skrub.datasets.fetch_credit_fraud(split="test")
-new_baskets = data.baskets
-new_products = data.products
-loaded_learner.predict({"baskets": new_baskets, "products": new_products})
-```
+![](images/base_ex.svg)
+
 :::
 
+:::
+
+## Basic example {auto-animate="true"}
+
+![](images/learner-schema/make_learner.svg)
 
 
 ## Tuning in `scikit-learn` can be complex {.smaller auto-animate="true"}
@@ -186,7 +262,7 @@ grid = [
     },
 ]
 ```
-## Tuning with Data Ops is simple! {.smaller} 
+## Data Ops make tuning easier {.smaller} 
 
 ```python 
 dim_reduction = X.skb.apply(
@@ -220,7 +296,7 @@ search = regressor.skb.make_randomized_search(
 best_learner = search.best_learner_
 ```
 
-With Optuna as backend:
+Use Optuna as backend:
 
 ```{.python}
 # fit the search 
@@ -229,34 +305,49 @@ search = regressor.skb.make_randomized_search(
 )
 ```
 
-## A parallel coordinate plot to explore hyperparameters{auto-animate="true" .smaller} 
+## Debug the entire plan with the report {.smaller}
 
-```{.python}
-search = pred.skb.get_randomized_search(fitted=True)
-search.plot_parallel_coord()
-```
+
+::: {.columns}
+
+::: {.column}
+
+
 ```{python}
-import os
-from plotly.io import read_json
-json_path = os.path.join("..", "data", "parallel_coordinates_hgbr.json")
+df = pd.DataFrame({"value": [1, 2, 3], "target": [1, 0, 1]})
 
-fig = read_json(json_path)
-fig.update_layout(margin=dict(l=200))
+data = skrub.var("data", df)
+X = data.drop(columns="target", errors="ignore").skb.mark_as_X()
+y = data["target"].skb.mark_as_y()
+pred = X.skb.apply(
+        StandardScaler()
+    ).skb.apply(
+        LogisticRegression(), y=y
+    )
+pred.skb.report()
 ```
 
+:::
+
+::: {.column}
+
+<iframe src="images/report/index.html" width="100%" height="480px" style="border: 1px solid #ccc; border-radius: 4px;"> </iframe>
+
+:::
+
+:::
 
 
-## Hyperparameter tuning in a Data Ops plan 
-Skrub implements four `choose_*` functions:
+## Data Ops are not limited to tabular data! 
 
-- `choose_from`: select from the given list of options
-- `choose_int`: select an integer within a range
-- `choose_float`: select a float within a range
-- `choose_bool`: select a bool 
-- `optional`: chooses whether to execute the given operation
+Data Ops make **no assumption** about the underlying data, or code.
+
+- [Image classification with pytorch](https://skrub-data.org/stable/auto_examples/02_data_ops/1160_pytorch.html)
+
 
 ## What we have seen in this chapter
-- DataOps can be used to build complex multi-table pipelines
-- They track all the operations that are executed and replay them with the same parameters
-- DataOps simplify building hyperparameter grids
-- Learners can be exported and used with new data
+- Data leakage is a problem, and in practice pipelines are not enough
+- Data Ops can be used to build complex multi-table plans
+- Data Ops track all the operations that are executed and replay them with the same parameters
+- Choose functions generate complex hyperparameter grid in place
+- Learners can be exported to be used with new data

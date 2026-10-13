@@ -30,6 +30,9 @@ format:
     code-tools: true
     scrollable: true
     footer: "[← Back to Slides Index](../../slides/index.html)"
+    resources:
+      - images/report/*
+
 
 execute:
   freeze: auto
