@@ -11,7 +11,51 @@ format:
 
 ---
 
-## When pipelines aren't enough ... 
+## Basic pipelines have limitations! {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Limitations
+
+::: {.fragment fragment-index=1}
+- Pipelines require a single matrix as input to trasform
+:::
+
+::: {.fragment fragment-index=2}
+- Multiple tables as inputs are not supported
+:::
+
+::: {.fragment fragment-index=3}
+- The number of samples cannot change inside a pipeline
+:::
+
+
+:::
+
+::: {.column width="50%"}
+
+### Reality
+
+::: {.fragment fragment-index=1}
+- In some cases, the feature matrix needs to be assembled within the pipeline
+:::
+
+::: {.fragment fragment-index=2}
+- Data may be spread over multiple tables (e.g., relational databases)
+:::
+
+
+::: {.fragment fragment-index=3}
+- The number of samples may be altered (e.g., by aggregating rows)
+:::
+
+
+:::
+
+::::
+
 
 ## {.smaller}
 
@@ -115,55 +159,12 @@ estimator.predict(X_new)</code></pre>
 
 ::::
 
-## Basic pipelines have limitations! {.smaller}
-
-:::: {.columns}
-
-::: {.column width="50%"}
-
-### Limitations
-
-::: {.fragment fragment-index=1}
-- Pipelines require a single feature matrix and a target
-:::
-
-::: {.fragment fragment-index=2}
-- Multiple tables as inputs are not supported
-:::
-
-::: {.fragment fragment-index=3}
-- The number of samples cannot change inside a pipeline
-:::
-
-
-:::
-
-::: {.column width="50%"}
-
-### Reality
-
-::: {.fragment fragment-index=1}
-- In some cases, the feature matrix needs to be assembled within the pipeline
-:::
-
-::: {.fragment fragment-index=2}
-- Relational databases require joins and aggregations
-:::
-
-
-::: {.fragment fragment-index=3}
-- The number of samples may be altered (e.g., by aggregating rows)
-:::
-
-
-:::
-
-::::
-
 
 ## With Data Ops... {.smaller}
 
-Seamless **Data wrangling:** filtering, resampling, aggregations, joins, ...
+**Data wrangling** is part of the pipeline: filtering, resampling, aggregations, joins, ...
+
+Then, after preparing the data: 
 
 - Cross-validate without [**data leaks**]{style="color: #1a5a8a; font-weight: bold;"}.
 - [**Tune choices**]{style="color: #1a5a8a; font-weight: bold;"} with validation scores.
@@ -313,7 +314,7 @@ search = regressor.skb.make_randomized_search(
 ::: {.column}
 
 
-```{python}
+```{.python}
 df = pd.DataFrame({"value": [1, 2, 3], "target": [1, 0, 1]})
 
 data = skrub.var("data", df)
@@ -338,9 +339,9 @@ pred.skb.report()
 :::
 
 
-## Data Ops are not limited to tabular data! 
+## Data Ops go beyond tabular data! 
 
-Data Ops make **no assumption** about the underlying data, or code.
+Data Ops make **no assumption** about the underlying data, or code. 
 
 - [Image classification with pytorch](https://skrub-data.org/stable/auto_examples/02_data_ops/1160_pytorch.html)
 
