@@ -65,6 +65,7 @@ format:
 
 **Textbook ML**
 
+
 <br>
 
 $X \in \mathbb{R}^{n \times p},\ y \in \mathbb{R}^n$
@@ -72,6 +73,9 @@ $X \in \mathbb{R}^{n \times p},\ y \in \mathbb{R}^n$
 $\hat{y} = f_{\hat{\theta}}(X)$
 
 <br>
+
+::: {.fragment}
+
 
 ```{=html}
 <pre><code class="language-python">estimator = <span style="outline: 3px transparent; outline-offset: 1px;">TabICLRegressor()</span>
@@ -81,12 +85,24 @@ cross_validate(estimator, X, y)
 estimator.fit(X_train, y_train)
 estimator.predict(X_new)</code></pre>
 ```
+
+:::
+
+
 :::
 
 ::: {.column width="55%"}
+
+
+::: {.fragment}
+
 **Data-Science Practice**
 
 ![](images/electricity-load-graph.svg)
+
+:::
+
+
 :::
 
 ::::
@@ -159,6 +175,17 @@ estimator.predict(X_new)</code></pre>
 
 ::::
 
+## 
+To build a ML pipeline, we need to:
+
+- preprocess the data, perform feature engineering, train a model ... 
+- so we need to [**learn a state**]{style="color: #1a5a8a; font-weight: bold;"}... 
+- while we [**evaluate the predictive performance**]{style="color: #1a5a8a; font-weight: bold;"}... 
+- as we avoid [**data leakage**]{style="color: #1a5a8a; font-weight: bold;"}... 
+- with multi-source input ... 
+
+How do we deal with that? 
+
 
 ## With Data Ops... {.smaller}
 
@@ -193,46 +220,80 @@ Then, after preparing the data:
 ::: {.column width=60%}
 
 
+
+::: {.fragment fragment-index=1}
+
 Declare the pipeline
 
-```python
+```{.python code-line-numbers="|1|2|3,4|5-7|"}
 data_path = skrub.var("data_path")
 data = data_path.skb.apply_func(pd.read_csv)
 X = data.drop(columns="target", errors="ignore").skb.mark_as_X()
 y = data["target"].skb.mark_as_y()
-pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)
+pred = X.skb.apply(
+    StandardScaler(), cols=s.numeric()
+).skb.apply(LogisticRegression(), y=y)
 ```
+
+
+
+:::
+
+
+
+::: {.fragment}
 
 Cross-validate
 
-```python
-pred.skb.cross_validate({"data_path": "historical_data.csv"})
+```{.python code-line-numbers="|2|"}
+pred.skb.cross_validate(
+    environment={"data_path": "historical_data.csv"}
+)
 ```
+
+:::
+
+
+::: {.fragment}
+
 
 Make a "learner" (object with `fit()` & `predict()`)
 
-```python
-learner = pred.skb.make_learner().fit({"data_path": "historical_data.csv"})
-learner.predict({"data_path": "new_data.csv"})
+```{.python code-line-numbers="|2|3|5|6|"}
+learner = pred.skb.make_learner(
+).fit(
+    environment={"data_path": "historical_data.csv"}
+)
+learner.predict(
+    environment={"data_path": "new_data.csv"}
+)
 ```
+
+
+:::
+
 
 
 :::
 
 ::: {.column width=40%}
 
+
+::: {.fragment fragment-index=2}
+
 ![](images/base_ex.svg)
 
 :::
 
+
 :::
 
-## Basic example {auto-animate="true"}
-
-![](images/learner-schema/make_learner.svg)
+:::
 
 
-## Tuning in `scikit-learn` can be complex {.smaller auto-animate="true"}
+## Hyperparameter tuning 1/2 {.smaller auto-animate="true"}
+
+Tuning hyperparameters in scikit-learn can be complex...
 
 ```{.python}
 pipe = Pipeline([("dim_reduction", PCA()), ("regressor", Ridge())])
@@ -263,9 +324,11 @@ grid = [
     },
 ]
 ```
-## Data Ops make tuning easier {.smaller} 
+## Hyperparameter tuning 2/2 {.smaller} 
 
-```python 
+With Data Ops, you can [**define the search space with the estimator**]{.emph}:
+
+```{.python code-line-numbers="|2,6,7|4,5|"}
 dim_reduction = X.skb.apply(
     skrub.choose_from(
         {
@@ -274,17 +337,26 @@ dim_reduction = X.skb.apply(
         }, name="dim_reduction"
     )
 )
-regressor = dim_reduction.skb.apply(
-    skrub.choose_from(
-        {
-            "Ridge": Ridge(alpha=skrub.choose_float(0.1, 10.0, log=True)),
-            "RandomForest": RandomForestRegressor(
-                n_estimators=skrub.choose_int(20, 200, log=True)
-            )
-        }, name="regressor"
-    )
-)
 ```
+
+
+::: {.fragment}
+
+Choices can be made about [**any part of the pipeline**]{.emph}:
+
+```{.python code-line-numbers="|6"}
+df = pd.DataFrame({
+    "region":  ["North", "North", "South", "South", "East", "East", "North", "South"],
+    "revenue": [100.0, 225.0, 70.0, 180.0, 90.0, 300.0, 50.0, 80.0],
+})
+do = skrub.var("data", df)
+do.groupby("region")["revenue"].agg(skrub.choose_from(["mean", "sum", "max"]))
+
+```
+
+:::
+
+
 
 ## Run hyperparameter search
 ```{.python}
@@ -295,6 +367,7 @@ search = regressor.skb.make_randomized_search(
 
 # save the best learner
 best_learner = search.best_learner_
+best_learner.predict({"data": new_data})
 ```
 
 Use Optuna as backend:
@@ -309,34 +382,7 @@ search = regressor.skb.make_randomized_search(
 ## Debug the entire plan with the report {.smaller}
 
 
-::: {.columns}
-
-::: {.column}
-
-
-```{.python}
-df = pd.DataFrame({"value": [1, 2, 3], "target": [1, 0, 1]})
-
-data = skrub.var("data", df)
-X = data.drop(columns="target", errors="ignore").skb.mark_as_X()
-y = data["target"].skb.mark_as_y()
-pred = X.skb.apply(
-        StandardScaler()
-    ).skb.apply(
-        LogisticRegression(), y=y
-    )
-pred.skb.report()
-```
-
-:::
-
-::: {.column}
-
 <iframe src="images/report/index.html" width="100%" height="480px" style="border: 1px solid #ccc; border-radius: 4px;"> </iframe>
-
-:::
-
-:::
 
 
 ## Data Ops go beyond tabular data! 
@@ -345,6 +391,15 @@ Data Ops make **no assumption** about the underlying data, or code.
 
 - [Image classification with pytorch](https://skrub-data.org/stable/auto_examples/02_data_ops/1160_pytorch.html)
 
+
+## In conclusion {.smaller}
+- Data science is harder than what you learn in classes
+- A full ML pipeline involves preprocessing, feature engineering and model training
+- We want to learn a "state" (it's called machine **learning** after all), [**evaluate performance**]{.emph} and do so while avoiding [**data leakage**]{.emph}
+- [**Data Ops**]{.emph} are a framework that allows to build [**stateful pipelines**]{.emph} for
+[**arbitrary code and inputs**]{.emph}
+- Data Ops extend the scikit-learn `fit` `predict` paradigm to [**multi-table inputs**]{.emph}, [**feature and target construction**]{.emph}, [**sample filtering**]{.emph} ... 
+- A Data Ops graph can be exported as a [**Learner**]{.emph}, a single object that includes all learned states to work on new data
 
 ## What we have seen in this chapter
 - Data leakage is a problem, and in practice pipelines are not enough

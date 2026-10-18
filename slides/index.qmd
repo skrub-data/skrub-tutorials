@@ -25,9 +25,9 @@ format: html
 ## Section 5: Data Ops
 - [Chapter 7: Data Ops](chapters/08_data_ops.qmd)
 
-## Section 5: Feature Engineering with skrub
-- [Chapter 7: Skrub transformers for feature engineering](chapters/07_feature_eng_all.slides.html)
-- Exercise 4 
-
 ## Section 6: Conclusion
 - [Wrapping up](chapters/100_conclusion.html)
+
+## Bonus Section: Feature Engineering with skrub
+- [Chapter 8: Skrub transformers for feature engineering](chapters/07_feature_eng_all.slides.html)
+- Exercise 4 

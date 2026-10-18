@@ -1,5 +1,5 @@
 ---
-title: "Data Preparation with skrub"
+title: "Setting the stage"
 format:
     html:
         toc: true
@@ -13,19 +13,13 @@ execute:
     echo: true
 ---
 
-##  A world without skrub {.smaller}
+##  A simple data science problem {.smaller}
 
-Let's consider a world where skrub does not exist, and all we can do is use 
-pandas and scikit-learn to prepare data for a machine learning model.
-
-You may already be living in such a world. 
-
-::: {.callout-note}
-
-We want to build a simple model as baseline to decide whether there is enough of
-a signal in our data to build on. 
-
-:::
+- We have a dataset and a target. 
+- We want to build a simple baseline model to find out if there is signal in the data.
+- We are going to use regular pandas and scikit-learn to pre-process and train on 
+the data.
+- For the sake of the example, we will use a **linear model**.
 
 ## Load and explore the data
 ```{python}
@@ -59,7 +53,7 @@ We need to:
 - Impute some missing values in the `gender` column.
 - Encode convert categorical features into numerical features. 
 - Convert the column `date_first_hired` into numerical features.
-- Scale numerical features (we'll be using a linear model).
+- Scale numerical features.
 - Evaluate the performance of the model. 
 
 ## Step 1: Convert date features to numerical {.smaller}
@@ -128,9 +122,10 @@ information content.
 
 Example:
 
-A dataset about **employment** has the column **current position**. A missing value
-here likely indicates **unemployment**, and imputing it with "most frequent" would
-lead to incorrect assumptions about the sample. 
+- A dataset about **employment** has the column **current position**. 
+- A missing value in **current position** likely indicates **unemployment**
+- Imputing **current position** with "most frequent" would
+lead to incorrect assumptions about the data. 
 
 ## Step 4: Scale numerical features {.smaller}
 Some models work better when all the numeric features have comparable scale. 
@@ -170,25 +165,21 @@ import numpy as np
 ridge = RidgeCV()
 
 # Perform cross-validation (5-fold)
-cv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2"])
+results_ridge = cross_validate(ridge, X_scaled, y, cv=5, scoring=["r2"])
 
 # Display results
 print("Cross-Validation Results:")
 print(
-    f"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+    f"Mean test R²: {results_ridge['test_r2'].mean():.4f} (+/- {results_ridge['test_r2'].std():.4f})"
 )
 ``` 
 
-## "Just ask an agent to write the code" {.smaller}
+## 
 
-::: {.incremental}
-- Operations in the wrong order.
-- The datetime feature was treated like a categorical feature.
-- Trying to impute categorical features without converting them to numeric values.
-- Cells could not be executed in order without proper debugging and re-prompting.
-- `pd.get_dummies` was executed on the full dataframe, rather than only on the 
-training split, leading to **data leakage**. 
-:::
+- So much boilerplate! 
+- What happened to the training split? 
+- Was there leakage? 
+- A lot of code to write and remember -> mistakes become more likely 
 
 ## Intermission: data leakage and fit/transform {auto-animate="true"}
 
@@ -230,8 +221,6 @@ df_test
 
 ## Intermission: data leakage and fit/transform {auto-animate="true"}
 What happens if you try to find the mean over all data? 
-
-
 
 ::: {.columns}
 
@@ -281,24 +270,50 @@ print(imputer.fit(df_train).transform(df_test))
 
 :::
 
-## Back on track! 
+## "Just ask an agent to write the code" {.smaller}
+
+::: {.incremental}
+- Operations were in the wrong order.
+- The datetime feature was treated like a categorical feature (and **one-hot encoded**).
+- Cells could not be executed in order without proper debugging and re-prompting.
+- `pd.get_dummies` was executed on the full dataframe, rather than only on the 
+training split, leading to **data leakage**. 
+:::
+
+## The Silent Failures in Agentic Data Science
+
+![https://trl-lab.github.io/ds-agent-failures/](images/pct_pipelines_with_failure.svg)
+
+> Almost every agentic DS pipeline contains at least one failure mode, regardless of the agent scaffold or the underlying model.
 
 
-## Waking up from a nightmare {.smaller}
+::: {.fragment}
+
+
+::: {.callout-important}
+
+We want to minimize the chance of making mistakes. 
+
+:::
+
+
+:::
+
+## skrub to the rescue {.smaller}
 Thankfully, we can `import skrub`:
 ```{python}
 #| warning: false
 from skrub import tabular_pipeline
 
 # Perform cross-validation (5-fold)
-cv_results = cross_validate(tabular_pipeline("regression"), X, y, cv=5, scoring=["r2"])
+results_tp = cross_validate(tabular_pipeline("regression"), X, y, cv=5, scoring=["r2"])
 # Display results
 print("Cross-Validation Results:")
 print(
-    f"tabular_pipeline: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+    f"tabular_pipeline: Mean test R²: {results_tp['test_r2'].mean():.4f} (+/- {results_tp['test_r2'].std():.4f})"
 )
 print(
-    f"Ridge: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})"
+    f"Ridge: Mean test R²: {results_ridge['test_r2'].mean():.4f} (+/- {results_ridge['test_r2'].std():.4f})"
 )
 ```
 
@@ -307,12 +322,12 @@ print(
 
 ## Pre-processing is part of the pipeline! {.smaller}
 
-There isn't a clear separation between "pre-processing", "feature engineering"
+- There isn't a clear separation between "pre-processing", "feature engineering"
 and "learning".
 
 ::: {.fragment}
 
-If you learn something while pre-processing your training data
+- If you learn something while pre-processing your training data
 ("this is a datetime"), you need to apply that knowledge to the test data. 
 
 :::
@@ -320,12 +335,10 @@ If you learn something while pre-processing your training data
 
 ::: {.fragment}
 
-This is why skrub provides **transformers**, rather than **functions**: transformers
+- This is why skrub provides **transformers**, rather than **functions**: transformers
 are stateful and can be used in pipelines, functions are not. 
 
 :::
-
-
 
 ## What we saw in this chapter
 - We built a predictive pipeline using traditional tools
@@ -334,13 +347,19 @@ are stateful and can be used in pipelines, functions are not.
 - We tested skrub's `tabular_pipeline`
 - We covered why pre-processing is part of the pipeline
 
+## Machine learning with dataframes: why skrub
+
+- skrub provides tools to build robust pipelines
+- this is done by bringing pre-processing and feature engineering __inside__ of 
+the pipeline
+- additionally, robust code avoids boilerplate
+
 ## Course Roadmap
 
 1. Data exploration with skrub's `TableReport`
 2. Data cleaning and sanitization with the `Cleaner`
-3. Columnwise operations with `ApplyToCols`
-4. Advanced column selectors and how to use them
+3. Column-based operations with `ApplyToCols`
+4. Selectors and how to use them for advanced column selection
 5. Automatic feature engineering with the `TableVectorizer`
 6. A robust baseline for machine learning tasks with the `tabular_pipeline`
 7. Beyond pipelines: skrub Data Ops
-
