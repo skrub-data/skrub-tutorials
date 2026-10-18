@@ -4,119 +4,35 @@
     "href": "chapters/100_conclusion.html",
     "title": "Wrapping up",
     "section": "",
-    "text": "Data cleaning and pre-processing are hard and time-consuming\nImproper pre-processing can cause issues (reminder: imputation)\nPre-processing should be part of the entire pipeline to prevent leakage"
+    "text": "Data science is hard in practice!\nPre-processing and feature engineering should be part of the pipeline\nLeakage and other failures are always a risk, and complex pre-processing is more error prone"
   },
   {
-    "objectID": "chapters/100_conclusion.html#on-pre-processing-and-cleaning",
-    "href": "chapters/100_conclusion.html#on-pre-processing-and-cleaning",
+    "objectID": "chapters/100_conclusion.html#to-conclude",
+    "href": "chapters/100_conclusion.html#to-conclude",
     "title": "Wrapping up",
     "section": "",
-    "text": "Data cleaning and pre-processing are hard and time-consuming\nImproper pre-processing can cause issues (reminder: imputation)\nPre-processing should be part of the entire pipeline to prevent leakage"
+    "text": "Data science is hard in practice!\nPre-processing and feature engineering should be part of the pipeline\nLeakage and other failures are always a risk, and complex pre-processing is more error prone"
   },
   {
     "objectID": "chapters/100_conclusion.html#how-skrub-helps-with-that",
     "href": "chapters/100_conclusion.html#how-skrub-helps-with-that",
     "title": "Wrapping up",
     "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nThe Cleaner and TableVectorizer handle pre-processing for you\nRobust defaults handle most common use cases"
+    "text": "How skrub helps with that\n\nskrub transformers are scikit-learn compatible and handle most typical pre-processing\n\nCleaner and TableVectorizer\n\nthey can be customized to fit most use cases\n\nSingleColumnTransformer, selectors\n\nData Ops extend the pipeline guarantees to multi-inputs, sample filtering, †arget construction …\n\nAnd more!\n\nThe TableReport helps with data exploration and measuring statistics\nThe selectors give total control over which columns should be modified and how"
   },
   {
-    "objectID": "chapters/100_conclusion.html#on-data-exploration",
-    "href": "chapters/100_conclusion.html#on-data-exploration",
+    "objectID": "chapters/100_conclusion.slides.html#to-conclude",
+    "href": "chapters/100_conclusion.slides.html#to-conclude",
     "title": "Wrapping up",
-    "section": "On data exploration",
-    "text": "On data exploration\n\nEven before you start cleaning, you need to find out what’s in your data\nWhat dtypes? Are there nulls? What kind of information are you dealing with?"
-  },
-  {
-    "objectID": "chapters/100_conclusion.html#how-skrub-helps-with-that-1",
-    "href": "chapters/100_conclusion.html#how-skrub-helps-with-that-1",
-    "title": "Wrapping up",
-    "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nThe TableReport computes various statistics about any given dataframe\nThe statistics are presented with an interactive view\nStats, distributions, column associations are available from the same view\nAll stats can also be exported to be used by other tools"
-  },
-  {
-    "objectID": "chapters/100_conclusion.html#on-transforming-columns",
-    "href": "chapters/100_conclusion.html#on-transforming-columns",
-    "title": "Wrapping up",
-    "section": "On transforming columns",
-    "text": "On transforming columns\n\nNot all columns are made equal\nSome need to be scaled, some need to be encoded, some need to be dropped\nSome should just be left alone\nSelecting columns is not always straightforward"
-  },
-  {
-    "objectID": "chapters/100_conclusion.html#how-skrub-helps-with-that-2",
-    "href": "chapters/100_conclusion.html#how-skrub-helps-with-that-2",
-    "title": "Wrapping up",
-    "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nApplyToCols lets you apply a specific transformer to a selection of columns\nIt’s possible to exclude columns from a selection and not pass them to the transformer\nThe skrub selectors can be used to build advanced column selection rules\nSelectors produce sets of columns that can be combined with set operations\nSelectors are used throughout the library"
-  },
-  {
-    "objectID": "chapters/100_conclusion.html#on-feature-engineering-and-model-building",
-    "href": "chapters/100_conclusion.html#on-feature-engineering-and-model-building",
-    "title": "Wrapping up",
-    "section": "On feature engineering and model building",
-    "text": "On feature engineering and model building\n\nFeature engineering requires time and is dtype dependent\nData should be prepared so that the proper transformers are applied to the right columns"
-  },
-  {
-    "objectID": "chapters/100_conclusion.html#how-skrub-helps-with-that-3",
-    "href": "chapters/100_conclusion.html#how-skrub-helps-with-that-3",
-    "title": "Wrapping up",
-    "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nThe TableVectorizer cleans the data before applying column specific transformers\nCategorical columns are encoded based on how many unique values they include\nThe tabular_pipeline builds a pipeline that acts as a good baseline for further analysis\nThe pipeline includes a TableVectorizer and a prediction model"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#on-pre-processing-and-cleaning",
-    "href": "chapters/100_conclusion.slides.html#on-pre-processing-and-cleaning",
-    "title": "Wrapping up",
-    "section": "On pre-processing and cleaning…",
-    "text": "On pre-processing and cleaning…\n\nData cleaning and pre-processing are hard and time-consuming\nImproper pre-processing can cause issues (reminder: imputation)\nPre-processing should be part of the entire pipeline to prevent leakage"
+    "section": "To conclude…",
+    "text": "To conclude…\n\nData science is hard in practice!\nPre-processing and feature engineering should be part of the pipeline\nLeakage and other failures are always a risk, and complex pre-processing is more error prone"
   },
   {
     "objectID": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that",
     "href": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that",
     "title": "Wrapping up",
     "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nThe Cleaner and TableVectorizer handle pre-processing for you\nRobust defaults handle most common use cases"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#on-data-exploration",
-    "href": "chapters/100_conclusion.slides.html#on-data-exploration",
-    "title": "Wrapping up",
-    "section": "On data exploration",
-    "text": "On data exploration\n\nEven before you start cleaning, you need to find out what’s in your data\nWhat dtypes? Are there nulls? What kind of information are you dealing with?"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that-1",
-    "href": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that-1",
-    "title": "Wrapping up",
-    "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nThe TableReport computes various statistics about any given dataframe\nThe statistics are presented with an interactive view\nStats, distributions, column associations are available from the same view\nAll stats can also be exported to be used by other tools"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#on-transforming-columns",
-    "href": "chapters/100_conclusion.slides.html#on-transforming-columns",
-    "title": "Wrapping up",
-    "section": "On transforming columns",
-    "text": "On transforming columns\n\nNot all columns are made equal\nSome need to be scaled, some need to be encoded, some need to be dropped\nSome should just be left alone\nSelecting columns is not always straightforward"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that-2",
-    "href": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that-2",
-    "title": "Wrapping up",
-    "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nApplyToCols lets you apply a specific transformer to a selection of columns\nIt’s possible to exclude columns from a selection and not pass them to the transformer\nThe skrub selectors can be used to build advanced column selection rules\nSelectors produce sets of columns that can be combined with set operations\nSelectors are used throughout the library"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#on-feature-engineering-and-model-building",
-    "href": "chapters/100_conclusion.slides.html#on-feature-engineering-and-model-building",
-    "title": "Wrapping up",
-    "section": "On feature engineering and model building",
-    "text": "On feature engineering and model building\n\nFeature engineering requires time and is dtype dependent\nData should be prepared so that the proper transformers are applied to the right columns"
-  },
-  {
-    "objectID": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that-3",
-    "href": "chapters/100_conclusion.slides.html#how-skrub-helps-with-that-3",
-    "title": "Wrapping up",
-    "section": "How skrub helps with that",
-    "text": "How skrub helps with that\n\nThe TableVectorizer cleans the data before applying column specific transformers\nCategorical columns are encoded based on how many unique values they include\nThe tabular_pipeline builds a pipeline that acts as a good baseline for further analysis\nThe pipeline includes a TableVectorizer and a prediction model"
+    "text": "How skrub helps with that\n\nskrub transformers are scikit-learn compatible and handle most typical pre-processing\n\nCleaner and TableVectorizer\n\nthey can be customized to fit most use cases\n\nSingleColumnTransformer, selectors\n\nData Ops extend the pipeline guarantees to multi-inputs, sample filtering, †arget construction …\n\nAnd more!\n\nThe TableReport helps with data exploration and measuring statistics\nThe selectors give total control over which columns should be modified and how"
   },
   {
     "objectID": "chapters/07_feature_eng_all.html",
@@ -1134,11 +1050,11 @@
     "text": "Section 4: Building a strong baseline\n\nChapter 5: Feature engineering with the TableVectorizer\nChapter 6: Strong ML baselines: tabular_pipeline\nExercise 3"
   },
   {
-    "objectID": "index.html#section-5-feature-engineering-with-skrub",
-    "href": "index.html#section-5-feature-engineering-with-skrub",
+    "objectID": "index.html#section-5-data-ops",
+    "href": "index.html#section-5-data-ops",
     "title": "Skrub Tutorial Slides",
-    "section": "Section 5: Feature Engineering with skrub",
-    "text": "Section 5: Feature Engineering with skrub\n\nChapter 7: Skrub transformers for feature engineering\nExercise 4"
+    "section": "Section 5: Data Ops",
+    "text": "Section 5: Data Ops\n\nChapter 7: Data Ops"
   },
   {
     "objectID": "index.html#section-6-conclusion",
@@ -1148,305 +1064,340 @@
     "text": "Section 6: Conclusion\n\nWrapping up"
   },
   {
-    "objectID": "chapters/00_intro.slides.html#a-world-without-skrub",
-    "href": "chapters/00_intro.slides.html#a-world-without-skrub",
-    "title": "Data Preparation with skrub",
-    "section": "A world without skrub",
-    "text": "A world without skrub\nLet’s consider a world where skrub does not exist, and all we can do is use pandas and scikit-learn to prepare data for a machine learning model.\nYou may already be living in such a world.\n\n\n\n\n\n\nNote\n\n\nWe want to build a simple model as baseline to decide whether there is enough of a signal in our data to build on."
+    "objectID": "index.html#bonus-section-feature-engineering-with-skrub",
+    "href": "index.html#bonus-section-feature-engineering-with-skrub",
+    "title": "Skrub Tutorial Slides",
+    "section": "Bonus Section: Feature Engineering with skrub",
+    "text": "Bonus Section: Feature Engineering with skrub\n\nChapter 8: Skrub transformers for feature engineering\nExercise 4"
+  },
+  {
+    "objectID": "chapters/00_intro.slides.html#a-simple-data-science-problem",
+    "href": "chapters/00_intro.slides.html#a-simple-data-science-problem",
+    "title": "Setting the stage",
+    "section": "A simple data science problem",
+    "text": "A simple data science problem\n\nWe have a dataset and a target.\nWe want to build a simple baseline model to find out if there is signal in the data.\nWe are going to use regular pandas and scikit-learn to pre-process and train on the data.\nFor the sake of the example, we will use a linear model."
   },
   {
     "objectID": "chapters/00_intro.slides.html#load-and-explore-the-data",
     "href": "chapters/00_intro.slides.html#load-and-explore-the-data",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Load and explore the data",
     "text": "Load and explore the data\n\nimport pandas as pd\nimport numpy as np\n\nX = pd.read_csv(\"../data/employee_salaries/data.csv\")\ny = pd.read_csv(\"../data/employee_salaries/target.csv\")[\"current_annual_salary\"]\nX.head(5)\n\n\n\n\n\n\n\n\ngender\ndepartment\ndepartment_name\ndivision\nassignment_category\nemployee_position_title\ndate_first_hired\nyear_first_hired\n\n\n\n\n0\nF\nPOL\nDepartment of Police\nMSB Information Mgmt and Tech Division Records...\nFulltime-Regular\nOffice Services Coordinator\n09/22/1986\n1986\n\n\n1\nM\nPOL\nDepartment of Police\nISB Major Crimes Division Fugitive Section\nFulltime-Regular\nMaster Police Officer\n09/12/1988\n1988\n\n\n2\nF\nHHS\nDepartment of Health and Human Services\nAdult Protective and Case Management Services\nFulltime-Regular\nSocial Worker IV\n11/19/1989\n1989\n\n\n3\nM\nCOR\nCorrection and Rehabilitation\nPRRS Facility and Security\nFulltime-Regular\nResident Supervisor II\n05/05/2014\n2014\n\n\n4\nM\nHCA\nDepartment of Housing and Community Affairs\nAffordable Housing Programs\nFulltime-Regular\nPlanning Specialist III\n03/05/2007\n2007"
   },
   {
     "objectID": "chapters/00_intro.slides.html#explore-the-target",
     "href": "chapters/00_intro.slides.html#explore-the-target",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Explore the target",
     "text": "Explore the target\nLet’s take a look at the target:\n\ny.head(5)\n\n0     69222.18\n1     97392.47\n2    104717.28\n3     52734.57\n4     93396.00\nName: current_annual_salary, dtype: float64\n\n\nThis is a regression task: we want to predict the value of current_annual_salary."
   },
   {
     "objectID": "chapters/00_intro.slides.html#strategizing",
     "href": "chapters/00_intro.slides.html#strategizing",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Strategizing",
     "text": "Strategizing\nWe can begin by exploring the dataframe with .describe, and then think of a plan for pre-processing our data.\n\nX.describe(include=\"all\")\n\n\n\n\n\n\n\n\ngender\ndepartment\ndepartment_name\ndivision\nassignment_category\nemployee_position_title\ndate_first_hired\nyear_first_hired\n\n\n\n\ncount\n9211\n9228\n9228\n9228\n9228\n9228\n9228\n9228.000000\n\n\nunique\n2\n37\n37\n694\n2\n443\n2264\nNaN\n\n\ntop\nM\nPOL\nDepartment of Police\nSchool Health Services\nFulltime-Regular\nBus Operator\n12/12/2016\nNaN\n\n\nfreq\n5481\n1844\n1844\n300\n8394\n638\n87\nNaN\n\n\nmean\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2003.597529\n\n\nstd\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n9.327078\n\n\nmin\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n1965.000000\n\n\n25%\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n1998.000000\n\n\n50%\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2005.000000\n\n\n75%\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2012.000000\n\n\nmax\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2016.000000"
   },
   {
     "objectID": "chapters/00_intro.slides.html#our-plan",
     "href": "chapters/00_intro.slides.html#our-plan",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Our plan",
-    "text": "Our plan\nWe need to:\n\nImpute some missing values in the gender column.\nEncode convert categorical features into numerical features.\nConvert the column date_first_hired into numerical features.\nScale numerical features (we’ll be using a linear model).\nEvaluate the performance of the model."
+    "text": "Our plan\nWe need to:\n\nImpute some missing values in the gender column.\nEncode convert categorical features into numerical features.\nConvert the column date_first_hired into numerical features.\nScale numerical features.\nEvaluate the performance of the model."
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-1-convert-date-features-to-numerical",
     "href": "chapters/00_intro.slides.html#step-1-convert-date-features-to-numerical",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 1: Convert date features to numerical",
     "text": "Step 1: Convert date features to numerical\nWe extract numerical features from the date_first_hired column.\n\n# Create a copy to work with\nX_processed = X.copy()\n\n# Parse the date column\nX_processed['date_first_hired'] = pd.to_datetime(X_processed['date_first_hired'])\n\n# Extract numerical features from date\nX_processed['hired_month'] = X_processed['date_first_hired'].dt.month\nX_processed['hired_year'] = X_processed['date_first_hired'].dt.year\n\n# Drop original date column\nX_processed = X_processed.drop('date_first_hired', axis=1)\n\nprint(\"Features after date transformation:\")\nprint(\"\\nShape:\", X_processed.shape)\n\nFeatures after date transformation:\n\nShape: (9228, 9)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-2-encode-categorical-features",
     "href": "chapters/00_intro.slides.html#step-2-encode-categorical-features",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 2: Encode categorical features",
     "text": "Step 2: Encode categorical features\nWe encode the categorical features using one-hot encoding.\n\n# Find the categorical columns\ncategorical_cols = X_processed.select_dtypes(include=['object']).columns.tolist()\nprint(\"Categorical columns to encode:\", categorical_cols)\n\n# Apply one-hot encoding only to categorical columns\nX_encoded = pd.get_dummies(X_processed, columns=categorical_cols)\nprint(\"\\nShape after encoding:\", X_encoded.shape)\n\nCategorical columns to encode: ['gender', 'department', 'department_name', 'division', 'assignment_category', 'employee_position_title']\n\nShape after encoding: (9228, 1218)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-3-impute-missing-values",
     "href": "chapters/00_intro.slides.html#step-3-impute-missing-values",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 3: Impute missing values",
     "text": "Step 3: Impute missing values\nSome models cannot handle missing values.\nWe impute the missing values in the gender column:\n\nfrom sklearn.impute import SimpleImputer\n\n# Impute missing values with most frequent value\nimputer = SimpleImputer(strategy='most_frequent')\nX_encoded_imputed = pd.DataFrame(\n    imputer.fit_transform(X_encoded),\n    columns=X_encoded.columns\n)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-3-impute-missing-values-1",
     "href": "chapters/00_intro.slides.html#step-3-impute-missing-values-1",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 3: Impute missing values",
-    "text": "Step 3: Impute missing values\n\n\n\n\n\n\nImportant\n\n\nMissing values are important! The fact that a value is missing is by itself useful information, and the pattern of missingness is also important.\nFor this reason, skrub transformers keep missing values as they are to retain the information content.\n\n\n\nExample:\nA dataset about employment has the column current position. A missing value here likely indicates unemployment, and imputing it with “most frequent” would lead to incorrect assumptions about the sample."
+    "text": "Step 3: Impute missing values\n\n\n\n\n\n\nImportant\n\n\nMissing values are important! The fact that a value is missing is by itself useful information, and the pattern of missingness is also important.\nFor this reason, skrub transformers keep missing values as they are to retain the information content.\n\n\n\nExample:\n\nA dataset about employment has the column current position.\nA missing value in current position likely indicates unemployment\nImputing current position with “most frequent” would lead to incorrect assumptions about the data."
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-4-scale-numerical-features",
     "href": "chapters/00_intro.slides.html#step-4-scale-numerical-features",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 4: Scale numerical features",
     "text": "Step 4: Scale numerical features\nSome models work better when all the numeric features have comparable scale.\nRidgeCV is one of them, so we need to scale numerical features.\n\nfrom sklearn.preprocessing import StandardScaler\n\n# Initialize the scaler\nscaler = StandardScaler()\n\n# Fit and transform the data\nX_scaled = scaler.fit_transform(X_encoded_imputed)\nX_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)\n\n\n\n\n\n\n\nWarning\n\n\nOutliers (values very far from the mean) make scaling hard to do. Robust scaling may be needed."
   },
   {
     "objectID": "chapters/00_intro.slides.html#step-5-train-ridge-model-with-cross-validation",
     "href": "chapters/00_intro.slides.html#step-5-train-ridge-model-with-cross-validation",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 5: Train Ridge model with cross-validation",
-    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)"
+    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\nresults_ridge = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {results_ridge['test_r2'].mean():.4f} (+/- {results_ridge['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)"
   },
   {
-    "objectID": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
-    "href": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
-    "title": "Data Preparation with skrub",
-    "section": "“Just ask an agent to write the code”",
-    "text": "“Just ask an agent to write the code”\n\nOperations in the wrong order.\nThe datetime feature was treated like a categorical feature.\nTrying to impute categorical features without converting them to numeric values.\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
+    "objectID": "chapters/00_intro.slides.html#section",
+    "href": "chapters/00_intro.slides.html#section",
+    "title": "Setting the stage",
+    "section": "",
+    "text": "So much boilerplate!\nWhat happened to the training split?\nWas there leakage?\nA lot of code to write and remember -&gt; mistakes become more likely"
   },
   {
     "objectID": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform",
     "href": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Intermission: data leakage and fit/transform",
     "text": "Intermission: data leakage and fit/transform\n\nfrom sklearn.impute import SimpleImputer\n\ndf = pd.DataFrame({\n    \"value\": [1, 3, None, 5, 10, None, 1000, 5]\n})\n\ndf_train = df[:5]\ndf_test = df[5:]\n\n\n\n\ndf_train\n\n\n\n\n\n\n\n\nvalue\n\n\n\n\n0\n1.0\n\n\n1\n3.0\n\n\n2\nNaN\n\n\n3\n5.0\n\n\n4\n10.0\n\n\n\n\n\n\n\n\n\ndf_test\n\n\n\n\n\n\n\n\nvalue\n\n\n\n\n5\nNaN\n\n\n6\n1000.0\n\n\n7\n5.0"
   },
   {
     "objectID": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform-1",
     "href": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform-1",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Intermission: data leakage and fit/transform",
     "text": "Intermission: data leakage and fit/transform\nWhat happens if you try to find the mean over all data?\n\n\n\nimputer = SimpleImputer(strategy=\"mean\").set_output(transform=\"pandas\")\ndf_imputed = imputer.fit_transform(df)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform-2",
     "href": "chapters/00_intro.slides.html#intermission-data-leakage-and-fittransform-2",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Intermission: data leakage and fit/transform",
     "text": "Intermission: data leakage and fit/transform\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\n\n\nprint(imputer.fit(df_train).transform(df_test))\n\n     value\n5     4.75\n6  1000.00\n7     5.00"
   },
   {
-    "objectID": "chapters/00_intro.slides.html#back-on-track",
-    "href": "chapters/00_intro.slides.html#back-on-track",
-    "title": "Data Preparation with skrub",
-    "section": "Back on track!",
-    "text": "Back on track!"
+    "objectID": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
+    "href": "chapters/00_intro.slides.html#just-ask-an-agent-to-write-the-code",
+    "title": "Setting the stage",
+    "section": "“Just ask an agent to write the code”",
+    "text": "“Just ask an agent to write the code”\n\nOperations were in the wrong order.\nThe datetime feature was treated like a categorical feature (and one-hot encoded).\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
   },
   {
-    "objectID": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
-    "href": "chapters/00_intro.slides.html#waking-up-from-a-nightmare",
-    "title": "Data Preparation with skrub",
-    "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, scoring=[\"r2\"])\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"tabular_pipeline: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(\n    f\"Ridge: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\ntabular_pipeline: Mean test R²: 0.9101 (+/- 0.0163)\nRidge: Mean test R²: 0.9101 (+/- 0.0163)"
+    "objectID": "chapters/00_intro.slides.html#the-silent-failures-in-agentic-data-science",
+    "href": "chapters/00_intro.slides.html#the-silent-failures-in-agentic-data-science",
+    "title": "Setting the stage",
+    "section": "The Silent Failures in Agentic Data Science",
+    "text": "The Silent Failures in Agentic Data Science\n\nhttps://trl-lab.github.io/ds-agent-failures/\nAlmost every agentic DS pipeline contains at least one failure mode, regardless of the agent scaffold or the underlying model.\n\n\n\n\n\n\n\n\nImportant\n\n\nWe want to minimize the chance of making mistakes."
+  },
+  {
+    "objectID": "chapters/00_intro.slides.html#skrub-to-the-rescue",
+    "href": "chapters/00_intro.slides.html#skrub-to-the-rescue",
+    "title": "Setting the stage",
+    "section": "skrub to the rescue",
+    "text": "skrub to the rescue\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\nresults_tp = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, scoring=[\"r2\"])\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"tabular_pipeline: Mean test R²: {results_tp['test_r2'].mean():.4f} (+/- {results_tp['test_r2'].std():.4f})\"\n)\nprint(\n    f\"Ridge: Mean test R²: {results_ridge['test_r2'].mean():.4f} (+/- {results_ridge['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\ntabular_pipeline: Mean test R²: 0.9088 (+/- 0.0144)\nRidge: Mean test R²: 0.8731 (+/- 0.0276)"
   },
   {
     "objectID": "chapters/00_intro.slides.html#whats-in-the-tabular_pipeline",
     "href": "chapters/00_intro.slides.html#whats-in-the-tabular_pipeline",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "What’s in the tabular_pipeline",
     "text": "What’s in the tabular_pipeline"
   },
   {
     "objectID": "chapters/00_intro.slides.html#pre-processing-is-part-of-the-pipeline",
     "href": "chapters/00_intro.slides.html#pre-processing-is-part-of-the-pipeline",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Pre-processing is part of the pipeline!",
-    "text": "Pre-processing is part of the pipeline!\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\n\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\n\n\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
+    "text": "Pre-processing is part of the pipeline!\n\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\n\n\n\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\n\n\n\n\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
   },
   {
     "objectID": "chapters/00_intro.slides.html#what-we-saw-in-this-chapter",
     "href": "chapters/00_intro.slides.html#what-we-saw-in-this-chapter",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "What we saw in this chapter",
     "text": "What we saw in this chapter\n\nWe built a predictive pipeline using traditional tools\nWe talked about missing data imputation\nWe discussed data leakage\nWe tested skrub’s tabular_pipeline\nWe covered why pre-processing is part of the pipeline"
   },
   {
+    "objectID": "chapters/00_intro.slides.html#machine-learning-with-dataframes-why-skrub",
+    "href": "chapters/00_intro.slides.html#machine-learning-with-dataframes-why-skrub",
+    "title": "Setting the stage",
+    "section": "Machine learning with dataframes: why skrub",
+    "text": "Machine learning with dataframes: why skrub\n\nskrub provides tools to build robust pipelines\nthis is done by bringing pre-processing and feature engineering inside of the pipeline\nadditionally, robust code avoids boilerplate"
+  },
+  {
     "objectID": "chapters/00_intro.slides.html#course-roadmap",
     "href": "chapters/00_intro.slides.html#course-roadmap",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nBeyond pipelines: skrub Data Ops"
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumn-based operations with ApplyToCols\nSelectors and how to use them for advanced column selection\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nBeyond pipelines: skrub Data Ops"
   },
   {
     "objectID": "chapters/00_intro.html",
     "href": "chapters/00_intro.html",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "",
-    "text": "Let’s consider a world where skrub does not exist, and all we can do is use pandas and scikit-learn to prepare data for a machine learning model.\nYou may already be living in such a world.\n\n\n\n\n\n\nNote\n\n\n\nWe want to build a simple model as baseline to decide whether there is enough of a signal in our data to build on."
+    "text": "We have a dataset and a target.\nWe want to build a simple baseline model to find out if there is signal in the data.\nWe are going to use regular pandas and scikit-learn to pre-process and train on the data.\nFor the sake of the example, we will use a linear model."
   },
   {
-    "objectID": "chapters/00_intro.html#a-world-without-skrub",
-    "href": "chapters/00_intro.html#a-world-without-skrub",
-    "title": "Data Preparation with skrub",
+    "objectID": "chapters/00_intro.html#a-simple-data-science-problem",
+    "href": "chapters/00_intro.html#a-simple-data-science-problem",
+    "title": "Setting the stage",
     "section": "",
-    "text": "Let’s consider a world where skrub does not exist, and all we can do is use pandas and scikit-learn to prepare data for a machine learning model.\nYou may already be living in such a world.\n\n\n\n\n\n\nNote\n\n\n\nWe want to build a simple model as baseline to decide whether there is enough of a signal in our data to build on."
+    "text": "We have a dataset and a target.\nWe want to build a simple baseline model to find out if there is signal in the data.\nWe are going to use regular pandas and scikit-learn to pre-process and train on the data.\nFor the sake of the example, we will use a linear model."
   },
   {
     "objectID": "chapters/00_intro.html#load-and-explore-the-data",
     "href": "chapters/00_intro.html#load-and-explore-the-data",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Load and explore the data",
     "text": "Load and explore the data\n\nimport pandas as pd\nimport numpy as np\n\nX = pd.read_csv(\"../data/employee_salaries/data.csv\")\ny = pd.read_csv(\"../data/employee_salaries/target.csv\")[\"current_annual_salary\"]\nX.head(5)\n\n\n\n\n\n\n\n\ngender\ndepartment\ndepartment_name\ndivision\nassignment_category\nemployee_position_title\ndate_first_hired\nyear_first_hired\n\n\n\n\n0\nF\nPOL\nDepartment of Police\nMSB Information Mgmt and Tech Division Records...\nFulltime-Regular\nOffice Services Coordinator\n09/22/1986\n1986\n\n\n1\nM\nPOL\nDepartment of Police\nISB Major Crimes Division Fugitive Section\nFulltime-Regular\nMaster Police Officer\n09/12/1988\n1988\n\n\n2\nF\nHHS\nDepartment of Health and Human Services\nAdult Protective and Case Management Services\nFulltime-Regular\nSocial Worker IV\n11/19/1989\n1989\n\n\n3\nM\nCOR\nCorrection and Rehabilitation\nPRRS Facility and Security\nFulltime-Regular\nResident Supervisor II\n05/05/2014\n2014\n\n\n4\nM\nHCA\nDepartment of Housing and Community Affairs\nAffordable Housing Programs\nFulltime-Regular\nPlanning Specialist III\n03/05/2007\n2007"
   },
   {
     "objectID": "chapters/00_intro.html#explore-the-target",
     "href": "chapters/00_intro.html#explore-the-target",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Explore the target",
     "text": "Explore the target\nLet’s take a look at the target:\n\ny.head(5)\n\n0     69222.18\n1     97392.47\n2    104717.28\n3     52734.57\n4     93396.00\nName: current_annual_salary, dtype: float64\n\n\nThis is a regression task: we want to predict the value of current_annual_salary."
   },
   {
     "objectID": "chapters/00_intro.html#strategizing",
     "href": "chapters/00_intro.html#strategizing",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Strategizing",
     "text": "Strategizing\nWe can begin by exploring the dataframe with .describe, and then think of a plan for pre-processing our data.\n\nX.describe(include=\"all\")\n\n\n\n\n\n\n\n\ngender\ndepartment\ndepartment_name\ndivision\nassignment_category\nemployee_position_title\ndate_first_hired\nyear_first_hired\n\n\n\n\ncount\n9211\n9228\n9228\n9228\n9228\n9228\n9228\n9228.000000\n\n\nunique\n2\n37\n37\n694\n2\n443\n2264\nNaN\n\n\ntop\nM\nPOL\nDepartment of Police\nSchool Health Services\nFulltime-Regular\nBus Operator\n12/12/2016\nNaN\n\n\nfreq\n5481\n1844\n1844\n300\n8394\n638\n87\nNaN\n\n\nmean\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2003.597529\n\n\nstd\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n9.327078\n\n\nmin\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n1965.000000\n\n\n25%\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n1998.000000\n\n\n50%\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2005.000000\n\n\n75%\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2012.000000\n\n\nmax\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\nNaN\n2016.000000"
   },
   {
     "objectID": "chapters/00_intro.html#our-plan",
     "href": "chapters/00_intro.html#our-plan",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Our plan",
-    "text": "Our plan\nWe need to:\n\nImpute some missing values in the gender column.\nEncode convert categorical features into numerical features.\nConvert the column date_first_hired into numerical features.\nScale numerical features (we’ll be using a linear model).\nEvaluate the performance of the model."
+    "text": "Our plan\nWe need to:\n\nImpute some missing values in the gender column.\nEncode convert categorical features into numerical features.\nConvert the column date_first_hired into numerical features.\nScale numerical features.\nEvaluate the performance of the model."
   },
   {
     "objectID": "chapters/00_intro.html#step-1-convert-date-features-to-numerical",
     "href": "chapters/00_intro.html#step-1-convert-date-features-to-numerical",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 1: Convert date features to numerical",
     "text": "Step 1: Convert date features to numerical\nWe extract numerical features from the date_first_hired column.\n\n# Create a copy to work with\nX_processed = X.copy()\n\n# Parse the date column\nX_processed['date_first_hired'] = pd.to_datetime(X_processed['date_first_hired'])\n\n# Extract numerical features from date\nX_processed['hired_month'] = X_processed['date_first_hired'].dt.month\nX_processed['hired_year'] = X_processed['date_first_hired'].dt.year\n\n# Drop original date column\nX_processed = X_processed.drop('date_first_hired', axis=1)\n\nprint(\"Features after date transformation:\")\nprint(\"\\nShape:\", X_processed.shape)\n\nFeatures after date transformation:\n\nShape: (9228, 9)"
   },
   {
     "objectID": "chapters/00_intro.html#step-2-encode-categorical-features",
     "href": "chapters/00_intro.html#step-2-encode-categorical-features",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 2: Encode categorical features",
     "text": "Step 2: Encode categorical features\nWe encode the categorical features using one-hot encoding.\n\n# Find the categorical columns\ncategorical_cols = X_processed.select_dtypes(include=['object']).columns.tolist()\nprint(\"Categorical columns to encode:\", categorical_cols)\n\n# Apply one-hot encoding only to categorical columns\nX_encoded = pd.get_dummies(X_processed, columns=categorical_cols)\nprint(\"\\nShape after encoding:\", X_encoded.shape)\n\nCategorical columns to encode: ['gender', 'department', 'department_name', 'division', 'assignment_category', 'employee_position_title']\n\nShape after encoding: (9228, 1218)"
   },
   {
     "objectID": "chapters/00_intro.html#step-3-impute-missing-values",
     "href": "chapters/00_intro.html#step-3-impute-missing-values",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 3: Impute missing values",
     "text": "Step 3: Impute missing values\nSome models cannot handle missing values.\nWe impute the missing values in the gender column:\n\nfrom sklearn.impute import SimpleImputer\n\n# Impute missing values with most frequent value\nimputer = SimpleImputer(strategy='most_frequent')\nX_encoded_imputed = pd.DataFrame(\n    imputer.fit_transform(X_encoded),\n    columns=X_encoded.columns\n)"
   },
   {
     "objectID": "chapters/00_intro.html#step-3-impute-missing-values-1",
     "href": "chapters/00_intro.html#step-3-impute-missing-values-1",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 3: Impute missing values",
-    "text": "Step 3: Impute missing values\n\n\n\n\n\n\nImportant\n\n\n\nMissing values are important! The fact that a value is missing is by itself useful information, and the pattern of missingness is also important.\nFor this reason, skrub transformers keep missing values as they are to retain the information content.\n\n\nExample:\nA dataset about employment has the column current position. A missing value here likely indicates unemployment, and imputing it with “most frequent” would lead to incorrect assumptions about the sample."
+    "text": "Step 3: Impute missing values\n\n\n\n\n\n\nImportant\n\n\n\nMissing values are important! The fact that a value is missing is by itself useful information, and the pattern of missingness is also important.\nFor this reason, skrub transformers keep missing values as they are to retain the information content.\n\n\nExample:\n\nA dataset about employment has the column current position.\nA missing value in current position likely indicates unemployment\nImputing current position with “most frequent” would lead to incorrect assumptions about the data."
   },
   {
     "objectID": "chapters/00_intro.html#step-4-scale-numerical-features",
     "href": "chapters/00_intro.html#step-4-scale-numerical-features",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 4: Scale numerical features",
     "text": "Step 4: Scale numerical features\nSome models work better when all the numeric features have comparable scale.\nRidgeCV is one of them, so we need to scale numerical features.\n\nfrom sklearn.preprocessing import StandardScaler\n\n# Initialize the scaler\nscaler = StandardScaler()\n\n# Fit and transform the data\nX_scaled = scaler.fit_transform(X_encoded_imputed)\nX_scaled = pd.DataFrame(X_scaled, columns=X_encoded_imputed.columns)\n\n\n\n\n\n\n\nWarning\n\n\n\nOutliers (values very far from the mean) make scaling hard to do. Robust scaling may be needed."
   },
   {
     "objectID": "chapters/00_intro.html#step-5-train-ridge-model-with-cross-validation",
     "href": "chapters/00_intro.html#step-5-train-ridge-model-with-cross-validation",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Step 5: Train Ridge model with cross-validation",
-    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)"
+    "text": "Step 5: Train Ridge model with cross-validation\nTrain a RidgeCV regression model and evaluate with cross-validation.\n\nfrom sklearn.linear_model import RidgeCV\nfrom sklearn.model_selection import cross_val_score, cross_validate\nimport numpy as np\n\n# Initialize Ridge model\nridge = RidgeCV()\n\n# Perform cross-validation (5-fold)\nresults_ridge = cross_validate(ridge, X_scaled, y, cv=5, scoring=[\"r2\"])\n\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"Mean test R²: {results_ridge['test_r2'].mean():.4f} (+/- {results_ridge['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\nMean test R²: 0.8731 (+/- 0.0276)"
   },
   {
-    "objectID": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
-    "href": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
-    "title": "Data Preparation with skrub",
-    "section": "“Just ask an agent to write the code”",
-    "text": "“Just ask an agent to write the code”\n\n\nOperations in the wrong order.\nThe datetime feature was treated like a categorical feature.\nTrying to impute categorical features without converting them to numeric values.\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
+    "objectID": "chapters/00_intro.html#section",
+    "href": "chapters/00_intro.html#section",
+    "title": "Setting the stage",
+    "section": "",
+    "text": "So much boilerplate!\nWhat happened to the training split?\nWas there leakage?\nA lot of code to write and remember -&gt; mistakes become more likely"
   },
   {
     "objectID": "chapters/00_intro.html#intermission-data-leakage-and-fittransform",
     "href": "chapters/00_intro.html#intermission-data-leakage-and-fittransform",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Intermission: data leakage and fit/transform",
     "text": "Intermission: data leakage and fit/transform\n\nfrom sklearn.impute import SimpleImputer\n\ndf = pd.DataFrame({\n    \"value\": [1, 3, None, 5, 10, None, 1000, 5]\n})\n\ndf_train = df[:5]\ndf_test = df[5:]\n\n\n\n\ndf_train\n\n\n\n\n\n\n\n\nvalue\n\n\n\n\n0\n1.0\n\n\n1\n3.0\n\n\n2\nNaN\n\n\n3\n5.0\n\n\n4\n10.0\n\n\n\n\n\n\n\n\n\ndf_test\n\n\n\n\n\n\n\n\nvalue\n\n\n\n\n5\nNaN\n\n\n6\n1000.0\n\n\n7\n5.0"
   },
   {
     "objectID": "chapters/00_intro.html#intermission-data-leakage-and-fittransform-1",
     "href": "chapters/00_intro.html#intermission-data-leakage-and-fittransform-1",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Intermission: data leakage and fit/transform",
     "text": "Intermission: data leakage and fit/transform\nWhat happens if you try to find the mean over all data?\n\n\n\nimputer = SimpleImputer(strategy=\"mean\").set_output(transform=\"pandas\")\ndf_imputed = imputer.fit_transform(df)"
   },
   {
     "objectID": "chapters/00_intro.html#intermission-data-leakage-and-fittransform-2",
     "href": "chapters/00_intro.html#intermission-data-leakage-and-fittransform-2",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Intermission: data leakage and fit/transform",
     "text": "Intermission: data leakage and fit/transform\nThe proper way to do it: fit the transformer on the training data, transform the training with the same mean:\n\n\n\nprint(imputer.fit(df_train).transform(df_test))\n\n     value\n5     4.75\n6  1000.00\n7     5.00"
   },
   {
-    "objectID": "chapters/00_intro.html#back-on-track",
-    "href": "chapters/00_intro.html#back-on-track",
-    "title": "Data Preparation with skrub",
-    "section": "Back on track!",
-    "text": "Back on track!"
+    "objectID": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
+    "href": "chapters/00_intro.html#just-ask-an-agent-to-write-the-code",
+    "title": "Setting the stage",
+    "section": "“Just ask an agent to write the code”",
+    "text": "“Just ask an agent to write the code”\n\n\nOperations were in the wrong order.\nThe datetime feature was treated like a categorical feature (and one-hot encoded).\nCells could not be executed in order without proper debugging and re-prompting.\npd.get_dummies was executed on the full dataframe, rather than only on the training split, leading to data leakage."
   },
   {
-    "objectID": "chapters/00_intro.html#waking-up-from-a-nightmare",
-    "href": "chapters/00_intro.html#waking-up-from-a-nightmare",
-    "title": "Data Preparation with skrub",
-    "section": "Waking up from a nightmare",
-    "text": "Waking up from a nightmare\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\ncv_results = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, scoring=[\"r2\"])\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"tabular_pipeline: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\nprint(\n    f\"Ridge: Mean test R²: {cv_results['test_r2'].mean():.4f} (+/- {cv_results['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\ntabular_pipeline: Mean test R²: 0.9101 (+/- 0.0163)\nRidge: Mean test R²: 0.9101 (+/- 0.0163)"
+    "objectID": "chapters/00_intro.html#the-silent-failures-in-agentic-data-science",
+    "href": "chapters/00_intro.html#the-silent-failures-in-agentic-data-science",
+    "title": "Setting the stage",
+    "section": "The Silent Failures in Agentic Data Science",
+    "text": "The Silent Failures in Agentic Data Science\n\n\n\nhttps://trl-lab.github.io/ds-agent-failures/\n\n\n\nAlmost every agentic DS pipeline contains at least one failure mode, regardless of the agent scaffold or the underlying model.\n\n\n\n\n\n\n\n\nImportant\n\n\n\nWe want to minimize the chance of making mistakes."
+  },
+  {
+    "objectID": "chapters/00_intro.html#skrub-to-the-rescue",
+    "href": "chapters/00_intro.html#skrub-to-the-rescue",
+    "title": "Setting the stage",
+    "section": "skrub to the rescue",
+    "text": "skrub to the rescue\nThankfully, we can import skrub:\n\nfrom skrub import tabular_pipeline\n\n# Perform cross-validation (5-fold)\nresults_tp = cross_validate(tabular_pipeline(\"regression\"), X, y, cv=5, scoring=[\"r2\"])\n# Display results\nprint(\"Cross-Validation Results:\")\nprint(\n    f\"tabular_pipeline: Mean test R²: {results_tp['test_r2'].mean():.4f} (+/- {results_tp['test_r2'].std():.4f})\"\n)\nprint(\n    f\"Ridge: Mean test R²: {results_ridge['test_r2'].mean():.4f} (+/- {results_ridge['test_r2'].std():.4f})\"\n)\n\nCross-Validation Results:\ntabular_pipeline: Mean test R²: 0.9088 (+/- 0.0144)\nRidge: Mean test R²: 0.8731 (+/- 0.0276)"
   },
   {
     "objectID": "chapters/00_intro.html#whats-in-the-tabular_pipeline",
     "href": "chapters/00_intro.html#whats-in-the-tabular_pipeline",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "What’s in the tabular_pipeline",
     "text": "What’s in the tabular_pipeline"
   },
   {
     "objectID": "chapters/00_intro.html#pre-processing-is-part-of-the-pipeline",
     "href": "chapters/00_intro.html#pre-processing-is-part-of-the-pipeline",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Pre-processing is part of the pipeline!",
-    "text": "Pre-processing is part of the pipeline!\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\n\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\n\n\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
+    "text": "Pre-processing is part of the pipeline!\n\nThere isn’t a clear separation between “pre-processing”, “feature engineering” and “learning”.\n\n\n\nIf you learn something while pre-processing your training data (“this is a datetime”), you need to apply that knowledge to the test data.\n\n\n\n\nThis is why skrub provides transformers, rather than functions: transformers are stateful and can be used in pipelines, functions are not."
   },
   {
     "objectID": "chapters/00_intro.html#what-we-saw-in-this-chapter",
     "href": "chapters/00_intro.html#what-we-saw-in-this-chapter",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "What we saw in this chapter",
     "text": "What we saw in this chapter\n\nWe built a predictive pipeline using traditional tools\nWe talked about missing data imputation\nWe discussed data leakage\nWe tested skrub’s tabular_pipeline\nWe covered why pre-processing is part of the pipeline"
   },
   {
+    "objectID": "chapters/00_intro.html#machine-learning-with-dataframes-why-skrub",
+    "href": "chapters/00_intro.html#machine-learning-with-dataframes-why-skrub",
+    "title": "Setting the stage",
+    "section": "Machine learning with dataframes: why skrub",
+    "text": "Machine learning with dataframes: why skrub\n\nskrub provides tools to build robust pipelines\nthis is done by bringing pre-processing and feature engineering inside of the pipeline\nadditionally, robust code avoids boilerplate"
+  },
+  {
     "objectID": "chapters/00_intro.html#course-roadmap",
     "href": "chapters/00_intro.html#course-roadmap",
-    "title": "Data Preparation with skrub",
+    "title": "Setting the stage",
     "section": "Course Roadmap",
-    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumnwise operations with ApplyToCols\nAdvanced column selectors and how to use them\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nBeyond pipelines: skrub Data Ops"
+    "text": "Course Roadmap\n\nData exploration with skrub’s TableReport\nData cleaning and sanitization with the Cleaner\nColumn-based operations with ApplyToCols\nSelectors and how to use them for advanced column selection\nAutomatic feature engineering with the TableVectorizer\nA robust baseline for machine learning tasks with the tabular_pipeline\nBeyond pipelines: skrub Data Ops"
   },
   {
     "objectID": "chapters/02_cleaning_data.slides.html#introduction",
@@ -1871,365 +1822,365 @@
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#building-a-baseline-model-with-preprocessing",
     "href": "chapters/06_tabular_pipeline.slides.html#building-a-baseline-model-with-preprocessing",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Building a baseline model with preprocessing",
-    "text": "Building a baseline model with preprocessing\nBeyond preprocessing and cleaning, machine learning pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
+    "text": "Building a baseline model with preprocessing\nA ML pipeline needs to:\n\nIngest data\nPre-process the data so it can be transformed\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\n\n\n\n\n\n\nImportant\n\n\nAll these steps are needed just to find if there is enough data to provide signal."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#reminder-avoiding-data-leakage",
     "href": "chapters/06_tabular_pipeline.slides.html#reminder-avoiding-data-leakage",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Reminder: avoiding data leakage",
     "text": "Reminder: avoiding data leakage\n\nWe want to prevent data that belongs to the test set from entering the train set.\nData leakage leads to over-optimistic results.\nTransformers and encoders must be trained exclusively on the training samples.\nRemember: pre-processing is part of the entire design!\n\nThis is why we want a Pipeline!"
   },
   {
+    "objectID": "chapters/06_tabular_pipeline.slides.html#the-scikit-learn-pipeline",
+    "href": "chapters/06_tabular_pipeline.slides.html#the-scikit-learn-pipeline",
+    "title": "A strong, general baseline",
+    "section": "The scikit-learn Pipeline",
+    "text": "The scikit-learn Pipeline\n\nThe Pipeline objects contains an arbitrary sequence of steps, that may involve transformations and encodings.\nPipelines accept only a feature matrix X and a target y.\nPipelines expose fit and predict, so that at fit time only they receive only the training samples."
+  },
+  {
     "objectID": "chapters/06_tabular_pipeline.slides.html#manual-pipeline-construction",
     "href": "chapters/06_tabular_pipeline.slides.html#manual-pipeline-construction",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Manual Pipeline Construction",
-    "text": "Manual Pipeline Construction\nscikit-learn provides either Pipeline or make_pipeline to concatenate transformers and avoid leakage.\nThe pipeline takes care of passing the same set of samples to the transformers in sequence.\n\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.impute import SimpleImputer\nfrom skrub import TableVectorizer\n\nmodel = make_pipeline(\n    TableVectorizer(),      # Feature engineering\n    SimpleImputer(),        # Handle missing values\n    StandardScaler(),       # Normalize features\n    LogisticRegression()    # Final estimator\n)"
+    "text": "Manual Pipeline Construction\n\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.impute import SimpleImputer\nfrom skrub import TableVectorizer\n\nmodel = make_pipeline(\n    TableVectorizer(),      # Feature engineering\n    SimpleImputer(),        # Handle missing values\n    StandardScaler(),       # Normalize features\n    LogisticRegression()    # Final estimator\n)"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#the-tabular_pipeline-function",
     "href": "chapters/06_tabular_pipeline.slides.html#the-tabular_pipeline-function",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "The tabular_pipeline Function",
-    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\nfrom skrub import tabular_pipeline\nfrom tabicl import TabICLRegressor\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\nmodel_tabicl = tabular_pipeline(TabICLRegressor())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\")\nmodel_reg = tabular_pipeline(\"regression\")"
+    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\nfrom skrub import tabular_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom tabicl import TabICLRegressor\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\nmodel_tabicl = tabular_pipeline(TabICLRegressor())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\") # Uses HGBClassifier\nmodel_reg = tabular_pipeline(\"regression\") # Uses HGBRegressor"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tree-based-model",
     "href": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tree-based-model",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What the pipeline looks like: tree-based model",
     "text": "What the pipeline looks like: tree-based model"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-linear-model",
     "href": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-linear-model",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What the pipeline looks like: linear model",
     "text": "What the pipeline looks like: linear model"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tabicl",
     "href": "chapters/06_tabular_pipeline.slides.html#what-the-pipeline-looks-like-tabicl",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What the pipeline looks like: TabICL",
     "text": "What the pipeline looks like: TabICL"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#customizing-the-pipeline",
     "href": "chapters/06_tabular_pipeline.slides.html#customizing-the-pipeline",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Customizing the pipeline",
-    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\nThis is not necessary most of the time!\n\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']"
-  },
-  {
-    "objectID": "chapters/06_tabular_pipeline.slides.html#customizing-the-tabular_pipeline",
-    "href": "chapters/06_tabular_pipeline.slides.html#customizing-the-tabular_pipeline",
-    "title": "Building a complete machine learning pipeline with skrub",
-    "section": "Customizing the tabular_pipeline",
-    "text": "Customizing the tabular_pipeline\nUse tabular_pipeline if:\n\nYou need a quick baseline for benchmarking/checking if there is a signal\nYou want a starting point for experimentation\nYou don’t need custom preprocessing/feature engineering\n\nEmbed a pipeline in tabular_pipeline if :\n\nYou need to modify only the end of the pipeline\n\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\nUse a manual pipeline if :\n\nYou need fine-grained control over most of the transformations\nYour training process includes custom preprocessing steps\nYou want to experiment with different transformers\n\nOr… use the skrub Data Ops!"
+    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\nThis should be done only to modify the final steps of the pipeline.\nDefine your own pipeline for more extensive changes.\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#example-complete-workflow",
     "href": "chapters/06_tabular_pipeline.slides.html#example-complete-workflow",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Example: Complete Workflow",
     "text": "Example: Complete Workflow\nfrom sklearn.model_selection import cross_val_score\n\n# Create pipeline\nmodel = tabular_pipeline(LogisticRegression())\n\n# Evaluate with cross-validation\nscores = cross_val_score(model, X, y, cv=5)\nprint(f\"Score: {scores.mean():.4f}\")\nThat’s it!"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.slides.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/06_tabular_pipeline.slides.html#what-we-have-seen-in-this-chapter",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage\nTableVectorizer handles most of the feature engineering\nThe tabular_pipeline uses good defaults based on the type of estimator used\nPass a model (LogisticRegression(), TabICLRegressor()), or a string (“regression”, “classification”)\nUse manual pipelines to retain full control"
+    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage.\ntabular_pipeline returns a scikit-learn pipeline that includes preprocessing (with TableVectorizer).\nThe tabular_pipeline uses good defaults based on the type of estimator used.\nPass a model (LogisticRegression(), TabICLRegressor()), or a string (“regression”, “classification”).\nUse manual pipelines for specific use cases."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html",
     "href": "chapters/06_tabular_pipeline.html",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "",
-    "text": "Beyond preprocessing and cleaning, machine learning pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
+    "text": "A ML pipeline needs to:\n\nIngest data\nPre-process the data so it can be transformed\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\n\n\n\n\n\n\nImportant\n\n\n\nAll these steps are needed just to find if there is enough data to provide signal."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#building-a-baseline-model-with-preprocessing",
     "href": "chapters/06_tabular_pipeline.html#building-a-baseline-model-with-preprocessing",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "",
-    "text": "Beyond preprocessing and cleaning, machine learning pipelines need to:\n\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\nWe also want to find out if there is a signal to learn in the data."
+    "text": "A ML pipeline needs to:\n\nIngest data\nPre-process the data so it can be transformed\nAdd new features via feature engineering\nHandle missing values (optional)\nScale numeric features (also optional)\nTrain the model\n\n\n\n\n\n\n\nImportant\n\n\n\nAll these steps are needed just to find if there is enough data to provide signal."
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#reminder-avoiding-data-leakage",
     "href": "chapters/06_tabular_pipeline.html#reminder-avoiding-data-leakage",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Reminder: avoiding data leakage",
     "text": "Reminder: avoiding data leakage\n\nWe want to prevent data that belongs to the test set from entering the train set.\nData leakage leads to over-optimistic results.\nTransformers and encoders must be trained exclusively on the training samples.\nRemember: pre-processing is part of the entire design!\n\nThis is why we want a Pipeline!"
   },
   {
+    "objectID": "chapters/06_tabular_pipeline.html#the-scikit-learn-pipeline",
+    "href": "chapters/06_tabular_pipeline.html#the-scikit-learn-pipeline",
+    "title": "A strong, general baseline",
+    "section": "The scikit-learn Pipeline",
+    "text": "The scikit-learn Pipeline\n\nThe Pipeline objects contains an arbitrary sequence of steps, that may involve transformations and encodings.\nPipelines accept only a feature matrix X and a target y.\nPipelines expose fit and predict, so that at fit time only they receive only the training samples."
+  },
+  {
     "objectID": "chapters/06_tabular_pipeline.html#manual-pipeline-construction",
     "href": "chapters/06_tabular_pipeline.html#manual-pipeline-construction",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Manual Pipeline Construction",
-    "text": "Manual Pipeline Construction\nscikit-learn provides either Pipeline or make_pipeline to concatenate transformers and avoid leakage.\nThe pipeline takes care of passing the same set of samples to the transformers in sequence.\n\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.impute import SimpleImputer\nfrom skrub import TableVectorizer\n\nmodel = make_pipeline(\n    TableVectorizer(),      # Feature engineering\n    SimpleImputer(),        # Handle missing values\n    StandardScaler(),       # Normalize features\n    LogisticRegression()    # Final estimator\n)"
+    "text": "Manual Pipeline Construction\n\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.impute import SimpleImputer\nfrom skrub import TableVectorizer\n\nmodel = make_pipeline(\n    TableVectorizer(),      # Feature engineering\n    SimpleImputer(),        # Handle missing values\n    StandardScaler(),       # Normalize features\n    LogisticRegression()    # Final estimator\n)"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#the-tabular_pipeline-function",
     "href": "chapters/06_tabular_pipeline.html#the-tabular_pipeline-function",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "The tabular_pipeline Function",
-    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\nfrom skrub import tabular_pipeline\nfrom tabicl import TabICLRegressor\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\nmodel_tabicl = tabular_pipeline(TabICLRegressor())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\")\nmodel_reg = tabular_pipeline(\"regression\")"
+    "text": "The tabular_pipeline Function\nskrub’s tabular_pipeline returns a pipeline that includes all steps, with tuned defaults depending on the input model.\nfrom skrub import tabular_pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom tabicl import TabICLRegressor\n\n# Option 1: Provide an estimator\nmodel = tabular_pipeline(LogisticRegression())\nmodel_tabicl = tabular_pipeline(TabICLRegressor())\n\n# Option 2: Use preset strings\nmodel_clf = tabular_pipeline(\"classification\") # Uses HGBClassifier\nmodel_reg = tabular_pipeline(\"regression\") # Uses HGBRegressor"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tree-based-model",
     "href": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tree-based-model",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What the pipeline looks like: tree-based model",
     "text": "What the pipeline looks like: tree-based model"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-linear-model",
     "href": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-linear-model",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What the pipeline looks like: linear model",
     "text": "What the pipeline looks like: linear model"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tabicl",
     "href": "chapters/06_tabular_pipeline.html#what-the-pipeline-looks-like-tabicl",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What the pipeline looks like: TabICL",
     "text": "What the pipeline looks like: TabICL"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#customizing-the-pipeline",
     "href": "chapters/06_tabular_pipeline.html#customizing-the-pipeline",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Customizing the pipeline",
-    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\n\nThis is not necessary most of the time!\n\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']"
-  },
-  {
-    "objectID": "chapters/06_tabular_pipeline.html#customizing-the-tabular_pipeline",
-    "href": "chapters/06_tabular_pipeline.html#customizing-the-tabular_pipeline",
-    "title": "Building a complete machine learning pipeline with skrub",
-    "section": "Customizing the tabular_pipeline",
-    "text": "Customizing the tabular_pipeline\nUse tabular_pipeline if:\n\nYou need a quick baseline for benchmarking/checking if there is a signal\nYou want a starting point for experimentation\nYou don’t need custom preprocessing/feature engineering\n\nEmbed a pipeline in tabular_pipeline if :\n\nYou need to modify only the end of the pipeline\n\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\nUse a manual pipeline if :\n\nYou need fine-grained control over most of the transformations\nYour training process includes custom preprocessing steps\nYou want to experiment with different transformers\n\nOr… use the skrub Data Ops!"
+    "text": "Customizing the pipeline\n\n\n\n\n\n\nTip\n\n\n\nThis should be done only to modify the final steps of the pipeline.\nDefine your own pipeline for more extensive changes.\n\n\n\nfrom sklearn.decomposition import PCA\nfrom sklearn.linear_model import Ridge\nfrom sklearn.pipeline import make_pipeline\nfrom skrub import tabular_pipeline\n# Create a pipeline that includes two steps\nmodel_pipeline = make_pipeline(PCA(n_components=20), Ridge())\n\n# Pass the new model to tabular_pipeline\nfull_pipeline = tabular_pipeline(model_pipeline)\n[name for name, _ in full_pipeline.steps]\n\n['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#example-complete-workflow",
     "href": "chapters/06_tabular_pipeline.html#example-complete-workflow",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "Example: Complete Workflow",
     "text": "Example: Complete Workflow\nfrom sklearn.model_selection import cross_val_score\n\n# Create pipeline\nmodel = tabular_pipeline(LogisticRegression())\n\n# Evaluate with cross-validation\nscores = cross_val_score(model, X, y, cv=5)\nprint(f\"Score: {scores.mean():.4f}\")\nThat’s it!"
   },
   {
     "objectID": "chapters/06_tabular_pipeline.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/06_tabular_pipeline.html#what-we-have-seen-in-this-chapter",
-    "title": "Building a complete machine learning pipeline with skrub",
+    "title": "A strong, general baseline",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage\nTableVectorizer handles most of the feature engineering\nThe tabular_pipeline uses good defaults based on the type of estimator used\nPass a model (LogisticRegression(), TabICLRegressor()), or a string (“regression”, “classification”)\nUse manual pipelines to retain full control"
+    "text": "What we have seen in this chapter\n\nAlways use pipelines to prevent data leakage.\ntabular_pipeline returns a scikit-learn pipeline that includes preprocessing (with TableVectorizer).\nThe tabular_pipeline uses good defaults based on the type of estimator used.\nPass a model (LogisticRegression(), TabICLRegressor()), or a string (“regression”, “classification”).\nUse manual pipelines for specific use cases."
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#skrub-dataops",
-    "href": "chapters/08_data_ops.slides.html#skrub-dataops",
+    "objectID": "chapters/08_data_ops.slides.html#basic-pipelines-have-limitations",
+    "href": "chapters/08_data_ops.slides.html#basic-pipelines-have-limitations",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Skrub DataOps",
-    "text": "Skrub DataOps\n\nExtend the scikit-learn machinery to multi-table operations\nTake care of data leakage\nStore stateful objects in the pipeline (including encoders and trasformers)\nTrack all operations with a computational graph (a Data Ops plan)\nAllow tuning any operation in the plan\nCan be persisted and shared easily"
+    "section": "Basic pipelines have limitations!",
+    "text": "Basic pipelines have limitations!\n\n\nLimitations\n\n\nPipelines require a single matrix as input to trasform\n\n\n\n\nMultiple tables as inputs are not supported\n\n\n\n\nThe number of samples cannot change inside a pipeline\n\n\n\nReality\n\n\nIn some cases, the feature matrix needs to be assembled within the pipeline\n\n\n\n\nData may be spread over multiple tables (e.g., relational databases)\n\n\n\n\nThe number of samples may be altered (e.g., by aggregating rows)"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#how-do-dataops-work-though",
-    "href": "chapters/08_data_ops.slides.html#how-do-dataops-work-though",
+    "objectID": "chapters/08_data_ops.slides.html#section",
+    "href": "chapters/08_data_ops.slides.html#section",
     "title": "Building extensive pipelines with DataOps",
-    "section": "How do DataOps work, though?",
-    "text": "How do DataOps work, though?\nDataOps wrap around user operations, where user operations are:\n\nany dataframe operation (e.g., merge, group by, aggregate etc.)\nscikit-learn estimators (a Random Forest, RidgeCV etc.)\ncustom user code (load data from a path, fetch from an URL etc.)\n\n\n\n\n\n\n\n\nImportant\n\n\nDataOps record user operations, so that they can later be replayed in the same order and with the same arguments on unseen data."
+    "section": "",
+    "text": "Textbook ML\n\n\\(X \\in \\mathbb{R}^{n \\times p},\\ y \\in \\mathbb{R}^n\\)\n\\(\\hat{y} = f_{\\hat{\\theta}}(X)\\)\n\n\nestimator = TabICLRegressor()\n\ncross_validate(estimator, X, y)\n\nestimator.fit(X_train, y_train)\nestimator.predict(X_new)\n\n\n\nData-Science Practice"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#starting-with-the-dataops",
-    "href": "chapters/08_data_ops.slides.html#starting-with-the-dataops",
+    "objectID": "chapters/08_data_ops.slides.html#section-1",
+    "href": "chapters/08_data_ops.slides.html#section-1",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Starting with the DataOps",
-    "text": "Starting with the DataOps\n\nimport skrub\ndata = skrub.datasets.fetch_credit_fraud()\n\nbaskets = skrub.var(\"baskets\", data.baskets)\nproducts = skrub.var(\"products\", data.products) # add a new variable\n\nX = baskets[[\"ID\"]].skb.mark_as_X()\ny = baskets[\"fraud_flag\"].skb.mark_as_y()\n\n\nbaskets and products represent inputs to the pipeline.\nSkrub tracks X and y so that training and test splits are never mixed."
+    "section": "",
+    "text": "Textbook ML\n\n\\(X \\in \\mathbb{R}^{n \\times p},\\ y \\in \\mathbb{R}^n\\)\n\\(\\hat{y} = f_{\\hat{\\theta}}(X)\\)\n\nestimator = TabICLRegressor()\n\ncross_validate(estimator, X, y)\n\nestimator.fit(X_train, y_train)\nestimator.predict(X_new)\n\nData-Science Practice"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#applying-a-transformer",
-    "href": "chapters/08_data_ops.slides.html#applying-a-transformer",
+    "objectID": "chapters/08_data_ops.slides.html#section-2",
+    "href": "chapters/08_data_ops.slides.html#section-2",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Applying a transformer",
-    "text": "Applying a transformer\n\nfrom skrub import selectors as s\n\nvectorizer = skrub.TableVectorizer(\n    high_cardinality=skrub.StringEncoder()\n)\nvectorized_products = products.skb.apply(\n    vectorizer, cols=s.all() - \"basket_ID\"\n)"
+    "section": "",
+    "text": "Textbook ML\n\n\\(X \\in \\mathbb{R}^{n \\times p},\\ y \\in \\mathbb{R}^n\\)\n\\(\\hat{y} = f_{\\hat{\\theta}}(X)\\)\n\nestimator = TabICLRegressor()\n\ncross_validate(estimator, X, y)\n\nestimator.fit(X_train, y_train)\nestimator.predict(X_new)\n\nData-Science Practice"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#executing-dataframe-operations",
-    "href": "chapters/08_data_ops.slides.html#executing-dataframe-operations",
+    "objectID": "chapters/08_data_ops.slides.html#section-3",
+    "href": "chapters/08_data_ops.slides.html#section-3",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Executing dataframe operations",
-    "text": "Executing dataframe operations\n\naggregated_products = vectorized_products.groupby(\n    \"basket_ID\"\n).agg(\"mean\").reset_index()\n\nfeatures = X.merge(\n    aggregated_products, left_on=\"ID\", right_on=\"basket_ID\"\n)\nfeatures = features.drop(columns=[\"ID\", \"basket_ID\"])"
+    "section": "",
+    "text": "To build a ML pipeline, we need to:\n\npreprocess the data, perform feature engineering, train a model …\nso we need to learn a state…\nwhile we evaluate the predictive performance…\nas we avoid data leakage…\nwith multi-source input …\n\nHow do we deal with that?"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#applying-a-ml-model",
-    "href": "chapters/08_data_ops.slides.html#applying-a-ml-model",
+    "objectID": "chapters/08_data_ops.slides.html#with-data-ops",
+    "href": "chapters/08_data_ops.slides.html#with-data-ops",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Applying a ML model",
-    "text": "Applying a ML model\n\nfrom sklearn.ensemble import ExtraTreesClassifier  \npredictions = features.skb.apply(\n    ExtraTreesClassifier(n_jobs=-1), y=y\n)"
+    "section": "With Data Ops…",
+    "text": "With Data Ops…\nData wrangling is part of the pipeline: filtering, resampling, aggregations, joins, …\nThen, after preparing the data:\n\nCross-validate without data leaks.\nTune choices with validation scores.\nReplay on new inputs.\n\n\n\n\n\n\nDataOps\n\n\n\nAll the goodies of the scikit-learn framework: fit() & predict(), cross-validation, hyperparameter tuning, serialization.\nWithout the usual restrictions & while supporting arbitrary data processing. Multiple inputs, feature & target construction, filtering samples, dynamic arguments for CV splitters & scorers, etc.\nAnd more: Optuna integration, dynamic previews, pipeline inspection, …"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#inspecting-the-data-ops-plan",
-    "href": "chapters/08_data_ops.slides.html#inspecting-the-data-ops-plan",
+    "objectID": "chapters/08_data_ops.slides.html#basic-example",
+    "href": "chapters/08_data_ops.slides.html#basic-example",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Inspecting the Data Ops plan",
-    "text": "Inspecting the Data Ops plan\npredictions.skb.full_report()\n\nExecution report\nEach node:\n\nShows a preview of the data resulting from the operation\nReports the location in the code where the code is defined\nCan include node names and descriptions\nShows the run time of each node"
+    "section": "Basic example",
+    "text": "Basic example\n\n\n\nDeclare the pipeline\ndata_path = skrub.var(\"data_path\")\ndata = data_path.skb.apply_func(pd.read_csv)\nX = data.drop(columns=\"target\", errors=\"ignore\").skb.mark_as_X()\ny = data[\"target\"].skb.mark_as_y()\npred = X.skb.apply(\n    StandardScaler(), cols=s.numeric()\n).skb.apply(LogisticRegression(), y=y)\n\n\nCross-validate\npred.skb.cross_validate(\n    environment={\"data_path\": \"historical_data.csv\"}\n)\n\n\nMake a “learner” (object with fit() & predict())\nlearner = pred.skb.make_learner(\n).fit(\n    environment={\"data_path\": \"historical_data.csv\"}\n)\nlearner.predict(\n    environment={\"data_path\": \"new_data.csv\"}\n)"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#exporting-the-plan-in-a-learner",
-    "href": "chapters/08_data_ops.slides.html#exporting-the-plan-in-a-learner",
+    "objectID": "chapters/08_data_ops.slides.html#hyperparameter-tuning-12",
+    "href": "chapters/08_data_ops.slides.html#hyperparameter-tuning-12",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Exporting the plan in a learner",
-    "text": "Exporting the plan in a learner\nThe Learner is an estimator that takes a dictionary as input rather than just X and y.\n\n\nlearner = predictions.skb.make_learner(fitted=True)\n\n\n\nThen, the learner can be pickled …\n\nimport pickle \n\nlearner_bytes = pickle.dumps(learner)\n\nimport pickle\n\nwith open(\"learner.bin\", \"wb\") as fp:\n    pickle.dump(learner, fp)\n\nloaded_learner = pickle.loads(learner_bytes)\n\n\n\n… loaded and applied to new data:\nwith open(\"learner.bin\", \"rb\") as fp:\n    loaded_learner = pickle.load(fp)\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict({\"baskets\": new_baskets, \"products\": new_products})"
+    "section": "Hyperparameter tuning 1/2",
+    "text": "Hyperparameter tuning 1/2\nTuning hyperparameters in scikit-learn can be complex…\npipe = Pipeline([(\"dim_reduction\", PCA()), (\"regressor\", Ridge())])\ngrid = [\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n]"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#tuning-in-scikit-learn-can-be-complex",
-    "href": "chapters/08_data_ops.slides.html#tuning-in-scikit-learn-can-be-complex",
+    "objectID": "chapters/08_data_ops.slides.html#hyperparameter-tuning-22",
+    "href": "chapters/08_data_ops.slides.html#hyperparameter-tuning-22",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Tuning in scikit-learn can be complex",
-    "text": "Tuning in scikit-learn can be complex\npipe = Pipeline([(\"dim_reduction\", PCA()), (\"regressor\", Ridge())])\ngrid = [\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n]"
-  },
-  {
-    "objectID": "chapters/08_data_ops.slides.html#tuning-with-data-ops-is-simple",
-    "href": "chapters/08_data_ops.slides.html#tuning-with-data-ops-is-simple",
-    "title": "Building extensive pipelines with DataOps",
-    "section": "Tuning with Data Ops is simple!",
-    "text": "Tuning with Data Ops is simple!\ndim_reduction = X.skb.apply(\n    skrub.choose_from(\n        {\n            \"PCA\": PCA(n_components=skrub.choose_int(10, 30)),\n            \"SelectKBest\": SelectKBest(k=skrub.choose_int(10, 30))\n        }, name=\"dim_reduction\"\n    )\n)\nregressor = dim_reduction.skb.apply(\n    skrub.choose_from(\n        {\n            \"Ridge\": Ridge(alpha=skrub.choose_float(0.1, 10.0, log=True)),\n            \"RandomForest\": RandomForestRegressor(\n                n_estimators=skrub.choose_int(20, 200, log=True)\n            )\n        }, name=\"regressor\"\n    )\n)"
+    "section": "Hyperparameter tuning 2/2",
+    "text": "Hyperparameter tuning 2/2\nWith Data Ops, you can define the search space with the estimator:\ndim_reduction = X.skb.apply(\n    skrub.choose_from(\n        {\n            \"PCA\": PCA(n_components=skrub.choose_int(10, 30)),\n            \"SelectKBest\": SelectKBest(k=skrub.choose_int(10, 30))\n        }, name=\"dim_reduction\"\n    )\n)\n\nChoices can be made about any part of the pipeline:\ndf = pd.DataFrame({\n    \"region\":  [\"North\", \"North\", \"South\", \"South\", \"East\", \"East\", \"North\", \"South\"],\n    \"revenue\": [100.0, 225.0, 70.0, 180.0, 90.0, 300.0, 50.0, 80.0],\n})\ndo = skrub.var(\"data\", df)\ndo.groupby(\"region\")[\"revenue\"].agg(skrub.choose_from([\"mean\", \"sum\", \"max\"]))"
   },
   {
     "objectID": "chapters/08_data_ops.slides.html#run-hyperparameter-search",
     "href": "chapters/08_data_ops.slides.html#run-hyperparameter-search",
     "title": "Building extensive pipelines with DataOps",
     "section": "Run hyperparameter search",
-    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_\nWith Optuna as backend:\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5, backend=\"optuna\"\n)"
+    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_\nbest_learner.predict({\"data\": new_data})\nUse Optuna as backend:\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5, backend=\"optuna\"\n)"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#a-parallel-coordinate-plot-to-explore-hyperparameters",
-    "href": "chapters/08_data_ops.slides.html#a-parallel-coordinate-plot-to-explore-hyperparameters",
+    "objectID": "chapters/08_data_ops.slides.html#debug-the-entire-plan-with-the-report",
+    "href": "chapters/08_data_ops.slides.html#debug-the-entire-plan-with-the-report",
     "title": "Building extensive pipelines with DataOps",
-    "section": "A parallel coordinate plot to explore hyperparameters",
-    "text": "A parallel coordinate plot to explore hyperparameters\nsearch = pred.skb.get_randomized_search(fitted=True)\nsearch.plot_parallel_coord()\n\nimport os\nfrom plotly.io import read_json\njson_path = os.path.join(\"..\", \"data\", \"parallel_coordinates_hgbr.json\")\n\nfig = read_json(json_path)\nfig.update_layout(margin=dict(l=200))"
+    "section": "Debug the entire plan with the report",
+    "text": "Debug the entire plan with the report"
   },
   {
-    "objectID": "chapters/08_data_ops.slides.html#hyperparameter-tuning-in-a-data-ops-plan",
-    "href": "chapters/08_data_ops.slides.html#hyperparameter-tuning-in-a-data-ops-plan",
+    "objectID": "chapters/08_data_ops.slides.html#data-ops-go-beyond-tabular-data",
+    "href": "chapters/08_data_ops.slides.html#data-ops-go-beyond-tabular-data",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Hyperparameter tuning in a Data Ops plan",
-    "text": "Hyperparameter tuning in a Data Ops plan\nSkrub implements four choose_* functions:\n\nchoose_from: select from the given list of options\nchoose_int: select an integer within a range\nchoose_float: select a float within a range\nchoose_bool: select a bool\noptional: chooses whether to execute the given operation"
+    "section": "Data Ops go beyond tabular data!",
+    "text": "Data Ops go beyond tabular data!\nData Ops make no assumption about the underlying data, or code.\n\nImage classification with pytorch"
+  },
+  {
+    "objectID": "chapters/08_data_ops.slides.html#in-conclusion",
+    "href": "chapters/08_data_ops.slides.html#in-conclusion",
+    "title": "Building extensive pipelines with DataOps",
+    "section": "In conclusion",
+    "text": "In conclusion\n\nData science is harder than what you learn in classes\nA full ML pipeline involves preprocessing, feature engineering and model training\nWe want to learn a “state” (it’s called machine learning after all), evaluate performance and do so while avoiding data leakage\nData Ops are a framework that allows to build stateful pipelines for arbitrary code and inputs\nData Ops extend the scikit-learn fit predict paradigm to multi-table inputs, feature and target construction, sample filtering …\nA Data Ops graph can be exported as a Learner, a single object that includes all learned states to work on new data"
   },
   {
     "objectID": "chapters/08_data_ops.slides.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/08_data_ops.slides.html#what-we-have-seen-in-this-chapter",
     "title": "Building extensive pipelines with DataOps",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nDataOps can be used to build complex multi-table pipelines\nThey track all the operations that are executed and replay them with the same parameters\nDataOps simplify building hyperparameter grids\nLearners can be exported and used with new data"
+    "text": "What we have seen in this chapter\n\nData leakage is a problem, and in practice pipelines are not enough\nData Ops can be used to build complex multi-table plans\nData Ops track all the operations that are executed and replay them with the same parameters\nChoose functions generate complex hyperparameter grid in place\nLearners can be exported to be used with new data"
   },
   {
     "objectID": "chapters/08_data_ops.html",
     "href": "chapters/08_data_ops.html",
     "title": "Building extensive pipelines with DataOps",
     "section": "",
-    "text": "Extend the scikit-learn machinery to multi-table operations\nTake care of data leakage\nStore stateful objects in the pipeline (including encoders and trasformers)\nTrack all operations with a computational graph (a Data Ops plan)\nAllow tuning any operation in the plan\nCan be persisted and shared easily"
+    "text": "Pipelines require a single matrix as input to trasform\n\n\n\n\nMultiple tables as inputs are not supported\n\n\n\n\nThe number of samples cannot change inside a pipeline\n\n\n\n\n\n\n\n\nIn some cases, the feature matrix needs to be assembled within the pipeline\n\n\n\n\nData may be spread over multiple tables (e.g., relational databases)\n\n\n\n\nThe number of samples may be altered (e.g., by aggregating rows)"
   },
   {
-    "objectID": "chapters/08_data_ops.html#skrub-dataops",
-    "href": "chapters/08_data_ops.html#skrub-dataops",
+    "objectID": "chapters/08_data_ops.html#basic-pipelines-have-limitations",
+    "href": "chapters/08_data_ops.html#basic-pipelines-have-limitations",
     "title": "Building extensive pipelines with DataOps",
     "section": "",
-    "text": "Extend the scikit-learn machinery to multi-table operations\nTake care of data leakage\nStore stateful objects in the pipeline (including encoders and trasformers)\nTrack all operations with a computational graph (a Data Ops plan)\nAllow tuning any operation in the plan\nCan be persisted and shared easily"
+    "text": "Pipelines require a single matrix as input to trasform\n\n\n\n\nMultiple tables as inputs are not supported\n\n\n\n\nThe number of samples cannot change inside a pipeline\n\n\n\n\n\n\n\n\nIn some cases, the feature matrix needs to be assembled within the pipeline\n\n\n\n\nData may be spread over multiple tables (e.g., relational databases)\n\n\n\n\nThe number of samples may be altered (e.g., by aggregating rows)"
   },
   {
-    "objectID": "chapters/08_data_ops.html#how-do-dataops-work-though",
-    "href": "chapters/08_data_ops.html#how-do-dataops-work-though",
+    "objectID": "chapters/08_data_ops.html#section",
+    "href": "chapters/08_data_ops.html#section",
     "title": "Building extensive pipelines with DataOps",
-    "section": "How do DataOps work, though?",
-    "text": "How do DataOps work, though?\nDataOps wrap around user operations, where user operations are:\n\nany dataframe operation (e.g., merge, group by, aggregate etc.)\nscikit-learn estimators (a Random Forest, RidgeCV etc.)\ncustom user code (load data from a path, fetch from an URL etc.)\n\n\n\n\n\n\n\n\nImportant\n\n\n\nDataOps record user operations, so that they can later be replayed in the same order and with the same arguments on unseen data."
+    "section": "",
+    "text": "Textbook ML\n\n\\(X \\in \\mathbb{R}^{n \\times p},\\ y \\in \\mathbb{R}^n\\)\n\\(\\hat{y} = f_{\\hat{\\theta}}(X)\\)\n\n\nestimator = TabICLRegressor()\n\ncross_validate(estimator, X, y)\n\nestimator.fit(X_train, y_train)\nestimator.predict(X_new)\n\n\n\nData-Science Practice"
   },
   {
-    "objectID": "chapters/08_data_ops.html#starting-with-the-dataops",
-    "href": "chapters/08_data_ops.html#starting-with-the-dataops",
+    "objectID": "chapters/08_data_ops.html#section-1",
+    "href": "chapters/08_data_ops.html#section-1",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Starting with the DataOps",
-    "text": "Starting with the DataOps\n\nimport skrub\ndata = skrub.datasets.fetch_credit_fraud()\n\nbaskets = skrub.var(\"baskets\", data.baskets)\nproducts = skrub.var(\"products\", data.products) # add a new variable\n\nX = baskets[[\"ID\"]].skb.mark_as_X()\ny = baskets[\"fraud_flag\"].skb.mark_as_y()\n\n\nbaskets and products represent inputs to the pipeline.\nSkrub tracks X and y so that training and test splits are never mixed."
+    "section": "",
+    "text": "Textbook ML\n\n\\(X \\in \\mathbb{R}^{n \\times p},\\ y \\in \\mathbb{R}^n\\)\n\\(\\hat{y} = f_{\\hat{\\theta}}(X)\\)\n\nestimator = TabICLRegressor()\n\ncross_validate(estimator, X, y)\n\nestimator.fit(X_train, y_train)\nestimator.predict(X_new)\n\nData-Science Practice"
   },
   {
-    "objectID": "chapters/08_data_ops.html#applying-a-transformer",
-    "href": "chapters/08_data_ops.html#applying-a-transformer",
+    "objectID": "chapters/08_data_ops.html#section-2",
+    "href": "chapters/08_data_ops.html#section-2",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Applying a transformer",
-    "text": "Applying a transformer\n\nfrom skrub import selectors as s\n\nvectorizer = skrub.TableVectorizer(\n    high_cardinality=skrub.StringEncoder()\n)\nvectorized_products = products.skb.apply(\n    vectorizer, cols=s.all() - \"basket_ID\"\n)"
+    "section": "",
+    "text": "Textbook ML\n\n\\(X \\in \\mathbb{R}^{n \\times p},\\ y \\in \\mathbb{R}^n\\)\n\\(\\hat{y} = f_{\\hat{\\theta}}(X)\\)\n\nestimator = TabICLRegressor()\n\ncross_validate(estimator, X, y)\n\nestimator.fit(X_train, y_train)\nestimator.predict(X_new)\n\nData-Science Practice"
   },
   {
-    "objectID": "chapters/08_data_ops.html#executing-dataframe-operations",
-    "href": "chapters/08_data_ops.html#executing-dataframe-operations",
+    "objectID": "chapters/08_data_ops.html#section-3",
+    "href": "chapters/08_data_ops.html#section-3",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Executing dataframe operations",
-    "text": "Executing dataframe operations\n\naggregated_products = vectorized_products.groupby(\n    \"basket_ID\"\n).agg(\"mean\").reset_index()\n\nfeatures = X.merge(\n    aggregated_products, left_on=\"ID\", right_on=\"basket_ID\"\n)\nfeatures = features.drop(columns=[\"ID\", \"basket_ID\"])"
+    "section": "",
+    "text": "To build a ML pipeline, we need to:\n\npreprocess the data, perform feature engineering, train a model …\nso we need to learn a state…\nwhile we evaluate the predictive performance…\nas we avoid data leakage…\nwith multi-source input …\n\nHow do we deal with that?"
   },
   {
-    "objectID": "chapters/08_data_ops.html#applying-a-ml-model",
-    "href": "chapters/08_data_ops.html#applying-a-ml-model",
+    "objectID": "chapters/08_data_ops.html#with-data-ops",
+    "href": "chapters/08_data_ops.html#with-data-ops",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Applying a ML model",
-    "text": "Applying a ML model\n\nfrom sklearn.ensemble import ExtraTreesClassifier  \npredictions = features.skb.apply(\n    ExtraTreesClassifier(n_jobs=-1), y=y\n)"
+    "section": "With Data Ops…",
+    "text": "With Data Ops…\nData wrangling is part of the pipeline: filtering, resampling, aggregations, joins, …\nThen, after preparing the data:\n\nCross-validate without data leaks.\nTune choices with validation scores.\nReplay on new inputs.\n\n\n\n\n\n\n\n\nNoteDataOps\n\n\n\n\nAll the goodies of the scikit-learn framework: fit() & predict(), cross-validation, hyperparameter tuning, serialization.\nWithout the usual restrictions & while supporting arbitrary data processing. Multiple inputs, feature & target construction, filtering samples, dynamic arguments for CV splitters & scorers, etc.\nAnd more: Optuna integration, dynamic previews, pipeline inspection, …"
   },
   {
-    "objectID": "chapters/08_data_ops.html#inspecting-the-data-ops-plan",
-    "href": "chapters/08_data_ops.html#inspecting-the-data-ops-plan",
+    "objectID": "chapters/08_data_ops.html#basic-example",
+    "href": "chapters/08_data_ops.html#basic-example",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Inspecting the Data Ops plan",
-    "text": "Inspecting the Data Ops plan\npredictions.skb.full_report()\n\nExecution report\nEach node:\n\nShows a preview of the data resulting from the operation\nReports the location in the code where the code is defined\nCan include node names and descriptions\nShows the run time of each node"
+    "section": "Basic example",
+    "text": "Basic example\n\n\n\nDeclare the pipeline\ndata_path = skrub.var(\"data_path\")\ndata = data_path.skb.apply_func(pd.read_csv)\nX = data.drop(columns=\"target\", errors=\"ignore\").skb.mark_as_X()\ny = data[\"target\"].skb.mark_as_y()\npred = X.skb.apply(\n    StandardScaler(), cols=s.numeric()\n).skb.apply(LogisticRegression(), y=y)\n\n\nCross-validate\npred.skb.cross_validate(\n    environment={\"data_path\": \"historical_data.csv\"}\n)\n\n\nMake a “learner” (object with fit() & predict())\nlearner = pred.skb.make_learner(\n).fit(\n    environment={\"data_path\": \"historical_data.csv\"}\n)\nlearner.predict(\n    environment={\"data_path\": \"new_data.csv\"}\n)"
   },
   {
-    "objectID": "chapters/08_data_ops.html#exporting-the-plan-in-a-learner",
-    "href": "chapters/08_data_ops.html#exporting-the-plan-in-a-learner",
+    "objectID": "chapters/08_data_ops.html#hyperparameter-tuning-12",
+    "href": "chapters/08_data_ops.html#hyperparameter-tuning-12",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Exporting the plan in a learner",
-    "text": "Exporting the plan in a learner\nThe Learner is an estimator that takes a dictionary as input rather than just X and y.\n\n\nlearner = predictions.skb.make_learner(fitted=True)\n\n\n\nThen, the learner can be pickled …\n\nimport pickle \n\nlearner_bytes = pickle.dumps(learner)\n\nimport pickle\n\nwith open(\"learner.bin\", \"wb\") as fp:\n    pickle.dump(learner, fp)\n\nloaded_learner = pickle.loads(learner_bytes)\n\n\n\n… loaded and applied to new data:\nwith open(\"learner.bin\", \"rb\") as fp:\n    loaded_learner = pickle.load(fp)\ndata = skrub.datasets.fetch_credit_fraud(split=\"test\")\nnew_baskets = data.baskets\nnew_products = data.products\nloaded_learner.predict({\"baskets\": new_baskets, \"products\": new_products})"
+    "section": "Hyperparameter tuning 1/2",
+    "text": "Hyperparameter tuning 1/2\nTuning hyperparameters in scikit-learn can be complex…\npipe = Pipeline([(\"dim_reduction\", PCA()), (\"regressor\", Ridge())])\ngrid = [\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n]"
   },
   {
-    "objectID": "chapters/08_data_ops.html#tuning-in-scikit-learn-can-be-complex",
-    "href": "chapters/08_data_ops.html#tuning-in-scikit-learn-can-be-complex",
+    "objectID": "chapters/08_data_ops.html#hyperparameter-tuning-22",
+    "href": "chapters/08_data_ops.html#hyperparameter-tuning-22",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Tuning in scikit-learn can be complex",
-    "text": "Tuning in scikit-learn can be complex\npipe = Pipeline([(\"dim_reduction\", PCA()), (\"regressor\", Ridge())])\ngrid = [\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [Ridge()],\n        \"regressor__alpha\": loguniform(0.1, 10.0),\n    },\n    {\n        \"dim_reduction\": [PCA()],\n        \"dim_reduction__n_components\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n    {\n        \"dim_reduction\": [SelectKBest()],\n        \"dim_reduction__k\": [10, 20, 30],\n        \"regressor\": [RandomForestRegressor()],\n        \"regressor__n_estimators\": loguniform(20, 200),\n    },\n]"
-  },
-  {
-    "objectID": "chapters/08_data_ops.html#tuning-with-data-ops-is-simple",
-    "href": "chapters/08_data_ops.html#tuning-with-data-ops-is-simple",
-    "title": "Building extensive pipelines with DataOps",
-    "section": "Tuning with Data Ops is simple!",
-    "text": "Tuning with Data Ops is simple!\ndim_reduction = X.skb.apply(\n    skrub.choose_from(\n        {\n            \"PCA\": PCA(n_components=skrub.choose_int(10, 30)),\n            \"SelectKBest\": SelectKBest(k=skrub.choose_int(10, 30))\n        }, name=\"dim_reduction\"\n    )\n)\nregressor = dim_reduction.skb.apply(\n    skrub.choose_from(\n        {\n            \"Ridge\": Ridge(alpha=skrub.choose_float(0.1, 10.0, log=True)),\n            \"RandomForest\": RandomForestRegressor(\n                n_estimators=skrub.choose_int(20, 200, log=True)\n            )\n        }, name=\"regressor\"\n    )\n)"
+    "section": "Hyperparameter tuning 2/2",
+    "text": "Hyperparameter tuning 2/2\nWith Data Ops, you can define the search space with the estimator:\ndim_reduction = X.skb.apply(\n    skrub.choose_from(\n        {\n            \"PCA\": PCA(n_components=skrub.choose_int(10, 30)),\n            \"SelectKBest\": SelectKBest(k=skrub.choose_int(10, 30))\n        }, name=\"dim_reduction\"\n    )\n)\n\nChoices can be made about any part of the pipeline:\ndf = pd.DataFrame({\n    \"region\":  [\"North\", \"North\", \"South\", \"South\", \"East\", \"East\", \"North\", \"South\"],\n    \"revenue\": [100.0, 225.0, 70.0, 180.0, 90.0, 300.0, 50.0, 80.0],\n})\ndo = skrub.var(\"data\", df)\ndo.groupby(\"region\")[\"revenue\"].agg(skrub.choose_from([\"mean\", \"sum\", \"max\"]))"
   },
   {
     "objectID": "chapters/08_data_ops.html#run-hyperparameter-search",
     "href": "chapters/08_data_ops.html#run-hyperparameter-search",
     "title": "Building extensive pipelines with DataOps",
     "section": "Run hyperparameter search",
-    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_\nWith Optuna as backend:\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5, backend=\"optuna\"\n)"
+    "text": "Run hyperparameter search\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5\n)\n\n# save the best learner\nbest_learner = search.best_learner_\nbest_learner.predict({\"data\": new_data})\nUse Optuna as backend:\n# fit the search \nsearch = regressor.skb.make_randomized_search(\n    scoring=\"roc_auc\", fitted=True, cv=5, backend=\"optuna\"\n)"
   },
   {
-    "objectID": "chapters/08_data_ops.html#a-parallel-coordinate-plot-to-explore-hyperparameters",
-    "href": "chapters/08_data_ops.html#a-parallel-coordinate-plot-to-explore-hyperparameters",
+    "objectID": "chapters/08_data_ops.html#debug-the-entire-plan-with-the-report",
+    "href": "chapters/08_data_ops.html#debug-the-entire-plan-with-the-report",
     "title": "Building extensive pipelines with DataOps",
-    "section": "A parallel coordinate plot to explore hyperparameters",
-    "text": "A parallel coordinate plot to explore hyperparameters\nsearch = pred.skb.get_randomized_search(fitted=True)\nsearch.plot_parallel_coord()\n\nimport os\nfrom plotly.io import read_json\njson_path = os.path.join(\"..\", \"data\", \"parallel_coordinates_hgbr.json\")\n\nfig = read_json(json_path)\nfig.update_layout(margin=dict(l=200))"
+    "section": "Debug the entire plan with the report",
+    "text": "Debug the entire plan with the report"
   },
   {
-    "objectID": "chapters/08_data_ops.html#hyperparameter-tuning-in-a-data-ops-plan",
-    "href": "chapters/08_data_ops.html#hyperparameter-tuning-in-a-data-ops-plan",
+    "objectID": "chapters/08_data_ops.html#data-ops-go-beyond-tabular-data",
+    "href": "chapters/08_data_ops.html#data-ops-go-beyond-tabular-data",
     "title": "Building extensive pipelines with DataOps",
-    "section": "Hyperparameter tuning in a Data Ops plan",
-    "text": "Hyperparameter tuning in a Data Ops plan\nSkrub implements four choose_* functions:\n\nchoose_from: select from the given list of options\nchoose_int: select an integer within a range\nchoose_float: select a float within a range\nchoose_bool: select a bool\noptional: chooses whether to execute the given operation"
+    "section": "Data Ops go beyond tabular data!",
+    "text": "Data Ops go beyond tabular data!\nData Ops make no assumption about the underlying data, or code.\n\nImage classification with pytorch"
+  },
+  {
+    "objectID": "chapters/08_data_ops.html#in-conclusion",
+    "href": "chapters/08_data_ops.html#in-conclusion",
+    "title": "Building extensive pipelines with DataOps",
+    "section": "In conclusion",
+    "text": "In conclusion\n\nData science is harder than what you learn in classes\nA full ML pipeline involves preprocessing, feature engineering and model training\nWe want to learn a “state” (it’s called machine learning after all), evaluate performance and do so while avoiding data leakage\nData Ops are a framework that allows to build stateful pipelines for arbitrary code and inputs\nData Ops extend the scikit-learn fit predict paradigm to multi-table inputs, feature and target construction, sample filtering …\nA Data Ops graph can be exported as a Learner, a single object that includes all learned states to work on new data"
   },
   {
     "objectID": "chapters/08_data_ops.html#what-we-have-seen-in-this-chapter",
     "href": "chapters/08_data_ops.html#what-we-have-seen-in-this-chapter",
     "title": "Building extensive pipelines with DataOps",
     "section": "What we have seen in this chapter",
-    "text": "What we have seen in this chapter\n\nDataOps can be used to build complex multi-table pipelines\nThey track all the operations that are executed and replay them with the same parameters\nDataOps simplify building hyperparameter grids\nLearners can be exported and used with new data"
+    "text": "What we have seen in this chapter\n\nData leakage is a problem, and in practice pipelines are not enough\nData Ops can be used to build complex multi-table plans\nData Ops track all the operations that are executed and replay them with the same parameters\nChoose functions generate complex hyperparameter grid in place\nLearners can be exported to be used with new data"
   }
 ]

@@ -119,14 +119,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#on-pre-processing-and-cleaning" id="toc-on-pre-processing-and-cleaning" class="nav-link active" data-scroll-target="#on-pre-processing-and-cleaning">On pre-processing and cleaning…</a></li>
+  <li><a href="#to-conclude" id="toc-to-conclude" class="nav-link active" data-scroll-target="#to-conclude">To conclude…</a></li>
   <li><a href="#how-skrub-helps-with-that" id="toc-how-skrub-helps-with-that" class="nav-link" data-scroll-target="#how-skrub-helps-with-that">How skrub helps with that</a></li>
-  <li><a href="#on-data-exploration" id="toc-on-data-exploration" class="nav-link" data-scroll-target="#on-data-exploration">On data exploration</a></li>
-  <li><a href="#how-skrub-helps-with-that-1" id="toc-how-skrub-helps-with-that-1" class="nav-link" data-scroll-target="#how-skrub-helps-with-that-1">How skrub helps with that</a></li>
-  <li><a href="#on-transforming-columns" id="toc-on-transforming-columns" class="nav-link" data-scroll-target="#on-transforming-columns">On transforming columns</a></li>
-  <li><a href="#how-skrub-helps-with-that-2" id="toc-how-skrub-helps-with-that-2" class="nav-link" data-scroll-target="#how-skrub-helps-with-that-2">How skrub helps with that</a></li>
-  <li><a href="#on-feature-engineering-and-model-building" id="toc-on-feature-engineering-and-model-building" class="nav-link" data-scroll-target="#on-feature-engineering-and-model-building">On feature engineering and model building</a></li>
-  <li><a href="#how-skrub-helps-with-that-3" id="toc-how-skrub-helps-with-that-3" class="nav-link" data-scroll-target="#how-skrub-helps-with-that-3">How skrub helps with that</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="100_conclusion.slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
     </div>
@@ -152,70 +146,31 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="on-pre-processing-and-cleaning" class="level2">
-<h2 class="anchored" data-anchor-id="on-pre-processing-and-cleaning">On pre-processing and cleaning…</h2>
+<section id="to-conclude" class="level2">
+<h2 class="anchored" data-anchor-id="to-conclude">To conclude…</h2>
 <ul>
-<li>Data cleaning and pre-processing are hard and time-consuming</li>
-<li>Improper pre-processing can cause issues (reminder: imputation)</li>
-<li>Pre-processing should be part of the entire pipeline to prevent leakage</li>
+<li>Data science is hard in practice!</li>
+<li>Pre-processing and feature engineering should be part of the pipeline</li>
+<li>Leakage and other failures are always a risk, and complex pre-processing is more error prone</li>
 </ul>
 </section>
-<section id="how-skrub-helps-with-that" class="level2">
-<h2 class="anchored" data-anchor-id="how-skrub-helps-with-that">How skrub helps with that</h2>
+<section id="how-skrub-helps-with-that" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="how-skrub-helps-with-that">How skrub helps with that</h2>
 <ul>
-<li>The <code>Cleaner</code> and <code>TableVectorizer</code> handle pre-processing for you</li>
-<li>Robust defaults handle most common use cases</li>
+<li>skrub transformers are scikit-learn compatible and handle most typical pre-processing
+<ul>
+<li><code>Cleaner</code> and <code>TableVectorizer</code></li>
+</ul></li>
+<li>they can be customized to fit most use cases
+<ul>
+<li><code>SingleColumnTransformer</code>, <code>selectors</code></li>
+</ul></li>
+<li>Data Ops extend the pipeline guarantees to multi-inputs, sample filtering, †arget construction …</li>
 </ul>
-</section>
-<section id="on-data-exploration" class="level2">
-<h2 class="anchored" data-anchor-id="on-data-exploration">On data exploration</h2>
+<p>And more!</p>
 <ul>
-<li>Even before you start cleaning, you need to find out what’s in your data</li>
-<li>What dtypes? Are there nulls? What kind of information are you dealing with?</li>
-</ul>
-</section>
-<section id="how-skrub-helps-with-that-1" class="level2">
-<h2 class="anchored" data-anchor-id="how-skrub-helps-with-that-1">How skrub helps with that</h2>
-<ul>
-<li>The <code>TableReport</code> computes various statistics about any given dataframe</li>
-<li>The statistics are presented with an interactive view</li>
-<li>Stats, distributions, column associations are available from the same view</li>
-<li>All stats can also be exported to be used by other tools</li>
-</ul>
-</section>
-<section id="on-transforming-columns" class="level2">
-<h2 class="anchored" data-anchor-id="on-transforming-columns">On transforming columns</h2>
-<ul>
-<li>Not all columns are made equal</li>
-<li>Some need to be scaled, some need to be encoded, some need to be dropped</li>
-<li>Some should just be left alone</li>
-<li>Selecting columns is not always straightforward</li>
-</ul>
-</section>
-<section id="how-skrub-helps-with-that-2" class="level2">
-<h2 class="anchored" data-anchor-id="how-skrub-helps-with-that-2">How skrub helps with that</h2>
-<ul>
-<li><code>ApplyToCols</code> lets you apply a specific transformer to a selection of columns</li>
-<li>It’s possible to exclude columns from a selection and not pass them to the transformer</li>
-<li>The skrub <strong>selectors</strong> can be used to build advanced column selection rules</li>
-<li>Selectors produce sets of columns that can be combined with set operations</li>
-<li>Selectors are used throughout the library</li>
-</ul>
-</section>
-<section id="on-feature-engineering-and-model-building" class="level2">
-<h2 class="anchored" data-anchor-id="on-feature-engineering-and-model-building">On feature engineering and model building</h2>
-<ul>
-<li>Feature engineering requires time and is dtype dependent</li>
-<li>Data should be prepared so that the proper transformers are applied to the right columns</li>
-</ul>
-</section>
-<section id="how-skrub-helps-with-that-3" class="level2">
-<h2 class="anchored" data-anchor-id="how-skrub-helps-with-that-3">How skrub helps with that</h2>
-<ul>
-<li>The <code>TableVectorizer</code> cleans the data before applying column specific transformers</li>
-<li>Categorical columns are encoded based on how many unique values they include</li>
-<li>The <code>tabular_pipeline</code> builds a pipeline that acts as a good baseline for further analysis</li>
-<li>The pipeline includes a <code>TableVectorizer</code> and a prediction model</li>
+<li>The <code>TableReport</code> helps with data exploration and measuring statistics</li>
+<li>The selectors give total control over which columns should be modified and how</li>
 </ul>
 
 
