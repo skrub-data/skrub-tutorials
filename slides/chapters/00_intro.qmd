@@ -1,8 +1,6 @@
 ---
 title: "Setting the stage"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false

@@ -1,8 +1,6 @@
 ---
 title: "Feature engineering with skrub"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false

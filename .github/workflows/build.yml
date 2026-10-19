@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   deploy-gh-pages:
@@ -12,33 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
       - uses: prefix-dev/setup-pixi@v0.9.6
         with:
           pixi-version: v0.70.0
           environments: doc
-
-      - name: Convert Python exercises to notebooks
-        run: |
-          pixi run -e doc convert-exercises-to-notebooks
-
-      - name: Setup JupyterLite content
-        run: |
-          pixi run -e doc setup-jupyterlite-content
-
-      - name: Build JupyterLite site
-        run: |
-          pixi run -e doc build-jupyterlite
-
-      - name: Render Quarto website (includes book and slides)
-        run: |
-          pixi run -e doc render
-
-      - name: Copy JupyterLite to output directory
-        run: |
-          pixi run -e doc copy-jupyterlite
-
+          cache: true
+      - name: Cache skrub datasets
+        uses: actions/cache@v4
+        with:
+          path: ~/skrub_data
+          key: skrub-datasets-v1
+      - name: Build website (book, slides, JupyterLite)
+        run: pixi run -e doc render
       - name: Deploy to GitHub Pages
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: peaceiris/actions-gh-pages@v4

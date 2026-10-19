@@ -1,8 +1,6 @@
 ---
 title: "Choose your columns with selectors"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false

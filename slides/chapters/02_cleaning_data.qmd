@@ -1,8 +1,6 @@
 ---
 title: "Preprocessing data with the skrub `Cleaner`"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false

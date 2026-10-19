@@ -1,8 +1,6 @@
 ---
 title: "Exploring dataframes with skrub"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false
@@ -73,7 +71,7 @@ from skrub import TableReport
 ```
 
 
-[Ref](../adult_census.html)
+[Ref](../data/adult_census.html)
 
 ## The Preview tab
 The `TableReport` shows all the columns in the dataset, and allows to select and copy the content

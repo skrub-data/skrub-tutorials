@@ -2,18 +2,8 @@ project:
     type: website
     title: "Skrub - Machine learning with dataframes"
     output-dir: _build
-    pre-render:
-       - "jupytext --to notebook ./content/exercises/*.py"
-       - "pixi run -e doc render-book"
-       - "pixi run -e doc render-slides"
     render:
-       - "**/*.qmd"
-       - "**/*.ipynb"
-       - "!pixi.toml"
-       - "!jupyterlite/**"
-       - "!data/**"
-       - "!book/**"
-       - "!slides/**"
+        - "index.qmd"
 
 website:
     title: "Skrub - Machine learning with dataframes"

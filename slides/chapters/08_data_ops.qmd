@@ -1,8 +1,6 @@
 ---
 title: "Building extensive pipelines with DataOps"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false

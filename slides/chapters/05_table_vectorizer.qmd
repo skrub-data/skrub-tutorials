@@ -1,14 +1,13 @@
 ---
 title: "All the pre-processing in one place: `TableVectorizer`"
 format:
-    html:
-        toc: true
     revealjs:
         slide-number: true
         toc: false
         code-fold: false
         code-tools: true
-
+execute: 
+    echo: true
 ---
 
 ## The Goal

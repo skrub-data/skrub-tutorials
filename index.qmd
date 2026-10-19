@@ -33,7 +33,7 @@ Try the exercises in your browser with JupyterLite (no installation required).
 
 [Launch JupyterLite →](jupyterlite/lab/){.btn .btn-success}
 
-If you want to run the code locally, refer to the [Preparation and setup](#prepration-and-setup)
+If you want to run the code locally, refer to the [Preparation and setup](#preparation-and-setup)
 section for detailed instructions. 
 
 ## Contacts
@@ -51,10 +51,7 @@ Some chapters include exercises for participants to work with the explained feat
 These exercises are made available in `content/exercises`, as well as at the end
 of the respective lesson in `content/notebooks`. 
 
-# Prepration and setup
-First of all, clone the [GitHub repo](https://github.com/skrub-data/skrub-tutorials/tree/main) 
-of this book to have access to the exercises. In a future version, Jupyterlite 
-support will be added.
+# Preparation and setup
 
 ## Setting up a local environment
 
@@ -67,10 +64,25 @@ All notebooks used in the course are found in `content/notebooks`, while the
 exercises are in `content/exercises`. 
 :::
 
+### Using pixi
+Follow the platform-specific instructions in the link to install 
+[pixi](https://pixi.sh/latest/installation/), then open a terminal window in 
+the folder of the repository you cloned.
 
+Run 
+```sh
+pixi install
+pixi run materials
+```
+to create the environment and generate the notebooks and datasets, followed by
+
+```sh
+pixi run lab
+``` 
+to start a Jupyter lab instance. 
 
 ### Using `pip`
-Create the and activate the environment:
+Create and activate the environment:
 
 ```sh
 python -m venv skrub-tutorial
@@ -86,53 +98,3 @@ Start the Jupyter lab instance:
 ```sh
 jupyter lab
 ```
-
-### Using conda
-An `environment.yaml` file is provided to create a conda environment. 
-
-Create and activate the environment with
-
-```sh
-conda env create -f environment.yaml
-conda activate skrub-tutorial
-```
-
-Then, start a jupyter lab instance:
-
-```sh
-jupyter lab
-```
-
-### Using `uv`
-Create the environment using `pyproject.toml` as the requirement file. 
-
-```sh
-uv venv 
-uv pip install -r pyproject.toml
-```
-
-Activate the environment that was created in the folder. 
-```sh
-source .venv/bin/activate
-```
-
-Start the Jupyter lab instance: 
-```sh
-jupyter lab
-```
-
-### Using pixi
-Follow the platform-specific 
-instructions in the link to install [pixi](https://pixi.sh/latest/installation/), 
-then open a terminal window in the folder of the repository you cloned.
-
-Run 
-```sh
-pixi install
-```
-to create the environment, followed by 
-
-```sh
-pixi run lab
-``` 
-to start a Jupyter lab instance. 
