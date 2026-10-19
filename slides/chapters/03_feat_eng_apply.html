@@ -159,6 +159,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#why-column-specific-transformations" id="toc-why-column-specific-transformations" class="nav-link active" data-scroll-target="#why-column-specific-transformations">Why Column-Specific Transformations?</a></li>
   <li><a href="#why-column-specific-transformations-1" id="toc-why-column-specific-transformations-1" class="nav-link" data-scroll-target="#why-column-specific-transformations-1">Why Column-Specific Transformations?</a></li>
+  <li><a href="#the-usual-solution-columntransformer" id="toc-the-usual-solution-columntransformer" class="nav-link" data-scroll-target="#the-usual-solution-columntransformer">The usual solution: <code>ColumnTransformer</code></a></li>
+  <li><a href="#this-has-some-downsides" id="toc-this-has-some-downsides" class="nav-link" data-scroll-target="#this-has-some-downsides">This has some downsides…</a></li>
   <li><a href="#applying-transformers-to-columns-with-applytocols" id="toc-applying-transformers-to-columns-with-applytocols" class="nav-link" data-scroll-target="#applying-transformers-to-columns-with-applytocols">Applying transformers to columns with <code>ApplyToCols</code></a></li>
   <li><a href="#example-applytocols-to-encode" id="toc-example-applytocols-to-encode" class="nav-link" data-scroll-target="#example-applytocols-to-encode">Example: <code>ApplyToCols</code> to encode</a></li>
   <li><a href="#example-applytocols-to-decompose" id="toc-example-applytocols-to-decompose" class="nav-link" data-scroll-target="#example-applytocols-to-decompose">Example: <code>ApplyToCols</code> to decompose</a></li>
@@ -198,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="why-column-specific-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="why-column-specific-transformations">Why Column-Specific Transformations?</h2>
 <p>Different columns must be handled in different ways.</p>
-<div id="58431568" class="cell" data-execution_count="1">
+<div id="4fc8683c" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
@@ -216,23 +218,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul class="incremental">
 <li>Some transformers (e.g., the <code>StandardScaler</code>) work only on numeric columns</li>
 <li>Some transformers (e.g., the <code>OneHotEncoder</code>) work only on categorical columns</li>
-<li>Different columns with the same dtype may need to be treated differently (e.g., an integer ID should not be scaled)</li>
-<li>Some transformations only make sense for a subset of the columns (e.g., extracting the year from datetimes)</li>
+<li>Integer IDs should not be treated as numeric and scaled</li>
+<li>Some transformations only make sense for some columns</li>
 </ul>
 </div>
+</section>
+<section id="the-usual-solution-columntransformer" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="the-usual-solution-columntransformer">The usual solution: <code>ColumnTransformer</code></h2>
+<div id="2a2529ff" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, StandardScaler</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"date"</span>, make_pipeline(ToDatetime(), DatetimeEncoder()), <span class="st">"date"</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"city"</span>, OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">"ignore"</span>), [<span class="st">"city"</span>]),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"metrics"</span>, StandardScaler(), [<span class="st">"metric_1"</span>, <span class="st">"metric_2"</span>]),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span>,  <span class="co"># keeps user_id as-is</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>preprocessor.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>array([[ 2.02300000e+03,  1.00000000e+00,  3.00000000e+00,
+         1.67270400e+09,  0.00000000e+00,  1.00000000e+00,
+         0.00000000e+00, -1.23067531e+00, -1.18366769e+00,
+         0.00000000e+00],
+       [ 2.02300000e+03,  2.00000000e+00,  4.00000000e+00,
+         1.67546880e+09,  1.00000000e+00,  0.00000000e+00,
+         0.00000000e+00,  1.19483040e-02, -7.83885885e-02,
+         1.00000000e+00],
+       [ 2.02300000e+03,  4.00000000e+00,  1.40000000e+01,
+         1.68143040e+09,  0.00000000e+00,  0.00000000e+00,
+         1.00000000e+00,  1.21872701e+00,  1.26205627e+00,
+         2.00000000e+00]])</code></pre>
+</div>
+</div>
+</section>
+<section id="this-has-some-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="this-has-some-downsides">This has some downsides…</h2>
+<ul>
+<li>A lot of boilerplate (again!)</li>
+<li>Clunky interface (a list of triplets)</li>
+<li>The <code>remainder</code> must be made explicit</li>
+</ul>
 </section>
 <section id="applying-transformers-to-columns-with-applytocols" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="applying-transformers-to-columns-with-applytocols">Applying transformers to columns with <code>ApplyToCols</code></h2>
 <p><code>ApplyToCols</code> is a <strong>meta-transformer</strong>: it applies a transformer to selected columns.</p>
-<p>Columns that are not selected pass through without changes.</p>
-<div id="d292e4ef" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ordinal <span class="op">=</span> ApplyToCols(OrdinalEncoder(), cols<span class="op">=</span><span class="st">"city"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>transformed <span class="op">=</span> ordinal.fit_transform(df)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<p>Columns that are not selected <strong>pass through</strong> without changes.</p>
+<div id="3e51ff1c" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ordinal <span class="op">=</span> ApplyToCols(OrdinalEncoder(), cols<span class="op">=</span><span class="st">"city"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>transformed <span class="op">=</span> ordinal.fit_transform(df)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -304,13 +348,13 @@ Note
 <p>Apply the <code>StandardScaler</code> only to the <code>metric_*</code> columns, excluding the column <code>user_id</code>.</p>
 </div>
 </div>
-<div id="b3f2e8c1" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric(), exclude_cols<span class="op">=</span><span class="st">"user_id"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>scaler.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div id="f519f778" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric(), exclude_cols<span class="op">=</span><span class="st">"user_id"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>scaler.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
 
@@ -360,45 +404,31 @@ Note
 <section id="chaining-transformers" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="chaining-transformers">Chaining Transformers</h2>
 <p>Use a scikit-learn <code>Pipeline</code> to concatenate multiple transformers, when wrapped in <code>ApplyToCols</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>select <span class="op">=</span> SelectCols(<span class="st">"department-name"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">reduce</span> <span class="op">=</span> ApplyToCols(PCA(n_components<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> make_pipeline(select, encode, <span class="bu">reduce</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Remember that columns that are not selected <strong>pass through</strong> without any change.</p>
-</div>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>encode <span class="op">=</span> ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span><span class="st">"department-name"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">reduce</span> <span class="op">=</span> ApplyToCols(PCA(n_components<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>transform <span class="op">=</span> make_pipeline(encode, <span class="bu">reduce</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="example-convert-to-datetime-and-encode" class="level2">
 <h2 class="anchored" data-anchor-id="example-convert-to-datetime-and-encode">Example: convert to datetime and encode</h2>
-<div id="63d6a683" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>encode_datetime <span class="op">=</span> make_pipeline(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(ToDatetime(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(DatetimeEncoder(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>encode_datetime.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div id="0eee6674" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"date"</span>: [<span class="st">"03 January 2023"</span>, <span class="st">"04 February 2023"</span>],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"city"</span>: [<span class="st">"Paris"</span>, <span class="st">"London"</span>],</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"values"</span>: [<span class="dv">10</span>, <span class="dv">20</span>]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>encode_datetime <span class="op">=</span> make_pipeline(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(ToDatetime(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(DatetimeEncoder(), cols<span class="op">=</span><span class="st">"date"</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>encode_datetime.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -443,19 +473,19 @@ Tip
 <section id="order-matters" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="order-matters">Order Matters!</h2>
 <p>Transformers should be ordered carefully:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode first, then scale</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>transform_1 <span class="op">=</span> make_pipeline(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string()),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Strings are now numbers! </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># vs. Scale first, then encode</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>transform_2 <span class="op">=</span> make_pipeline(</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric()),</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Strings haven't been touched</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode first, then scale</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>transform_1 <span class="op">=</span> make_pipeline(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string()),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Strings are now numbers! </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric())</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># vs. Scale first, then encode</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>transform_2 <span class="op">=</span> make_pipeline(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(StandardScaler(), cols<span class="op">=</span>s.numeric()),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Strings haven't been touched</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    ApplyToCols(OneHotEncoder(sparse_output<span class="op">=</span><span class="va">False</span>), cols<span class="op">=</span>s.string())</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -481,11 +511,11 @@ Tip
 <section id="handling-columns-that-cant-be-transformed-1" class="level2">
 <h2 class="anchored" data-anchor-id="handling-columns-that-cant-be-transformed-1">Handling columns that can’t be transformed</h2>
 <p>When <code>allow_reject=True</code>, columns that can’t be transformed are passed through:</p>
-<div id="b9439e6a" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="aa72138b" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> with_reject.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="define-custom-transformers-to-use-with-applytocols" class="level2">
@@ -494,16 +524,16 @@ Tip
 <li>Some columns need specific transformations</li>
 <li>You can define your transformer and have it work seamlessly with <code>ApplyToCols</code></li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub.core <span class="im">import</span> RejectColumn, SingleColumnTransformer</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CustomTransformer(SingleColumnTransformer):</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit_transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        ... do something</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ... <span class="co"># the column can't be handled</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> RejectColumn(...)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub.core <span class="im">import</span> RejectColumn, SingleColumnTransformer</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CustomTransformer(SingleColumnTransformer):</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit_transform(<span class="va">self</span>, X, y<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        ... do something</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ... <span class="co"># the column can't be handled</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> RejectColumn(...)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> transformed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="what-we-have-seen-in-this-chapter" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-have-seen-in-this-chapter">What we have seen in this chapter</h2>

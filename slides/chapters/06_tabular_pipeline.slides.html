@@ -202,7 +202,7 @@
 </div>
 
 </section>
-<section id="building-a-baseline-model-with-preprocessing" class="slide level2">
+<section id="building-a-baseline-model-with-preprocessing" class="slide level2 smaller">
 <h2>Building a baseline model with preprocessing</h2>
 <p>A ML pipeline needs to:</p>
 <ul>
@@ -247,7 +247,7 @@
 </section>
 <section id="manual-pipeline-construction" class="slide level2 smaller">
 <h2>Manual Pipeline Construction</h2>
-<div id="0b741064" class="cell" data-execution_count="1">
+<div id="8f77d151" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb1-3"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
@@ -264,7 +264,7 @@
 </section>
 <section id="the-tabular_pipeline-function" class="slide level2">
 <h2>The <code>tabular_pipeline</code> Function</h2>
-<p>skrub’s <code>tabular_pipeline</code> returns a pipeline that includes all steps, with tuned defaults depending on the input model.</p>
+<p>skrub’s <code>tabular_pipeline</code> returns a pipeline that includes all steps, with <strong>good tuned defaults</strong> depending on the input model.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb2-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb2-3"><a></a><span class="im">from</span> tabicl <span class="im">import</span> TabICLRegressor</span>
@@ -305,7 +305,7 @@
 </div>
 </div>
 </div>
-<div id="362b3d65" class="cell" data-execution_count="2">
+<div id="c83e76b4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb3-2"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb3-3"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>

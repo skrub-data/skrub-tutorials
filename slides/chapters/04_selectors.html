@@ -165,9 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#selecting-by-name" id="toc-selecting-by-name" class="nav-link" data-scroll-target="#selecting-by-name">Selecting by Name</a></li>
   <li><a href="#combining-selectors" id="toc-combining-selectors" class="nav-link" data-scroll-target="#combining-selectors">Combining Selectors</a></li>
   <li><a href="#combining-selectors-.all" id="toc-combining-selectors-.all" class="nav-link" data-scroll-target="#combining-selectors-.all">Combining Selectors: <code>.all()</code></a></li>
-  <li><a href="#combining-selectors-not" id="toc-combining-selectors-not" class="nav-link" data-scroll-target="#combining-selectors-not">Combining Selectors: NOT</a></li>
   <li><a href="#combining-selectors-and" id="toc-combining-selectors-and" class="nav-link" data-scroll-target="#combining-selectors-and">Combining Selectors: AND</a></li>
-  <li><a href="#combining-selectors-or" id="toc-combining-selectors-or" class="nav-link" data-scroll-target="#combining-selectors-or">Combining Selectors: OR</a></li>
   <li><a href="#multiple-aggregations-in-pandas-with-selectors" id="toc-multiple-aggregations-in-pandas-with-selectors" class="nav-link" data-scroll-target="#multiple-aggregations-in-pandas-with-selectors">Multiple aggregations in pandas with selectors</a></li>
   <li><a href="#using-selectors-to-aggregate-pandas-dataframes" id="toc-using-selectors-to-aggregate-pandas-dataframes" class="nav-link" data-scroll-target="#using-selectors-to-aggregate-pandas-dataframes">Using selectors to aggregate pandas dataframes</a></li>
   <li><a href="#custom-selectors-filter-by-condition" id="toc-custom-selectors-filter-by-condition" class="nav-link" data-scroll-target="#custom-selectors-filter-by-condition">Custom Selectors: Filter by Condition</a></li>
@@ -201,19 +199,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction-to-selectors" class="level2">
 <h2 class="anchored" data-anchor-id="introduction-to-selectors">Introduction to Selectors</h2>
 <p>Complex column selection beyond simple name lists:</p>
-<div id="b4246779" class="cell" data-execution_count="1">
+<div id="e726e2f3" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Selectors are used throughout the skrub package:</p>
 <ul>
 <li><code>ApplyToCols</code></li>
 <li><code>TableReport</code> filters</li>
-<li><code>.skb.apply()</code></li>
+<li><code>.skb.apply()</code> (for later)</li>
 </ul>
 </section>
 <section id="example-select-string-columns" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="example-select-string-columns">Example: Select String Columns</h2>
-<div id="00fe8219" class="cell" data-execution_count="2">
+<div id="1b0ecbac" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
@@ -225,7 +223,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="columns">
 <div class="column">
 <p><code>s.select()</code> to select columns:</p>
-<div id="aa40fbbf" class="cell" data-execution_count="3">
+<div id="f7baf6f5" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>s.select(df, s.string())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -263,7 +261,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div><div class="column">
 <p>… and <code>s.drop()</code> to remove them:</p>
-<div id="4401e557" class="cell" data-execution_count="4">
+<div id="862cfa73" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>s.drop(df, s.string())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
@@ -321,7 +319,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="example-select-list-columns-with-has_dtype" class="level2">
 <h2 class="anchored" data-anchor-id="example-select-list-columns-with-has_dtype">Example: select list columns with <code>has_dtype</code></h2>
-<div id="f56fd507" class="cell" data-execution_count="5">
+<div id="46dd092e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.DataFrame({<span class="st">"A"</span>: [[<span class="dv">1</span>,<span class="dv">2</span>], [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]], <span class="st">"B"</span>: [<span class="st">"A"</span>, <span class="st">"B"</span>]})</span>
@@ -330,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[List(Int64), String]</code></pre>
 </div>
 </div>
-<div id="769fc232" class="cell" data-execution_count="6">
+<div id="9287867c" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sel <span class="op">=</span> s.has_dtype(pl.List)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>s.select(df, sel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
@@ -374,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>.regex("pattern")</code>: Regular expressions</li>
 </ul>
 </div><div class="column">
-<div id="bdc764be" class="cell" data-execution_count="7">
+<div id="1ddfe2b0" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"patient_id"</span>: [<span class="dv">101</span>, <span class="dv">102</span>, <span class="dv">103</span>],</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"metric_1"</span>: [<span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span>],</span>
@@ -442,25 +440,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="combining-selectors-.all" class="level2" data-auto-animate="true">
 <h2 data-auto-animate="true" class="anchored" data-anchor-id="combining-selectors-.all">Combining Selectors: <code>.all()</code></h2>
 <p><img src="./images/s-all.png" class="img-fluid"></p>
-</section>
-<section id="combining-selectors-not" class="level2" data-auto-animate="true">
-<h2 data-auto-animate="true" class="anchored" data-anchor-id="combining-selectors-not">Combining Selectors: NOT</h2>
-<p><img src="./images/not-s-numeric.png" class="img-fluid"></p>
+<!-- ## Combining Selectors: NOT {auto-animate="true"}
+
+![](./images/not-s-numeric.png) -->
 </section>
 <section id="combining-selectors-and" class="level2" data-auto-animate="true">
 <h2 data-auto-animate="true" class="anchored" data-anchor-id="combining-selectors-and">Combining Selectors: AND</h2>
 <p><img src="./images/s-numeric-and-has-nulls.png" class="img-fluid"></p>
-</section>
-<section id="combining-selectors-or" class="level2" data-auto-animate="true">
-<h2 data-auto-animate="true" class="anchored" data-anchor-id="combining-selectors-or">Combining Selectors: OR</h2>
-<p><img src="./images/s-any-date-or-string.png" class="img-fluid"></p>
+<!-- ## Combining Selectors: OR {auto-animate="true"}
+
+![](./images/s-any-date-or-string.png) -->
 </section>
 <section id="multiple-aggregations-in-pandas-with-selectors" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="multiple-aggregations-in-pandas-with-selectors">Multiple aggregations in pandas with selectors</h2>
 <div class="columns">
 <div class="column">
 <p>Define a selector: only numeric columns except the “id”</p>
-<div id="7ba7e6fa" class="cell" data-execution_count="8">
+<div id="b6a55c54" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"id"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
@@ -475,7 +471,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>only_num <span class="op">=</span> (s.numeric() <span class="op">-</span> <span class="st">"id"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div><div class="column">
-<div id="fb3a0a83" class="cell" data-execution_count="9">
+<div id="13304346" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aggs <span class="op">=</span> {col: [<span class="st">"mean"</span>, <span class="st">"sum"</span>] <span class="cf">for</span> col <span class="kw">in</span> only_num.expand(df)}</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">"group"</span>).agg(aggs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -531,7 +527,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="using-selectors-to-aggregate-pandas-dataframes" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="using-selectors-to-aggregate-pandas-dataframes">Using selectors to aggregate pandas dataframes</h2>
 <p>New columns are handled by the selector:</p>
-<div id="c88e9f14" class="cell" data-execution_count="10">
+<div id="f3033061" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># new columns, same selector</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"value3"</span>] <span class="op">=</span> [<span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>]</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"note"</span>] <span class="op">=</span> [<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>]</span>
@@ -598,19 +594,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="custom-selectors-filter-by-condition" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="custom-selectors-filter-by-condition">Custom Selectors: Filter by Condition</h2>
 <p>Define a function that takes <strong>one column</strong> as input and returns <code>True</code>/<code>False</code> as output (depending on if the column is selected or not)</p>
-<div id="68251e28" class="cell" data-execution_count="11">
+<div id="c62926b1" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> more_nulls_than_half(col):</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> col.isnull().<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(col) <span class="op">&gt;</span> <span class="fl">0.5</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"no-nulls"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"lotsa-nulls"</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="dv">4</span>],</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>selector <span class="op">=</span> s.<span class="bu">filter</span>(more_nulls_than_half)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>s.select(df, selector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Select columns with more than 50% missing values</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> col.isnull().<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(col) <span class="op">&gt;</span> <span class="fl">0.5</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"no-nulls"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"lotsa-nulls"</span>: [<span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>, <span class="dv">4</span>],</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>selector <span class="op">=</span> s.<span class="bu">filter</span>(more_nulls_than_half)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>s.select(df, selector)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
@@ -649,7 +648,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="using-selectors-with-the-tablereport" class="level2 smaller">
 <h2 class="smaller anchored" data-anchor-id="using-selectors-with-the-tablereport">Using selectors with the <code>TableReport</code></h2>
 <p>The <code>TableReport</code> can use selectors (or simply column names) to focus only on specific columns:</p>
-<div id="dd8e2ab1" class="cell" data-execution_count="12">
+<div id="02d0deb5" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> TableReport</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>custom_filter <span class="op">=</span> {<span class="st">"metrics"</span>: s.glob(<span class="st">"metric_*"</span>)}</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -661,8 +660,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>TableReport(df, column_filters<span class="op">=</span>custom_filter)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
-<div id="report_74441d02-wrapper" hidden="">
-    <template id="report_74441d02-template">
+<div id="report_5a74c3d7-wrapper" hidden="">
+    <template id="report_5a74c3d7-template">
         <style>
          /*!
 Pure v3.0.0
@@ -2074,32 +2073,32 @@ NOTE: some columns have very strong associations and may be redundant.">
 <table class="pure-table pure-table-striped table-with-selectable-cells caption-top" data-quarto-postprocess="true" data-manager="SampleTable" data-start-i="-2" data-stop-i="3" data-start-j="-1" data-stop-j="3">
 <thead>
 <tr class="header">
-<th rowspan="2" id="e86cccf1" class="table-cell elided-short" data-quarto-table-cell-role="th" data-role="padding" data-i="-2" data-j="-1" data-spans__-2__-1="" data-spans__-1__-1="" data-value-repr="None" data-value-str="None"></th>
-<th rowspan="2" id="ce60950c" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="0" data-spans__-2__0="" data-spans__-1__0="" data-value-repr="'patient_id'" data-value-str="patient_id" data-column-idx="0">patient_id</th>
-<th rowspan="2" id="e9b589fd" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="1" data-spans__-2__1="" data-spans__-1__1="" data-value-repr="'metric_1'" data-value-str="metric_1" data-column-idx="1">metric_1</th>
-<th rowspan="2" id="72fd2336" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="2" data-spans__-2__2="" data-spans__-1__2="" data-value-repr="'metric_2'" data-value-str="metric_2" data-column-idx="2">metric_2</th>
+<th rowspan="2" id="70455654" class="table-cell elided-short" data-quarto-table-cell-role="th" data-role="padding" data-i="-2" data-j="-1" data-spans__-2__-1="" data-spans__-1__-1="" data-value-repr="None" data-value-str="None"></th>
+<th rowspan="2" id="6797fef8" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="0" data-spans__-2__0="" data-spans__-1__0="" data-value-repr="'patient_id'" data-value-str="patient_id" data-column-idx="0">patient_id</th>
+<th rowspan="2" id="11bc0c38" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="1" data-spans__-2__1="" data-spans__-1__1="" data-value-repr="'metric_1'" data-value-str="metric_1" data-column-idx="1">metric_1</th>
+<th rowspan="2" id="691084bd" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="columns-level-value" data-manager="SampleTableCell FilterableColumn" data-i="-2" data-j="2" data-spans__-2__2="" data-spans__-1__2="" data-value-repr="'metric_2'" data-value-str="metric_2" data-column-idx="2">metric_2</th>
 </tr>
 <tr class="even">
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="f4abea37" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="0" data-j="-1" data-spans__0__-1="" data-value-repr="0" data-value-str="0">0</td>
-<td id="399abe5f" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="0" data-spans__0__0="" data-value-repr="101" data-value-str="101" data-column-idx="0">101</td>
-<td id="dacee0d5" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="1" data-spans__0__1="" data-value-repr="0.3" data-value-str="0.3" data-column-idx="1">0.300</td>
-<td id="352f15f9" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="2" data-spans__0__2="" data-value-repr="3" data-value-str="3" data-column-idx="2">3</td>
+<td id="765c45b9" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="0" data-j="-1" data-spans__0__-1="" data-value-repr="0" data-value-str="0">0</td>
+<td id="8e888893" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="0" data-spans__0__0="" data-value-repr="101" data-value-str="101" data-column-idx="0">101</td>
+<td id="e94de398" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="1" data-spans__0__1="" data-value-repr="0.3" data-value-str="0.3" data-column-idx="1">0.300</td>
+<td id="9e680c72" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="0" data-j="2" data-spans__0__2="" data-value-repr="3" data-value-str="3" data-column-idx="2">3</td>
 </tr>
 <tr class="even">
-<td id="25e3339b" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="1" data-j="-1" data-spans__1__-1="" data-value-repr="1" data-value-str="1">1</td>
-<td id="b901b632" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="0" data-spans__1__0="" data-value-repr="102" data-value-str="102" data-column-idx="0">102</td>
-<td id="fa8c9276" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="1" data-spans__1__1="" data-value-repr="0.3" data-value-str="0.3" data-column-idx="1">0.300</td>
-<td id="51be312d" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="2" data-spans__1__2="" data-value-repr="5" data-value-str="5" data-column-idx="2">5</td>
+<td id="1685f154" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="1" data-j="-1" data-spans__1__-1="" data-value-repr="1" data-value-str="1">1</td>
+<td id="1e4b61d5" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="0" data-spans__1__0="" data-value-repr="102" data-value-str="102" data-column-idx="0">102</td>
+<td id="01168962" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="1" data-spans__1__1="" data-value-repr="0.3" data-value-str="0.3" data-column-idx="1">0.300</td>
+<td id="be55914d" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="1" data-j="2" data-spans__1__2="" data-value-repr="5" data-value-str="5" data-column-idx="2">5</td>
 </tr>
 <tr class="odd">
-<td id="7b844365" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="2" data-j="-1" data-spans__2__-1="" data-value-repr="2" data-value-str="2">2</td>
-<td id="c26881ac" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="0" data-spans__2__0="" data-value-repr="103" data-value-str="103" data-column-idx="0">103</td>
-<td id="ac275a3b" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="1" data-spans__2__1="" data-value-repr="0.6" data-value-str="0.6" data-column-idx="1">0.600</td>
-<td id="c92bb5ab" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="2" data-spans__2__2="" data-value-repr="10" data-value-str="10" data-column-idx="2">10</td>
+<td id="d9be4caf" class="table-cell elided-short clickable" data-quarto-table-cell-role="th" data-role="index-level-value" data-manager="SampleTableCell " data-i="2" data-j="-1" data-spans__2__-1="" data-value-repr="2" data-value-str="2">2</td>
+<td id="f5081dbd" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="0" data-spans__2__0="" data-value-repr="103" data-value-str="103" data-column-idx="0">103</td>
+<td id="d29fbade" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="1" data-spans__2__1="" data-value-repr="0.6" data-value-str="0.6" data-column-idx="1">0.600</td>
+<td id="bed0881f" class="table-cell elided-short clickable" data-role="dataframe-data" data-manager="SampleTableCell FilterableColumn" data-i="2" data-j="2" data-spans__2__2="" data-value-repr="10" data-value-str="10" data-column-idx="2">10</td>
 </tr>
 </tbody>
 </table>
@@ -2213,7 +2212,7 @@ NOTE: some columns have very strong associations and may be redundant.">
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2026-10-08T14:48:55.576076</dc:date>
+    <dc:date>2026-10-19T12:03:35.427247</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -2243,7 +2242,7 @@ L 49.739489 79.570257
 L 49.739489 10.998828 
 L 36.64858 10.998828 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570257 
@@ -2251,7 +2250,7 @@ L 62.830398 79.570257
 L 62.830398 79.570257 
 L 49.739489 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570257 
@@ -2259,7 +2258,7 @@ L 75.921307 79.570257
 L 75.921307 79.570257 
 L 62.830398 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570257 
@@ -2267,7 +2266,7 @@ L 89.012216 79.570257
 L 89.012216 79.570257 
 L 75.921307 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570257 
@@ -2275,7 +2274,7 @@ L 102.103125 79.570257
 L 102.103125 79.570257 
 L 89.012216 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570257 
@@ -2283,7 +2282,7 @@ L 115.194034 79.570257
 L 115.194034 10.998828 
 L 102.103125 10.998828 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570257 
@@ -2291,7 +2290,7 @@ L 128.284943 79.570257
 L 128.284943 79.570257 
 L 115.194034 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570257 
@@ -2299,7 +2298,7 @@ L 141.375852 79.570257
 L 141.375852 79.570257 
 L 128.284943 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570257 
@@ -2307,7 +2306,7 @@ L 154.466761 79.570257
 L 154.466761 79.570257 
 L 141.375852 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570257 
@@ -2315,18 +2314,18 @@ L 167.55767 79.570257
 L 167.55767 10.998828 
 L 154.466761 10.998828 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m9e1a8f6c33" d="M 0 0 
+       <path id="m665c82699a" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m9e1a8f6c33" x="36.64858" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m665c82699a" x="36.64858" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -2336,7 +2335,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m9e1a8f6c33" x="102.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m665c82699a" x="102.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -2346,7 +2345,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#m9e1a8f6c33" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m665c82699a" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -2358,12 +2357,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="mc15abe6b8a" d="M 0 0 
+       <path id="m07d922989d" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mc15abe6b8a" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m07d922989d" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -2373,7 +2372,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#mc15abe6b8a" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m07d922989d" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -2383,7 +2382,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#mc15abe6b8a" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m07d922989d" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -2404,7 +2403,7 @@ L 174.103125 79.570257
   </g>
  </g>
  <defs>
-  <clippath id="pda52f21c43">
+  <clippath id="pcf301bb072">
    <rect x="30.103125" y="7.570257" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -2490,7 +2489,7 @@ L 174.103125 79.570257
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2026-10-08T14:48:55.591039</dc:date>
+    <dc:date>2026-10-19T12:03:35.441748</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -2520,7 +2519,7 @@ L 40.198864 79.570257
 L 40.198864 10.998828 
 L 27.107955 10.998828 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 40.198864 79.570257 
@@ -2528,7 +2527,7 @@ L 53.289773 79.570257
 L 53.289773 79.570257 
 L 40.198864 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 53.289773 79.570257 
@@ -2536,7 +2535,7 @@ L 66.380682 79.570257
 L 66.380682 79.570257 
 L 53.289773 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 66.380682 79.570257 
@@ -2544,7 +2543,7 @@ L 79.471591 79.570257
 L 79.471591 79.570257 
 L 66.380682 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 79.471591 79.570257 
@@ -2552,7 +2551,7 @@ L 92.5625 79.570257
 L 92.5625 79.570257 
 L 79.471591 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 92.5625 79.570257 
@@ -2560,7 +2559,7 @@ L 105.653409 79.570257
 L 105.653409 79.570257 
 L 92.5625 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 105.653409 79.570257 
@@ -2568,7 +2567,7 @@ L 118.744305 79.570257
 L 118.744305 79.570257 
 L 105.653409 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 118.744305 79.570257 
@@ -2576,7 +2575,7 @@ L 131.835227 79.570257
 L 131.835227 79.570257 
 L 118.744305 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 131.835227 79.570257 
@@ -2584,7 +2583,7 @@ L 144.926149 79.570257
 L 144.926149 79.570257 
 L 131.835227 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 144.926149 79.570257 
@@ -2592,18 +2591,18 @@ L 158.017045 79.570257
 L 158.017045 45.284542 
 L 144.926149 45.284542 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m3d30f96723" d="M 0 0 
+       <path id="mc8b1d1f7a9" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m3d30f96723" x="27.107949" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="27.107949" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -2613,7 +2612,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m3d30f96723" x="70.744311" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="70.744311" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -2623,7 +2622,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#m3d30f96723" x="114.380673" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="114.380673" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -2633,7 +2632,7 @@ L 0 3.5
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use href="#m3d30f96723" x="158.017035" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="158.017035" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -2645,12 +2644,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_5">
       <defs>
-       <path id="m579988c31d" d="M 0 0 
+       <path id="m204094b7b7" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m579988c31d" x="20.5625" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m204094b7b7" x="20.5625" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -2660,7 +2659,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_6">
       <g>
-       <use href="#m579988c31d" x="20.5625" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m204094b7b7" x="20.5625" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -2670,7 +2669,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_7">
       <g>
-       <use href="#m579988c31d" x="20.5625" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m204094b7b7" x="20.5625" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -2691,7 +2690,7 @@ L 164.5625 79.570257
   </g>
  </g>
  <defs>
-  <clippath id="pe182f92296">
+  <clippath id="p692e9cea7f">
    <rect x="20.5625" y="7.570257" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -2777,7 +2776,7 @@ L 164.5625 79.570257
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2026-10-08T14:48:55.606600</dc:date>
+    <dc:date>2026-10-19T12:03:35.457915</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -2807,7 +2806,7 @@ L 49.739489 79.570257
 L 49.739489 10.998828 
 L 36.64858 10.998828 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570257 
@@ -2815,7 +2814,7 @@ L 62.830398 79.570257
 L 62.830398 79.570257 
 L 49.739489 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570257 
@@ -2823,7 +2822,7 @@ L 75.921307 79.570257
 L 75.921307 10.998828 
 L 62.830398 10.998828 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570257 
@@ -2831,7 +2830,7 @@ L 89.012216 79.570257
 L 89.012216 79.570257 
 L 75.921307 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570257 
@@ -2839,7 +2838,7 @@ L 102.103125 79.570257
 L 102.103125 79.570257 
 L 89.012216 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570257 
@@ -2847,7 +2846,7 @@ L 115.194034 79.570257
 L 115.194034 79.570257 
 L 102.103125 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570257 
@@ -2855,7 +2854,7 @@ L 128.284943 79.570257
 L 128.284943 79.570257 
 L 115.194034 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570257 
@@ -2863,7 +2862,7 @@ L 141.375852 79.570257
 L 141.375852 79.570257 
 L 128.284943 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570257 
@@ -2871,7 +2870,7 @@ L 154.466761 79.570257
 L 154.466761 79.570257 
 L 141.375852 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570257 
@@ -2879,18 +2878,18 @@ L 167.55767 79.570257
 L 167.55767 10.998828 
 L 154.466761 10.998828 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mb7105337a5" d="M 0 0 
+       <path id="mbad7627d45" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mb7105337a5" x="55.349878" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="55.349878" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -2900,7 +2899,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#mb7105337a5" x="92.752476" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="92.752476" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -2910,7 +2909,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#mb7105337a5" x="130.155073" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="130.155073" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -2920,7 +2919,7 @@ L 0 3.5
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use href="#mb7105337a5" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -2932,12 +2931,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_5">
       <defs>
-       <path id="m1fc7b5d412" d="M 0 0 
+       <path id="m05a72fcc7d" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m1fc7b5d412" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m05a72fcc7d" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -2947,7 +2946,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_6">
       <g>
-       <use href="#m1fc7b5d412" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m05a72fcc7d" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -2957,7 +2956,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_7">
       <g>
-       <use href="#m1fc7b5d412" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m05a72fcc7d" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -2978,7 +2977,7 @@ L 174.103125 79.570257
   </g>
  </g>
  <defs>
-  <clippath id="peede8ea014">
+  <clippath id="pa21b547b62">
    <rect x="30.103125" y="7.570257" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -3334,7 +3333,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2026-10-08T14:48:55.576076</dc:date>
+    <dc:date>2026-10-19T12:03:35.427247</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -3364,7 +3363,7 @@ L 49.739489 79.570257
 L 49.739489 10.998828 
 L 36.64858 10.998828 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570257 
@@ -3372,7 +3371,7 @@ L 62.830398 79.570257
 L 62.830398 79.570257 
 L 49.739489 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570257 
@@ -3380,7 +3379,7 @@ L 75.921307 79.570257
 L 75.921307 79.570257 
 L 62.830398 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570257 
@@ -3388,7 +3387,7 @@ L 89.012216 79.570257
 L 89.012216 79.570257 
 L 75.921307 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570257 
@@ -3396,7 +3395,7 @@ L 102.103125 79.570257
 L 102.103125 79.570257 
 L 89.012216 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570257 
@@ -3404,7 +3403,7 @@ L 115.194034 79.570257
 L 115.194034 10.998828 
 L 102.103125 10.998828 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570257 
@@ -3412,7 +3411,7 @@ L 128.284943 79.570257
 L 128.284943 79.570257 
 L 115.194034 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570257 
@@ -3420,7 +3419,7 @@ L 141.375852 79.570257
 L 141.375852 79.570257 
 L 128.284943 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570257 
@@ -3428,7 +3427,7 @@ L 154.466761 79.570257
 L 154.466761 79.570257 
 L 141.375852 79.570257 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570257 
@@ -3436,18 +3435,18 @@ L 167.55767 79.570257
 L 167.55767 10.998828 
 L 154.466761 10.998828 
 z
-" clip-path="url(#pda52f21c43)" style="fill: #1f77b4"></path>
+" clip-path="url(#pcf301bb072)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m9e1a8f6c33" d="M 0 0 
+       <path id="m665c82699a" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m9e1a8f6c33" x="36.64858" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m665c82699a" x="36.64858" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -3457,7 +3456,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m9e1a8f6c33" x="102.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m665c82699a" x="102.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -3467,7 +3466,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#m9e1a8f6c33" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m665c82699a" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -3479,12 +3478,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_4">
       <defs>
-       <path id="mc15abe6b8a" d="M 0 0 
+       <path id="m07d922989d" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mc15abe6b8a" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m07d922989d" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -3494,7 +3493,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_5">
       <g>
-       <use href="#mc15abe6b8a" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m07d922989d" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -3504,7 +3503,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_6">
       <g>
-       <use href="#mc15abe6b8a" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m07d922989d" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -3525,7 +3524,7 @@ L 174.103125 79.570257
   </g>
  </g>
  <defs>
-  <clippath id="pda52f21c43">
+  <clippath id="pcf301bb072">
    <rect x="30.103125" y="7.570257" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -3607,7 +3606,7 @@ L 174.103125 79.570257
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2026-10-08T14:48:55.591039</dc:date>
+    <dc:date>2026-10-19T12:03:35.441748</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -3637,7 +3636,7 @@ L 40.198864 79.570257
 L 40.198864 10.998828 
 L 27.107955 10.998828 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 40.198864 79.570257 
@@ -3645,7 +3644,7 @@ L 53.289773 79.570257
 L 53.289773 79.570257 
 L 40.198864 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 53.289773 79.570257 
@@ -3653,7 +3652,7 @@ L 66.380682 79.570257
 L 66.380682 79.570257 
 L 53.289773 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 66.380682 79.570257 
@@ -3661,7 +3660,7 @@ L 79.471591 79.570257
 L 79.471591 79.570257 
 L 66.380682 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 79.471591 79.570257 
@@ -3669,7 +3668,7 @@ L 92.5625 79.570257
 L 92.5625 79.570257 
 L 79.471591 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 92.5625 79.570257 
@@ -3677,7 +3676,7 @@ L 105.653409 79.570257
 L 105.653409 79.570257 
 L 92.5625 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 105.653409 79.570257 
@@ -3685,7 +3684,7 @@ L 118.744305 79.570257
 L 118.744305 79.570257 
 L 105.653409 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 118.744305 79.570257 
@@ -3693,7 +3692,7 @@ L 131.835227 79.570257
 L 131.835227 79.570257 
 L 118.744305 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 131.835227 79.570257 
@@ -3701,7 +3700,7 @@ L 144.926149 79.570257
 L 144.926149 79.570257 
 L 131.835227 79.570257 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 144.926149 79.570257 
@@ -3709,18 +3708,18 @@ L 158.017045 79.570257
 L 158.017045 45.284542 
 L 144.926149 45.284542 
 z
-" clip-path="url(#pe182f92296)" style="fill: #1f77b4"></path>
+" clip-path="url(#p692e9cea7f)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="m3d30f96723" d="M 0 0 
+       <path id="mc8b1d1f7a9" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m3d30f96723" x="27.107949" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="27.107949" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -3730,7 +3729,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#m3d30f96723" x="70.744311" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="70.744311" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -3740,7 +3739,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#m3d30f96723" x="114.380673" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="114.380673" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -3750,7 +3749,7 @@ L 0 3.5
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use href="#m3d30f96723" x="158.017035" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mc8b1d1f7a9" x="158.017035" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -3762,12 +3761,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_5">
       <defs>
-       <path id="m579988c31d" d="M 0 0 
+       <path id="m204094b7b7" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m579988c31d" x="20.5625" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m204094b7b7" x="20.5625" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -3777,7 +3776,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_6">
       <g>
-       <use href="#m579988c31d" x="20.5625" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m204094b7b7" x="20.5625" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -3787,7 +3786,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_7">
       <g>
-       <use href="#m579988c31d" x="20.5625" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m204094b7b7" x="20.5625" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -3808,7 +3807,7 @@ L 164.5625 79.570257
   </g>
  </g>
  <defs>
-  <clippath id="pe182f92296">
+  <clippath id="p692e9cea7f">
    <rect x="20.5625" y="7.570257" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -3890,7 +3889,7 @@ L 164.5625 79.570257
   <rdf:rdf xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
-    <dc:date>2026-10-08T14:48:55.606600</dc:date>
+    <dc:date>2026-10-19T12:03:35.457915</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:agent>
@@ -3920,7 +3919,7 @@ L 49.739489 79.570257
 L 49.739489 10.998828 
 L 36.64858 10.998828 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_3">
     <path d="M 49.739489 79.570257 
@@ -3928,7 +3927,7 @@ L 62.830398 79.570257
 L 62.830398 79.570257 
 L 49.739489 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_4">
     <path d="M 62.830398 79.570257 
@@ -3936,7 +3935,7 @@ L 75.921307 79.570257
 L 75.921307 10.998828 
 L 62.830398 10.998828 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_5">
     <path d="M 75.921307 79.570257 
@@ -3944,7 +3943,7 @@ L 89.012216 79.570257
 L 89.012216 79.570257 
 L 75.921307 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_6">
     <path d="M 89.012216 79.570257 
@@ -3952,7 +3951,7 @@ L 102.103125 79.570257
 L 102.103125 79.570257 
 L 89.012216 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_7">
     <path d="M 102.103125 79.570257 
@@ -3960,7 +3959,7 @@ L 115.194034 79.570257
 L 115.194034 79.570257 
 L 102.103125 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_8">
     <path d="M 115.194034 79.570257 
@@ -3968,7 +3967,7 @@ L 128.284943 79.570257
 L 128.284943 79.570257 
 L 115.194034 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_9">
     <path d="M 128.284943 79.570257 
@@ -3976,7 +3975,7 @@ L 141.375852 79.570257
 L 141.375852 79.570257 
 L 128.284943 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_10">
     <path d="M 141.375852 79.570257 
@@ -3984,7 +3983,7 @@ L 154.466761 79.570257
 L 154.466761 79.570257 
 L 141.375852 79.570257 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="patch_11">
     <path d="M 154.466761 79.570257 
@@ -3992,18 +3991,18 @@ L 167.55767 79.570257
 L 167.55767 10.998828 
 L 154.466761 10.998828 
 z
-" clip-path="url(#peede8ea014)" style="fill: #1f77b4"></path>
+" clip-path="url(#pa21b547b62)" style="fill: #1f77b4"></path>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
       <defs>
-       <path id="mb7105337a5" d="M 0 0 
+       <path id="mbad7627d45" d="M 0 0 
 L 0 3.5 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#mb7105337a5" x="55.349878" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="55.349878" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_1">
@@ -4013,7 +4012,7 @@ L 0 3.5
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use href="#mb7105337a5" x="92.752476" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="92.752476" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_2">
@@ -4023,7 +4022,7 @@ L 0 3.5
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use href="#mb7105337a5" x="130.155073" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="130.155073" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_3">
@@ -4033,7 +4032,7 @@ L 0 3.5
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use href="#mb7105337a5" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#mbad7627d45" x="167.55767" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_4">
@@ -4045,12 +4044,12 @@ L 0 3.5
     <g id="ytick_1">
      <g id="line2d_5">
       <defs>
-       <path id="m1fc7b5d412" d="M 0 0 
+       <path id="m05a72fcc7d" d="M 0 0 
 L -3.5 0 
 " style="stroke: var(--color-text-primary); stroke-width: 0.8"></path>
       </defs>
       <g>
-       <use href="#m1fc7b5d412" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m05a72fcc7d" x="30.103125" y="79.570257" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_5">
@@ -4060,7 +4059,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_6">
       <g>
-       <use href="#m1fc7b5d412" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m05a72fcc7d" x="30.103125" y="45.284542" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_6">
@@ -4070,7 +4069,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_7">
       <g>
-       <use href="#m1fc7b5d412" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
+       <use href="#m05a72fcc7d" x="30.103125" y="10.998828" style="fill: var(--color-text-primary); stroke: var(--color-text-primary); stroke-width: 0.8"></use>
       </g>
      </g>
      <g id="text_7">
@@ -4091,7 +4090,7 @@ L 174.103125 79.570257
   </g>
  </g>
  <defs>
-  <clippath id="peede8ea014">
+  <clippath id="pa21b547b62">
    <rect x="30.103125" y="7.570257" width="144" height="72"></rect>
   </clippath>
  </defs>
@@ -4177,7 +4176,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
         </div>
     </template>
 
-    <skrub-table-report class="report" id="report_74441d02">
+    <skrub-table-report class="report" id="report_5a74c3d7">
     </skrub-table-report>
 
     <script type="module">
@@ -5281,7 +5280,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
     </script>
 </div>
 
-<div id="report_74441d02-wrapper-fallback">
+<div id="report_5a74c3d7-wrapper-fallback">
     <h2 class="anchored">Please enable javascript</h2>
     <p>
         The skrub table reports need javascript to display correctly. If you are
@@ -5292,8 +5291,8 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 
 <script>
- document.getElementById("report_74441d02-wrapper").removeAttribute("hidden");
- document.getElementById("report_74441d02-wrapper-fallback").setAttribute("hidden", "");
+ document.getElementById("report_5a74c3d7-wrapper").removeAttribute("hidden");
+ document.getElementById("report_5a74c3d7-wrapper-fallback").setAttribute("hidden", "");
 </script>
 </div>
 </div>
