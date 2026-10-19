@@ -18,9 +18,9 @@ Before any kind of data processing or usage, we need to know what we are dealing
 - How big is the dataframe?
 - What kind of data types are we dealing with? Only numeric, mixed types? 
 - How are values distrbuted in each column? 
-- Missing values: are there any? How many? Where?
-- Which features are discrete/categorical, and how many categories there are.
-- Are there correlated columns?
+- Are there missing values? 
+- Are there discrete/categorical features? How many categories are there? 
+- Are columns correlated with each other?
 
 ## Loading the data
 ```{python}
@@ -51,6 +51,12 @@ We can also get a richer summary of the data with the `.describe()` method:
 ```{python}
 data.describe(include="all")
 ```
+
+## Dataframe exploration tools work, but ...
+
+- The information is spread across three separate functions.
+- The UI can be a bit unwieldy. 
+- More advanced statistics require ad-hoc code. 
 
 ## Exploring data with the `TableReport` {.smaller}
 The `TableReport` computes various statistics about the given dataframe and presents
@@ -104,10 +110,10 @@ columns that may be redundant.
 
 ::: {.column}
 
-The `TableReport` detects outliers using a simple interquartile test, marking 
-as outliers all values that are beyond the IQR. This is a simple heuristic, and 
-should not be treated as perfect. If your problem requires reliable outlier 
-detection, you should not rely exclusively on what the `TableReport` shows. 
+- The `TableReport` detects outliers using an **interquartile test**, marking 
+as outliers all values that are beyond the IQR.
+- This is a simple heuristic and should not replace more clever outlier detection
+strategies.
 
 :::
 
@@ -128,7 +134,7 @@ my_filter = {"only_education": ["education", "education-num"]}
 TableReport(data, column_filters=my_filter)
 ```
 
-Skrub selectors can be used for that (more on that later).
+**Skrub selectors** can be used for that (more on that later).
 
 ## Exploring the target variable {.smaller}
 Besides dataframes, the `TableReport` handles series and mono- and bi-dimensional 
@@ -139,10 +145,10 @@ TableReport(target)
 ```
 
 ## Working with big tables
-Plot generation and computation of associations are very expensive operations, so
+- Plot generation and computation of associations are expensive operations, so
 so they can be disabled for big tables.
 
-Use the `plot_distributions` and `compute_associations` parameters to do so: 
+- Use the `plot_distributions` and `compute_associations` parameters to do so: 
 
 ```{python}
 TableReport(
@@ -183,6 +189,14 @@ If the plots are not needed, disable them with `plot_distributions=False`.
 
 :::
 
+## Exporting the `TableReport`: python dict {.smaller}
+The report can also be exported as a python dict to use the statistics it measures
+in a python script:
+
+```python
+tr_dict = TableReport(data, plot_distributions=False).dict()
+```
+
 ## Exporting the `TableReport`: Markdown {.smaller}
 The report can be exported in summarized form as a Markdown-formatted string:
 
@@ -201,19 +215,11 @@ of the report to an agent if the dataset is large, or if its content is not trus
 
 :::
 
-## Exporting the `TableReport`: python dict {.smaller}
-The report can also be exported as a python dict to use the statistics it measures
-in a python script:
-
-```python
-tr_dict = TableReport(data, plot_distributions=False).dict()
-```
-
 ## What we have seen in this chapter {.smaller}
 
 - Creating and configuring a `TableReport` for fast, interactive data exploration
 - Exploring column statistics, value distributions, and associations visually
 - Detecting nulls, outliers, and highly correlated columns at a glance
 - Filtering columns by type or characteristics using built-in filters
-- Adjusting `TableReport` settings for large datasets to optimize performance
-- Saving and exporting reports as HTML, JSON, Markdown and python dicts
+- Adjusting `TableReport` settings for large datasets
+- Saving and exporting reports as HTML, JSON, python dicts and Markdown

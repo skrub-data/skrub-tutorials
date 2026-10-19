@@ -128,15 +128,15 @@ Example:
 lead to incorrect assumptions about the data. 
 
 ## Step 4: Scale numerical features {.smaller}
-Some models work better when all the numeric features have comparable scale. 
-
-`RidgeCV` is one of them, so we need to scale numerical features.
+- Some models work better when all the numeric features have comparable scale. 
+- `RidgeCV` is one of them, so we need to scale numerical features.
+- `SquashingScaler` is an improvement over the `RobustScaler`
 
 ```{python}
-from sklearn.preprocessing import StandardScaler
+from skrub import SquashingScaler
 
 # Initialize the scaler
-scaler = StandardScaler()
+scaler = SquashingScaler()
 
 # Fit and transform the data
 X_scaled = scaler.fit_transform(X_encoded_imputed)
@@ -179,7 +179,7 @@ print(
 - So much boilerplate! 
 - What happened to the training split? 
 - Was there leakage? 
-- A lot of code to write and remember -> mistakes become more likely 
+- A lot of code to write and remember => mistakes are more likely 
 
 ## Intermission: data leakage and fit/transform {auto-animate="true"}
 
@@ -320,6 +320,8 @@ print(
 ## What's in the `tabular_pipeline`
 ![](images/tabular-pipeline.png){fig-align="center"}
 
+And **good defaults**! 
+
 ## Pre-processing is part of the pipeline! {.smaller}
 
 - There isn't a clear separation between "pre-processing", "feature engineering"
@@ -352,7 +354,9 @@ are stateful and can be used in pipelines, functions are not.
 - skrub provides tools to build robust pipelines
 - this is done by bringing pre-processing and feature engineering __inside__ of 
 the pipeline
-- additionally, robust code avoids boilerplate
+- robust code avoids boilerplate
+- the fit/transform framework builds production-ready pipelines
+- skrub transformers are tuned to use **good defaults**
 
 ## Course Roadmap
 

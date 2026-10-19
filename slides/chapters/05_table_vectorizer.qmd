@@ -20,6 +20,12 @@ Convert any mixed-type dataframe into numeric features for ML:
 - Datetime features can be transformed into more informative features
 - The transformer should be **stateful** and **robust**
 
+## Not so easy! 
+- Each column needs to be handled in a different way
+- The input dtype may not be the dtype we want
+- Having multiple encoded features adds a lot of bookkeeping
+- We still want to fit/predict to avoid leakage
+
 ## The solution: `TableVectorizer`
 The `TableVectorizer` is a transformer that 
 
@@ -131,9 +137,9 @@ df_enc = tv.fit_transform(df)
 ```{python}
 #| echo: false
 print("Original")
-print(df[["num_id", "str_id"]])
+print(df)
 print("\nEncoded")
-print(df_enc[["num_id", "str_id"]])
+print(df_enc)
 ```
 
 :::

@@ -34,17 +34,41 @@ df = pd.DataFrame({
 ::: {.incremental}
 - Some transformers (e.g., the `StandardScaler`) work only on numeric columns
 - Some transformers (e.g., the `OneHotEncoder`) work only on categorical columns
-- Different columns with the same dtype may need to be treated differently (e.g.,
-an integer ID should not be scaled)
-- Some transformations only make sense for a subset of the columns (e.g., extracting
-the year from datetimes)
+- Integer IDs should not be treated as numeric and scaled
+- Some transformations only make sense for some columns
 :::
+
+## The usual solution: `ColumnTransformer` {.smaller}
+
+```{python}
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from skrub import ToDatetime, DatetimeEncoder
+from sklearn.pipeline import make_pipeline
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("date", make_pipeline(ToDatetime(), DatetimeEncoder()), "date"),
+        ("city", OneHotEncoder(handle_unknown="ignore"), ["city"]),
+        ("metrics", StandardScaler(), ["metric_1", "metric_2"]),
+    ],
+    remainder="passthrough",  # keeps user_id as-is
+)
+
+preprocessor.fit_transform(df)
+```
+
+## This has some downsides...
+
+- A lot of boilerplate (again!)
+- Clunky interface (a list of triplets)
+- The `remainder` must be made explicit
 
 
 ## Applying transformers to columns with `ApplyToCols` {.smaller}
 `ApplyToCols` is a **meta-transformer**: it applies a transformer to selected columns.
 
-Columns that are not selected pass through without changes.
+Columns that are not selected **pass through** without changes.
 
 ```{python}
 from skrub import ApplyToCols
@@ -91,19 +115,12 @@ wrapped in `ApplyToCols`:
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-select = SelectCols("department-name")
-encode = ApplyToCols(OneHotEncoder(sparse_output=False))
+encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols="department-name")
 reduce = ApplyToCols(PCA(n_components=2))
 
-transform = make_pipeline(select, encode, reduce)
+transform = make_pipeline(encode, reduce)
 ```
 
-
-::: {.callout-tip}
-
-Remember that columns that are not selected **pass through** without any change. 
-
-:::
 
 ## Example: convert to datetime and encode
 

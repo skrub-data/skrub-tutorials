@@ -24,7 +24,7 @@ import pandas as pd
 df = pd.DataFrame(
     {
         "numerical_1": [1, 2, 3, 4, 5],
-        "numerical_2": pd.Series([10.5, 20.3, "?", 40.1, 50.2]).astype(str),
+        "numerical_2": [10.5, 20.3, None, 40.1, 50.2],
         "string_column": ["apple", "?", "banana", "cherry", "?"],
         "datetime_column": [
             "03 Jan 2020",
@@ -110,11 +110,12 @@ correctly, and the datetime column has been parsed as such:
 df_clean.info()
 ```
 
+
 ## What does the `Cleaner` do in practice? {.smaller}
 
 1. It replaces strings used to represent null values with `None`
 2. It removes uninformative columns
-3. It tries to parse datetime columns
+3. It converts dates in string format to datetimes
 4. It parses strings like ` "1234.6"` to numbers
 
 ## Note on intended usage 

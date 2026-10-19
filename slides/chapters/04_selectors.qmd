@@ -23,7 +23,7 @@ Selectors are used throughout the skrub package:
 
 - `ApplyToCols`
 - `TableReport` filters
-- `.skb.apply()`
+- `.skb.apply()` (for later)
 
 ## Example: Select String Columns {.smaller}
 
@@ -159,17 +159,17 @@ s.all() - "datetime-col"
 
 ![](./images/s-all.png)
 
-## Combining Selectors: NOT {auto-animate="true"}
+<!-- ## Combining Selectors: NOT {auto-animate="true"}
 
-![](./images/not-s-numeric.png)
+![](./images/not-s-numeric.png) -->
 
 ## Combining Selectors: AND {auto-animate="true"}
 
 ![](./images/s-numeric-and-has-nulls.png)
 
-## Combining Selectors: OR {auto-animate="true"}
+<!-- ## Combining Selectors: OR {auto-animate="true"}
 
-![](./images/s-any-date-or-string.png)
+![](./images/s-any-date-or-string.png) -->
 
 ## Multiple aggregations in pandas with selectors{.smaller}
 
@@ -209,8 +209,6 @@ df.groupby("group").agg(aggs)
 :::
 
 
-
-
 ## Using selectors to aggregate pandas dataframes {.smaller}
 
 New columns are handled by the selector:
@@ -230,6 +228,9 @@ as output (depending on if the column is selected or not)
 
 ```{python}
 def more_nulls_than_half(col):
+    """
+    Select columns with more than 50% missing values
+    """
     return col.isnull().sum() / len(col) > 0.5
 
 df = pd.DataFrame(

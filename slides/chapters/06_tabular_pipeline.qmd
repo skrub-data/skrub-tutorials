@@ -11,7 +11,7 @@ format:
 
 ---
 
-## Building a baseline model with preprocessing
+## Building a baseline model with preprocessing {.smaller}
 
 A ML pipeline needs to:
 
@@ -68,7 +68,7 @@ model = make_pipeline(
 ## The `tabular_pipeline` Function
 
 skrub's `tabular_pipeline` returns a pipeline that includes all steps, with 
-tuned defaults depending on the input model. 
+**good tuned defaults** depending on the input model. 
 
 ```{.python}
 from skrub import tabular_pipeline
