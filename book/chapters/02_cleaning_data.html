@@ -327,7 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>Cleaner</code> is intended to be a first step in preparing tabular data for analysis or modeling, and can handle a variety of common data cleaning tasks automatically. It is designed to work out-of-the-box with minimal configuration, although it is also possible to customize its behavior if needed.</p>
 <p>Given a dataframe, the <code>Cleaner</code> applies a sequence of transformers to each column:</p>
 <p>Consider this example dataframe:</p>
-<div id="4d36553c" class="cell" data-execution_count="1">
+<div id="f02278a9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -410,7 +410,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>This dataframe has mixed type columns, with some of the missing values denoted as <code>None</code> and some <code>"?"</code>. The datetime column has a non-standard format and has been parsed as a string column. Finally, one of the columns is completely empty.</p>
-<div id="da6d0b74" class="cell" data-execution_count="2">
+<div id="5f874396" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -430,7 +430,7 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="using-plain-pandas" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="using-plain-pandas"><span class="header-section-number">3.2.1</span> Using plain pandas</h3>
 <p>Cleaning this dataset using plain pandas may require writing code like this:</p>
-<div id="9f39da07" class="cell" data-execution_count="3">
+<div id="a00e79c9" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parse the datetime strings with a specific format</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'datetime_column'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime_column'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%d</span><span class="st"> %b %Y'</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -512,7 +512,7 @@ memory usage: 332.0+ bytes</code></pre>
 <section id="the-alternative-skrub.cleaner" class="level3" data-number="3.2.2">
 <h3 data-number="3.2.2" class="anchored" data-anchor-id="the-alternative-skrub.cleaner"><span class="header-section-number">3.2.2</span> The alternative: <code>skrub.Cleaner</code></h3>
 <p>By default, the <code>Cleaner</code> applies various transformations that can sanitize many common use cases:</p>
-<div id="a6c0746d" class="cell" data-execution_count="4">
+<div id="ba89a6bc" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> Cleaner</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> Cleaner().fit_transform(df)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_clean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -573,7 +573,7 @@ memory usage: 332.0+ bytes</code></pre>
 </div>
 </div>
 <p>We can see that the cleaned version of the dataframe is now marking missing values correctly, and that the datetime column has been parsed accordingly:</p>
-<div id="2925702d" class="cell" data-execution_count="5">
+<div id="cc338281" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_clean.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -643,7 +643,7 @@ Tip
 <li>This check is off by default and can be turned on by setting <code>drop_if_unique</code> to <code>True</code>.</li>
 </ul></li>
 </ul>
-<div id="10bac885" class="cell" data-execution_count="6">
+<div id="f9210b4c" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -717,7 +717,7 @@ Tip
 </div>
 </div>
 </div>
-<div id="7b1c461c" class="cell" data-execution_count="7">
+<div id="4af4dd9d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, DropUninformative</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>drop <span class="op">=</span> ApplyToCols(DropUninformative(drop_if_constant<span class="op">=</span><span class="va">True</span>, drop_null_fraction<span class="op">=</span><span class="fl">0.5</span>))</span>

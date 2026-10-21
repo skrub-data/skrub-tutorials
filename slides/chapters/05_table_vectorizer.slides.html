@@ -231,7 +231,7 @@
 </section>
 <section id="a-toy-example" class="slide level2 smaller">
 <h2>A toy example</h2>
-<div id="6bb12924" class="cell" data-execution_count="1">
+<div id="73e6c309" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> TableVectorizer</span>
 <span id="cb1-3"><a></a></span>
@@ -322,7 +322,7 @@
 </tr>
 </tbody>
 </table>
-<div id="ba1acd5a" class="cell" data-execution_count="2">
+<div id="f75f1761" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="co"># Change when categories become "high-cardinality"</span></span>
 <span id="cb3-2"><a></a>tv <span class="op">=</span> TableVectorizer(cardinality_threshold<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -345,7 +345,7 @@
 <h2>Applying to a subset of columns</h2>
 <div class="columns">
 <div class="column">
-<div id="2a285acb" class="cell" data-execution_count="3">
+<div id="f20392a8" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb5-2"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb5-3"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
@@ -362,11 +362,11 @@
 </div>
 </div><div class="column">
 <p>We can use <code>ApplyToCols</code> and the skrub selectors:</p>
-<div id="29d84941" class="cell" data-execution_count="4">
+<div id="fe616e75" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>tv <span class="op">=</span> ApplyToCols(TableVectorizer(), exclude_cols<span class="op">=</span>[<span class="st">"num_id"</span>, <span class="st">"str_id"</span>])</span>
 <span id="cb6-2"><a></a>df_enc <span class="op">=</span> tv.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="bd05d2dc" class="cell" data-execution_count="5">
+<div id="b4a40356" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-stdout">
 <pre><code>Original
    metric_1  metric_2  metric_3  num_id str_id
@@ -390,7 +390,7 @@ Encoded
 <div class="columns">
 <div class="column">
 <p>Plain text: <code>describe_transformations_</code></p>
-<div id="a7a42eed" class="cell" data-execution_count="6">
+<div id="d5e1a856" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>tv <span class="op">=</span> TableVectorizer().fit(df)</span>
 <span id="cb8-2"><a></a><span class="bu">print</span>(tv.describe_transformations())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -414,7 +414,7 @@ No high_cardinality columns have been detected.</code></pre>
 </div>
 </div><div class="column">
 <p>Retrieve the actual transformers, column by column: <code>all_processing_steps_</code></p>
-<div id="11d466f1" class="cell" data-execution_count="7">
+<div id="71cbe1e9" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
 <span id="cb10-2"><a></a>tv <span class="op">=</span> TableVectorizer().fit(df)</span>
 <span id="cb10-3"><a></a>pprint(tv.all_processing_steps_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

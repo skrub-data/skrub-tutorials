@@ -216,7 +216,7 @@
 </section>
 <section id="load-and-explore-the-data" class="slide level2">
 <h2>Load and explore the data</h2>
-<div id="8ac50a97" class="cell" data-execution_count="1">
+<div id="06923f75" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a></a></span>
@@ -319,7 +319,7 @@
 <section id="explore-the-target" class="slide level2">
 <h2>Explore the target</h2>
 <p>Let’s take a look at the target:</p>
-<div id="009fd53a" class="cell" data-execution_count="2">
+<div id="0be1e735" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>y.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>0     69222.18
@@ -335,7 +335,7 @@ Name: current_annual_salary, dtype: float64</code></pre>
 <section id="strategizing" class="slide level2">
 <h2>Strategizing</h2>
 <p>We can begin by exploring the dataframe with <code>.describe</code>, and then think of a plan for pre-processing our data.</p>
-<div id="493a87d1" class="cell" data-execution_count="3">
+<div id="e5d43c88" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>X.describe(include<span class="op">=</span><span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -510,7 +510,7 @@ Name: current_annual_salary, dtype: float64</code></pre>
 <section id="step-1-convert-date-features-to-numerical" class="slide level2 smaller">
 <h2>Step 1: Convert date features to numerical</h2>
 <p>We extract numerical features from the <code>date_first_hired</code> column.</p>
-<div id="1a17fdf9" class="cell" data-execution_count="4">
+<div id="3ae222db" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="co"># Create a copy to work with</span></span>
 <span id="cb5-2"><a></a>X_processed <span class="op">=</span> X.copy()</span>
 <span id="cb5-3"><a></a></span>
@@ -536,7 +536,7 @@ Shape: (9228, 9)</code></pre>
 <section id="step-2-encode-categorical-features" class="slide level2 smaller">
 <h2>Step 2: Encode categorical features</h2>
 <p>We encode the categorical features using one-hot encoding.</p>
-<div id="e3d6221e" class="cell" data-execution_count="5">
+<div id="3774762c" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="co"># Find the categorical columns</span></span>
 <span id="cb7-2"><a></a>categorical_cols <span class="op">=</span> X_processed.select_dtypes(include<span class="op">=</span>[<span class="st">'object'</span>]).columns.tolist()</span>
 <span id="cb7-3"><a></a><span class="bu">print</span>(<span class="st">"Categorical columns to encode:"</span>, categorical_cols)</span>
@@ -555,7 +555,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <h2 data-id="quarto-animate-title">Step 3: Impute missing values</h2>
 <p>Some models cannot handle missing values.</p>
 <p>We impute the missing values in the <code>gender</code> column:</p>
-<div id="1277075d" class="cell" data-execution_count="6">
+<div id="a0ba7f92" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb9-1" class="hljs-ln-code"><a></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb9-2" class="hljs-ln-code"><a></a></span>
 <span id="cb9-3" class="hljs-ln-code"><a></a><span class="co"># Impute missing values with most frequent value</span></span>
@@ -596,7 +596,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <li><code>RidgeCV</code> is one of them, so we need to scale numerical features.</li>
 <li><code>SquashingScaler</code> is an improvement over the <code>RobustScaler</code></li>
 </ul>
-<div id="a78e3a96" class="cell" data-execution_count="7">
+<div id="93a02ff0" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> SquashingScaler</span>
 <span id="cb10-2"><a></a></span>
 <span id="cb10-3"><a></a><span class="co"># Initialize the scaler</span></span>
@@ -623,7 +623,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-5-train-ridge-model-with-cross-validation" class="slide level2 smaller">
 <h2>Step 5: Train Ridge model with cross-validation</h2>
 <p>Train a <code>RidgeCV</code> regression model and evaluate with cross-validation.</p>
-<div id="f2cc9d72" class="cell" data-execution_count="8">
+<div id="09cb835f" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> RidgeCV</span>
 <span id="cb11-2"><a></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, cross_validate</span>
 <span id="cb11-3"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -656,7 +656,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 </section>
 <section id="intermission-data-leakage-and-fittransform" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title">Intermission: data leakage and fit/transform</h2>
-<div id="c510829f" class="cell" data-execution_count="9">
+<div id="75fc8de3" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb13-2"><a></a></span>
 <span id="cb13-3"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
@@ -668,7 +668,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 </div>
 <div class="columns">
 <div class="column">
-<div id="8d8d791a" class="cell" data-execution_count="10">
+<div id="e8e7fc20" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>df_train</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
@@ -721,7 +721,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 </div>
 </div>
 </div><div class="column">
-<div id="ad37e1c9" class="cell" data-execution_count="11">
+<div id="e7686000" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>df_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
@@ -772,7 +772,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 <p>What happens if you try to find the mean over all data?</p>
 <div class="columns">
 <div class="column">
-<div id="8260e2be" class="cell" data-execution_count="12">
+<div id="a1436c8c" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb16-1" class="hljs-ln-code"><a></a>imputer <span class="op">=</span> SimpleImputer(strategy<span class="op">=</span><span class="st">"mean"</span>).set_output(transform<span class="op">=</span><span class="st">"pandas"</span>)</span>
 <span id="cb16-2" class="hljs-ln-code"><a></a>df_imputed <span class="op">=</span> imputer.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -785,7 +785,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 <p>The proper way to do it: fit the transformer on the training data, transform the training with the same mean:</p>
 <div class="columns">
 <div class="column">
-<div id="4e241107" class="cell" data-execution_count="13">
+<div id="8f27ebcc" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode python hljs"><span id="cb17-1" class="hljs-ln-code"><a></a><span class="bu">print</span>(imputer.fit(df_train).transform(df_test))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     value
@@ -832,7 +832,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 <section id="skrub-to-the-rescue" class="slide level2 smaller">
 <h2>skrub to the rescue</h2>
 <p>Thankfully, we can <code>import skrub</code>:</p>
-<div id="a931e505" class="cell" data-execution_count="14">
+<div id="c72c2d31" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb19-2"><a></a></span>
 <span id="cb19-3"><a></a><span class="co"># Perform cross-validation (5-fold)</span></span>
@@ -847,7 +847,7 @@ Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 <span id="cb19-12"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cross-Validation Results:
-tabular_pipeline: Mean test R²: 0.9111 (+/- 0.0136)
+tabular_pipeline: Mean test R²: 0.9107 (+/- 0.0138)
 Ridge: Mean test R²: 0.8931 (+/- 0.0222)</code></pre>
 </div>
 </div>

@@ -402,7 +402,7 @@ Tip
 </div>
 </div>
 <div class="fragment">
-<div id="6b3e9e86" class="cell" data-execution_count="1">
+<div id="3ffa7355" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
@@ -414,7 +414,7 @@ Tip
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>full_pipeline <span class="op">=</span> tabular_pipeline(model_pipeline)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>[name <span class="cf">for</span> name, _ <span class="kw">in</span> full_pipeline.steps]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pipeline']</code></pre>
+<pre><code>['tablevectorizer', 'simpleimputer', 'squashingscaler', 'pca', 'ridge']</code></pre>
 </div>
 </div>
 </div>

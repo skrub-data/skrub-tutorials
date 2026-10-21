@@ -208,7 +208,7 @@
 <section id="why-column-specific-transformations" class="slide level2">
 <h2>Why Column-Specific Transformations?</h2>
 <p>Different columns must be handled in different ways.</p>
-<div id="4fc8683c" class="cell" data-execution_count="1">
+<div id="eeb02719" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a></a></span>
 <span id="cb1-3"><a></a>df <span class="op">=</span> pd.DataFrame({</span>
@@ -231,7 +231,7 @@
 </section>
 <section id="the-usual-solution-columntransformer" class="slide level2 smaller">
 <h2>The usual solution: <code>ColumnTransformer</code></h2>
-<div id="2a2529ff" class="cell" data-execution_count="2">
+<div id="321aae8a" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
 <span id="cb2-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, StandardScaler</span>
 <span id="cb2-3"><a></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
@@ -275,7 +275,7 @@
 <h2>Applying transformers to columns with <code>ApplyToCols</code></h2>
 <p><code>ApplyToCols</code> is a <strong>meta-transformer</strong>: it applies a transformer to selected columns.</p>
 <p>Columns that are not selected <strong>pass through</strong> without changes.</p>
-<div id="3e51ff1c" class="cell" data-execution_count="3">
+<div id="f7df574b" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols</span>
 <span id="cb4-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OrdinalEncoder</span>
 <span id="cb4-3"><a></a></span>
@@ -366,7 +366,7 @@
 </div>
 </div>
 </div>
-<div id="f519f778" class="cell" data-execution_count="4">
+<div id="ac6018b6" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> skrub.selectors <span class="im">as</span> s</span>
 <span id="cb5-2"><a></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb5-3"><a></a></span>
@@ -444,7 +444,7 @@
 </section>
 <section id="example-convert-to-datetime-and-encode" class="slide level2">
 <h2>Example: convert to datetime and encode</h2>
-<div id="0eee6674" class="cell" data-execution_count="5">
+<div id="edb36575" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ToDatetime, DatetimeEncoder</span>
 <span id="cb7-2"><a></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb7-3"><a></a></span>
@@ -553,7 +553,7 @@
 <section id="handling-columns-that-cant-be-transformed-1" class="slide level2">
 <h2>Handling columns that can’t be transformed</h2>
 <p>When <code>allow_reject=True</code>, columns that can’t be transformed are passed through:</p>
-<div id="aa72138b" class="cell" data-execution_count="6">
+<div id="96977325" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">from</span> skrub <span class="im">import</span> ApplyToCols, ToDatetime</span>
 <span id="cb9-2"><a></a></span>
 <span id="cb9-3"><a></a>with_reject <span class="op">=</span> ApplyToCols(ToDatetime(), allow_reject<span class="op">=</span><span class="va">True</span>)</span>

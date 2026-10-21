@@ -341,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You may already be living in such a world.</p>
 <section id="load-and-explore-the-data" class="level3" data-number="0.1.1">
 <h3 data-number="0.1.1" class="anchored" data-anchor-id="load-and-explore-the-data"><span class="header-section-number">0.1.1</span> Load and explore the data</h3>
-<div id="9b3577fa" class="cell" data-execution_count="1">
+<div id="74f17afc" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="explore-the-target" class="level3" data-number="0.1.2">
 <h3 data-number="0.1.2" class="anchored" data-anchor-id="explore-the-target"><span class="header-section-number">0.1.2</span> Explore the target</h3>
 <p>Let’s take a look at the target:</p>
-<div id="fb65743d" class="cell" data-execution_count="2">
+<div id="0ee98a4e" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y.head(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>0     69222.18
@@ -448,7 +448,7 @@ Name: current_annual_salary, dtype: float64</code></pre>
 <section id="strategizing" class="level3" data-number="0.1.3">
 <h3 data-number="0.1.3" class="anchored" data-anchor-id="strategizing"><span class="header-section-number">0.1.3</span> Strategizing</h3>
 <p>We can begin by exploring the dataframe with <code>.describe</code>, and then think of a plan for pre-processing our data.</p>
-<div id="3966b35e" class="cell" data-execution_count="3">
+<div id="25320e62" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>X.describe(include<span class="op">=</span><span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -614,7 +614,7 @@ Name: current_annual_salary, dtype: float64</code></pre>
 <section id="step-1-convert-date-features-to-numerical" class="level3 smaller" data-number="0.2.1">
 <h3 class="smaller anchored" data-number="0.2.1" data-anchor-id="step-1-convert-date-features-to-numerical"><span class="header-section-number">0.2.1</span> Step 1: Convert date features to numerical</h3>
 <p>We extract numerical features from the <code>date_first_hired</code> column.</p>
-<div id="d6cf7abb" class="cell" data-execution_count="4">
+<div id="5fdc0e36" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a copy to work with</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X_processed <span class="op">=</span> X.copy()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -640,7 +640,7 @@ Shape: (9228, 9)</code></pre>
 <section id="step-2-encode-categorical-features" class="level3 smaller" data-number="0.2.2">
 <h3 class="smaller anchored" data-number="0.2.2" data-anchor-id="step-2-encode-categorical-features"><span class="header-section-number">0.2.2</span> Step 2: Encode categorical features</h3>
 <p>We encode all categorical features using one-hot encoding.</p>
-<div id="8de12fc4" class="cell" data-execution_count="5">
+<div id="a8dab391" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the categorical columns</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> X_processed.select_dtypes(include<span class="op">=</span>[<span class="st">'object'</span>]).columns.tolist()</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Categorical columns to encode:"</span>, categorical_cols)</span>
@@ -660,7 +660,7 @@ Shape after encoding: (9228, 1218)</code></pre>
 <section id="step-3-impute-missing-values" class="level3 smaller" data-number="0.2.3">
 <h3 class="smaller anchored" data-number="0.2.3" data-anchor-id="step-3-impute-missing-values"><span class="header-section-number">0.2.3</span> Step 3: Impute missing values</h3>
 <p>We impute the missing values in the <code>gender</code> column to fill any gaps. In this case, this dataframe does not include many missing values, and they’re concentrated in a single categorical column, so we fill missing values with the “most frequent” strategy.</p>
-<div id="b8db8c9d" class="cell" data-execution_count="6">
+<div id="e50023bd" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Impute missing values with most frequent value</span></span>
@@ -692,7 +692,7 @@ Important
 <h3 class="smaller anchored" data-number="0.2.4" data-anchor-id="step-4-scale-numerical-features"><span class="header-section-number">0.2.4</span> Step 4: Scale numerical features</h3>
 <p>Linear models are strongly affected by numeric features that haven’t been scaled, so this step should always be done. The <code>StandardScaler</code> scales values by removing the mean and scaling to unit variance.</p>
 <p>So, here we scale numerical features for the <code>RidgeCV</code> regression model:</p>
-<div id="bd1b8389" class="cell" data-execution_count="7">
+<div id="dc23f73d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the scaler</span></span>
@@ -719,7 +719,7 @@ Warning
 <section id="step-5-train-ridge-model-with-cross-validation" class="level3 smaller" data-number="0.2.5">
 <h3 class="smaller anchored" data-number="0.2.5" data-anchor-id="step-5-train-ridge-model-with-cross-validation"><span class="header-section-number">0.2.5</span> Step 5: Train Ridge model with cross-validation</h3>
 <p>For this example we want to train a <code>RidgeCV</code> regression model and evaluate the model’s performance with cross-validation.</p>
-<div id="b92e8647" class="cell" data-execution_count="8">
+<div id="b7fb84e8" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> RidgeCV</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, cross_validate</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -766,7 +766,7 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 <h2 data-number="0.4" class="anchored" data-anchor-id="small-intermission-data-leakage-and-fittransform"><span class="header-section-number">0.4</span> Small intermission: data leakage and fit/transform</h2>
 <p>For simplicity, let’s try to impute values in a series as our example. One-hot leakage works in similar ways.</p>
 <p>This example dataframe is split into training and test split with a 50/50 split.</p>
-<div id="ddb7e144" class="cell" data-execution_count="9">
+<div id="7e9af77a" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
@@ -778,14 +778,14 @@ Mean test RMSE: 10329.8687 (+/- 1421.8752)</code></pre>
 </div>
 <p>A common strategy is to impute numeric missing values by finding the mean of the features that are still there. We can do this with <code>stragegy="mean"</code>.</p>
 <p>What happens if you try to find the mean over all data?</p>
-<div id="f0c71b1f" class="cell" data-execution_count="10">
+<div id="5b295cd1" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>imputer <span class="op">=</span> SimpleImputer(strategy<span class="op">=</span><span class="st">"mean"</span>).set_output(transform<span class="op">=</span><span class="st">"pandas"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df_imputed <span class="op">=</span> imputer.fit_transform(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/fit-transform-impute-1.png" class="img-fluid"></p>
 <p>The result is that the missing values have been filled with the mean over both the train and test set. The test set happened to contain an outlier, which skewed the mean in the training.</p>
 <p>To impute properly and avoid leakage, we want to <strong>fit</strong> the imputer on the training data, and then <strong>transform</strong> the test split using the mean that was learned in while fitting.</p>
-<div id="f76e39d6" class="cell" data-execution_count="11">
+<div id="1d9def42" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(imputer.fit(df_train).transform(df_test))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     value
@@ -812,7 +812,7 @@ Important
 <section id="waking-up-from-a-nightmare" class="level2 smaller" data-number="0.5">
 <h2 class="smaller anchored" data-number="0.5" data-anchor-id="waking-up-from-a-nightmare"><span class="header-section-number">0.5</span> Waking up from a nightmare</h2>
 <p>Thankfully, we can <code>import skrub</code>:</p>
-<div id="72a8eb68" class="cell" data-execution_count="12">
+<div id="861a8e24" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skrub <span class="im">import</span> tabular_pipeline</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform cross-validation (5-fold)</span></span>
@@ -830,8 +830,8 @@ Important
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean test RMSE: </span><span class="sc">{</span>test_rmse<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> (+/- </span><span class="sc">{</span>test_rmse<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cross-Validation Results:
-Mean test R²: 0.9080 (+/- 0.0163)
-Mean test RMSE: 8814.0154 (+/- 1057.4677)</code></pre>
+Mean test R²: 0.9095 (+/- 0.0146)
+Mean test RMSE: 8748.8343 (+/- 981.5363)</code></pre>
 </div>
 </div>
 <section id="what-is-happening" class="level3" data-number="0.5.1">
