@@ -68,7 +68,10 @@ materials = { depends-on = [
     "convert-exercises-to-notebooks",
     "copy-data",
 ] }
-setup-jupyterlite-content = { cmd = "mkdir -p ./content/notebooks ./content/data && cp ../content/notebooks/*.ipynb ./content/notebooks && cp -r ../data/adult_census ../data/employee_salaries ../data/wine ../data/cleaner_data.csv ../data/parallel_coordinates_hgbr.json ./content/data", cwd = "jupyterlite", depends-on = [
+# The setup task creates the jupyterlite/ tree (it is not tracked by git:
+# contents are fully regenerated from content/ and data/), so the following
+# tasks can safely run with cwd = jupyterlite in a fresh checkout.
+setup-jupyterlite-content = { cmd = "mkdir -p ./jupyterlite/content/notebooks ./jupyterlite/content/data && cp ./content/notebooks/*.ipynb ./jupyterlite/content/notebooks/ && cp -r ./data/adult_census ./data/employee_salaries ./data/wine ./data/cleaner_data.csv ./data/parallel_coordinates_hgbr.json ./jupyterlite/content/data/", depends-on = [
     "convert-exercises-to-notebooks",
 ] }
 build-jupyterlite = { cmd = "jupyter lite build --contents ./content --output-dir dist", cwd = "jupyterlite", depends-on = [
