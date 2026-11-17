@@ -50,25 +50,14 @@ X_numeric = tv.fit_transform(df)
 print(X_numeric)
 ```
 
-## Phase 1: Cleaning {.smaller}
+## Phase 1: Cleaning
 
-The `TableVectorizer` starts by cleaning:
-
-- Parse datetime columns (with custom formats)
-- Detect numbers written as strings ("123.45")
-- Handle missing value markers ("N/A", "?")
-- Drop uninformative columns
-- **Convert all columns to string if they can't be parsed as float or datetime**
-- **Convert to `float32` for efficiency**
+- Apply the `Cleaner` to all columns.
+- Convert all columns to string if they can't be parsed as float or datetime
+- Convert to `float32` for efficiency
 
 
-::: {.callout-tip}
-
-In practice, a `Cleaner` followed by conversion to `float32`. 
-
-:::
-
-## Phase 2: Column Dispatch
+## Phase 2: Dispatch Columns
 
 After cleaning, columns are routed to appropriate transformers:
 
@@ -130,7 +119,10 @@ df = pd.DataFrame(
 
 We can use `ApplyToCols` and the skrub selectors: 
 ```{python}
-tv = ApplyToCols(TableVectorizer(), exclude_cols=["num_id", "str_id"])
+tv = ApplyToCols(
+    TableVectorizer(),
+    exclude_cols=["num_id", "str_id"],
+)
 df_enc = tv.fit_transform(df)
 ```
 ```{python}
@@ -151,7 +143,7 @@ print(df_enc)
 ::: {.columns}
 
 ::: {.column}
-Plain text: `describe_transformations_`
+Plain text: `describe_transformations()`
 
 ```{python}
 tv = TableVectorizer().fit(df)
@@ -174,7 +166,7 @@ pprint(tv.all_processing_steps_)
 
 :::
 
-## Fine-Grained Control: specific_transformers
+## Fine-Grained Control: specific_transformers {visibility="hidden"}
 
 ::: {.callout-tip}
 

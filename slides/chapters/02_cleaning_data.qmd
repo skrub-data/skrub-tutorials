@@ -37,7 +37,7 @@ df = pd.DataFrame(
 ```
 
 
-## There are some issues!
+## There are some issues! {visibility="hidden"}
 - Null values in various columns
 - `"?"` used as null value marker
 - The datetime column has an unusual format
@@ -135,7 +135,7 @@ The assumption is that complex transformations are done in later steps by the us
 :::
 
 
-## Data cleaning parameters:
+## Data cleaning parameters {visibility="hidden"}
 
 ```{python}
 cleaner = Cleaner(
@@ -146,7 +146,7 @@ cleaner = Cleaner(
 )
 ```
 
-## Bonus: convert numeric columns with European separators
+## Bonus: convert numeric columns with European separators {visibility="hidden"}
 ```{python}
 from skrub import ToFloat
 s = pd.Series(["4 567,89", "12 567,89"], name="x")

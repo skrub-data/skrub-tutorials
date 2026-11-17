@@ -28,8 +28,7 @@ All these steps are needed just to find if **there is enough data to provide sig
 :::
 
 
-
-## Reminder: avoiding data leakage
+## Avoiding data leakage
 - We want to prevent data that belongs to the test set from entering the train set.
 - Data leakage leads to over-optimistic results. 
 - Transformers and encoders must be trained exclusively on the training samples.
@@ -94,7 +93,7 @@ model_reg = tabular_pipeline("regression") # Uses HGBRegressor
 ## What the pipeline looks like: TabICL
 ![](images/tabular_pipeline_tabicl.png)
 
-## Customizing the pipeline
+## Customizing the pipeline {visibility="hidden"}
 
 
 ::: {.callout-tip}
@@ -130,6 +129,9 @@ model = tabular_pipeline(LogisticRegression())
 # Evaluate with cross-validation
 scores = cross_val_score(model, X, y, cv=5)
 print(f"Score: {scores.mean():.4f}")
+```
+```{.python}
+0.796...
 ```
 
 That's it! 

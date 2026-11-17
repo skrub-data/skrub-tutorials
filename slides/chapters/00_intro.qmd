@@ -11,6 +11,15 @@ execute:
     echo: true
 ---
 
+## Machine learning with dataframes: why skrub
+
+- skrub provides tools to build robust pipelines
+- this is done by bringing pre-processing and feature engineering __inside__ of 
+the pipeline
+- robust code avoids boilerplate
+- the fit/transform framework builds production-ready pipelines
+- skrub transformers are tuned to use **good defaults**
+
 ##  A simple data science problem {.smaller}
 
 - We have a dataset and a target. 
@@ -29,7 +38,7 @@ y = pd.read_csv("../data/employee_salaries/target.csv")["current_annual_salary"]
 X.head(5)
 ```
 
-## Explore the target
+## Explore the target {visibility="hidden"}
 Let's take a look at the target:
 ```{python}
 y.head(5)
@@ -37,7 +46,7 @@ y.head(5)
 
 This is a **regression** task: we want to predict the value of `current_annual_salary`.
 
-## Strategizing
+## Strategizing {visibility="hidden"}
 We can begin by exploring the dataframe with `.describe`, and then think of a 
 plan for pre-processing our data. 
 
@@ -45,7 +54,7 @@ plan for pre-processing our data.
 X.describe(include="all")
 ```
 
-## Our plan
+## Our plan {visibility="hidden"}
 We need to: 
 
 - Impute some missing values in the `gender` column.
@@ -54,7 +63,7 @@ We need to:
 - Scale numerical features.
 - Evaluate the performance of the model. 
 
-## Step 1: Convert date features to numerical {.smaller}
+## Step 1: Convert date features to numerical {.smaller visibility="hidden"}
 
 We extract numerical features from the `date_first_hired` column.
 
@@ -76,7 +85,7 @@ print("Features after date transformation:")
 print("\nShape:", X_processed.shape)
 ```
 
-## Step 2: Encode categorical features {.smaller}
+## Step 2: Encode categorical features {.smaller visibility="hidden"}
 
 We encode the categorical features using one-hot encoding.
 
@@ -90,7 +99,7 @@ X_encoded = pd.get_dummies(X_processed, columns=categorical_cols)
 print("\nShape after encoding:", X_encoded.shape)
 ```
 
-## Step 3: Impute missing values {.smaller auto-animate="true"}
+## Step 3: Impute missing values {.smaller auto-animate="true" visibility="hidden"}
 Some models cannot handle missing values. 
 
 We impute the missing values in the `gender` column:
@@ -106,7 +115,7 @@ X_encoded_imputed = pd.DataFrame(
 )
 ```
 
-## Step 3: Impute missing values {auto-animate="true"}
+## Step 3: Impute missing values {auto-animate="true" visibility="hidden"}
 
 ::: {.callout-important}
 
@@ -125,7 +134,7 @@ Example:
 - Imputing **current position** with "most frequent" would
 lead to incorrect assumptions about the data. 
 
-## Step 4: Scale numerical features {.smaller}
+## Step 4: Scale numerical features {.smaller visibility="hidden"}
 - Some models work better when all the numeric features have comparable scale. 
 - `RidgeCV` is one of them, so we need to scale numerical features.
 - `SquashingScaler` is an improvement over the `RobustScaler`
@@ -149,7 +158,8 @@ may be needed.
 
 :::
 
-## Step 5: Train Ridge model with cross-validation {.smaller}
+## Step 5: Train Ridge model with cross-validation {.smaller visibility="hidden"}
+## Train Ridge model with cross-validation {.smaller visibility="hidden"}
 
 Train a `RidgeCV` regression model and evaluate with cross-validation.
 
@@ -158,6 +168,15 @@ Train a `RidgeCV` regression model and evaluate with cross-validation.
 from sklearn.linear_model import RidgeCV
 from sklearn.model_selection import cross_val_score, cross_validate
 import numpy as np
+
+# Encode categorical features
+...
+
+# Impute missing values
+...
+
+# Scale features
+...
 
 # Initialize Ridge model
 ridge = RidgeCV()
@@ -172,14 +191,14 @@ print(
 )
 ``` 
 
-## 
+##  {visibility="hidden"}
 
 - So much boilerplate! 
 - What happened to the training split? 
 - Was there leakage? 
 - A lot of code to write and remember => mistakes are more likely 
 
-## Intermission: data leakage and fit/transform {auto-animate="true"}
+## Intermission: data leakage and fit/transform {auto-animate="true" visibility="hidden"}
 
 ```{python}
 from sklearn.impute import SimpleImputer
@@ -217,7 +236,7 @@ df_test
 
 
 
-## Intermission: data leakage and fit/transform {auto-animate="true"}
+## Intermission: data leakage and fit/transform {auto-animate="true" visibility="hidden"}
 What happens if you try to find the mean over all data? 
 
 ::: {.columns}
@@ -243,7 +262,7 @@ df_imputed = imputer.fit_transform(df)
 
 
 
-## Intermission: data leakage and fit/transform {auto-animate="true"}
+## Intermission: data leakage and fit/transform {auto-animate="true" visibility="hidden"}
 
 The proper way to do it: fit the transformer on the training data, transform 
 the training with the same mean:
@@ -268,7 +287,7 @@ print(imputer.fit(df_train).transform(df_test))
 
 :::
 
-## "Just ask an agent to write the code" {.smaller}
+## "Just ask an agent to write the code" {.smaller visibility="hidden"}
 
 ::: {.incremental}
 - Operations were in the wrong order.
@@ -278,7 +297,7 @@ print(imputer.fit(df_train).transform(df_test))
 training split, leading to **data leakage**. 
 :::
 
-## The Silent Failures in Agentic Data Science
+## The Silent Failures in Agentic Data Science {visibility="hidden"}
 
 ![https://trl-lab.github.io/ds-agent-failures/](images/pct_pipelines_with_failure.svg)
 
@@ -340,23 +359,15 @@ are stateful and can be used in pipelines, functions are not.
 
 :::
 
-## What we saw in this chapter
+## What we saw in this chapter {visibility="hidden"}
 - We built a predictive pipeline using traditional tools
 - We talked about missing data imputation
 - We discussed data leakage
 - We tested skrub's `tabular_pipeline`
 - We covered why pre-processing is part of the pipeline
 
-## Machine learning with dataframes: why skrub
 
-- skrub provides tools to build robust pipelines
-- this is done by bringing pre-processing and feature engineering __inside__ of 
-the pipeline
-- robust code avoids boilerplate
-- the fit/transform framework builds production-ready pipelines
-- skrub transformers are tuned to use **good defaults**
-
-## Course Roadmap
+## Course Roadmap {visibility="hidden"}
 
 1. Data exploration with skrub's `TableReport`
 2. Data cleaning and sanitization with the `Cleaner`

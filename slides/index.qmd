@@ -23,7 +23,7 @@ format: html
 - Exercise 3
 
 ## Section 5: Data Ops
-- [Chapter 7: Data Ops](chapters/08_data_ops.qmd)
+- [Chapter 7: Data Ops](chapters/08_data_ops.slides.html)
 
 ## Section 6: Conclusion
 - [Wrapping up](chapters/100_conclusion.html)

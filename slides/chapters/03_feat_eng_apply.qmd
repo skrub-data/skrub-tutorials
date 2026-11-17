@@ -26,7 +26,7 @@ df = pd.DataFrame({
 
 ```
 
-## Why Column-Specific Transformations? {.smaller}
+## Why Column-Specific Transformations? {.smaller visibility="hidden"}
 
 
 ::: {.incremental}
@@ -56,7 +56,7 @@ preprocessor = ColumnTransformer(
 preprocessor.fit_transform(df)
 ```
 
-## This has some downsides...
+## This has some downsides... {visibility="hidden"}
 
 - A lot of boilerplate (again!)
 - Clunky interface (a list of triplets)
@@ -104,23 +104,10 @@ scaler = ApplyToCols(StandardScaler(), cols=s.numeric(), exclude_cols="user_id")
 scaler.fit_transform(df)
 ```
 
-## Chaining Transformers {.smaller}
 
+## Example: Chaining transformers {.smaller}
 Use a scikit-learn `Pipeline` to concatenate multiple transformers, when
 wrapped in `ApplyToCols`:
-
-```{.python}
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import OneHotEncoder
-
-encode = ApplyToCols(OneHotEncoder(sparse_output=False), cols="department-name")
-reduce = ApplyToCols(PCA(n_components=2))
-
-transform = make_pipeline(encode, reduce)
-```
-
-
-## Example: convert to datetime and encode
 
 ```{python}
 from skrub import ToDatetime, DatetimeEncoder
@@ -168,14 +155,13 @@ This is particularly important if you use expensive models to generate features!
 
 ## Handling columns that can't be transformed
 
-- It is not always possible to know a priori if a transformer can handle a column. 
-- The default behavior is to **reject columns** that can't be handled. 
-- In some situations, it is expected that some columns will be rejected (e.g., 
-if the transformer needs to detect the column dtype)
+- It is not always possible to know **a priori** if a transformer can handle a column. 
+- The default behavior is **raise an exception** to **reject columns**. 
+- In some cases, it **expected** to reject some columns.
 
 ## Handling columns that can't be transformed
 
-When `allow_reject=True`, columns that can't be transformed are passed through:
+When `allow_reject=True`, columns that can't be transformed are **passed through unchanged**:
 
 ```{python}
 from skrub import ApplyToCols, ToDatetime
@@ -184,8 +170,8 @@ with_reject = ApplyToCols(ToDatetime(), allow_reject=True)
 result = with_reject.fit_transform(df)
 ```
 
-## Define custom transformers to use with `ApplyToCols`
-- Some columns need specific transformations
+## Define custom transformers to use with `ApplyToCols` {visibility="hidden"}
+- Some columns need **specific transformations**
 - You can define your transformer and have it work seamlessly with `ApplyToCols`
 
 ```python

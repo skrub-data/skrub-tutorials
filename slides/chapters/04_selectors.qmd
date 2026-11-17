@@ -138,6 +138,10 @@ Selectors can be combined:
 to combine selectors
 - column names or lists of columns can be used directly
 
+
+::: {.fragment}
+
+
 ```{.python}
 # Inverse: NOT numeric
 ~s.numeric()
@@ -153,7 +157,11 @@ s.all() - "datetime-col"
 
 ```
 
-## Combining Selectors: `.all()` {auto-animate="true"}
+
+:::
+
+
+## Combining Selectors: `.all()` {auto-animate="true" visibility="hidden"}
 
 ![](./images/s-all.png)
 
@@ -161,7 +169,7 @@ s.all() - "datetime-col"
 
 ![](./images/not-s-numeric.png) -->
 
-## Combining Selectors: AND {auto-animate="true"}
+## Combining Selectors: AND {auto-animate="true" visibility="hidden"}
 
 ![](./images/s-numeric-and-has-nulls.png)
 
@@ -169,7 +177,7 @@ s.all() - "datetime-col"
 
 ![](./images/s-any-date-or-string.png) -->
 
-## Multiple aggregations in pandas with selectors{.smaller}
+## Multiple aggregations in pandas with selectors{.smaller visibility="hidden"}
 
 
 ::: {.columns}
@@ -207,7 +215,7 @@ df.groupby("group").agg(aggs)
 :::
 
 
-## Using selectors to aggregate pandas dataframes {.smaller}
+## Using selectors to aggregate pandas dataframes {.smaller visibility="hidden"}
 
 New columns are handled by the selector:
 
@@ -220,7 +228,7 @@ aggs = {col: ["mean", "sum"] for col in only_num.expand(df)}
 df.groupby("group").agg(aggs)
 ```
 
-## Custom Selectors: Filter by Condition {.smaller}
+## Custom Selectors: Filter by Condition {.smaller visibility="hidden"}
 Define a function that takes **one column** as input and returns `True`/`False` 
 as output (depending on if the column is selected or not)
 
@@ -265,7 +273,5 @@ TableReport(df, column_filters=custom_filter)
 
 - Selectors can be used for flexible, reusable column selection
 - Selectors can be combined with logical operators as "sets of columns"
-- `expand()` extracts selected column names and can be used with 
-dataframe libraries
 - `s.filter()` can be used to create custom selectors for domain-specific logic
 - `ApplyToCols` and `TableReport` can use selectors to filter columns

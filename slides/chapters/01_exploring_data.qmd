@@ -17,7 +17,6 @@ Before any kind of data processing or usage, we need to know what we are dealing
 - What kind of data types are we dealing with? Only numeric, mixed types? 
 - How are values distrbuted in each column? 
 - Are there missing values? 
-- Are there discrete/categorical features? How many categories are there? 
 - Are columns correlated with each other?
 
 ## Loading the data
@@ -73,13 +72,13 @@ from skrub import TableReport
 
 [Ref](../data/adult_census.html)
 
-## The Preview tab
+## The Preview tab {visibility="hidden"}
 The `TableReport` shows all the columns in the dataset, and allows to select and copy the content
 of the cells shown in the preview. 
 
 As this is a preview, only the first and last few rows are displayed. 
 
-## The Stats tab 
+## The Stats tab  {visibility="hidden"}
 The `Stats` tab includes information about each column:
 
 - full name
@@ -88,13 +87,13 @@ The `Stats` tab includes information about each column:
 - cardinality (number of unique values)
 - additional statistics for numerical features
 
-## The Distributions tab
+## The Distributions tab {visibility="hidden"}
 A histogram is drawn for each column to show the distribution of values in that 
 column. 
 
 Most frequent values are also displayed
 
-## The Associations tab
+## The Associations tab {visibility="hidden"}
 Cramer's V and Pearson's correlation coefficient are measured for all pairs of 
 columns.
 
@@ -102,7 +101,7 @@ Associations show whether there are strong correlations between columns, and
 columns that may be redundant. 
 
 
-## Outlier detection
+## Outlier detection {visibility="hidden"}
 
 ::: {.columns}
 
@@ -142,7 +141,7 @@ numpy arrays.
 TableReport(target)
 ```
 
-## Working with big tables
+## Working with big tables {visibility="hidden"}
 - Plot generation and computation of associations are expensive operations, so
 so they can be disabled for big tables.
 
@@ -156,13 +155,15 @@ TableReport(
 
 ## Exporting the `TableReport`
 
-The `TableReport` computes many statistics about a given table. Typically, the 
-interactive view is sufficient when developing with a notebook. 
+The `TableReport` computes many statistics about a given table. These statistics
+can be exported in various ways, depending on the use case:
 
-It is also possible to export the statistics in various formats to share them,
-or to use them programmatically. 
+- in HTML, to access from a browser -- no need for a running kernel! 
+- in JSON, to export directly the stats
+- as a python `dict`, for scripts
+- in plaintest with formatted Markdown
 
-## Exporting the `TableReport`: HTML
+## Exporting the `TableReport`: HTML {visibility="hidden"}
 The `TableReport` can be saved on disk as an HTML. 
 ```{.python}
 TableReport(data).write_html("report.html")
@@ -173,7 +174,7 @@ The report can be opened using any internet browser, with no need to run
 a Jupyter notebok or a python interactive console. 
 :::
 
-## Exporting the `TableReport`: JSON
+## Exporting the `TableReport`: JSON {visibility="hidden"}
 It is possible to export the report in JSON format:
 
 ```{.python}
@@ -187,7 +188,7 @@ If the plots are not needed, disable them with `plot_distributions=False`.
 
 :::
 
-## Exporting the `TableReport`: python dict {.smaller}
+## Exporting the `TableReport`: python dict {.smaller visibility="hidden"}
 The report can also be exported as a python dict to use the statistics it measures
 in a python script:
 
@@ -195,7 +196,7 @@ in a python script:
 tr_dict = TableReport(data, plot_distributions=False).dict()
 ```
 
-## Exporting the `TableReport`: Markdown {.smaller}
+## Exporting the `TableReport`: Markdown {.smaller visibility="hidden"}
 The report can be exported in summarized form as a Markdown-formatted string:
 
 ```python
@@ -219,5 +220,4 @@ of the report to an agent if the dataset is large, or if its content is not trus
 - Exploring column statistics, value distributions, and associations visually
 - Detecting nulls, outliers, and highly correlated columns at a glance
 - Filtering columns by type or characteristics using built-in filters
-- Adjusting `TableReport` settings for large datasets
 - Saving and exporting reports as HTML, JSON, python dicts and Markdown
