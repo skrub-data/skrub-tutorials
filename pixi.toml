@@ -50,8 +50,19 @@ jupytext = ">=1.18.1,<2"
 jupyterquiz = ">=2.9.6.2,<3"
 
 [feature.doc.tasks]
+# Regenerate the DataOps report embedded in the slides (08_data_ops.qmd).
+# The script writes <output_dir>/report plus the graph images, so it runs into
+# data/credit_fraud_outputs (its default location, where the graph images are
+# tracked) and the report is then moved into book/chapters/images/report, which
+# the slides project exposes through the chapters/images symlink. The report
+# directory is replaced rather than merged: node pages and the hashed python/
+# source pages are named after the current run, so leftovers from a previous run
+# would be dead links.
+generate-report = { cmd = "python data/credit_fraud_report.py -o data/credit_fraud_outputs && rm -rf book/chapters/images/report && mv data/credit_fraud_outputs/report book/chapters/images/report", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" } }
 render-book = { cmd = "rm -rf _build/book && quarto render book/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" } }
-render-slides = { cmd = "rm -rf _build/slides && quarto render slides/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" } }
+render-slides = { cmd = "rm -rf _build/slides && quarto render slides/", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" }, depends-on = [
+    "generate-report",
+] }
 # --no-clean: the root output dir also holds the book and slides builds,
 # which live outside this project and would be removed by quarto's cleanup.
 render-site = { cmd = "quarto render --no-clean", env = { "SKB_TABLE_REPORT_VERBOSITY" = "0" } }

@@ -276,6 +276,73 @@ pre, code {
     flex: 1 1 auto;
 }
 
+/* The graph is not scrolled but panned and zoomed in a viewport filling the
+   panel (see data_ops-report.js). The viewport stays inside the panel's padding
+   so that the panel's resize handle (bottom right corner) remains reachable. */
+.report-index .data_op-node > nav.main-nav[data-is-open] {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.graph-toolbar {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.graph-toolbar .graph-hint {
+    margin: 0;
+}
+
+#graph-nav {
+    flex: 1 1 0;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    cursor: grab;
+    /* we handle touch gestures */
+    touch-action: none;
+}
+
+#graph-nav.panning {
+    cursor: grabbing;
+}
+
+#graph-canvas {
+    width: max-content;
+    user-select: none;
+}
+
+#graph-canvas svg {
+    display: block;
+}
+
+.graph-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.graph-controls button {
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.5rem;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.graph-controls button:hover {
+    background: #eef4fb;
+}
+
 /* When the drawer is open the graph and the drawer share the width. */
 .report-index.drawer-open .data_op-node > nav.main-nav {
     flex: 0 0 auto;
@@ -357,7 +424,7 @@ pre, code {
                         </li>
                     </ul>
                 </nav>
-                <samp>ID:</samp> <samp>44691467740786072399697255127977211476</samp>
+                <samp>ID:</samp> <samp>290014760240699527218560401610719590418</samp>
                 
                 <h2><samp>Name: data_source</samp></h2>
                 
@@ -393,7 +460,7 @@ pre, code {
                 
                 <div>
                     <h3>Computation time</h3>
-                    <code>0h 0m 4e-06s</code>
+                    <code>0h 0m 5.2e-06s</code>
                 </div>
                 
 
@@ -422,18 +489,18 @@ pre, code {
 92788  43567           0
 92789  68268           0
 
-[61241 rows x 2 columns], &#39;products&#39;:         basket_ID  ...  Nbr_of_prod_purchas
-1           51113  ...                    1
-9           41798  ...                    1
-11          39361  ...                    1
-15          38615  ...                    1
-16          70262  ...                    1
-...           ...  ...                  ...
-163352      42613  ...                    1
-163353      42613  ...                    1
-163354      43567  ...                    1
-163355      43567  ...                    1
-163356      68268  ...                    1
+[61241 rows x 2 columns], &#39;products&#39;:         basket_ID  ... Nbr_of_prod_purchas
+1           51113  ...                   1
+9           41798  ...                   1
+11          39361  ...                   1
+15          38615  ...                   1
+16          70262  ...                   1
+...           ...  ...                 ...
+163352      42613  ...                   1
+163353      42613  ...                   1
+163354      43567  ...                   1
+163355      43567  ...                   1
+163356      68268  ...                   1
 
 [109380 rows x 7 columns]}</pre>
     </samp>
