@@ -40,14 +40,14 @@ df = pd.DataFrame({
 
 ```{python}
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from skrub import ToDatetime, DatetimeEncoder
 from sklearn.pipeline import make_pipeline
 
 preprocessor = ColumnTransformer(
     transformers=[
         ("date", make_pipeline(ToDatetime(), DatetimeEncoder()), "date"),
-        ("city", OneHotEncoder(handle_unknown="ignore"), ["city"]),
+        ("city", OrdinalEncoder(), ["city"]),
         ("metrics", StandardScaler(), ["metric_1", "metric_2"]),
     ],
     remainder="passthrough",  # keeps user_id as-is
@@ -116,7 +116,7 @@ from sklearn.pipeline import make_pipeline
 preprocessor = make_pipeline(
     ApplyToCols(ToDatetime(), cols="date"),
     ApplyToCols(DatetimeEncoder(), cols="date"),
-    ApplyToCols(OneHotEncoder(handle_unknown="ignore"), cols="city"),
+    ApplyToCols(OrdinalEncoder(), cols="city"),
     ApplyToCols(StandardScaler(), cols=s.glob("metrics_*")),
 )
 preprocessor.fit_transform(df)

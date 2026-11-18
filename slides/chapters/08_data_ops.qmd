@@ -217,13 +217,15 @@ Then, after preparing the data:
 
 Declare the pipeline
 
-```{.python code-line-numbers="|1|2|3,4|5-7|"}
+```{.python code-line-numbers="|1-2|3|4-5|6|7-9|"}
 data_path = skrub.var("data_path")
 data = data_path.skb.apply_func(pd.read_csv)
+hist = skrub.var("hist_path").skb.apply_func(pd.read_csv)
 X = data.drop(columns="target", errors="ignore").skb.mark_as_X()
 y = data["target"].skb.mark_as_y()
-pred = X.skb.apply(
-    StandardScaler(), cols=s.numeric()
+X_join = X.merge(hist, on="id", how="left")
+pred = X_join.skb.apply(
+    StandardScaler()
 ).skb.apply(LogisticRegression(), y=y)
 ```
 
@@ -232,14 +234,35 @@ pred = X.skb.apply(
 :::
 
 
+:::
 
+::: {.column width=40%}
+
+
+::: {.fragment fragment-index=2}
+
+![](images/model_graph.svg)
+
+:::
+
+
+:::
+
+:::
+
+## Basic example {.smaller auto-animate="true"}
+
+
+::: {.columns}
+
+::: {.column width=60%}
 ::: {.fragment}
 
 Cross-validate
 
 ```{.python code-line-numbers="|2|"}
 pred.skb.cross_validate(
-    environment={"data_path": "historical_data.csv"}
+    environment={"data_path": "historical_data.csv", "hist_path": "archive.csv"}
 )
 ```
 
@@ -254,10 +277,10 @@ Make a "learner" (object with `fit()` & `predict()`)
 ```{.python code-line-numbers="|2|3|5|6|"}
 learner = pred.skb.make_learner(
 ).fit(
-    environment={"data_path": "historical_data.csv"}
+    environment={"data_path": "historical_data.csv", "hist_path": "archive.csv"}
 )
 learner.predict(
-    environment={"data_path": "new_data.csv"}
+    environment={"data_path": "new_data.csv", "hist_path": "archive.csv"}
 )
 ```
 
@@ -273,7 +296,7 @@ learner.predict(
 
 ::: {.fragment fragment-index=2}
 
-![](images/base_ex.svg)
+![](images/model_graph.svg)
 
 :::
 
@@ -281,7 +304,6 @@ learner.predict(
 :::
 
 :::
-
 
 ## Hyperparameter tuning 1/2 {.smaller auto-animate="true"}
 
