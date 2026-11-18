@@ -78,12 +78,12 @@ transformed
 ```
 
 ## Example: `ApplyToCols` to encode
-`ApplyToCols(OneHotEncoder(), cols=["Name", "Desc"])`
+`ApplyToCols(StringEncoder(n_components=3), cols=["Name", "Desc"])`
 
 ![](./images/ex_ApplyToCols.png)
 
 ## Example: `ApplyToCols` to decompose
-`ApplyToCols(PCA(), cols=s.glob("metric_*"))`
+`ApplyToCols(PCA(n_components=4), cols=s.glob("metric_*"))`
 
 ![](./images/ex_ApplyToFrame.png)
 
@@ -113,20 +113,17 @@ wrapped in `ApplyToCols`:
 from skrub import ToDatetime, DatetimeEncoder
 from sklearn.pipeline import make_pipeline
 
-df = pd.DataFrame({
-    "date": ["03 January 2023", "04 February 2023"],
-    "city": ["Paris", "London"],
-    "values": [10, 20]
-})
-encode_datetime = make_pipeline(
+preprocessor = make_pipeline(
     ApplyToCols(ToDatetime(), cols="date"),
     ApplyToCols(DatetimeEncoder(), cols="date"),
+    ApplyToCols(OneHotEncoder(handle_unknown="ignore"), cols="city"),
+    ApplyToCols(StandardScaler(), cols=s.glob("metrics_*")),
 )
-encode_datetime.fit_transform(df)
+preprocessor.fit_transform(df)
 ```
 
 
-## Order Matters! {.smaller}
+## Order Matters!
 
 Transformers should be ordered carefully:
 
@@ -137,13 +134,6 @@ transform_1 = make_pipeline(
     # Strings are now numbers! 
     ApplyToCols(StandardScaler(), cols=s.numeric())
 )
-
-# vs. Scale first, then encode
-transform_2 = make_pipeline(
-    ApplyToCols(StandardScaler(), cols=s.numeric()),
-    # Strings haven't been touched
-    ApplyToCols(OneHotEncoder(sparse_output=False), cols=s.string())
-)
 ```
 
 
@@ -153,7 +143,7 @@ This is particularly important if you use expensive models to generate features!
 
 :::
 
-## Handling columns that can't be transformed
+## Handling columns that can't be transformed {visibility="hidden"}
 
 - It is not always possible to know **a priori** if a transformer can handle a column. 
 - The default behavior is **raise an exception** to **reject columns**. 

@@ -159,7 +159,7 @@ may be needed.
 :::
 
 ## Step 5: Train Ridge model with cross-validation {.smaller visibility="hidden"}
-## Train Ridge model with cross-validation {.smaller visibility="hidden"}
+## Train Ridge model with cross-validation {.smaller}
 
 Train a `RidgeCV` regression model and evaluate with cross-validation.
 

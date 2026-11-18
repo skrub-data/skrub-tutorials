@@ -30,6 +30,10 @@ format:
 :::
 
 
+::: {.fragment fragment-index=4}
+- We may want to make architectural decisions on our pipeline
+:::
+
 :::
 
 ::: {.column width="50%"}
@@ -49,6 +53,10 @@ format:
 - The number of samples may be altered (e.g., by aggregating rows)
 :::
 
+
+::: {.fragment fragment-index=4}
+- Pipelines are static and can't be modified (besides hyperparameters)
+:::
 
 :::
 
@@ -194,20 +202,6 @@ Then, after preparing the data:
 - Cross-validate without [**data leaks**]{style="color: #1a5a8a; font-weight: bold;"}.
 - [**Tune choices**]{style="color: #1a5a8a; font-weight: bold;"} with validation scores.
 - Replay on [**new inputs**]{style="color: #1a5a8a; font-weight: bold;"}.
-
-
-::: {.fragment}
-
-::: {.callout-note icon=false style="font-size: 1em;"}
-### DataOps
-
-- All the goodies of the scikit-learn framework: `fit()` & `predict()`, cross-validation, hyperparameter tuning, serialization.
-- Without the usual restrictions & while supporting **arbitrary data processing**.
-  [Multiple inputs, feature & target construction, filtering samples, dynamic arguments for CV splitters & scorers, etc.]{style="font-size: 0.8em; color: gray;"}
-- And more: Optuna integration, dynamic previews, pipeline inspection, ...
-:::
-
-:::
 
 
 ## Basic example {.smaller auto-animate="true"}
@@ -368,7 +362,7 @@ best_learner = search.best_learner_
 best_learner.predict({"data": new_data})
 ```
 
-Use Optuna as backend:
+Use **Optuna** as backend:
 
 ```{.python}
 # fit the search 
@@ -390,18 +384,10 @@ Data Ops make **no assumption** about the underlying data, or code.
 - [Image classification with pytorch](https://skrub-data.org/stable/auto_examples/02_data_ops/1160_pytorch.html)
 
 
-## In conclusion {.smaller}
-- Data science is harder than what you learn in classes
-- A full ML pipeline involves preprocessing, feature engineering and model training
+## What we have seen in this chapter {.smaller}
+- In practice, plain Pipelines cannot handle the complexity of **practical data science problems**.
+- A full ML pipeline involves **preprocessing**, **feature engineering** and **model training**
 - We want to learn a "state" (it's called machine **learning** after all), [**evaluate performance**]{.emph} and do so while avoiding [**data leakage**]{.emph}
 - [**Data Ops**]{.emph} are a framework that allows to build [**stateful pipelines**]{.emph} for
 [**arbitrary code and inputs**]{.emph}
-- Data Ops extend the scikit-learn `fit` `predict` paradigm to [**multi-table inputs**]{.emph}, [**feature and target construction**]{.emph}, [**sample filtering**]{.emph} ... 
 - A Data Ops graph can be exported as a [**Learner**]{.emph}, a single object that includes all learned states to work on new data
-
-## What we have seen in this chapter
-- Data leakage is a problem, and in practice pipelines are not enough
-- Data Ops can be used to build complex multi-table plans
-- Data Ops track all the operations that are executed and replay them with the same parameters
-- Choose functions generate complex hyperparameter grid in place
-- Learners can be exported to be used with new data

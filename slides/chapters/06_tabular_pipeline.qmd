@@ -73,13 +73,14 @@ from skrub import tabular_pipeline
 from sklearn.linear_model import LogisticRegression
 from tabicl import TabICLRegressor
 
-# Option 1: Provide an estimator
+# Option 1: Use preset strings
+model_clf = tabular_pipeline("classification") # Uses HGBClassifier
+model_reg = tabular_pipeline("regression") # Uses HGBRegressor
+
+# Option 2: Provide an estimator
 model = tabular_pipeline(LogisticRegression())
 model_tabicl = tabular_pipeline(TabICLRegressor())
 
-# Option 2: Use preset strings
-model_clf = tabular_pipeline("classification") # Uses HGBClassifier
-model_reg = tabular_pipeline("regression") # Uses HGBRegressor
 ```
 
 ## What the pipeline looks like: tree-based model
@@ -90,7 +91,7 @@ model_reg = tabular_pipeline("regression") # Uses HGBRegressor
 ## What the pipeline looks like: linear model
 ![](images/tabular-pipeline-linear-regression.png)
 
-## What the pipeline looks like: TabICL
+## What the pipeline looks like: TabICL {visibility="hidden"}
 ![](images/tabular_pipeline_tabicl.png)
 
 ## Customizing the pipeline {visibility="hidden"}

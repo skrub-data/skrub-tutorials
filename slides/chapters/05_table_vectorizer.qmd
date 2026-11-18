@@ -18,12 +18,9 @@ Convert any mixed-type dataframe into numeric features for ML:
 - Categorical features need to be **encoded** into numerical features
 - Datetime features can be transformed into more informative features
 - The transformer should be **stateful** and **robust**
+- We should be able to **keep track** of the new features
+- Transformations should be **stateful** and avoid **data leakage**
 
-## Not so easy! 
-- Each column needs to be handled in a different way
-- The input dtype may not be the dtype we want
-- Having multiple encoded features adds a lot of bookkeeping
-- We still want to fit/predict to avoid leakage
 
 ## The solution: `TableVectorizer`
 The `TableVectorizer` is a transformer that 
@@ -73,7 +70,7 @@ After cleaning, columns are routed to appropriate transformers:
 tv = TableVectorizer(cardinality_threshold=10)
 ```
 
-## Customizing Transformers {.smaller}
+## Customizing Transformers
 
 ```{.python}
 from skrub import DatetimeEncoder, LLMEncoder
@@ -93,7 +90,7 @@ tv = TableVectorizer(
 
 ::: {.columns}
 
-::: {.column}
+::: {.column width=45%}
 
 
 ```{python}
@@ -115,7 +112,7 @@ df = pd.DataFrame(
 
 :::
 
-::: {.column}
+::: {.column width=55%}
 
 We can use `ApplyToCols` and the skrub selectors: 
 ```{python}

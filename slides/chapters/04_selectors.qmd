@@ -228,7 +228,7 @@ aggs = {col: ["mean", "sum"] for col in only_num.expand(df)}
 df.groupby("group").agg(aggs)
 ```
 
-## Custom Selectors: Filter by Condition {.smaller visibility="hidden"}
+## Custom Selectors: Filter by Condition {.smaller}
 Define a function that takes **one column** as input and returns `True`/`False` 
 as output (depending on if the column is selected or not)
 
