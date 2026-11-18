@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
 <meta charset="UTF-8">
-<title>gen-report</title>
+<title>credit_fraud_report</title>
 
 <!-- Prism.js (v1.29.0, MIT license) is vendored in prism-1.29.0/ so that this
      page is fully standalone and does not require a network connection.
@@ -14,26 +14,126 @@ pre[data-line]{position:relative;padding:1em 0 1em 3em}.line-highlight{position:
 </style>
 
 <style>
-  body { font-family: sans-serif; max-width: 100%; margin: 2em auto; padding: 2em; }
-  pre[class*="language-"] { font-size: 0.95em; }
+  /* compact layout: this page is displayed in the drawer of the index page */
+  html, body { height: 100%; }
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 1em 1.5em;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* The file name stays visible and the code scrolls on its own, so that the
+     horizontal scrollbar is always at the bottom of the view. */
+  h1 {
+    flex: none;
+    margin: 0 0 0.75em;
+    font-size: 1.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .code-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+  /* Let .code-scroll do the scrolling (instead of the <pre> from prism) so that
+     the horizontal scrollbar sits at the bottom of the view. */
+  pre[class*="language-"] {
+    font-size: 0.95em;
+    margin: 0;
+    box-sizing: border-box;
+    width: max-content;
+    min-width: 100%;
+    overflow: visible;
+  }
+  /* Prism sets a pixel width on the highlight when a line is selected; that
+     width goes stale when the drawer is resized and then makes the page scroll
+     horizontally. Let it span the code block instead (it is positioned with
+     left: 0 and right: 0). */
+  .line-highlight { width: auto !important; }
 </style>
 </head>
 <body>
 
-    <h1><code>/Users/rcap/scratch/gen-report.py</code></h1>
+    <h1><code>/Users/rcap/work/skrub-tutorials/data/credit_fraud_report.py</code></h1>
 
-<pre id="code-container" class="line-numbers" data-line=""><code class="language-python" id="code">import skrub
-import pandas as pd 
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+<div class="code-scroll">
+<pre id="code-container" class="line-numbers" data-line=""><code class="language-python" id="code">import argparse
+from pathlib import Path
 
-df = pd.DataFrame({&#34;value&#34;: [1,2,3], &#34;target&#34;: [1, 0, 1]})
+from sklearn.ensemble import HistGradientBoostingClassifier
 
-data = skrub.var(&#34;data&#34;, df)
-X = data.drop(columns=&#34;target&#34;, errors=&#34;ignore&#34;).skb.mark_as_X()
-y = data[&#34;target&#34;].skb.mark_as_y()
-pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)
+import skrub
+
+parser = argparse.ArgumentParser()
+parser.add_argument(&#34;-o&#34;, &#34;--output_dir&#34;, default=&#34;credit_fraud_outputs&#34;)
+args = parser.parse_args()
+output_dir = Path(args.output_dir)
+output_dir.mkdir(exist_ok=True, parents=True)
+
+dataset = skrub.datasets.fetch_credit_fraud(split=&#34;train&#34;)
+
+data_source = skrub.var(
+    &#34;data_source&#34;, {&#34;orders&#34;: dataset.baskets, &#34;products&#34;: dataset.products}
+)
+
+
+def load_orders(data_source, order_ids=None):
+    if order_ids is None:
+        return data_source[&#34;orders&#34;]
+    return data_source[&#34;orders&#34;].set_index(&#34;ID&#34;).loc[order_ids].reset_index(drop=False)
+
+
+query = skrub.var(&#34;order_IDs&#34;, dataset[&#34;baskets&#34;][&#34;ID&#34;])
+orders = data_source.skb.apply_func(load_orders, query)
+order_ids = orders[[&#34;ID&#34;]].skb.mark_as_X()
+fraud_flags = orders[&#34;fraud_flag&#34;].skb.mark_as_y()
+
+
+def load_products(orders_ids, data_source):
+    products = data_source[&#34;products&#34;]
+    return products[products[&#34;basket_ID&#34;].isin(order_ids[&#34;ID&#34;])]
+
+
+encoder = skrub.choose_from({&#34;bow&#34;: skrub.StringEncoder(), &#34;llm&#34;: skrub.LLMEncoder()})
+vectorized_products = order_ids.skb.apply_func(load_products, data_source).skb.apply(
+    skrub.TableVectorizer(high_cardinality=encoder),
+    exclude_cols=&#34;basket_ID&#34;,
+)
+
+
+def join_orders_products(orders, vectorized_products, agg_func):
+    return orders.merge(
+        vectorized_products.groupby(&#34;basket_ID&#34;).agg(agg_func).reset_index(),
+        left_on=&#34;ID&#34;,
+        right_on=&#34;basket_ID&#34;,
+    ).drop(columns=[&#34;ID&#34;, &#34;basket_ID&#34;])
+
+
+features = order_ids.skb.apply_func(
+    join_orders_products,
+    vectorized_products,
+    agg_func=skrub.choose_from([&#34;mean&#34;, &#34;sum&#34;]),
+)
+pred = features.skb.apply(
+    HistGradientBoostingClassifier(
+        learning_rate=skrub.choose_float(0.01, 0.5, log=True)
+    ),
+    y=fraud_flags,
+)
+
+pred.skb.report(
+    output_dir=output_dir / &#34;report&#34;,
+    overwrite=True,
+    open=False,
+    title=&#34;Credit fraud prediction&#34;,
+)
+
+graph = pred.skb.draw_graph()
+(output_dir / &#34;credit_fraud_graph.svg&#34;).write_bytes(graph.svg)
+(output_dir / &#34;credit_fraud_graph.png&#34;).write_bytes(graph.png)
 </code></pre>
+</div>
 
 <script>
 var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var n=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,t=0,r={},a={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(n){return n instanceof i?new i(n.type,e(n.content),n.alias):Array.isArray(n)?n.map(e):n.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function e(n,t){var r,i;switch(t=t||{},a.util.type(n)){case"Object":if(i=a.util.objId(n),t[i])return t[i];for(var l in r={},t[i]=r,n)n.hasOwnProperty(l)&&(r[l]=e(n[l],t));return r;case"Array":return i=a.util.objId(n),t[i]?t[i]:(r=[],t[i]=r,n.forEach((function(n,a){r[a]=e(n,t)})),r);default:return n}},getLanguage:function(e){for(;e;){var t=n.exec(e.className);if(t)return t[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,t){e.className=e.className.replace(RegExp(n,"gi"),""),e.classList.add("language-"+t)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(r){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(r.stack)||[])[1];if(e){var n=document.getElementsByTagName("script");for(var t in n)if(n[t].src==e)return n[t]}return null}},isActive:function(e,n,t){for(var r="no-"+n;e;){var a=e.classList;if(a.contains(n))return!0;if(a.contains(r))return!1;e=e.parentElement}return!!t}},languages:{plain:r,plaintext:r,text:r,txt:r,extend:function(e,n){var t=a.util.clone(a.languages[e]);for(var r in n)t[r]=n[r];return t},insertBefore:function(e,n,t,r){var i=(r=r||a.languages)[e],l={};for(var o in i)if(i.hasOwnProperty(o)){if(o==n)for(var s in t)t.hasOwnProperty(s)&&(l[s]=t[s]);t.hasOwnProperty(o)||(l[o]=i[o])}var u=r[e];return r[e]=l,a.languages.DFS(a.languages,(function(n,t){t===u&&n!=e&&(this[n]=l)})),l},DFS:function e(n,t,r,i){i=i||{};var l=a.util.objId;for(var o in n)if(n.hasOwnProperty(o)){t.call(n,o,n[o],r||o);var s=n[o],u=a.util.type(s);"Object"!==u||i[l(s)]?"Array"!==u||i[l(s)]||(i[l(s)]=!0,e(s,t,o,i)):(i[l(s)]=!0,e(s,t,null,i))}}},plugins:{},highlightAll:function(e,n){a.highlightAllUnder(document,e,n)},highlightAllUnder:function(e,n,t){var r={callback:t,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};a.hooks.run("before-highlightall",r),r.elements=Array.prototype.slice.apply(r.container.querySelectorAll(r.selector)),a.hooks.run("before-all-elements-highlight",r);for(var i,l=0;i=r.elements[l++];)a.highlightElement(i,!0===n,r.callback)},highlightElement:function(n,t,r){var i=a.util.getLanguage(n),l=a.languages[i];a.util.setLanguage(n,i);var o=n.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&a.util.setLanguage(o,i);var s={element:n,language:i,grammar:l,code:n.textContent};function u(e){s.highlightedCode=e,a.hooks.run("before-insert",s),s.element.innerHTML=s.highlightedCode,a.hooks.run("after-highlight",s),a.hooks.run("complete",s),r&&r.call(s.element)}if(a.hooks.run("before-sanity-check",s),(o=s.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!s.code)return a.hooks.run("complete",s),void(r&&r.call(s.element));if(a.hooks.run("before-highlight",s),s.grammar)if(t&&e.Worker){var c=new Worker(a.filename);c.onmessage=function(e){u(e.data)},c.postMessage(JSON.stringify({language:s.language,code:s.code,immediateClose:!0}))}else u(a.highlight(s.code,s.grammar,s.language));else u(a.util.encode(s.code))},highlight:function(e,n,t){var r={code:e,grammar:n,language:t};if(a.hooks.run("before-tokenize",r),!r.grammar)throw new Error('The language "'+r.language+'" has no grammar.');return r.tokens=a.tokenize(r.code,r.grammar),a.hooks.run("after-tokenize",r),i.stringify(a.util.encode(r.tokens),r.language)},tokenize:function(e,n){var t=n.rest;if(t){for(var r in t)n[r]=t[r];delete n.rest}var a=new s;return u(a,a.head,e),o(e,a,n,a.head,0),function(e){for(var n=[],t=e.head.next;t!==e.tail;)n.push(t.value),t=t.next;return n}(a)},hooks:{all:{},add:function(e,n){var t=a.hooks.all;t[e]=t[e]||[],t[e].push(n)},run:function(e,n){var t=a.hooks.all[e];if(t&&t.length)for(var r,i=0;r=t[i++];)r(n)}},Token:i};function i(e,n,t,r){this.type=e,this.content=n,this.alias=t,this.length=0|(r||"").length}function l(e,n,t,r){e.lastIndex=n;var a=e.exec(t);if(a&&r&&a[1]){var i=a[1].length;a.index+=i,a[0]=a[0].slice(i)}return a}function o(e,n,t,r,s,g){for(var f in t)if(t.hasOwnProperty(f)&&t[f]){var h=t[f];h=Array.isArray(h)?h:[h];for(var d=0;d<h.length;++d){if(g&&g.cause==f+","+d)return;var v=h[d],p=v.inside,m=!!v.lookbehind,y=!!v.greedy,k=v.alias;if(y&&!v.pattern.global){var x=v.pattern.toString().match(/[imsuy]*$/)[0];v.pattern=RegExp(v.pattern.source,x+"g")}for(var b=v.pattern||v,w=r.next,A=s;w!==n.tail&&!(g&&A>=g.reach);A+=w.value.length,w=w.next){var E=w.value;if(n.length>e.length)return;if(!(E instanceof i)){var P,L=1;if(y){if(!(P=l(b,A,e,m))||P.index>=e.length)break;var S=P.index,O=P.index+P[0].length,j=A;for(j+=w.value.length;S>=j;)j+=(w=w.next).value.length;if(A=j-=w.value.length,w.value instanceof i)continue;for(var C=w;C!==n.tail&&(j<O||"string"==typeof C.value);C=C.next)L++,j+=C.value.length;L--,E=e.slice(A,j),P.index-=A}else if(!(P=l(b,0,E,m)))continue;S=P.index;var N=P[0],_=E.slice(0,S),M=E.slice(S+N.length),W=A+E.length;g&&W>g.reach&&(g.reach=W);var z=w.prev;if(_&&(z=u(n,z,_),A+=_.length),c(n,z,L),w=u(n,z,new i(f,p?a.tokenize(N,p):N,k,N)),M&&u(n,w,M),L>1){var I={cause:f+","+d,reach:W};o(e,n,t,w.prev,A,I),g&&I.reach>g.reach&&(g.reach=I.reach)}}}}}}function s(){var e={value:null,prev:null,next:null},n={value:null,prev:e,next:null};e.next=n,this.head=e,this.tail=n,this.length=0}function u(e,n,t){var r=n.next,a={value:t,prev:n,next:r};return n.next=a,r.prev=a,e.length++,a}function c(e,n,t){for(var r=n.next,a=0;a<t&&r!==e.tail;a++)r=r.next;n.next=r,r.prev=n,e.length-=a}if(e.Prism=a,i.stringify=function e(n,t){if("string"==typeof n)return n;if(Array.isArray(n)){var r="";return n.forEach((function(n){r+=e(n,t)})),r}var i={type:n.type,content:e(n.content,t),tag:"span",classes:["token",n.type],attributes:{},language:t},l=n.alias;l&&(Array.isArray(l)?Array.prototype.push.apply(i.classes,l):i.classes.push(l)),a.hooks.run("wrap",i);var o="";for(var s in i.attributes)o+=" "+s+'="'+(i.attributes[s]||"").replace(/"/g,"&quot;")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'"'+o+">"+i.content+"</"+i.tag+">"},!e.document)return e.addEventListener?(a.disableWorkerMessageHandler||e.addEventListener("message",(function(n){var t=JSON.parse(n.data),r=t.language,i=t.code,l=t.immediateClose;e.postMessage(a.highlight(i,a.languages[r],r)),l&&e.close()}),!1),a):a;var g=a.util.currentScript();function f(){a.manual||a.highlightAll()}if(g&&(a.filename=g.src,g.hasAttribute("data-manual")&&(a.manual=!0)),!a.manual){var h=document.readyState;"loading"===h||"interactive"===h&&g&&g.defer?document.addEventListener("DOMContentLoaded",f):window.requestAnimationFrame?window.requestAnimationFrame(f):window.setTimeout(f,16)}return a}(_self);"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);

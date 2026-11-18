@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<title>_table_vectorizer</title>
+
+<!-- Prism.js (v1.29.0, MIT license) is vendored in prism-1.29.0/ so that this
+     page is fully standalone and does not require a network connection.
+     See prism-1.29.0/README.md and prism-1.29.0/LICENSE. -->
+<style>
+code[class*=language-],pre[class*=language-]{color:#000;background:0 0;text-shadow:0 1px #fff;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code[class*=language-] ::-moz-selection,code[class*=language-]::-moz-selection,pre[class*=language-] ::-moz-selection,pre[class*=language-]::-moz-selection{text-shadow:none;background:#b3d4fc}code[class*=language-] ::selection,code[class*=language-]::selection,pre[class*=language-] ::selection,pre[class*=language-]::selection{text-shadow:none;background:#b3d4fc}@media print{code[class*=language-],pre[class*=language-]{text-shadow:none}}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#f5f2f0}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#708090}.token.punctuation{color:#999}.token.namespace{opacity:.7}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:#905}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:#690}.language-css .token.string,.style .token.string,.token.entity,.token.operator,.token.url{color:#9a6e3a;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.class-name,.token.function{color:#dd4a68}.token.important,.token.regex,.token.variable{color:#e90}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}
+pre[class*=language-].line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}pre[class*=language-].line-numbers>code{position:relative;white-space:inherit}.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:0;font-size:100%;left:-3.8em;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.line-numbers-rows>span{display:block;counter-increment:linenumber}.line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}
+pre[data-line]{position:relative;padding:1em 0 1em 3em}.line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}@media print{.line-highlight{-webkit-print-color-adjust:exact;color-adjust:exact}}.line-highlight:before,.line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}.line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}.line-numbers .line-highlight:after,.line-numbers .line-highlight:before{content:none}pre[id].linkable-line-numbers span.line-numbers-rows{pointer-events:all}pre[id].linkable-line-numbers span.line-numbers-rows>span:before{cursor:pointer}pre[id].linkable-line-numbers span.line-numbers-rows>span:hover:before{background-color:rgba(128,128,128,.2)}
+</style>
+
+<style>
+  /* compact layout: this page is displayed in the drawer of the index page */
+  html, body { height: 100%; }
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 1em 1.5em;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* The file name stays visible and the code scrolls on its own, so that the
+     horizontal scrollbar is always at the bottom of the view. */
+  h1 {
+    flex: none;
+    margin: 0 0 0.75em;
+    font-size: 1.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .code-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+  /* Let .code-scroll do the scrolling (instead of the <pre> from prism) so that
+     the horizontal scrollbar sits at the bottom of the view. */
+  pre[class*="language-"] {
+    font-size: 0.95em;
+    margin: 0;
+    box-sizing: border-box;
+    width: max-content;
+    min-width: 100%;
+    overflow: visible;
+  }
+  /* Prism sets a pixel width on the highlight when a line is selected; that
+     width goes stale when the drawer is resized and then makes the page scroll
+     horizontally. Let it span the code block instead (it is positioned with
+     left: 0 and right: 0). */
+  .line-highlight { width: auto !important; }
+</style>
+</head>
+<body>
+
+    <h1><code>/Users/rcap/work/skrub/skrub/_table_vectorizer.py</code></h1>
+
+<div class="code-scroll">
+<pre id="code-container" class="line-numbers" data-line=""><code class="language-python" id="code">import reprlib
+from collections import UserDict
+from collections.abc import Iterable
+
+import numpy as np
+from sklearn.base import TransformerMixin, clone
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.utils.validation import check_is_fitted
+
+from . import _dataframe as sbd
+from . import _utils
+from . import selectors as s
+from ._base import SkrubBaseEstimator
+from ._check_input import CheckInputDataFrame
+from ._clean_categories import CleanCategories
+from ._clean_null_strings import CleanNullStrings
+from ._datetime_encoder import DatetimeEncoder
+from ._drop_uninformative import DropUninformative
+from ._duration_to_float import DurationToFloat
+from ._select_cols import Drop
+from ._single_column_transformer import SingleColumnTransformer
+from ._sklearn_compat import _VisualBlock
+from ._string_encoder import StringEncoder
+from ._to_datetime import ToDatetime
+from ._to_float import ToFloat
+from ._to_str import ToStr
+from ._wrap_transformer import wrap_transformer
+
+__all__ = [&#34;TableVectorizer&#34;]
+
+
+class PassThrough(SingleColumnTransformer):
+    _doc_link_module = &#34;&#34;
+
+    def fit_transform(self, column, y=None):
+        return column
+
+    def transform(self, column):
+        return column
+
+
+HIGH_CARDINALITY_TRANSFORMER = StringEncoder(n_components=30)
+LOW_CARDINALITY_TRANSFORMER = OneHotEncoder(
+    sparse_output=False,
+    dtype=&#34;float32&#34;,
+    handle_unknown=&#34;ignore&#34;,
+    drop=&#34;if_binary&#34;,
+)
+DATETIME_TRANSFORMER = DatetimeEncoder()
+NUMERIC_TRANSFORMER = PassThrough()
+
+
+class ShortReprDict(UserDict):
+    &#34;&#34;&#34;A dict with a shorter repr.
+
+    Examples
+    --------
+    &gt;&gt;&gt; d = {&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3, &#39;four&#39;: 4}
+    &gt;&gt;&gt; d
+    {&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;three&#39;: 3, &#39;four&#39;: 4}
+    &gt;&gt;&gt; from skrub._table_vectorizer import ShortReprDict
+    &gt;&gt;&gt; ShortReprDict(d)
+    {&#39;four&#39;: 4, &#39;one&#39;: 1, ...}
+    &gt;&gt;&gt; _[&#39;two&#39;]
+    2
+    &#34;&#34;&#34;
+
+    def __repr__(self):
+        r = reprlib.Repr()
+        r.maxdict = 2
+        return r.repr(dict(self))
+
+
+def _created_by_predicate(col, transformers):
+    return any(sbd.name(col) in t.created_outputs_ for t in transformers)
+
+
+def _created_by(*transformers):
+    &#34;&#34;&#34;Selector for columns created by one of the provided transformers.
+
+    Each of ``transformers`` must be an instance of ``ApplyToEachCol``.
+    A column is matched if it was created (or modified) by one of them, i.e. if
+    it is listed in one of their ``created_outputs_`` fitted attributes.
+
+    .. note::
+
+        This selector works by storing references to the ``transformers``. If
+        they are cloned, the stored reference still points to the original
+        object. Therefore if this selector is used to refer to earlier steps in
+        a pipeline and the pipeline is cloned, it will not work as it will
+        inspect the original transformers, not their clones. This is fine for
+        the ``TableVectorizer`` because it uses ``_created_by`` in its (private
+        attribute) ``_pipeline`` which is constructed and fitted during
+        ``TableVectorizer.fit``, and is never cloned. ``_created_by`` is a
+        private helper of ``TableVectorizer``, not meant to be generally useful
+        and it should not be moved to the ``skrub.selectors`` module.
+    &#34;&#34;&#34;
+    return s.Filter(
+        _created_by_predicate,
+        args=(transformers,),
+        selector_repr=f&#34;created_by(&lt;any of {len(transformers)} transformers&gt;)&#34;,
+    )
+
+
+def _check_transformer(transformer):
+    if isinstance(transformer, str):
+        if transformer == &#34;passthrough&#34;:
+            return PassThrough()
+        if transformer == &#34;drop&#34;:
+            return Drop()
+        raise ValueError(
+            f&#34;Value not understood: {transformer!r}. Please provide either&#34;
+            &#34; &#39;passthrough&#39;, &#39;drop&#39;, or a scikit-learn transformer.&#34;
+        )
+    return clone(transformer)
+
+
+def _get_preprocessors(
+    *,
+    cols,
+    drop_null_fraction,
+    drop_if_constant,
+    n_jobs,
+    parse_numbers=False,
+    cast_to_float32=False,
+    cast_to_str=True,
+    null_strings=None,
+    datetime_format=None,
+    duration_to_float=False,
+):
+    cols = s.make_selector(cols)
+    steps = [CheckInputDataFrame()]
+    transformers = [
+        (
+            CleanNullStrings(
+                null_strings=null_strings,
+            ),
+            cols,
+        ),
+        (
+            DropUninformative(
+                drop_null_fraction=drop_null_fraction,
+                drop_if_constant=drop_if_constant,
+            ),
+            cols,
+        ),
+        (ToDatetime(format=datetime_format), cols),
+    ]
+
+    if duration_to_float:
+        transformers.append((DurationToFloat(), cols))
+
+    match parse_numbers, cast_to_float32:
+        case False, False:
+            tofloat_cols = None
+        case False, True:
+            tofloat_cols = cols &amp; s.numeric()
+        case True, False:
+            tofloat_cols = cols &amp; s.string()
+        case True, True:
+            tofloat_cols = cols
+    if tofloat_cols is not None:
+        transformers.append((ToFloat(), tofloat_cols))
+
+    transformers.append((CleanCategories(), cols))
+
+    if cast_to_str:
+        transformers.append((ToStr(), cols))
+
+    for transformer, transformer_cols in transformers:
+        steps.append(
+            wrap_transformer(
+                transformer,
+                transformer_cols,
+                allow_reject=True,
+                n_jobs=n_jobs,
+                columnwise=True,
+            )
+        )
+    return steps
+
+
+def _describe_transformations(estimator, max_cols=10):
+    message = &#34;&#34;
+    post = estimator._postprocessors if hasattr(estimator, &#34;_postprocessors&#34;) else []
+
+    template = &#34;{} ({} columns):\n    - {}\n&#34;
+
+    for step in estimator._pipeline.named_steps:
+        if step == &#34;checkinputdataframe&#34;:
+            continue
+        transformer = estimator._pipeline.named_steps[step]
+        label = transformer.transformer.__class__.__name__
+        all_cols = transformer.used_inputs_
+        match transformer.transformer:
+            case DropUninformative():
+                all_cols = set(transformer.all_inputs_) - set(transformer.all_outputs_)
+            case CleanNullStrings():
+                label = &#34;Null values cleaned&#34;
+            case ToFloat() if transformer in post:
+                all_cols = []
+            case _:
+                continue
+        n_cols = len(all_cols)
+        if n_cols &gt; 0:
+            columns = _limit_cols(all_cols, max_cols=max_cols)
+            message += template.format(label, n_cols, &#34;\n    - &#34;.join(columns))
+    return message
+
+
+class Cleaner(TransformerMixin, SkrubBaseEstimator):
+    &#34;&#34;&#34;Column-wise consistency checks and sanitization of dtypes, null values and dates.
+
+    The ``Cleaner`` performs some consistency checks and basic preprocessing
+    such as detecting null values represented as strings (e.g. ``&#39;N/A&#39;``), parsing
+    dates, and removing uninformative columns. See the &#34;Notes&#34; section for a full list.
+
+    Parameters
+    ----------
+    drop_null_fraction : float or None, default=1.0
+        Fraction of null above which the column is dropped. If ``drop_null_fraction``
+        is set to ``1.0``, the column is dropped if it contains only
+        nulls or NaNs (this is the default behavior). If ``drop_null_fraction`` is a
+        number in ``[0.0, 1.0)``, the column is dropped if the fraction of nulls
+        is strictly larger than ``drop_null_fraction``. If ``drop_null_fraction`` is
+        ``None``, this selection is disabled: no columns are dropped based on the
+        number of null values they contain.
+
+    drop_if_constant : bool, default=False
+        If set to true, drop columns that contain a single unique value. Note that
+        missing values are considered as one additional distinct value.
+
+    datetime_format : str, default=None
+        The format to use when parsing dates. If None, the format is inferred.
+
+    parse_numbers : bool, default=False
+        Whether to parse strings that represent numeric values.
+
+        - ``False``: no numeric parsing is attempted.
+        - ``True``: apply :class:`ToFloat` to string columns. String columns
+          whose non-missing values can all be parsed as numbers are converted to
+          ``float32``.
+
+    cast_to_float32 : bool, default=False
+        Whether to cast numeric columns to ``float32``.
+        If set to ``True``, numeric columns are converted to ``float32``.
+
+    cast_to_str : bool, default=False
+        If ``True``, apply the ``ToStr`` transformer to non-numeric,
+        non-categorical, and non-datetime columns, converting them to strings.
+        If ``False``, this step is skipped and such columns retain their
+        original dtype (e.g., lists, structs).
+
+    null_strings : str or sequence of str, default=None
+        Additional strings to consider as null values, beyond the default list.
+
+    n_jobs : int, default=None
+        Number of jobs to run in parallel.
+        ``None`` means 1 unless in a joblib ``parallel_backend`` context.
+        ``-1`` means using all processors.
+
+    Attributes
+    ----------
+    all_processing_steps_ : dict
+        Maps the name of each column to a list of all the processing steps that were
+        applied to it.
+
+    all_outputs_ : list of str
+        Column names of the output of ``transform``.
+
+    See Also
+    --------
+    TableVectorizer :
+        Process columns of a dataframe and convert them to a numeric (vectorized)
+        representation.
+
+    ToFloat :
+        Convert numeric columns to ``np.float32``, to have consistent numeric
+        types and representation of missing values. More informative columns (e.g.,
+        categorical or datetime) are not converted.
+
+    ApplyToCols :
+        Apply a given transformer to each column in a selection of columns.
+        Useful to complement the default heuristics of the ``Cleaner``.
+
+    DropUninformative :
+        Drop columns that are considered uninformative, e.g., containing only
+        null values or a single unique value.
+
+    Notes
+    -----
+    The ``Cleaner`` performs the following set of transformations on each column:
+
+    - ``CleanNullStrings()``: replace strings used to represent missing values
+      with NA markers.
+
+    - :class:`DropUninformative`: drop the column if it is considered to be
+      &#34;uninformative&#34;. A column is considered to be &#34;uninformative&#34; if it contains
+      only missing values (``drop_null_fraction``) or only a constant value
+      (``drop_if_constant``).
+      By default, the ``Cleaner`` keeps all columns, unless they contain only
+      missing values.
+
+    - :class:`ToDatetime`: parse datetimes represented as strings and return them as
+      actual datetimes with the correct dtype. If ``datetime_format`` is provided,
+      it is forwarded to :class:`ToDatetime`. Otherwise, the format is inferred.
+
+    - :class:`ToFloat`:
+
+      - if ``parse_numbers=True``, apply :class:`ToFloat` on string columns,
+        converting strings whose non-missing values can all be parsed as numbers
+        to ``float32``;
+      - if ``cast_to_float32=True``, apply :class:`ToFloat` on numeric
+        columns to cast them to ``float32``.
+
+    - ``CleanCategories()``: process categorical columns depending on the dataframe
+      library (Pandas or Polars) to force consistent typing and avoid issues downstream.
+
+    - ``ToStr()``: convert columns to strings unless they are numerical,
+      categorical, or datetime. This step is controlled by the ``cast_to_str``
+      parameter. When ``cast_to_str=False`` (default), string conversion is
+      skipped. When ``cast_to_str=True``, string conversion is applied.
+
+    The transformations applied to each column can be inspected in the
+    ``all_processing_steps_`` attribute, which maps each column name to a list of
+    the transformers that were applied to it.
+    :func:`~Cleaner.describe_transformations` provides a summary of the
+    transformations in plain text.
+
+    Examples
+    --------
+    &gt;&gt;&gt; from skrub import Cleaner
+    &gt;&gt;&gt; import pandas as pd
+    &gt;&gt;&gt; df = pd.DataFrame({&#34;num_str&#34;: [&#34;1&#34;, &#34;2&#34;], &#34;num&#34;: [1, 2], &#34;f&#34;: [1.0, 2.0]})
+    &gt;&gt;&gt; Cleaner(parse_numbers=False).fit_transform(df).dtypes  # doctest: +SKIP
+    num_str    ...
+    num        ...
+    f          float64
+    dtype: object
+    &gt;&gt;&gt; cleaner = Cleaner(parse_numbers=True, cast_to_float32=True)
+    &gt;&gt;&gt; cleaner.fit_transform(df).dtypes  # doctest: +SKIP
+    num_str    float32
+    num        ...
+    f          float32
+    dtype: object
+    &gt;&gt;&gt; df = pd.DataFrame({
+    ...     &#39;A&#39;: [&#39;one&#39;, &#39;two&#39;, &#39;two&#39;, &#39;three&#39;],
+    ...     &#39;B&#39;: [&#39;02/02/2024&#39;, &#39;23/02/2024&#39;, &#39;12/03/2024&#39;, &#39;13/03/2024&#39;],
+    ...     &#39;C&#39;: [&#39;1.5&#39;, &#39;N/A&#39;, &#39;12.2&#39;, &#39;N/A&#39;],
+    ...     &#39;D&#39;: [1.5, 2.0, 2.5, 3.0],
+    ... })
+    &gt;&gt;&gt; df
+           A           B     C    D
+    0    one  02/02/2024   1.5  1.5
+    1    two  23/02/2024   N/A  2.0
+    2    two  12/03/2024  12.2  2.5
+    3  three  13/03/2024   N/A  3.0
+    &gt;&gt;&gt; df.dtypes # doctest: +SKIP
+    A       ...
+    B       ...
+    C       ...
+    D   float64
+    dtype: object
+
+    The Cleaner will parse datetime columns and convert nulls to dtypes
+    suitable to those of the column (e.g., ``np.NaN`` for numerical columns).
+
+    &gt;&gt;&gt; cleaner = Cleaner()
+    &gt;&gt;&gt; cleaner.fit_transform(df)
+           A          B     C    D
+    0    one 2024-02-02   1.5  1.5
+    1    two 2024-02-23  ...  2.0
+    2    two 2024-03-12  12.2  2.5
+    3  three 2024-03-13  ...  3.0
+
+    &gt;&gt;&gt; cleaner.fit_transform(df).dtypes  # doctest: +SKIP
+    A               ...
+    B    datetime64[ns]
+    C               ...
+    D           float64
+    dtype: object
+
+    Columns can be excluded from processing by combining the ``Cleaner`` with
+    :class:`~skrub.ApplyToCols`. For example, to exclude the datetime column from
+    processing and keep it as a string, we can do:
+
+    &gt;&gt;&gt; from skrub import ApplyToCols
+    &gt;&gt;&gt; import skrub.selectors as s
+    &gt;&gt;&gt; ApplyToCols(Cleaner(), s.all() - &#39;B&#39;).fit_transform(df)
+                B      A     C    D
+    0  02/02/2024    one   1.5  1.5
+    1  23/02/2024    two   ...  2.0
+    2  12/03/2024    two  12.2  2.5
+    3  13/03/2024  three   ...  3.0
+
+    We can inspect all the processing steps that were applied to a given column:
+
+    &gt;&gt;&gt; cleaner.all_processing_steps_[&#39;A&#39;]
+    [CleanNullStrings(), DropUninformative()]
+    &gt;&gt;&gt; cleaner.all_processing_steps_[&#39;B&#39;]
+    [CleanNullStrings(), DropUninformative(), ToDatetime()]
+    &gt;&gt;&gt; cleaner.all_processing_steps_[&#39;C&#39;]
+    [CleanNullStrings(), DropUninformative()]
+    &gt;&gt;&gt; cleaner.all_processing_steps_[&#39;D&#39;]
+    [DropUninformative()]
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        drop_null_fraction=1.0,
+        drop_if_constant=False,
+        datetime_format=None,
+        null_strings=None,
+        parse_numbers=False,
+        cast_to_float32=False,
+        cast_to_str=False,
+        n_jobs=1,
+    ):
+        self.null_strings = null_strings
+        self.drop_null_fraction = drop_null_fraction
+        self.drop_if_constant = drop_if_constant
+        self.datetime_format = datetime_format
+        self.parse_numbers = parse_numbers
+        self.cast_to_float32 = cast_to_float32
+        self.cast_to_str = cast_to_str
+        self.n_jobs = n_jobs
+
+    def fit_transform(self, X, y=None):
+        &#34;&#34;&#34;Fit transformer and transform dataframe.
+
+        Parameters
+        ----------
+        X : dataframe of shape (n_samples, n_features)
+            Input data to transform.
+
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs) or None, \
+                default=None
+            Target values for supervised learning (None for unsupervised
+            transformations).
+
+        Returns
+        -------
+        dataframe
+            The transformed input.
+        &#34;&#34;&#34;
+
+        cast_to_float32 = self.cast_to_float32
+        parse_numbers = self.parse_numbers
+
+        if not isinstance(self.parse_numbers, bool):
+            raise TypeError(
+                f&#34;`parse_numbers` must be a boolean. Found {self.parse_numbers!r}.&#34;
+            )
+        if not isinstance(cast_to_float32, bool):
+            raise TypeError(
+                f&#34;`cast_to_float32` must be a boolean.Found {cast_to_float32!r}.&#34;
+            )
+
+        all_steps = _get_preprocessors(
+            cols=s.all(),
+            drop_null_fraction=self.drop_null_fraction,
+            drop_if_constant=self.drop_if_constant,
+            n_jobs=self.n_jobs,
+            parse_numbers=parse_numbers,
+            cast_to_float32=cast_to_float32,
+            cast_to_str=self.cast_to_str,
+            datetime_format=self.datetime_format,
+            null_strings=self.null_strings,
+        )
+        self._pipeline = make_pipeline(*all_steps)
+        result = self._pipeline.fit_transform(X)
+        self.all_outputs_ = sbd.column_names(result)
+        input_names = all_steps[0].feature_names_out_
+        self.all_processing_steps_ = {col: [] for col in input_names}
+        for step in all_steps[1:]:
+            for col, transformer in step.transformers_.items():
+                self.all_processing_steps_[col].append(transformer)
+        return result
+
+    def transform(self, X):
+        &#34;&#34;&#34;Transform dataframe.
+
+        Parameters
+        ----------
+        X : dataframe of shape (n_samples, n_features)
+            Input data to transform.
+
+        Returns
+        -------
+        dataframe
+            The transformed input.
+        &#34;&#34;&#34;
+        return self._pipeline.transform(X)
+
+    def fit(self, X, y=None):
+        &#34;&#34;&#34;Fit transformer.
+
+        Parameters
+        ----------
+        X : dataframe of shape (n_samples, n_features)
+            Input data to transform.
+
+        y : array-like, shape (n_samples,) or (n_samples, n_outputs) or None, \
+                default=None
+            Target values for supervised learning (None for unsupervised
+            transformations).
+
+        Returns
+        -------
+        self : Cleaner
+            The fitted estimator.
+        &#34;&#34;&#34;
+        self.fit_transform(X, y=y)
+        return self
+
+    def get_feature_names_out(self, input_features=None):
+        &#34;&#34;&#34;Return the column names of the output of ``transform`` as a list of strings.
+
+        Parameters
+        ----------
+        input_features : array-like of str or None, default=None
+            Ignored.
+
+        Returns
+        -------
+        list of strings
+            The column names.
+        &#34;&#34;&#34;
+        check_is_fitted(self, &#34;all_outputs_&#34;)
+        return np.asarray(self.all_outputs_)
+
+    def describe_transformations(self, max_cols=10):
+        &#34;&#34;&#34;Returns a string reporting the transformations applied by the \
+        TableVectorizer and the columns they are each applied to.
+
+        Parameters
+        ----------
+        max_cols : int
+            The maximum amount of columns to list per transformer. Any overflow is
+            represented by `...`
+
+        Returns
+        -------
+        full_list : string
+            An ASCII formatted message sorting transformers by category
+            (preprocessing, specific processors, etc.) and listing the columns
+            to which each of these transformers is applied.
+        &#34;&#34;&#34;
+        return _describe_transformations(self, max_cols=max_cols)
+
+
+class TableVectorizer(TransformerMixin, SkrubBaseEstimator):
+    &#34;&#34;&#34;Transform a dataframe to a numeric (vectorized) representation.
+
+    This transformer preprocesses the given dataframe by first cleaning the data
+    to ensure consistent numerical dtypes (float32). The TableVectorizer will
+    automatically convert to float32 any string column that contains only numerical
+    information.
+    Then it encodes each column with an encoder suitable for its dtype. Categorical
+    features are encoded differently depending on their cardinality.
+
+    Parameters
+    ----------
+    cardinality_threshold : int, default=40
+        String and categorical columns with a number of unique values strictly smaller
+        than this threshold are handled by the transformer ``low_cardinality``, the rest
+        are handled by the transformer ``high_cardinality``.
+
+    low_cardinality : transformer, &#34;passthrough&#34; or &#34;drop&#34;, \
+            default=OneHotEncoder instance
+        The transformer for string or categorical columns with strictly fewer than
+        ``cardinality_threshold`` unique values. By default, we use a
+        :class:`~sklearn.preprocessing.OneHotEncoder` that ignores unknown categories
+        and drop one of the transformed columns if the feature contains only 2
+        categories.
+
+    high_cardinality : transformer, &#34;passthrough&#34; or &#34;drop&#34;, default=StringEncoder instance
+        The transformer for string or categorical columns with at least
+        ``cardinality_threshold`` unique values. The default is a
+        :class:`~skrub.StringEncoder` with 30 components (30 output columns for each
+        input).
+
+        .. versionchanged:: 0.6.0
+           The default ``high_cardinality`` encoder has been changed from
+           :class:`~skrub.GapEncoder` to :class:`~skrub.StringEncoder`.
+
+    numeric : transformer, &#34;passthrough&#34; or &#34;drop&#34;, default=&#34;passthrough&#34;
+        The transformer for numeric columns (floats, ints, booleans).
+
+    datetime : transformer, &#34;passthrough&#34; or &#34;drop&#34;, default=DatetimeEncoder instance
+        The transformer for date and datetime columns. By default, we use a
+        :class:`~skrub.DatetimeEncoder`.
+
+    specific_transformers : list of (transformer, list of column names) pairs, \
+            default=()
+        Override the categories above for the given columns and force using the
+        specified transformer. This disables any preprocessing usually done by
+        the TableVectorizer; the columns are passed to the transformer without
+        any modification. A column is not allowed to appear twice in
+        ``specific_transformers``.
+        Consider wrapping the ``TableVectorizer`` in  :class:`~skrub.ApplyToCols`
+        to select or exclude specific columns from the processing. Alternatively,
+        the :ref:`skrub DataOps &lt;user_guide_data_ops_index&gt;` allow for more complex
+        pre-processing.
+
+    drop_null_fraction : float or None, default=1.0
+        Fraction of null above which the column is dropped. If `drop_null_fraction` is
+        set to ``1.0``, the column is dropped if it contains only
+        nulls or NaNs (this is the default behavior). If `drop_null_fraction` is a
+        number in ``[0.0, 1.0)``, the column is dropped if the fraction of nulls
+        is strictly larger than `drop_null_fraction`. If `drop_null_fraction` is ``None``,
+        this selection is disabled: no columns are dropped based on the number
+        of null values they contain.
+
+    drop_if_constant : bool, default=False
+        If set to true, drop columns that contain a single unique value. Note that
+        missing values are considered as one additional distinct value.
+
+    datetime_format : str, default=None
+        The format to use when parsing dates. If None, the format is inferred.
+
+    null_strings : str or sequence of str, default=None
+        Additional strings to consider as null values, beyond the default list.
+
+    n_jobs : int, default=None
+        Number of jobs to run in parallel.
+        ``None`` means 1 unless in a joblib ``parallel_backend`` context.
+        ``-1`` means using all processors.
+
+    Attributes
+    ----------
+    transformers_ : dict
+        Maps the name of each column to the fitted transformer that was applied
+        to it.
+
+    column_to_kind_ : dict
+        Maps each column name to the kind (``&#34;high_cardinality&#34;``,
+        ``&#34;low_cardinality&#34;``, ``&#34;specific&#34;``, etc.) it was assigned.
+
+    kind_to_columns_ : dict
+        The reverse of ``column_to_kind_``: maps each kind of column
+        (``&#34;high_cardinality&#34;``, ``&#34;low_cardinality&#34;``, etc.) to a list of
+        column names. For example ``kind_to_columns[&#39;datetime&#39;]`` contains the
+        names of all datetime columns.
+
+    input_to_outputs_ : dict
+        Maps the name of each input column to the names of the corresponding
+        output columns.
+
+    output_to_input_ : dict
+        The reverse of ``input_to_outputs_``: maps the name of each output
+        column to the name of the column in the input dataframe from which it
+        was derived.
+
+    all_processing_steps_ : dict
+        Maps the name of each column to a list of all the processing steps that were
+        applied to it. Those steps may include some pre-processing transformations such
+        as converting strings to datetimes or numbers, the main transformer (e.g. the
+        :class:`~skrub.DatetimeEncoder`), and a post-processing step casting the main
+        transformer&#39;s output to :obj:`numpy.float32`. See the &#34;Examples&#34; section below
+        for details.
+
+    feature_names_in_ : list of str
+        The names of the input columns, after applying some cleaning (casting
+        all column names to strings and deduplication).
+
+    n_features_in_ : int
+        The number of input columns.
+
+    all_outputs_ : list of str
+        The names of the output columns.
+
+    See Also
+    --------
+    tabular_pipeline :
+        A function that accepts a scikit-learn estimator and creates a pipeline
+        combining a ``TableVectorizer``, optional missing value imputation and
+        the provided estimator.
+
+    Cleaner :
+        Preprocesses each column of a dataframe with consistency checks and
+        sanitization, e.g., of null values or dates.
+
+    ApplyToCols :
+        Apply a given transformer to each column in a selection of columns. Combine
+        this transformer with the skrub selectors to select columns based on
+        advanced rules.
+
+    DropUninformative :
+        Drop columns that are considered uninformative, e.g., containing only
+        null values or a single unique value.
+
+    Notes
+    -----
+    The TableVectorizer applies a different transformation to each of several kinds of columns:
+
+    - `numeric`: floats, integers, and booleans.
+    - `datetime`: datetimes and dates.
+    - `low_cardinality`: string and categorical columns with a count
+      of unique values smaller than a given threshold (40 by default). Category encoding
+      schemes such as one-hot encoding, ordinal encoding etc. are typically appropriate
+      for columns with few unique values.
+    - `high_cardinality`: string and categorical columns with many
+      unique values, such as free-form text. Such columns have so many distinct values
+      that it is not possible to assign a distinct representation to each: the dimension
+      would be too large and there would be too few examples of each category.
+      Representations designed for text, such as topic modelling
+      (:class:`~skrub.GapEncoder`) or locality-sensitive hashing
+      (:class:`~skrub.MinHash`) are more appropriate.
+
+    .. note::
+
+        Transformations are applied **independently on each column**. A
+        different transformer instance is used for each column separately;
+        multivariate transformations are therefore not supported.
+
+    The transformer for each kind of column can be configured with the corresponding
+    parameter. A transformer is expected to be a `compatible scikit-learn transformer
+    &lt;https://scikit-learn.org/stable/glossary.html#term-transformer&gt;`_. Special-cased
+    strings ``&#34;drop&#34;`` and ``&#34;passthrough&#34;`` are accepted as well, to indicate to drop
+    the columns or to pass them through untransformed, respectively.
+
+    Additionally, it is possible to specify transformers for specific columns,
+    overriding the categorization described above. This is done by providing a
+    list of pairs ``(transformer, list_of_columns)`` as the
+    ``specific_transformers`` parameter.
+
+    The transformations applied to each column can be inspected in the ``all_processing_steps_``
+    attribute, which maps each column name to a list of the transformers that were applied to it.
+    :func:`~TableVectorizer.describe_transformations` provides a summary of the transformations
+    in plain text.
+
+    Examples
+    --------
+    &gt;&gt;&gt; from skrub import TableVectorizer
+    &gt;&gt;&gt; import pandas as pd
+    &gt;&gt;&gt; df = pd.DataFrame({
+    ...     &#39;A&#39;: [&#39;one&#39;, &#39;two&#39;, &#39;two&#39;, &#39;three&#39;],
+    ...     &#39;B&#39;: [&#39;02/02/2024&#39;, &#39;23/02/2024&#39;, &#39;12/03/2024&#39;, &#39;13/03/2024&#39;],
+    ...     &#39;C&#39;: [&#39;1.5&#39;, &#39;N/A&#39;, &#39;12.2&#39;, &#39;N/A&#39;],
+    ... })
+    &gt;&gt;&gt; df
+           A           B     C
+    0    one  02/02/2024   1.5
+    1    two  23/02/2024   N/A
+    2    two  12/03/2024  12.2
+    3  three  13/03/2024   N/A
+    &gt;&gt;&gt; df.dtypes
+    A         ...
+    B         ...
+    C         ...
+    dtype: object
+
+    &gt;&gt;&gt; vectorizer = TableVectorizer()
+    &gt;&gt;&gt; vectorizer.fit_transform(df)
+       A_one  A_three  A_two  B_year  B_month  B_day  B_total_seconds     C
+    0    1.0      0.0    0.0  2024.0      2.0    2.0     1.706832e+09   1.5
+    1    0.0      0.0    1.0  2024.0      2.0   23.0     1.708646e+09   NaN
+    2    0.0      0.0    1.0  2024.0      3.0   12.0     1.710202e+09  12.2
+    3    0.0      1.0    0.0  2024.0      3.0   13.0     1.710288e+09   NaN
+
+    We can inspect which outputs were created from a given column in the input
+    dataframe:
+
+    &gt;&gt;&gt; vectorizer.input_to_outputs_[&#39;B&#39;]
+    [&#39;B_year&#39;, &#39;B_month&#39;, &#39;B_day&#39;, &#39;B_total_seconds&#39;]
+
+    and the reverse mapping:
+
+    &gt;&gt;&gt; vectorizer.output_to_input_[&#39;B_total_seconds&#39;]
+    &#39;B&#39;
+
+    We can also see the encoder that was applied to a given column:
+
+    &gt;&gt;&gt; vectorizer.transformers_[&#39;B&#39;]
+    DatetimeEncoder()
+    &gt;&gt;&gt; vectorizer.transformers_[&#39;A&#39;]
+    OneHotEncoder(drop=&#39;if_binary&#39;, dtype=&#39;float32&#39;, handle_unknown=&#39;ignore&#39;,
+                  sparse_output=False)
+    &gt;&gt;&gt; vectorizer.transformers_[&#39;A&#39;].categories_
+    [array([&#39;one&#39;, &#39;three&#39;, &#39;two&#39;], dtype=...)]
+
+    We can see the columns grouped by the kind of encoder that was applied
+    to them:
+
+    &gt;&gt;&gt; vectorizer.kind_to_columns_
+    {&#39;numeric&#39;: [&#39;C&#39;], &#39;datetime&#39;: [&#39;B&#39;], &#39;low_cardinality&#39;: [&#39;A&#39;], &#39;high_cardinality&#39;: [], &#39;specific&#39;: []}
+
+    As well as the reverse mapping (from each column to its kind):
+
+    &gt;&gt;&gt; vectorizer.column_to_kind_
+    {&#39;C&#39;: &#39;numeric&#39;, &#39;B&#39;: &#39;datetime&#39;, &#39;A&#39;: &#39;low_cardinality&#39;}
+
+    Before applying the main transformer, the ``TableVectorizer`` applies
+    several preprocessing steps, for example to detect numbers or dates that are
+    represented as strings. By default, columns that contain only null values are
+    dropped. Moreover, a final post-processing step is applied to all
+    non-categorical columns in the encoder&#39;s output to cast them to float32.
+    If ``datetime_format`` is provided, it will be used to parse all datetime
+    columns.
+
+    We can inspect all the processing steps that were applied to a given column:
+
+    &gt;&gt;&gt; vectorizer.all_processing_steps_[&#39;B&#39;]
+    [CleanNullStrings(), DropUninformative(), ToDatetime(), DatetimeEncoder(), {&#39;B_day&#39;: ToFloat(), &#39;B_month&#39;: ToFloat(), ...}]
+
+    Note that as the encoder (``DatetimeEncoder()`` above) produces multiple
+    columns, the last processing step is not described by a single transformer
+    like the previous ones but by a mapping from column name to transformer.
+
+    ``all_processing_steps_`` is useful to inspect the details of the
+    choices made by the ``TableVectorizer`` during preprocessing, for example:
+
+    &gt;&gt;&gt; vectorizer.all_processing_steps_[&#39;B&#39;][2]
+    ToDatetime()
+    &gt;&gt;&gt; _.format_
+    &#39;%d/%m/%Y&#39;
+
+    **Transformers are applied separately to each column**
+
+    The ``TableVectorizer`` vectorizes each column separately -- a different
+    transformer is applied to each column; multivariate transformers are not
+    allowed.
+
+    &gt;&gt;&gt; df_1 = pd.DataFrame(dict(A=[&#39;one&#39;, &#39;two&#39;], B=[&#39;three&#39;, &#39;four&#39;]))
+    &gt;&gt;&gt; vectorizer = TableVectorizer().fit(df_1)
+    &gt;&gt;&gt; vectorizer.transformers_[&#39;A&#39;] is not vectorizer.transformers_[&#39;B&#39;]
+    True
+    &gt;&gt;&gt; vectorizer.transformers_[&#39;A&#39;].categories_
+    [array([&#39;one&#39;, &#39;two&#39;], dtype=...)]
+    &gt;&gt;&gt; vectorizer.transformers_[&#39;B&#39;].categories_
+    [array([&#39;four&#39;, &#39;three&#39;], dtype=...)]
+
+    **Overriding the transformer for specific columns**
+
+    We can also provide transformers for specific columns. In that case the
+    provided transformer has full control over the associated columns; no other
+    processing is applied to those columns. A column cannot appear twice in the
+    ``specific_transformers``.
+
+    The overrides are provided as a list of pairs:
+    ``(transformer, list_of_column_names)``.
+
+    &gt;&gt;&gt; from sklearn.preprocessing import OrdinalEncoder
+    &gt;&gt;&gt; vectorizer = TableVectorizer(
+    ...     specific_transformers=[(&#39;drop&#39;, [&#39;A&#39;]), (OrdinalEncoder(), [&#39;B&#39;])]
+    ... )
+    &gt;&gt;&gt; df
+           A           B     C
+    0    one  02/02/2024   1.5
+    1    two  23/02/2024   N/A
+    2    two  12/03/2024  12.2
+    3  three  13/03/2024   N/A
+    &gt;&gt;&gt; vectorizer.fit_transform(df)
+         B     C
+    0  0.0   1.5
+    1  3.0   NaN
+    2  1.0  12.2
+    3  2.0   NaN
+
+    Here the column &#39;A&#39; has been dropped and the column &#39;B&#39; has been passed to
+    the ``OrdinalEncoder`` (instead of the default choice which would have been
+    ``DatetimeEncoder``).
+
+    We can see that &#39;A&#39; and &#39;B&#39; are now treated as &#39;specific&#39; columns:
+
+    &gt;&gt;&gt; vectorizer.column_to_kind_
+    {&#39;C&#39;: &#39;numeric&#39;, &#39;A&#39;: &#39;specific&#39;, &#39;B&#39;: &#39;specific&#39;}
+
+    Preprocessing and postprocessing steps are not applied to columns appearing
+    in ``specific_columns``. For example &#39;B&#39; has not gone through
+    ``ToDatetime()``:
+
+    &gt;&gt;&gt; vectorizer.all_processing_steps_
+    {&#39;A&#39;: [Drop()], &#39;B&#39;: [OrdinalEncoder()], &#39;C&#39;: [CleanNullStrings(), DropUninformative(), ToFloat(), PassThrough(), {&#39;C&#39;: ToFloat()}]}
+
+    Specifying several ``specific_transformers`` for the same column is not allowed.
+
+    &gt;&gt;&gt; vectorizer = TableVectorizer(
+    ...     specific_transformers=[(&#39;passthrough&#39;, [&#39;A&#39;, &#39;B&#39;]), (&#39;drop&#39;, [&#39;A&#39;])]
+    ... )
+
+    &gt;&gt;&gt; vectorizer.fit_transform(df)
+    Traceback (most recent call last):
+        ...
+    ValueError: Column &#39;A&#39; used twice in &#39;specific_transformers&#39;, at indices 0 and 1.
+    &#34;&#34;&#34;  # noqa: E501
+
+    def __init__(
+        self,
+        *,
+        cardinality_threshold=40,
+        low_cardinality=LOW_CARDINALITY_TRANSFORMER,
+        high_cardinality=HIGH_CARDINALITY_TRANSFORMER,
+        numeric=NUMERIC_TRANSFORMER,
+        datetime=DATETIME_TRANSFORMER,
+        specific_transformers=(),
+        drop_null_fraction=1.0,
+        drop_if_constant=False,
+        datetime_format=None,
+        null_strings=None,
+        n_jobs=None,
+    ):
+        self.cardinality_threshold = cardinality_threshold
+        self.low_cardinality = _utils.clone_if_default(
+            low_cardinality, LOW_CARDINALITY_TRANSFORMER
+        )
+        self.high_cardinality = _utils.clone_if_default(
+            high_cardinality, HIGH_CARDINALITY_TRANSFORMER
+        )
+        self.numeric = _utils.clone_if_default(numeric, NUMERIC_TRANSFORMER)
+        self.datetime = _utils.clone_if_default(datetime, DATETIME_TRANSFORMER)
+        self.specific_transformers = specific_transformers
+        self.n_jobs = n_jobs
+        self.drop_null_fraction = drop_null_fraction
+        self.drop_if_constant = drop_if_constant
+        self.datetime_format = datetime_format
+        self.null_strings = null_strings
+
+    def fit(self, X, y=None):
+        &#34;&#34;&#34;Fit transformer.
+
+        Parameters
+        ----------
+        X : dataframe of shape (n_samples, n_features)
+            Input data to transform.
+
+        y : array-like, shape (n_samples,) or (n_samples, n_outputs) or None, \
+                default=None
+            Target values for supervised learning (None for unsupervised
+            transformations).
+
+        Returns
+        -------
+        self : TableVectorizer
+            The fitted estimator.
+        &#34;&#34;&#34;
+        self.fit_transform(X, y=y)
+        return self
+
+    def fit_transform(self, X, y=None):
+        &#34;&#34;&#34;Fit transformer and transform dataframe.
+
+        Parameters
+        ----------
+        X : dataframe of shape (n_samples, n_features)
+            Input data to transform.
+
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs) or None, \
+                default=None
+            Target values for supervised learning (None for unsupervised
+            transformations).
+
+        Returns
+        -------
+        dataframe
+            The transformed input.
+        &#34;&#34;&#34;
+        self._check_specific_columns()
+        self._make_pipeline()
+        output = self._pipeline.fit_transform(X, y=y)
+        self.all_outputs_ = sbd.column_names(output)
+        self._store_processing_steps()
+        self._store_column_kinds()
+        self._store_output_to_input()
+        # for sklearn
+        self.feature_names_in_ = self._preprocessors[0].feature_names_out_
+        self.n_features_in_ = len(self.feature_names_in_)
+
+        return output
+
+    def transform(self, X):
+        &#34;&#34;&#34;Transform dataframe.
+
+        Parameters
+        ----------
+        X : dataframe of shape (n_samples, n_features)
+            Input data to transform.
+
+        Returns
+        -------
+        dataframe
+            The transformed input.
+        &#34;&#34;&#34;
+        check_is_fitted(self, &#34;transformers_&#34;)
+        return self._pipeline.transform(X)
+
+    def _check_specific_columns(self):
+        specific_columns = {}
+        for i, config in enumerate(self.specific_transformers):
+            try:
+                _, cols = config
+                assert isinstance(cols, Iterable) and not isinstance(cols, str)
+            except (ValueError, TypeError, AssertionError):
+                raise ValueError(
+                    &#34;&#39;specific_transformers&#39; must be a list of &#34;
+                    &#34;(transformer, list of columns) pairs. &#34;
+                    f&#34;Got {config!r} at index {i}.&#34;
+                )
+            for c in cols:
+                if not isinstance(c, str):
+                    raise ValueError(
+                        &#34;Column names in &#39;specific_transformers&#39; must be strings,&#34;
+                        f&#34; got {c}&#34;
+                    )
+                if c in specific_columns:
+                    raise ValueError(
+                        f&#34;Column {c!r} used twice in &#39;specific_transformers&#39;, &#34;
+                        f&#34;at indices {specific_columns[c]} and {i}.&#34;
+                    )
+            specific_columns.update(dict.fromkeys(cols, i))
+        self._specific_columns = list(specific_columns.keys())
+
+    def _make_pipeline(self):
+        def add_step(steps, transformer, cols, allow_reject=False):
+            steps.append(
+                wrap_transformer(
+                    _check_transformer(transformer),
+                    cols,
+                    allow_reject=allow_reject,
+                    n_jobs=self.n_jobs,
+                    columnwise=True,
+                )
+            )
+            return steps[-1]
+
+        cols = s.all() - self._specific_columns
+        self._preprocessors = _get_preprocessors(
+            cols=cols,
+            drop_null_fraction=self.drop_null_fraction,
+            drop_if_constant=self.drop_if_constant,
+            n_jobs=self.n_jobs,
+            parse_numbers=True,
+            cast_to_float32=True,
+            datetime_format=self.datetime_format,
+            null_strings=self.null_strings,
+            duration_to_float=True,
+        )
+
+        self._encoders = []
+        self._named_encoders = {}
+        for name, selector in [
+            (&#34;numeric&#34;, s.numeric()),
+            (&#34;datetime&#34;, s.any_date()),
+            (
+                &#34;low_cardinality&#34;,
+                s.cardinality_below(self.cardinality_threshold),
+            ),
+            (&#34;high_cardinality&#34;, s.all()),
+        ]:
+            self._named_encoders[name] = add_step(
+                self._encoders,
+                getattr(self, name),
+                cols &amp; selector - _created_by(*self._encoders),
+            )
+
+        self._specific_transformers = []
+        for specific_transformer, specific_cols in self.specific_transformers:
+            add_step(self._specific_transformers, specific_transformer, specific_cols)
+
+        self._postprocessors = []
+        add_step(
+            self._postprocessors,
+            ToFloat(),
+            s.all() - _created_by(*self._specific_transformers) - s.categorical(),
+            allow_reject=True,
+        )
+        self._pipeline = make_pipeline(
+            *self._preprocessors,
+            *self._encoders,
+            *self._specific_transformers,
+            *self._postprocessors,
+        )
+
+    def _store_processing_steps(self):
+        input_names = self._preprocessors[0].feature_names_out_
+        to_outputs = {col: [col] for col in input_names}
+        to_steps = {col: [] for col in input_names}
+        self.transformers_ = {}
+        # [1:] because CheckInputDataFrame not included in all_processing_steps_
+        for step in self._preprocessors[1:]:
+            for col, transformer in step.transformers_.items():
+                to_steps[col].append(transformer)
+        for step in self._encoders + self._specific_transformers:
+            for col, transformer in step.transformers_.items():
+                to_steps[col].append(transformer)
+                to_outputs[col] = step.input_to_outputs_[col]
+                self.transformers_[col] = transformer
+        for col, outputs in to_outputs.items():
+            post_proc = {
+                c: t
+                for c in outputs
+                if (t := self._postprocessors[0].transformers_.get(c)) is not None
+            }
+            if post_proc:
+                to_steps[col].append(ShortReprDict(post_proc))
+        self.input_to_outputs_ = to_outputs
+        self.all_processing_steps_ = to_steps
+
+    def _store_column_kinds(self):
+        self.kind_to_columns_ = {
+            k: v.used_inputs_ for k, v in self._named_encoders.items()
+        }
+        self.kind_to_columns_[&#34;specific&#34;] = self._specific_columns
+        self.column_to_kind_ = {
+            c: k for k, cols in self.kind_to_columns_.items() for c in cols
+        }
+
+    def _store_output_to_input(self):
+        self.output_to_input_ = {
+            out: input_
+            for (input_, outputs) in self.input_to_outputs_.items()
+            for out in outputs
+        }
+
+    def _sk_visual_block_(self):
+        if hasattr(self, &#34;kind_to_columns_&#34;):
+            name_details = [
+                self.kind_to_columns_[&#34;numeric&#34;],
+                self.kind_to_columns_[&#34;datetime&#34;],
+                self.kind_to_columns_[&#34;low_cardinality&#34;],
+                self.kind_to_columns_[&#34;high_cardinality&#34;],
+            ]
+        else:
+            name_details = None
+        return _VisualBlock(
+            &#34;parallel&#34;,
+            [self.numeric, self.datetime, self.low_cardinality, self.high_cardinality],
+            names=[&#34;numeric&#34;, &#34;datetime&#34;, &#34;low_cardinality&#34;, &#34;high_cardinality&#34;],
+            name_details=name_details,
+        )
+
+    # scikit-learn compatibility
+
+    def _more_tags(self):
+        &#34;&#34;&#34;
+        Used internally by sklearn to ease the estimator checks.
+        &#34;&#34;&#34;
+        return {
+            &#34;X_types&#34;: [&#34;2darray&#34;, &#34;string&#34;],
+            &#34;allow_nan&#34;: [True],
+            &#34;_xfail_checks&#34;: {
+                &#34;check_complex_data&#34;: &#34;Passthrough complex columns as-is.&#34;,
+            },
+        }
+
+    def __sklearn_tags__(self):
+        tags = super().__sklearn_tags__()
+        tags.input_tags.string = True
+        tags.input_tags.allow_nan = True
+        return tags
+
+    def get_feature_names_out(self, input_features=None):
+        &#34;&#34;&#34;Return the column names of the output of ``transform`` as a list of strings.
+
+        Parameters
+        ----------
+        input_features : array-like of str or None, default=None
+            Ignored.
+
+        Returns
+        -------
+        list of strings
+            The column names.
+        &#34;&#34;&#34;
+        check_is_fitted(self, &#34;all_outputs_&#34;)
+        return np.asarray(self.all_outputs_)
+
+    def describe_transformations(self, max_cols=10):
+        &#34;&#34;&#34;Returns a string reporting the transformations applied by the \
+            TableVectorizer and the columns they are each applied to.
+
+        This covers every preprocessing step, each of the `numeric`, `datetime`, \
+        `low cardinality` and `high cardinality` transformations and any \
+        specific transformer. Post-processors being always the same \
+        (ToFloat applied to every numeric column), they are not mentioned.
+
+        Parameters
+        ----------
+        max_cols : int
+            The maximum amount of columns to list per transformer. Any overflow is
+            represented by `...`
+
+        Returns
+        -------
+        full_list : string
+            An ASCII formatted message sorting transformers by category
+            (preprocessing, specific processors, etc.) and listing the columns
+            to which each of these transformers is applied.
+
+
+        &#34;&#34;&#34;
+        preprocessing_transformations = [
+            &#34;Preprocessors&#34;,
+            &#34;=============&#34;,
+            _describe_transformations(self, max_cols=max_cols),
+        ]
+        vectorize_transformations = [&#34;Processors by type&#34;, &#34;==================&#34;]
+        specific_transformations = []
+
+        all_transformers = self.kind_to_columns_.copy()
+        specific = all_transformers.pop(&#34;specific&#34;)
+
+        for transformer_type, transformer_cols in all_transformers.items():
+            if transformer_cols:
+                cols_to_print = list(transformer_cols)
+                # For each column type (numeric, datetime etc.), there is a
+                # dedicated transformer in the TableVectorizer that must be
+                # displayed (for instance, self.numeric = Passthrough()).
+                # The corresponding attribute is therefore fetched
+                # and its class name printed.
+                vectorize_transformations.append(
+                    f&#34;{getattr(self, transformer_type).__class__.__name__} &#34;
+                    f&#34;({transformer_type} - {len(cols_to_print)} columns):&#34;
+                )
+
+                vectorize_transformations.extend(
+                    [
+                        &#34;    - &#34; + s
+                        for s in _limit_cols(cols_to_print, max_cols=max_cols)
+                    ]
+                )
+            else:
+                vectorize_transformations.append(
+                    f&#34;No {transformer_type} columns have been detected.&#34;
+                )
+
+        if self.specific_transformers:
+            specific_transformations = [
+                &#34;&#34;,
+                &#34;Specific transformers&#34;,
+                &#34;=====================&#34;,
+            ]
+            for t in self.specific_transformers:
+                specific_transformations.append(
+                    f&#34;{t[0].__class__.__name__} (specific - {len(specific)} columns):&#34;
+                )
+                specific_transformations.extend(
+                    [&#34;    - &#34; + s for s in _limit_cols(specific, max_cols=max_cols)]
+                )
+
+        full_transformations = (
+            preprocessing_transformations
+            + vectorize_transformations
+            + specific_transformations
+        )
+
+        return &#34;\n&#34;.join(full_transformations)
+
+
+def _limit_cols(col_names, max_cols=10):
+    list_cols = (
+        col_names[:max_cols] + [&#34;...&#34;] if len(col_names) &gt; max_cols else col_names
+    )
+    return list_cols
+</code></pre>
+</div>
+
+<script>
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var n=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,t=0,r={},a={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(n){return n instanceof i?new i(n.type,e(n.content),n.alias):Array.isArray(n)?n.map(e):n.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function e(n,t){var r,i;switch(t=t||{},a.util.type(n)){case"Object":if(i=a.util.objId(n),t[i])return t[i];for(var l in r={},t[i]=r,n)n.hasOwnProperty(l)&&(r[l]=e(n[l],t));return r;case"Array":return i=a.util.objId(n),t[i]?t[i]:(r=[],t[i]=r,n.forEach((function(n,a){r[a]=e(n,t)})),r);default:return n}},getLanguage:function(e){for(;e;){var t=n.exec(e.className);if(t)return t[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,t){e.className=e.className.replace(RegExp(n,"gi"),""),e.classList.add("language-"+t)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(r){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(r.stack)||[])[1];if(e){var n=document.getElementsByTagName("script");for(var t in n)if(n[t].src==e)return n[t]}return null}},isActive:function(e,n,t){for(var r="no-"+n;e;){var a=e.classList;if(a.contains(n))return!0;if(a.contains(r))return!1;e=e.parentElement}return!!t}},languages:{plain:r,plaintext:r,text:r,txt:r,extend:function(e,n){var t=a.util.clone(a.languages[e]);for(var r in n)t[r]=n[r];return t},insertBefore:function(e,n,t,r){var i=(r=r||a.languages)[e],l={};for(var o in i)if(i.hasOwnProperty(o)){if(o==n)for(var s in t)t.hasOwnProperty(s)&&(l[s]=t[s]);t.hasOwnProperty(o)||(l[o]=i[o])}var u=r[e];return r[e]=l,a.languages.DFS(a.languages,(function(n,t){t===u&&n!=e&&(this[n]=l)})),l},DFS:function e(n,t,r,i){i=i||{};var l=a.util.objId;for(var o in n)if(n.hasOwnProperty(o)){t.call(n,o,n[o],r||o);var s=n[o],u=a.util.type(s);"Object"!==u||i[l(s)]?"Array"!==u||i[l(s)]||(i[l(s)]=!0,e(s,t,o,i)):(i[l(s)]=!0,e(s,t,null,i))}}},plugins:{},highlightAll:function(e,n){a.highlightAllUnder(document,e,n)},highlightAllUnder:function(e,n,t){var r={callback:t,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};a.hooks.run("before-highlightall",r),r.elements=Array.prototype.slice.apply(r.container.querySelectorAll(r.selector)),a.hooks.run("before-all-elements-highlight",r);for(var i,l=0;i=r.elements[l++];)a.highlightElement(i,!0===n,r.callback)},highlightElement:function(n,t,r){var i=a.util.getLanguage(n),l=a.languages[i];a.util.setLanguage(n,i);var o=n.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&a.util.setLanguage(o,i);var s={element:n,language:i,grammar:l,code:n.textContent};function u(e){s.highlightedCode=e,a.hooks.run("before-insert",s),s.element.innerHTML=s.highlightedCode,a.hooks.run("after-highlight",s),a.hooks.run("complete",s),r&&r.call(s.element)}if(a.hooks.run("before-sanity-check",s),(o=s.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!s.code)return a.hooks.run("complete",s),void(r&&r.call(s.element));if(a.hooks.run("before-highlight",s),s.grammar)if(t&&e.Worker){var c=new Worker(a.filename);c.onmessage=function(e){u(e.data)},c.postMessage(JSON.stringify({language:s.language,code:s.code,immediateClose:!0}))}else u(a.highlight(s.code,s.grammar,s.language));else u(a.util.encode(s.code))},highlight:function(e,n,t){var r={code:e,grammar:n,language:t};if(a.hooks.run("before-tokenize",r),!r.grammar)throw new Error('The language "'+r.language+'" has no grammar.');return r.tokens=a.tokenize(r.code,r.grammar),a.hooks.run("after-tokenize",r),i.stringify(a.util.encode(r.tokens),r.language)},tokenize:function(e,n){var t=n.rest;if(t){for(var r in t)n[r]=t[r];delete n.rest}var a=new s;return u(a,a.head,e),o(e,a,n,a.head,0),function(e){for(var n=[],t=e.head.next;t!==e.tail;)n.push(t.value),t=t.next;return n}(a)},hooks:{all:{},add:function(e,n){var t=a.hooks.all;t[e]=t[e]||[],t[e].push(n)},run:function(e,n){var t=a.hooks.all[e];if(t&&t.length)for(var r,i=0;r=t[i++];)r(n)}},Token:i};function i(e,n,t,r){this.type=e,this.content=n,this.alias=t,this.length=0|(r||"").length}function l(e,n,t,r){e.lastIndex=n;var a=e.exec(t);if(a&&r&&a[1]){var i=a[1].length;a.index+=i,a[0]=a[0].slice(i)}return a}function o(e,n,t,r,s,g){for(var f in t)if(t.hasOwnProperty(f)&&t[f]){var h=t[f];h=Array.isArray(h)?h:[h];for(var d=0;d<h.length;++d){if(g&&g.cause==f+","+d)return;var v=h[d],p=v.inside,m=!!v.lookbehind,y=!!v.greedy,k=v.alias;if(y&&!v.pattern.global){var x=v.pattern.toString().match(/[imsuy]*$/)[0];v.pattern=RegExp(v.pattern.source,x+"g")}for(var b=v.pattern||v,w=r.next,A=s;w!==n.tail&&!(g&&A>=g.reach);A+=w.value.length,w=w.next){var E=w.value;if(n.length>e.length)return;if(!(E instanceof i)){var P,L=1;if(y){if(!(P=l(b,A,e,m))||P.index>=e.length)break;var S=P.index,O=P.index+P[0].length,j=A;for(j+=w.value.length;S>=j;)j+=(w=w.next).value.length;if(A=j-=w.value.length,w.value instanceof i)continue;for(var C=w;C!==n.tail&&(j<O||"string"==typeof C.value);C=C.next)L++,j+=C.value.length;L--,E=e.slice(A,j),P.index-=A}else if(!(P=l(b,0,E,m)))continue;S=P.index;var N=P[0],_=E.slice(0,S),M=E.slice(S+N.length),W=A+E.length;g&&W>g.reach&&(g.reach=W);var z=w.prev;if(_&&(z=u(n,z,_),A+=_.length),c(n,z,L),w=u(n,z,new i(f,p?a.tokenize(N,p):N,k,N)),M&&u(n,w,M),L>1){var I={cause:f+","+d,reach:W};o(e,n,t,w.prev,A,I),g&&I.reach>g.reach&&(g.reach=I.reach)}}}}}}function s(){var e={value:null,prev:null,next:null},n={value:null,prev:e,next:null};e.next=n,this.head=e,this.tail=n,this.length=0}function u(e,n,t){var r=n.next,a={value:t,prev:n,next:r};return n.next=a,r.prev=a,e.length++,a}function c(e,n,t){for(var r=n.next,a=0;a<t&&r!==e.tail;a++)r=r.next;n.next=r,r.prev=n,e.length-=a}if(e.Prism=a,i.stringify=function e(n,t){if("string"==typeof n)return n;if(Array.isArray(n)){var r="";return n.forEach((function(n){r+=e(n,t)})),r}var i={type:n.type,content:e(n.content,t),tag:"span",classes:["token",n.type],attributes:{},language:t},l=n.alias;l&&(Array.isArray(l)?Array.prototype.push.apply(i.classes,l):i.classes.push(l)),a.hooks.run("wrap",i);var o="";for(var s in i.attributes)o+=" "+s+'="'+(i.attributes[s]||"").replace(/"/g,"&quot;")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'"'+o+">"+i.content+"</"+i.tag+">"},!e.document)return e.addEventListener?(a.disableWorkerMessageHandler||e.addEventListener("message",(function(n){var t=JSON.parse(n.data),r=t.language,i=t.code,l=t.immediateClose;e.postMessage(a.highlight(i,a.languages[r],r)),l&&e.close()}),!1),a):a;var g=a.util.currentScript();function f(){a.manual||a.highlightAll()}if(g&&(a.filename=g.src,g.hasAttribute("data-manual")&&(a.manual=!0)),!a.manual){var h=document.readyState;"loading"===h||"interactive"===h&&g&&g.defer?document.addEventListener("DOMContentLoaded",f):window.requestAnimationFrame?window.requestAnimationFrame(f):window.setTimeout(f,16)}return a}(_self);"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
+Prism.languages.python={comment:{pattern:/(^|[^\\])#.*/,lookbehind:!0,greedy:!0},"string-interpolation":{pattern:/(?:f|fr|rf)(?:("""|''')[\s\S]*?\1|("|')(?:\\.|(?!\2)[^\\\r\n])*\2)/i,greedy:!0,inside:{interpolation:{pattern:/((?:^|[^{])(?:\{\{)*)\{(?!\{)(?:[^{}]|\{(?!\{)(?:[^{}]|\{(?!\{)(?:[^{}])+\})+\})+\}/,lookbehind:!0,inside:{"format-spec":{pattern:/(:)[^:(){}]+(?=\}$)/,lookbehind:!0},"conversion-option":{pattern:/![sra](?=[:}]$)/,alias:"punctuation"},rest:null}},string:/[\s\S]+/}},"triple-quoted-string":{pattern:/(?:[rub]|br|rb)?("""|''')[\s\S]*?\1/i,greedy:!0,alias:"string"},string:{pattern:/(?:[rub]|br|rb)?("|')(?:\\.|(?!\1)[^\\\r\n])*\1/i,greedy:!0},function:{pattern:/((?:^|\s)def[ \t]+)[a-zA-Z_]\w*(?=\s*\()/g,lookbehind:!0},"class-name":{pattern:/(\bclass\s+)\w+/i,lookbehind:!0},decorator:{pattern:/(^[\t ]*)@\w+(?:\.\w+)*/m,lookbehind:!0,alias:["annotation","punctuation"],inside:{punctuation:/\./}},keyword:/\b(?:_(?=\s*:)|and|as|assert|async|await|break|case|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|match|nonlocal|not|or|pass|print|raise|return|try|while|with|yield)\b/,builtin:/\b(?:__import__|abs|all|any|apply|ascii|basestring|bin|bool|buffer|bytearray|bytes|callable|chr|classmethod|cmp|coerce|compile|complex|delattr|dict|dir|divmod|enumerate|eval|execfile|file|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|intern|isinstance|issubclass|iter|len|list|locals|long|map|max|memoryview|min|next|object|oct|open|ord|pow|property|range|raw_input|reduce|reload|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unichr|unicode|vars|xrange|zip)\b/,boolean:/\b(?:False|None|True)\b/,number:/\b0(?:b(?:_?[01])+|o(?:_?[0-7])+|x(?:_?[a-f0-9])+)\b|(?:\b\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\B\.\d+(?:_\d+)*)(?:e[+-]?\d+(?:_\d+)*)?j?(?!\w)/i,operator:/[-+%=]=?|!=|:=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]/,punctuation:/[{}[\];(),.:]/},Prism.languages.python["string-interpolation"].inside.interpolation.inside.rest=Prism.languages.python,Prism.languages.py=Prism.languages.python;
+!function(){if("undefined"!=typeof Prism&&"undefined"!=typeof document){var e="line-numbers",n=/\n(?!$)/g,t=Prism.plugins.lineNumbers={getLine:function(n,t){if("PRE"===n.tagName&&n.classList.contains(e)){var i=n.querySelector(".line-numbers-rows");if(i){var r=parseInt(n.getAttribute("data-start"),10)||1,s=r+(i.children.length-1);t<r&&(t=r),t>s&&(t=s);var l=t-r;return i.children[l]}}},resize:function(e){r([e])},assumeViewportIndependence:!0},i=void 0;window.addEventListener("resize",(function(){t.assumeViewportIndependence&&i===window.innerWidth||(i=window.innerWidth,r(Array.prototype.slice.call(document.querySelectorAll("pre.line-numbers"))))})),Prism.hooks.add("complete",(function(t){if(t.code){var i=t.element,s=i.parentNode;if(s&&/pre/i.test(s.nodeName)&&!i.querySelector(".line-numbers-rows")&&Prism.util.isActive(i,e)){i.classList.remove(e),s.classList.add(e);var l,o=t.code.match(n),a=o?o.length+1:1,u=new Array(a+1).join("<span></span>");(l=document.createElement("span")).setAttribute("aria-hidden","true"),l.className="line-numbers-rows",l.innerHTML=u,s.hasAttribute("data-start")&&(s.style.counterReset="linenumber "+(parseInt(s.getAttribute("data-start"),10)-1)),t.element.appendChild(l),r([s]),Prism.hooks.run("line-numbers",t)}}})),Prism.hooks.add("line-numbers",(function(e){e.plugins=e.plugins||{},e.plugins.lineNumbers=!0}))}function r(e){if(0!=(e=e.filter((function(e){var n,t=(n=e,n?window.getComputedStyle?getComputedStyle(n):n.currentStyle||null:null)["white-space"];return"pre-wrap"===t||"pre-line"===t}))).length){var t=e.map((function(e){var t=e.querySelector("code"),i=e.querySelector(".line-numbers-rows");if(t&&i){var r=e.querySelector(".line-numbers-sizer"),s=t.textContent.split(n);r||((r=document.createElement("span")).className="line-numbers-sizer",t.appendChild(r)),r.innerHTML="0",r.style.display="block";var l=r.getBoundingClientRect().height;return r.innerHTML="",{element:e,lines:s,lineHeights:[],oneLinerHeight:l,sizer:r}}})).filter(Boolean);t.forEach((function(e){var n=e.sizer,t=e.lines,i=e.lineHeights,r=e.oneLinerHeight;i[t.length-1]=void 0,t.forEach((function(e,t){if(e&&e.length>1){var s=n.appendChild(document.createElement("span"));s.style.display="block",s.textContent=e}else i[t]=r}))})),t.forEach((function(e){for(var n=e.sizer,t=e.lineHeights,i=0,r=0;r<t.length;r++)void 0===t[r]&&(t[r]=n.children[i++].getBoundingClientRect().height)})),t.forEach((function(e){var n=e.sizer,t=e.element.querySelector(".line-numbers-rows");n.style.display="none",n.innerHTML="",e.lineHeights.forEach((function(e,n){t.children[n].style.height=e+"px"}))}))}}}();
+!function(){if("undefined"!=typeof Prism&&"undefined"!=typeof document&&document.querySelector){var e,t="line-numbers",i="linkable-line-numbers",n=/\n(?!$)/g,r=!0;Prism.plugins.lineHighlight={highlightLines:function(o,u,c){var h=(u="string"==typeof u?u:o.getAttribute("data-line")||"").replace(/\s+/g,"").split(",").filter(Boolean),d=+o.getAttribute("data-line-offset")||0,f=(function(){if(void 0===e){var t=document.createElement("div");t.style.fontSize="13px",t.style.lineHeight="1.5",t.style.padding="0",t.style.border="0",t.innerHTML="&nbsp;<br />&nbsp;",document.body.appendChild(t),e=38===t.offsetHeight,document.body.removeChild(t)}return e}()?parseInt:parseFloat)(getComputedStyle(o).lineHeight),p=Prism.util.isActive(o,t),g=o.querySelector("code"),m=p?o:g||o,v=[],y=g.textContent.match(n),b=y?y.length+1:1,A=g&&m!=g?function(e,t){var i=getComputedStyle(e),n=getComputedStyle(t);function r(e){return+e.substr(0,e.length-2)}return t.offsetTop+r(n.borderTopWidth)+r(n.paddingTop)-r(i.paddingTop)}(o,g):0;h.forEach((function(e){var t=e.split("-"),i=+t[0],n=+t[1]||i;if(!((n=Math.min(b+d,n))<i)){var r=o.querySelector('.line-highlight[data-range="'+e+'"]')||document.createElement("div");if(v.push((function(){r.setAttribute("aria-hidden","true"),r.setAttribute("data-range",e),r.className=(c||"")+" line-highlight"})),p&&Prism.plugins.lineNumbers){var s=Prism.plugins.lineNumbers.getLine(o,i),l=Prism.plugins.lineNumbers.getLine(o,n);if(s){var a=s.offsetTop+A+"px";v.push((function(){r.style.top=a}))}if(l){var u=l.offsetTop-s.offsetTop+l.offsetHeight+"px";v.push((function(){r.style.height=u}))}}else v.push((function(){r.setAttribute("data-start",String(i)),n>i&&r.setAttribute("data-end",String(n)),r.style.top=(i-d-1)*f+A+"px",r.textContent=new Array(n-i+2).join(" \n")}));v.push((function(){r.style.width=o.scrollWidth+"px"})),v.push((function(){m.appendChild(r)}))}}));var P=o.id;if(p&&Prism.util.isActive(o,i)&&P){l(o,i)||v.push((function(){o.classList.add(i)}));var E=parseInt(o.getAttribute("data-start")||"1");s(".line-numbers-rows > span",o).forEach((function(e,t){var i=t+E;e.onclick=function(){var e=P+"."+i;r=!1,location.hash=e,setTimeout((function(){r=!0}),1)}}))}return function(){v.forEach(a)}}};var o=0;Prism.hooks.add("before-sanity-check",(function(e){var t=e.element.parentElement;if(u(t)){var i=0;s(".line-highlight",t).forEach((function(e){i+=e.textContent.length,e.parentNode.removeChild(e)})),i&&/^(?: \n)+$/.test(e.code.slice(-i))&&(e.code=e.code.slice(0,-i))}})),Prism.hooks.add("complete",(function e(i){var n=i.element.parentElement;if(u(n)){clearTimeout(o);var r=Prism.plugins.lineNumbers,s=i.plugins&&i.plugins.lineNumbers;l(n,t)&&r&&!s?Prism.hooks.add("line-numbers",e):(Prism.plugins.lineHighlight.highlightLines(n)(),o=setTimeout(c,1))}})),window.addEventListener("hashchange",c),window.addEventListener("resize",(function(){s("pre").filter(u).map((function(e){return Prism.plugins.lineHighlight.highlightLines(e)})).forEach(a)}))}function s(e,t){return Array.prototype.slice.call((t||document).querySelectorAll(e))}function l(e,t){return e.classList.contains(t)}function a(e){e()}function u(e){return!!(e&&/pre/i.test(e.nodeName)&&(e.hasAttribute("data-line")||e.id&&Prism.util.isActive(e,i)))}function c(){var e=location.hash.slice(1);s(".temporary.line-highlight").forEach((function(e){e.parentNode.removeChild(e)}));var t=(e.match(/\.([\d,-]+)$/)||[,""])[1];if(t&&!document.getElementById(e)){var i=e.slice(0,e.lastIndexOf(".")),n=document.getElementById(i);n&&(n.hasAttribute("data-line")||n.setAttribute("data-line",""),Prism.plugins.lineHighlight.highlightLines(n,t,"temporary ")(),r&&document.querySelector(".temporary.line-highlight").scrollIntoView())}}}();
+</script>
+
+<script>
+  // Parse "#L5" (GitHub/GitLab style) from the URL hash and return the line number, or null.
+  function lineFromHash() {
+    var m = /^#?L(\d+)$/.exec(location.hash);
+    return m ? m[1] : null;
+  }
+
+  var codeEl = document.getElementById('code');
+  var containerEl = document.getElementById('code-container');
+
+  // Tell the line-highlight plugin which line to highlight (if any).
+  var line = lineFromHash();
+  if (line) containerEl.setAttribute('data-line', line);
+
+  // Highlight + render line numbers / line highlight. The Python source is
+  // already embedded in the <code> element above, so no fetch() is needed.
+  Prism.highlightElement(codeEl);
+
+  // Scroll the highlighted line into view once Prism has rendered the highlight overlay.
+  if (line) {
+    setTimeout(function () {
+      var highlightEl = containerEl.querySelector('.line-highlight');
+      if (highlightEl) highlightEl.scrollIntoView({ block: 'center' });
+    }, 0);
+  }
+
+  // Support changing the hash while the page is open (e.g. user edits #L2 -> #L3).
+  window.addEventListener('hashchange', function () {
+    location.reload();
+  });
+</script>
+
+</body>
+</html>

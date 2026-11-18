@@ -28,7 +28,7 @@ format:
     scrollable: true
     footer: "[← Back to Slides Index](../../slides/index.html)"
     resources:
-      - chapters/images/report/*
+      - chapters/images/report
       - data/adult_census.html
 
 

@@ -1,11 +1,11 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DataOp report</title>
+    <title>Credit fraud prediction</title>
     <style>
      html {
     font-family: sans-serif;
@@ -46,6 +46,18 @@ pre, code {
     transform: translateY(2px);
 }
 
+.graph-hint {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 0 0.75rem;
+    padding: 10px 12px;
+    border-left: 4px solid #6b9bd2;
+    border-radius: 3px;
+    background: #eef4fb;
+    color: #1f3b5c;
+    font-size: 0.95rem;
+}
+
 .data_op-node-wrapper {
     overflow-x: auto;
 }
@@ -58,7 +70,7 @@ pre, code {
 
 .data_op-node {
     display: flex;
-    height: calc(100vh - 24px - 24px);
+    height: 100%;
 }
 
 .data_op-node > * {
@@ -68,18 +80,118 @@ pre, code {
 }
 
 .data_op-node > nav.main-nav {
-    padding-top: 24px;
     border-right: 2px solid #ccc;
     flex-shrink: 0;
-}
-
-.fixed-report-title ~ .data_op-node-wrapper > .data_op-node > nav.main-nav {
-    padding-top: 30px;
+    resize: horizontal;
+    min-width: 8rem;
+    box-sizing: border-box;
 }
 
 .node-details {
     flex-grow: 1;
     flex-shrink: 1;
+}
+
+/* Drawer displaying the selected node (or a source file) next to the graph. */
+.data_op-node > .drawer {
+    display: none;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
+    border-left: 2px solid #ccc;
+}
+
+.drawer-open .data_op-node > .drawer {
+    display: flex;
+}
+
+/* The node page and the source page are stacked. The one not displayed is only
+   invisible, not display: none, so that the node page keeps its scroll position
+   and the source page can scroll to its highlighted line while it loads. The
+   keyboard does not reach an invisible iframe either. */
+.drawer-body {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.drawer-body > iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+}
+
+.drawer[data-mode="node"] #source-frame,
+.drawer[data-mode="source"] #node-frame {
+    visibility: hidden;
+}
+
+.drawer[data-mode="source"] #close-drawer,
+.drawer[data-mode="node"] #back-to-node {
+    display: none;
+}
+
+.drawer-toolbar {
+    display: flex;
+    flex: none;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #ddd;
+    background: #fafafa;
+}
+
+.header-button,
+.drawer-toolbar button {
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.header-button:hover:not(:disabled),
+.drawer-toolbar button:hover {
+    background: #f0f0f0;
+}
+
+.header-button:disabled {
+    color: #999;
+    cursor: default;
+}
+
+.header-button:focus-visible,
+.drawer-toolbar button:focus-visible {
+    outline: 2px solid #6b9bd2;
+    outline-offset: 1px;
+}
+
+/* Node pages are displayed inside the iframe of the index page: they fill it
+   and scroll as a whole. */
+.node-page {
+    margin: 0;
+}
+
+.node-page .data_op-node {
+    display: block;
+    height: auto;
+}
+
+.node-page .data_op-node > * {
+    max-height: none;
+    overflow-y: visible;
+}
+
+.node-page .node-details {
+    min-height: 100vh;
 }
 
 .node-details[data-has-error]{
@@ -117,10 +229,6 @@ pre, code {
     display: none;
 }
 
-.main-nav[data-is-open] + .node-details {
-    min-width: min(95%, 25rem);
-}
-
 .nav-legend-current-node {
     display: flex;
     background: var(--current-node-color);
@@ -133,32 +241,63 @@ pre, code {
     margin-top: 2rem;
 }
 
-.current-node polygon {
-
-    fill: var(--current-node-color);
-    stroke-width: 3;
+/* Layout of the index page: a header with the title and graph toggle, below it
+   the graph and the drawer displaying the selected node. */
+.report-index {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.icon-button {
-    position: absolute;
-    left: 5px;
-    top: 10px;
-    padding: 2px;
-    width: 24px;
-    height: 24px;
+.report-header {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    background: #fafafa;
 }
 
-.fixed-report-title {
-    position: absolute;
+.report-index > .data_op-node-wrapper {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.report-index .data_op-node {
+    flex: 1;
+    min-height: 0;
+}
+
+.report-index .data_op-node > nav.main-nav {
+    flex: 1 1 auto;
+}
+
+/* When the drawer is open the graph and the drawer share the width. */
+.report-index.drawer-open .data_op-node > nav.main-nav {
+    flex: 0 0 auto;
+    width: 50%;
+}
+
+.header-button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    margin-left: auto;
+}
+
+.report-title {
+    flex: 0 1 auto;
+    margin: 0;
+    min-width: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 90%;
-    left: 40px;
-    top: 5px;
-    padding: 2px;
-    padding-top: 0;
-    margin: 0;
 }
 
 .error-node polygon {
@@ -170,168 +309,42 @@ pre, code {
     stroke-dasharray: 4;
 }
     </style>
+    <script>
+     // Included in node pages. When a node page is displayed in the drawer of
+// index.html (see data_ops-report.js), clicks on links to other nodes or to
+// source files are not followed here: we ask the index page to display them,
+// so that it stays in charge of what is shown (and of the browser's history).
+// Nothing happens when the page is opened on its own.
+(function () {
+    if (window.parent === window) {
+        return;
+    }
+    document.addEventListener("click", (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey ||
+            event.shiftKey || event.altKey) {
+            return;
+        }
+        const link = event.target.closest('a[href^="node_"], a[href^="python/"]');
+        if (!link) {
+            return;
+        }
+        event.preventDefault();
+        // The target origin must be "*": for file:// URLs the origin is opaque,
+        // so it cannot be named.
+        window.parent.postMessage(
+            {type: "skrub-report-link", href: link.getAttribute("href")}, "*");
+    });
+})();
+    </script>
 </head>
 
-<body>
-    <button type="button" class="icon-button"
-        id="toggle-nav"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg></button>
-    
+<body class="node-page">
     <div class="data_op-node-wrapper">
         <div class="data_op-node">
-            <nav class="main-nav" data-is-open>
-                <div id="graph-nav" data-current-node-id="node_4" data-node-status='{"0": "success", "1": "success", "2": "success", "3": "success", "4": "success"}'>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 14.1.2 (0)
- -->
-<!-- Title: G Pages: 1 -->
-<svg width="232pt" height="183pt"
- viewBox="0.00 0.00 232.00 183.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 178.56)">
-
-<polygon fill="white" stroke="none" points="-4,4 -4,-178.56 228.02,-178.56 228.02,4 -4,4"/>
-<!-- node_0 -->
-<g id="node_0" class="node">
-
-<g id="a_node_0"><a xlink:href="node_0.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 8, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;data = skrub.var(&quot;data&quot;, df)">
-<polygon fill="none" stroke="black" points="143.89,-170.56 89.62,-170.56 89.62,-150.67 143.89,-150.67 143.89,-170.56"/>
-<polygon fill="none" stroke="black" points="147.89,-174.56 85.62,-174.56 85.62,-146.67 147.89,-146.67 147.89,-174.56"/>
-<text xml:space="preserve" text-anchor="start" x="95.38" y="-157.74" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">Var &#39;data&#39;</text>
-</a>
-</g>
-</g>
-<!-- node_1 -->
-<g id="node_1" class="node">
-
-<g id="a_node_1"><a xlink:href="node_1.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 9, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;X = data.drop(columns=&quot;target&quot;, errors=&quot;ignore&quot;).skb.mark_as_X()">
-<polygon fill="#c6d5f0" stroke="black" points="120.14,-117.67 13.38,-117.67 13.38,-97.78 120.14,-97.78 120.14,-117.67"/>
-<text xml:space="preserve" text-anchor="start" x="19.13" y="-104.85" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">X: CallMethod &#39;drop&#39;</text>
-</a>
-</g>
-</g>
-<!-- node_0&#45;&gt;node_1 -->
-<g id="edge4" class="edge">
-
-<path fill="none" stroke="black" d="M103.62,-146.24C96.98,-139.48 88.88,-131.23 81.96,-124.2"/>
-<polygon fill="black" stroke="black" points="83.74,-122.51 77.08,-119.23 80.24,-125.94 83.74,-122.51"/>
-</g>
-<!-- node_3 -->
-<g id="node_3" class="node">
-
-<g id="a_node_3"><a xlink:href="node_3.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 10, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;y = data[&quot;target&quot;].skb.mark_as_y()">
-<polygon fill="#fad9c6" stroke="black" points="224.02,-68.78 131.5,-68.78 131.5,-48.89 224.02,-48.89 224.02,-68.78"/>
-<text xml:space="preserve" text-anchor="start" x="137.26" y="-55.96" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">y: GetItem &#39;target&#39;</text>
-</a>
-</g>
-</g>
-<!-- node_0&#45;&gt;node_3 -->
-<g id="edge5" class="edge">
-
-<path fill="none" stroke="black" d="M124.73,-146.57C135.8,-128.48 155.79,-95.77 167.81,-76.1"/>
-<polygon fill="black" stroke="black" points="169.79,-77.57 171.35,-70.32 165.61,-75.01 169.79,-77.57"/>
-</g>
-<!-- node_2 -->
-<g id="node_2" class="node">
-
-<g id="a_node_2"><a xlink:href="node_2.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 11, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)">
-<polygon fill="none" stroke="black" points="113.52,-68.78 0,-68.78 0,-48.89 113.52,-48.89 113.52,-68.78"/>
-<text xml:space="preserve" text-anchor="start" x="5.76" y="-55.96" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">Apply StandardScaler</text>
-</a>
-</g>
-</g>
-<!-- node_1&#45;&gt;node_2 -->
-<g id="edge3" class="edge">
-
-<path fill="none" stroke="black" d="M64.83,-97.68C63.6,-91.92 61.97,-84.26 60.49,-77.34"/>
-<polygon fill="black" stroke="black" points="62.92,-76.98 59.07,-70.65 58.13,-78.01 62.92,-76.98"/>
-</g>
-<!-- node_4 -->
-<g id="node_4" class="node">
-
-<g id="a_node_4"><a xlink:href="node_4.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 11, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)">
-<polygon fill="none" stroke="black" points="183.27,-19.89 50.25,-19.89 50.25,0 183.27,0 183.27,-19.89"/>
-<text xml:space="preserve" text-anchor="start" x="56.01" y="-7.07" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">Apply LogisticRegression</text>
-</a>
-</g>
-</g>
-<!-- node_2&#45;&gt;node_4 -->
-<g id="edge1" class="edge">
-
-<path fill="none" stroke="black" d="M68.61,-48.57C77.08,-41.96 88.63,-32.93 98.3,-25.37"/>
-<polygon fill="black" stroke="black" points="99.73,-27.36 103.74,-21.12 96.71,-23.5 99.73,-27.36"/>
-</g>
-<!-- node_3&#45;&gt;node_4 -->
-<g id="edge2" class="edge">
-
-<path fill="none" stroke="black" d="M165.71,-48.57C157.1,-41.96 145.36,-32.93 135.53,-25.37"/>
-<polygon fill="black" stroke="black" points="137.03,-23.44 129.99,-21.11 134.04,-27.32 137.03,-23.44"/>
-</g>
-</g>
-</svg>
-
-</div>
-<script>
- (function() {
-
-    function highlightCurrentNode() {
-        const graphDiv = document.getElementById('graph-nav');
-        const currentNode = graphDiv.dataset.currentNodeId;
-        const nodeElem = document.getElementById(currentNode);
-        if (nodeElem === null){
-            return;
-        }
-        nodeElem.classList.add('current-node');
-    }
-    highlightCurrentNode();
-
-    function toggleNav() {
-        const nav = document.querySelector("nav");
-        if (nav === null){
-            return;
-        }
-        if (nav.hasAttribute("data-is-open")) {
-            nav.removeAttribute("data-is-open");
-        } else {
-            nav.setAttribute("data-is-open", "");
-        }
-    }
-    const toggleNavButton = document.getElementById('toggle-nav');
-    if (toggleNavButton !== null){
-        toggleNavButton.addEventListener("click", toggleNav);
-    }
-
-    function showNodeStatus() {
-        const graphDiv = document.getElementById('graph-nav');
-        const nodeStatus = JSON.parse(graphDiv.dataset.nodeStatus);
-        for (const nodeId in nodeStatus) {
-            const nodeElem = document.getElementById(`node_${nodeId}`);
-            switch (nodeStatus[nodeId]) {
-            case 'success':
-                nodeElem.classList.add('success-node');
-                break;
-            case 'error':
-                nodeElem.classList.add('error-node');
-                break;
-            case 'skipped':
-                nodeElem.classList.add('skipped-node');
-                break;
-            default:
-                // eval=False was passed to .skb.report(), no particular styling
-                // needed on any nodes.
-                break;
-            }
-        }
-    }
-    showNodeStatus();
-})();
-</script>
-            </nav>
             <div class="node-details" 
                 >
-                <h1>4: Apply LogisticRegression</h1>
+                <h1>Call &#39;load_products&#39;</h1>
+                <div><pre><code></code></pre></div>
                 <nav class="mini-nav">
                     <ul>
                         <li>
@@ -341,13 +354,12 @@ pre, code {
                         </li>
                         <li>
                             
-                        </li>
-                        <li>
-                            <a href='index.html'>top</a>
+                            <a href="node_5.html">next</a>
+                            
                         </li>
                     </ul>
                 </nav>
-                <samp>ID:</samp> <samp>23336755552611304060299580142464606223</samp>
+                <samp>ID:</samp> <samp>83093050407549382850396234525560678549</samp>
                 
                 <div>
                     
@@ -355,11 +367,11 @@ pre, code {
                     <h3>This step uses:</h3>
                     <ul>
                         
-                        <li><a href="node_2.html">2:
-                                Apply StandardScaler</a></li>
-                        
                         <li><a href="node_3.html">3:
-                                GetItem &#39;target&#39;</a></li>
+                                GetItem [&#39;ID&#39;]</a></li>
+                        
+                        <li><a href="node_0.html">0:
+                                Var &#39;data_source&#39;</a></li>
                         
                     </ul>
                 </div>
@@ -368,1611 +380,40 @@ pre, code {
                     <h3>This step is used by:</h3>
                     <ul>
                         
+                        <li><a href="node_5.html">5:
+                                Apply TableVectorizer</a></li>
+                        
                     </ul>
                 </div>
 
                 <div>
                     <h3>Where was this step created?</h3>
-                    <pre><code class="node-creation-stack">File <a href="python/0d374c52e8a159e08ad2fdaf742c3a950692871e8743e85ca5232fe35c462ed0.html#L11">/Users/rcap/scratch/gen-report.py, line 11</a>, in &lt;module&gt;
-<span class="node-creation-stack-line">pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)</span></code></pre>
+                    <pre><code class="node-creation-stack">File <a href="python/beb2d207ff50631f597c649be44870249dd47ecd2ea44feae49a89abb0b48dc9.html#L39">/Users/rcap/work/skrub-tutorials/data/credit_fraud_report.py, line 39</a>, in &lt;module&gt;
+<span class="node-creation-stack-line">vectorized_products = order_ids.skb.apply_func(load_products, data_source).skb.apply(</span></code></pre>
                 </div>
                 
 
                 
                 <div>
                     <h3>Computation time</h3>
-                    <code>0h 0m 0.073s</code>
+                    <code>0h 0m 0.0015s</code>
                 </div>
                 
 
                 
-                <h3>Estimator applied in this step:</h3>
+                
                 <div>
-                    <p>
-                        <code>LogisticRegression</code>
-                        
-                        : <a href="python/360df69156a060b2b7fb161990aadd0251f24ceb9c4a92a0ddd48254533e366e.html#L974">source code</a>
-                        
-                    </p>
+                    <h3>Function applied in this step:</h3>
+                    <code>load_products</code>
+                    
+                    : <a href="python/beb2d207ff50631f597c649be44870249dd47ecd2ea44feae49a89abb0b48dc9.html#L33">source code</a>
+                    
 
                     
 
 
-<details class="docstring-details">
-    <summary>
-        <strong>docstring:</strong>
-        <code>Logistic Regression (aka logit, MaxEnt) classifier.</code>
-    </summary>
-    <pre><code>Logistic Regression (aka logit, MaxEnt) classifier.
 
-This class implements regularized logistic regression using a set of available
-solvers. **Note that regularization is applied by default**. It can handle both
-dense and sparse input `X`. Use C-ordered arrays or CSR matrices containing 64-bit
-floats for optimal performance; any other input format will be converted (and
-copied).
-
-The solvers &#39;lbfgs&#39;, &#39;newton-cg&#39;, &#39;newton-cholesky&#39; and &#39;sag&#39; support only L2
-regularization with primal formulation, or no regularization. The &#39;liblinear&#39;
-solver supports both L1 and L2 regularization (but not both, i.e. elastic-net),
-with a dual formulation only for the L2 penalty. The Elastic-Net (combination of L1
-and L2) regularization is only supported by the &#39;saga&#39; solver.
-
-For :term:`multiclass` problems (whenever `n_classes &gt;= 3`), all solvers except
-&#39;liblinear&#39; optimize the (penalized) multinomial loss. &#39;liblinear&#39; only handles
-binary classification but can be extended to handle multiclass by using
-:class:`~sklearn.multiclass.OneVsRestClassifier`.
-
-Read more in the :ref:`User Guide &lt;logistic_regression&gt;`.
-
-Parameters
-----------
-penalty : {&#39;l1&#39;, &#39;l2&#39;, &#39;elasticnet&#39;, None}, default=&#39;l2&#39;
-    Specify the norm of the penalty:
-
-    - `None`: no penalty is added;
-    - `&#39;l2&#39;`: add an L2 penalty term and it is the default choice;
-    - `&#39;l1&#39;`: add an L1 penalty term;
-    - `&#39;elasticnet&#39;`: both L1 and L2 penalty terms are added.
-
-    .. warning::
-       Some penalties may not work with some solvers. See the parameter
-       `solver` below, to know the compatibility between the penalty and
-       solver.
-
-    .. versionadded:: 0.19
-       l1 penalty with SAGA solver (allowing &#39;multinomial&#39; + L1)
-
-    .. deprecated:: 1.8
-       `penalty` was deprecated in version 1.8 and will be removed in 1.10.
-       Use `l1_ratio` and `C` instead. `l1_ratio=0` for `penalty=&#39;l2&#39;`,
-       `l1_ratio=1` for `penalty=&#39;l1&#39;`, `l1_ratio` set to any float between 0 and 1
-       for `penalty=&#39;elasticnet&#39;`, and `C=np.inf` for `penalty=None`.
-
-C : float, default=1.0
-    Inverse of regularization strength; must be a positive float.
-    Like in support vector machines, smaller values specify stronger
-    regularization. `C=np.inf` results in unpenalized logistic regression.
-    For a visual example on the effect of tuning the `C` parameter
-    with an L1 penalty, see:
-    :ref:`sphx_glr_auto_examples_linear_model_plot_logistic_path.py`.
-
-l1_ratio : float, default=0.0
-    The Elastic-Net mixing parameter, with `0 &lt;= l1_ratio &lt;= 1`. Setting
-    `l1_ratio=1` gives a pure L1-penalty, setting `l1_ratio=0` a pure L2-penalty.
-    Any value between 0 and 1 gives an Elastic-Net penalty of the form
-    `l1_ratio * L1 + (1 - l1_ratio) * L2`.
-
-    .. warning::
-       Certain values of `l1_ratio`, i.e. some penalties, may not work with some
-       solvers. See the parameter `solver` below, to know the compatibility between
-       the penalty and solver.
-
-    .. versionchanged:: 1.8
-        Default value changed from None to 0.0.
-
-    .. deprecated:: 1.8
-        `None` is deprecated and will be removed in version 1.10. Always use
-        `l1_ratio` to specify the penalty type.
-
-dual : bool, default=False
-    Dual (constrained) or primal (regularized, see also
-    :ref:`this equation &lt;regularized-logistic-loss&gt;`) formulation. Dual formulation
-    is only implemented for l2 penalty with liblinear solver. Prefer `dual=False`
-    when n_samples &gt; n_features.
-
-tol : float, default=1e-4
-    Tolerance for stopping criteria.
-
-fit_intercept : bool, default=True
-    Specifies if a constant (a.k.a. bias or intercept) should be
-    added to the decision function.
-
-intercept_scaling : float, default=1
-    Useful only when the solver `liblinear` is used
-    and `self.fit_intercept` is set to `True`. In this case, `x` becomes
-    `[x, self.intercept_scaling]`,
-    i.e. a &#34;synthetic&#34; feature with constant value equal to
-    `intercept_scaling` is appended to the instance vector.
-    The intercept becomes
-    ``intercept_scaling * synthetic_feature_weight``.
-
-    .. note::
-        The synthetic feature weight is subject to L1 or L2
-        regularization as all other features.
-        To lessen the effect of regularization on synthetic feature weight
-        (and therefore on the intercept) `intercept_scaling` has to be increased.
-
-class_weight : dict or &#39;balanced&#39;, default=None
-    Weights associated with classes in the form ``{class_label: weight}``.
-    If not given, all classes are supposed to have weight one.
-
-    The &#34;balanced&#34; mode uses the values of y to automatically adjust
-    weights inversely proportional to class frequencies in the input data
-    as ``n_samples / (n_classes * np.bincount(y))``.
-
-    Note that these weights will be multiplied with sample_weight (passed
-    through the fit method) if sample_weight is specified.
-
-    .. versionadded:: 0.17
-       *class_weight=&#39;balanced&#39;*
-
-random_state : int, RandomState instance, default=None
-    Used when ``solver`` == &#39;sag&#39;, &#39;saga&#39; or &#39;liblinear&#39; to shuffle the
-    data. See :term:`Glossary &lt;random_state&gt;` for details.
-
-solver : {&#39;lbfgs&#39;, &#39;liblinear&#39;, &#39;newton-cg&#39;, &#39;newton-cholesky&#39;, &#39;sag&#39;, &#39;saga&#39;},             default=&#39;lbfgs&#39;
-
-    Algorithm to use in the optimization problem. Default is &#39;lbfgs&#39;.
-    To choose a solver, you might want to consider the following aspects:
-
-    - &#39;lbfgs&#39; is a good default solver because it works reasonably well for a wide
-      class of problems.
-    - For :term:`multiclass` problems (`n_classes &gt;= 3`), all solvers except
-      &#39;liblinear&#39; minimize the full multinomial loss, &#39;liblinear&#39; will raise an
-      error.
-    - &#39;newton-cholesky&#39; is a good choice for
-      `n_samples` &gt;&gt; `n_features * n_classes`, especially with one-hot encoded
-      categorical features with rare categories. Be aware that the memory usage
-      of this solver has a quadratic dependency on `n_features * n_classes`
-      because it explicitly computes the full Hessian matrix.
-    - For small datasets, &#39;liblinear&#39; is a good choice, whereas &#39;sag&#39;
-      and &#39;saga&#39; are faster for large ones;
-    - &#39;liblinear&#39; can only handle binary classification by default. To apply a
-      one-versus-rest scheme for the multiclass setting one can wrap it with the
-      :class:`~sklearn.multiclass.OneVsRestClassifier`.
-
-    .. warning::
-       The choice of the algorithm depends on the penalty chosen (`l1_ratio=0`
-       for L2-penalty, `l1_ratio=1` for L1-penalty and `0 &lt; l1_ratio &lt; 1` for
-       Elastic-Net) and on (multinomial) multiclass support:
-
-       ================= ======================== ======================
-       solver            l1_ratio                 multinomial multiclass
-       ================= ======================== ======================
-       &#39;lbfgs&#39;           l1_ratio=0               yes
-       &#39;liblinear&#39;       l1_ratio=1 or l1_ratio=0 no
-       &#39;newton-cg&#39;       l1_ratio=0               yes
-       &#39;newton-cholesky&#39; l1_ratio=0               yes
-       &#39;sag&#39;             l1_ratio=0               yes
-       &#39;saga&#39;            0&lt;=l1_ratio&lt;=1           yes
-       ================= ======================== ======================
-
-    .. note::
-       &#39;sag&#39; and &#39;saga&#39; fast convergence is only guaranteed on features
-       with approximately the same scale. You can preprocess the data with
-       a scaler from :mod:`sklearn.preprocessing`.
-
-    .. seealso::
-       Refer to the :ref:`User Guide &lt;Logistic_regression&gt;` for more
-       information regarding :class:`LogisticRegression` and more specifically the
-       :ref:`Table &lt;logistic_regression_solvers&gt;`
-       summarizing solver/penalty supports.
-
-    .. versionadded:: 0.17
-       Stochastic Average Gradient (SAG) descent solver. Multinomial support in
-       version 0.18.
-    .. versionadded:: 0.19
-       SAGA solver.
-    .. versionchanged:: 0.22
-       The default solver changed from &#39;liblinear&#39; to &#39;lbfgs&#39; in 0.22.
-    .. versionadded:: 1.2
-       newton-cholesky solver. Multinomial support in version 1.6.
-
-max_iter : int, default=100
-    Maximum number of iterations taken for the solvers to converge.
-
-verbose : int, default=0
-    For the liblinear and lbfgs solvers set verbose to any positive
-    number for verbosity.
-
-warm_start : bool, default=False
-    When set to True, reuse the solution of the previous call to fit as
-    initialization, otherwise, just erase the previous solution.
-    Useless for liblinear solver. See :term:`the Glossary &lt;warm_start&gt;`.
-
-    .. versionadded:: 0.17
-       *warm_start* to support *lbfgs*, *newton-cg*, *sag*, *saga* solvers.
-
-n_jobs : int, default=None
-    Does not have any effect.
-
-    .. deprecated:: 1.8
-       `n_jobs` is deprecated in version 1.8 and will be removed in 1.10.
-
-Attributes
-----------
-
-classes_ : ndarray of shape (n_classes, )
-    A list of class labels known to the classifier.
-
-coef_ : ndarray or CSR matrix of shape (1, n_features) or (n_classes, n_features)
-    Coefficients of the features in the decision function.
-
-    `coef_` is of shape (1, n_features) when the given problem is binary.
-
-    By default, it will be created as a dense array, but can be turned to
-    sparse (CSR format) through :meth:`sparsify` (which can be beneficial
-    under L1 regularization when many coefficients are zero), and back to
-    dense through :meth:`densify`.
-
-intercept_ : ndarray of shape (1,) or (n_classes,)
-    Intercept (a.k.a. bias) added to the decision function.
-
-    If `fit_intercept` is set to False, the intercept is set to zero.
-    `intercept_` is of shape (1,) when the given problem is binary.
-
-n_features_in_ : int
-    Number of features seen during :term:`fit`.
-
-    .. versionadded:: 0.24
-
-feature_names_in_ : ndarray of shape (`n_features_in_`,)
-    Names of features seen during :term:`fit`. Defined only when `X`
-    has feature names that are all strings.
-
-    .. versionadded:: 1.0
-
-n_iter_ : ndarray of shape (1, )
-    Actual number of iterations for all classes.
-
-    .. versionchanged:: 0.20
-
-        In SciPy &lt;= 1.0.0 the number of lbfgs iterations may exceed
-        ``max_iter``. ``n_iter_`` will now report at most ``max_iter``.
-
-See Also
---------
-SGDClassifier : Incrementally trained logistic regression (when given
-    the parameter ``loss=&#34;log_loss&#34;``).
-LogisticRegressionCV : Logistic regression with built-in cross validation.
-
-Notes
------
-The underlying C implementation uses a random number generator to
-select features when fitting the model. It is thus not uncommon,
-to have slightly different results for the same input data. If
-that happens, try with a smaller tol parameter.
-
-Predict output may not match that of standalone liblinear in certain
-cases. See :ref:`differences from liblinear &lt;liblinear_differences&gt;`
-in the narrative documentation.
-
-References
-----------
-
-L-BFGS-B -- Software for Large-scale Bound-constrained Optimization
-    Ciyou Zhu, Richard Byrd, Jorge Nocedal and Jose Luis Morales.
-    http://users.iems.northwestern.edu/~nocedal/lbfgsb.html
-
-LIBLINEAR -- A Library for Large Linear Classification
-    https://www.csie.ntu.edu.tw/~cjlin/liblinear/
-
-SAG -- Mark Schmidt, Nicolas Le Roux, and Francis Bach
-    Minimizing Finite Sums with the Stochastic Average Gradient
-    https://hal.inria.fr/hal-00860051/document
-
-SAGA -- Defazio, A., Bach F. &amp; Lacoste-Julien S. (2014).
-        :arxiv:`&#34;SAGA: A Fast Incremental Gradient Method With Support
-        for Non-Strongly Convex Composite Objectives&#34; &lt;1407.0202&gt;`
-
-Hsiang-Fu Yu, Fang-Lan Huang, Chih-Jen Lin (2011). Dual coordinate descent
-    methods for logistic regression and maximum entropy models.
-    Machine Learning 85(1-2):41-75.
-    https://www.csie.ntu.edu.tw/~cjlin/papers/maxent_dual.pdf
-
-Examples
---------
-&gt;&gt;&gt; from sklearn.datasets import load_iris
-&gt;&gt;&gt; from sklearn.linear_model import LogisticRegression
-&gt;&gt;&gt; X, y = load_iris(return_X_y=True)
-&gt;&gt;&gt; clf = LogisticRegression(random_state=0).fit(X, y)
-&gt;&gt;&gt; clf.predict(X[:2, :])
-array([0, 0])
-&gt;&gt;&gt; clf.predict_proba(X[:2, :])
-array([[9.82e-01, 1.82e-02, 1.44e-08],
-       [9.72e-01, 2.82e-02, 3.02e-08]])
-&gt;&gt;&gt; clf.score(X, y)
-0.97
-
-For a comparison of the LogisticRegression with other classifiers see:
-:ref:`sphx_glr_auto_examples_classification_plot_classification_probability.py`.</code></pre>
-</details>
-
-
-
-
-                    
-                    <style>.sk-global {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: #000;
-  --sklearn-color-text-muted: #666;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-}
-
-.sk-global.light {
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: black;
-  --sklearn-color-background: white;
-  --sklearn-color-border-box: black;
-  --sklearn-color-icon: #696969;
-}
-
-.sk-global.dark {
-  --sklearn-color-text-on-default-background: white;
-  --sklearn-color-background: #111;
-  --sklearn-color-border-box: white;
-  --sklearn-color-icon: #878787;
-}
-
-.sk-global {
-  color: var(--sklearn-color-text);
-}
-
-.sk-global pre {
-  padding: 0;
-}
-
-.sk-global input.sk-hidden--visually {
-  border: 0;
-  clip-path: inset(100%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-.sk-global div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-.sk-global div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-.sk-global div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-.sk-global div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-.sk-global div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-.sk-global div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.sk-global div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-.sk-global div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-.sk-global div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-.sk-global div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-.sk-global div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-.sk-global label.sk-toggleable__label {
-  cursor: pointer;
-  display: flex;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-}
-
-.sk-global label.sk-toggleable__label .caption {
-  font-size: 0.6rem;
-  font-weight: lighter;
-  color: var(--sklearn-color-text-muted);
-}
-
-.sk-global label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-.sk-global label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-.sk-global div.sk-toggleable__content {
-  display: none;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-.sk-global div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.sk-global div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-.sk-global div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.sk-global input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  display: block;
-  width: 100%;
-  overflow: visible;
-}
-
-.sk-global input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-.sk-global div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.sk-global div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-.sk-global div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.sk-global div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-.sk-global div.sk-label label.sk-toggleable__label,
-.sk-global div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-.sk-global div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-.sk-global div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-.sk-global div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  line-height: 1.2em;
-}
-
-.sk-global div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-.sk-global div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-.sk-global div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-.sk-global div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.sk-global div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 0.5em;
-  text-align: center;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-3) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3) 1pt solid;
-  color: var(--sklearn-color-fitted-level-3);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  border: var(--sklearn-color-fitted-level-0) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-0);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  border: var(--sklearn-color-fitted-level-0) 1pt solid;
-  color: var(--sklearn-color-fitted-level-0);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-.sk-global a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-.sk-global a.estimator_doc_link.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-.sk-global a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-.sk-global a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-top-container.sk-global {
-  /* pydata-sphinx-theme hides overflow, so scrolling is disabled.
-   We need to set it to !important and add tabindex="0" in the HTML
-   to allow keyboard-only users to navigate the display. */
-  overflow-x: scroll !important;
-  max-width: 100%;
-}
-
-.estimator-table {
-    font-family: monospace;
-}
-
-.estimator-table summary {
-    padding: .5rem;
-    cursor: pointer;
-}
-
-.estimator-table summary::marker {
-    font-size: 0.7rem;
-}
-
-.estimator-table details[open] {
-    padding-left: 0.1rem;
-    padding-right: 0.1rem;
-    padding-bottom: 0.3rem;
-}
-
-.estimator-table .parameters-table {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    margin-top: 0;
-}
-
-.estimator-table .parameters-table tr:nth-child(odd) {
-    background-color: #fff;
-}
-
-.estimator-table .parameters-table tr:nth-child(even) {
-    background-color: #f6f6f6;
-}
-
-.estimator-table .parameters-table tr:hover td {
-    background-color: #e0e0e0;
-}
-
-.estimator-table table :is(td, th) {
-    border: 1px solid rgba(106, 105, 104, 0.232);
-}
-
-/*
-    `table td`is set in notebook with right text-align.
-    We need to overwrite it.
-*/
-.estimator-table table td.param {
-    text-align: left;
-    position: relative;
-    padding: 0;
-}
-
-.user-set td {
-    color:rgb(255, 94, 0);
-    text-align: left !important;
-}
-
-.user-set td.value {
-    color:rgb(255, 94, 0);
-    background-color: transparent;
-}
-
-.default td, .estimator-table th {
-    color: black;
-    text-align: left !important;
-}
-
-.user-set td i,
-.default td i {
-    color: black;
-}
-
-td.fitted-att-type {
-    white-space: preserve nowrap;
-}
-
-/*
-    Styles for parameter documentation links
-    We need styling for visited so jupyter doesn't overwrite it
-*/
-a.param-doc-link,
-a.param-doc-link:link,
-a.param-doc-link:visited {
-    text-decoration: underline dashed;
-    text-underline-offset: .3em;
-    color: inherit;
-    display: block;
-    padding: .5em;
-}
-
-@supports(anchor-name: --doc-link) {
-    a.param-doc-link,
-    a.param-doc-link:link,
-    a.param-doc-link:visited {
-    anchor-name: --doc-link;
-    }
-}
-
-/* "hack" to make the entire area of the cell containing the link clickable */
-a.param-doc-link::before {
-    position: absolute;
-    content: "";
-    inset: 0;
-}
-
-.param-doc-description {
-    display: none;
-    position: absolute;
-    z-index: 9999;
-    left: 0;
-    padding: .5ex;
-    margin-left: 1.5em;
-    color: var(--sklearn-color-text);
-    box-shadow: .3em .3em .4em #999;
-    width: max-content;
-    text-align: left;
-    max-height: 10em;
-    overflow-y: auto;
-
-    /* unfitted */
-    background: var(--sklearn-color-unfitted-level-0);
-    border: thin solid var(--sklearn-color-unfitted-level-3);
-}
-
-@supports(position-area: center right) {
-    .param-doc-description {
-    position-area: center right;
-    position: fixed;
-    margin-left: 0;
-    }
-}
-
-/* Fitted state for parameter tooltips */
-.fitted .param-doc-description {
-    /* fitted */
-    background: var(--sklearn-color-fitted-level-0);
-    border: thin solid var(--sklearn-color-fitted-level-3);
-}
-
-.param-doc-link:hover .param-doc-description {
-    display: block;
-}
-
-.copy-paste-icon {
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTIwOCAwTDMzMi4xIDBjMTIuNyAwIDI0LjkgNS4xIDMzLjkgMTQuMWw2Ny45IDY3LjljOSA5IDE0LjEgMjEuMiAxNC4xIDMzLjlMNDQ4IDMzNmMwIDI2LjUtMjEuNSA0OC00OCA0OGwtMTkyIDBjLTI2LjUgMC00OC0yMS41LTQ4LTQ4bDAtMjg4YzAtMjYuNSAyMS41LTQ4IDQ4LTQ4ek00OCAxMjhsODAgMCAwIDY0LTY0IDAgMCAyNTYgMTkyIDAgMC0zMiA2NCAwIDAgNDhjMCAyNi41LTIxLjUgNDgtNDggNDhMNDggNTEyYy0yNi41IDAtNDgtMjEuNS00OC00OEwwIDE3NmMwLTI2LjUgMjEuNS00OCA0OC00OHoiLz48L3N2Zz4=);
-    background-repeat: no-repeat;
-    background-size: 14px 14px;
-    background-position: 0;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    cursor: pointer;
-}
-
-.features {
-  font-family: monospace;
-  cursor: pointer;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: .20em;
-  margin-bottom: 0.5em;
-  font-size: inherit; /* Needed for jupyter */
-}
-
-.features.fitted {
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.features summary {
-  cursor: pointer;
-  display: flex;
-  margin-bottom: 0;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  padding: .25em;
-}
-
-.features details[open] > summary {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-  border-radius: .20em 0 0 0;
-}
-
-.features.fitted details[open] > summary {
-  background-color: var(--sklearn-color-fitted-level-2);
-  border-radius: .20em 0 0 0;
-}
-
-.features details > summary .arrow::before {
-  content: "▸";
-  color: grey;
-}
-
-.features details[open] > summary .arrow::before {
-  content: "▾";
-}
-
-.features details:hover > summary {
-  margin: 0;
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.features.fitted details:hover > summary {
-  margin: 0;
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-.features .features-container {
-  max-width: 15em;
-  max-height: 10em;
-  overflow: auto;
-  scrollbar-width: thin;
-  padding: .25em 0.1rem;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border-radius: 0 0 .5em .5em;
-}
-
-.features.fitted .features-container {
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.features .image-container {
-  block-size: 1em;
-  inline-size: 1em;
-  padding: 0;
-  margin: 0%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.features .copy-paste-icon {
-  background-size: 1em 1em;
-  width: 1em;
-  height: 1em;
-  filter: grayscale(100%) opacity(60%);
-}
-
-.features .features-container table {
-  width: 100%;
-  margin: 0.01em;
-}
-
-.features .features-container table tr:nth-child(odd) {
-  background-color: #fff;
-}
-
-.features .features-container table tr:nth-child(even) {
-  background-color: #f6f6f6;
-}
-
-.features .features-container table tr:hover {
-  background-color: #e0e0e0;
-}
-
-.features .features-container table {
-  table-layout: inherit;
-}
-
-.features .features-container table td {
-  text-align: left;
-  padding: 0 0.5em;
-  border: 1px solid rgba(106, 105, 104, 0.232);
-  white-space: nowrap;
-  color: var(--sklearn-color-text);
-}
-
-.total_features {
-  display: flex;
-  justify-content: center;
-  margin-top: 0.5em;
-}
-</style><body><div id="sk-container-id-9" tabindex="0" class="sk-top-container sk-global"><div class="sk-text-repr-fallback"><pre>LogisticRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually sk-global" id="sk-estimator-id-11" type="checkbox" checked><label for="sk-estimator-id-11" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>LogisticRegression</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html">?<span>Documentation for LogisticRegression</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted" data-param-prefix="">
-        <div class="estimator-table">
-            <details>
-                <summary>Parameters</summary>
-                <table class="parameters-table">
-                  <tbody>
-                    
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('penalty',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-penalty;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=penalty,-%7B%27l1%27%2C%20%27l2%27%2C%20%27elasticnet%27%2C%20None%7D%2C%20default%3D%27l2%27">
-            penalty
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-penalty;">
-            penalty: {&#x27;l1&#x27;, &#x27;l2&#x27;, &#x27;elasticnet&#x27;, None}, default=&#x27;l2&#x27;<br><br>Specify the norm of the penalty:<br><br>- `None`: no penalty is added;<br>- `&#x27;l2&#x27;`: add an L2 penalty term and it is the default choice;<br>- `&#x27;l1&#x27;`: add an L1 penalty term;<br>- `&#x27;elasticnet&#x27;`: both L1 and L2 penalty terms are added.<br><br>.. warning::<br>   Some penalties may not work with some solvers. See the parameter<br>   `solver` below, to know the compatibility between the penalty and<br>   solver.<br><br>.. versionadded:: 0.19<br>   l1 penalty with SAGA solver (allowing &#x27;multinomial&#x27; + L1)<br><br>.. deprecated:: 1.8<br>   `penalty` was deprecated in version 1.8 and will be removed in 1.10.<br>   Use `l1_ratio` and `C` instead. `l1_ratio=0` for `penalty=&#x27;l2&#x27;`,<br>   `l1_ratio=1` for `penalty=&#x27;l1&#x27;`, `l1_ratio` set to any float between 0 and 1<br>   for `penalty=&#x27;elasticnet&#x27;`, and `C=np.inf` for `penalty=None`.</span>
-        </a>
-    </td>
-            <td class="value">&#x27;deprecated&#x27;</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('C',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-C;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=C,-float%2C%20default%3D1.0">
-            C
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-C;">
-            C: float, default=1.0<br><br>Inverse of regularization strength; must be a positive float.<br>Like in support vector machines, smaller values specify stronger<br>regularization. `C=np.inf` results in unpenalized logistic regression.<br>For a visual example on the effect of tuning the `C` parameter<br>with an L1 penalty, see:<br>:ref:`sphx_glr_auto_examples_linear_model_plot_logistic_path.py`.</span>
-        </a>
-    </td>
-            <td class="value">1.0</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('l1_ratio',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-l1_ratio;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=l1_ratio,-float%2C%20default%3D0.0">
-            l1_ratio
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-l1_ratio;">
-            l1_ratio: float, default=0.0<br><br>The Elastic-Net mixing parameter, with `0 &lt;= l1_ratio &lt;= 1`. Setting<br>`l1_ratio=1` gives a pure L1-penalty, setting `l1_ratio=0` a pure L2-penalty.<br>Any value between 0 and 1 gives an Elastic-Net penalty of the form<br>`l1_ratio * L1 + (1 - l1_ratio) * L2`.<br><br>.. warning::<br>   Certain values of `l1_ratio`, i.e. some penalties, may not work with some<br>   solvers. See the parameter `solver` below, to know the compatibility between<br>   the penalty and solver.<br><br>.. versionchanged:: 1.8<br>    Default value changed from None to 0.0.<br><br>.. deprecated:: 1.8<br>    `None` is deprecated and will be removed in version 1.10. Always use<br>    `l1_ratio` to specify the penalty type.</span>
-        </a>
-    </td>
-            <td class="value">0.0</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('dual',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-dual;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=dual,-bool%2C%20default%3DFalse">
-            dual
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-dual;">
-            dual: bool, default=False<br><br>Dual (constrained) or primal (regularized, see also<br>:ref:`this equation &lt;regularized-logistic-loss&gt;`) formulation. Dual formulation<br>is only implemented for l2 penalty with liblinear solver. Prefer `dual=False`<br>when n_samples &gt; n_features.</span>
-        </a>
-    </td>
-            <td class="value">False</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('tol',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-tol;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=tol,-float%2C%20default%3D1e-4">
-            tol
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-tol;">
-            tol: float, default=1e-4<br><br>Tolerance for stopping criteria.</span>
-        </a>
-    </td>
-            <td class="value">0.0001</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('fit_intercept',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-fit_intercept;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=fit_intercept,-bool%2C%20default%3DTrue">
-            fit_intercept
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-fit_intercept;">
-            fit_intercept: bool, default=True<br><br>Specifies if a constant (a.k.a. bias or intercept) should be<br>added to the decision function.</span>
-        </a>
-    </td>
-            <td class="value">True</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('intercept_scaling',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-intercept_scaling;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=intercept_scaling,-float%2C%20default%3D1">
-            intercept_scaling
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-intercept_scaling;">
-            intercept_scaling: float, default=1<br><br>Useful only when the solver `liblinear` is used<br>and `self.fit_intercept` is set to `True`. In this case, `x` becomes<br>`[x, self.intercept_scaling]`,<br>i.e. a &quot;synthetic&quot; feature with constant value equal to<br>`intercept_scaling` is appended to the instance vector.<br>The intercept becomes<br>``intercept_scaling * synthetic_feature_weight``.<br><br>.. note::<br>    The synthetic feature weight is subject to L1 or L2<br>    regularization as all other features.<br>    To lessen the effect of regularization on synthetic feature weight<br>    (and therefore on the intercept) `intercept_scaling` has to be increased.</span>
-        </a>
-    </td>
-            <td class="value">1</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('class_weight',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-class_weight;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=class_weight,-dict%20or%20%27balanced%27%2C%20default%3DNone">
-            class_weight
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-class_weight;">
-            class_weight: dict or &#x27;balanced&#x27;, default=None<br><br>Weights associated with classes in the form ``{class_label: weight}``.<br>If not given, all classes are supposed to have weight one.<br><br>The &quot;balanced&quot; mode uses the values of y to automatically adjust<br>weights inversely proportional to class frequencies in the input data<br>as ``n_samples / (n_classes * np.bincount(y))``.<br><br>Note that these weights will be multiplied with sample_weight (passed<br>through the fit method) if sample_weight is specified.<br><br>.. versionadded:: 0.17<br>   *class_weight=&#x27;balanced&#x27;*</span>
-        </a>
-    </td>
-            <td class="value">None</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('random_state',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-random_state;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=random_state,-int%2C%20RandomState%20instance%2C%20default%3DNone">
-            random_state
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-random_state;">
-            random_state: int, RandomState instance, default=None<br><br>Used when ``solver`` == &#x27;sag&#x27;, &#x27;saga&#x27; or &#x27;liblinear&#x27; to shuffle the<br>data. See :term:`Glossary &lt;random_state&gt;` for details.</span>
-        </a>
-    </td>
-            <td class="value">None</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('solver',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-solver;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=solver,-%7B%27lbfgs%27%2C%20%27liblinear%27%2C%20%27newton-cg%27%2C%20%27newton-cholesky%27%2C%20%27sag%27%2C%20%27saga%27%7D%2C%20%20%20%20%20%20%20%20%20%20%20%20%20default%3D%27lbfgs%27">
-            solver
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-solver;">
-            solver: {&#x27;lbfgs&#x27;, &#x27;liblinear&#x27;, &#x27;newton-cg&#x27;, &#x27;newton-cholesky&#x27;, &#x27;sag&#x27;, &#x27;saga&#x27;},             default=&#x27;lbfgs&#x27;<br><br>Algorithm to use in the optimization problem. Default is &#x27;lbfgs&#x27;.<br>To choose a solver, you might want to consider the following aspects:<br><br>- &#x27;lbfgs&#x27; is a good default solver because it works reasonably well for a wide<br>  class of problems.<br>- For :term:`multiclass` problems (`n_classes &gt;= 3`), all solvers except<br>  &#x27;liblinear&#x27; minimize the full multinomial loss, &#x27;liblinear&#x27; will raise an<br>  error.<br>- &#x27;newton-cholesky&#x27; is a good choice for<br>  `n_samples` &gt;&gt; `n_features * n_classes`, especially with one-hot encoded<br>  categorical features with rare categories. Be aware that the memory usage<br>  of this solver has a quadratic dependency on `n_features * n_classes`<br>  because it explicitly computes the full Hessian matrix.<br>- For small datasets, &#x27;liblinear&#x27; is a good choice, whereas &#x27;sag&#x27;<br>  and &#x27;saga&#x27; are faster for large ones;<br>- &#x27;liblinear&#x27; can only handle binary classification by default. To apply a<br>  one-versus-rest scheme for the multiclass setting one can wrap it with the<br>  :class:`~sklearn.multiclass.OneVsRestClassifier`.<br><br>.. warning::<br>   The choice of the algorithm depends on the penalty chosen (`l1_ratio=0`<br>   for L2-penalty, `l1_ratio=1` for L1-penalty and `0 &lt; l1_ratio &lt; 1` for<br>   Elastic-Net) and on (multinomial) multiclass support:<br><br>   ================= ======================== ======================<br>   solver            l1_ratio                 multinomial multiclass<br>   ================= ======================== ======================<br>   &#x27;lbfgs&#x27;           l1_ratio=0               yes<br>   &#x27;liblinear&#x27;       l1_ratio=1 or l1_ratio=0 no<br>   &#x27;newton-cg&#x27;       l1_ratio=0               yes<br>   &#x27;newton-cholesky&#x27; l1_ratio=0               yes<br>   &#x27;sag&#x27;             l1_ratio=0               yes<br>   &#x27;saga&#x27;            0&lt;=l1_ratio&lt;=1           yes<br>   ================= ======================== ======================<br><br>.. note::<br>   &#x27;sag&#x27; and &#x27;saga&#x27; fast convergence is only guaranteed on features<br>   with approximately the same scale. You can preprocess the data with<br>   a scaler from :mod:`sklearn.preprocessing`.<br><br>.. seealso::<br>   Refer to the :ref:`User Guide &lt;Logistic_regression&gt;` for more<br>   information regarding :class:`LogisticRegression` and more specifically the<br>   :ref:`Table &lt;logistic_regression_solvers&gt;`<br>   summarizing solver/penalty supports.<br><br>.. versionadded:: 0.17<br>   Stochastic Average Gradient (SAG) descent solver. Multinomial support in<br>   version 0.18.<br>.. versionadded:: 0.19<br>   SAGA solver.<br>.. versionchanged:: 0.22<br>   The default solver changed from &#x27;liblinear&#x27; to &#x27;lbfgs&#x27; in 0.22.<br>.. versionadded:: 1.2<br>   newton-cholesky solver. Multinomial support in version 1.6.</span>
-        </a>
-    </td>
-            <td class="value">&#x27;lbfgs&#x27;</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('max_iter',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-max_iter;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=max_iter,-int%2C%20default%3D100">
-            max_iter
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-max_iter;">
-            max_iter: int, default=100<br><br>Maximum number of iterations taken for the solvers to converge.</span>
-        </a>
-    </td>
-            <td class="value">100</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('verbose',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-verbose;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=verbose,-int%2C%20default%3D0">
-            verbose
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-verbose;">
-            verbose: int, default=0<br><br>For the liblinear and lbfgs solvers set verbose to any positive<br>number for verbosity.</span>
-        </a>
-    </td>
-            <td class="value">0</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('warm_start',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-warm_start;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=warm_start,-bool%2C%20default%3DFalse">
-            warm_start
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-warm_start;">
-            warm_start: bool, default=False<br><br>When set to True, reuse the solution of the previous call to fit as<br>initialization, otherwise, just erase the previous solution.<br>Useless for liblinear solver. See :term:`the Glossary &lt;warm_start&gt;`.<br><br>.. versionadded:: 0.17<br>   *warm_start* to support *lbfgs*, *newton-cg*, *sag*, *saga* solvers.</span>
-        </a>
-    </td>
-            <td class="value">False</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('n_jobs',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-n_jobs;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=n_jobs,-int%2C%20default%3DNone">
-            n_jobs
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-n_jobs;">
-            n_jobs: int, default=None<br><br>Does not have any effect.<br><br>.. deprecated:: 1.8<br>   `n_jobs` is deprecated in version 1.8 and will be removed in 1.10.</span>
-        </a>
-    </td>
-            <td class="value">None</td>
-        </tr>
-    
-                  </tbody>
-                </table>
-            </details>
-        </div>
-    
-        <div class="estimator-table">
-            <details>
-                <summary>Fitted attributes</summary>
-                <table class="parameters-table">
-                    <tbody>
-                        <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Value</th>
-                        </tr>
-                        
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-classes_;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=classes_,-ndarray%20of%20shape%20%28n_classes%2C%20%29">
-            classes_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-classes_;">
-            classes_: ndarray of shape (n_classes, )<br><br>A list of class labels known to the classifier.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">ndarray[int64](2,)</td>
-           <td>[0,1]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-coef_;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=coef_,-ndarray%20or%20CSR%20matrix%20of%20shape%20%281%2C%20n_features%29%20or%20%28n_classes%2C%20n_features%29">
-            coef_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-coef_;">
-            coef_: ndarray or CSR matrix of shape (1, n_features) or (n_classes, n_features)<br><br>Coefficients of the features in the decision function.<br><br>`coef_` is of shape (1, n_features) when the given problem is binary.<br><br>By default, it will be created as a dense array, but can be turned to<br>sparse (CSR format) through :meth:`sparsify` (which can be beneficial<br>under L1 regularization when many coefficients are zero), and back to<br>dense through :meth:`densify`.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">ndarray[float64](1, 1)</td>
-           <td>[[0.]]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-feature_names_in_;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=feature_names_in_,-ndarray%20of%20shape%20%28n_features_in_%2C%29">
-            feature_names_in_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-feature_names_in_;">
-            feature_names_in_: ndarray of shape (`n_features_in_`,)<br><br>Names of features seen during :term:`fit`. Defined only when `X`<br>has feature names that are all strings.<br><br>.. versionadded:: 1.0</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">ndarray[object](1,)</td>
-           <td>[&#x27;value&#x27;]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-intercept_;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=intercept_,-ndarray%20of%20shape%20%281%2C%29%20or%20%28n_classes%2C%29">
-            intercept_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-intercept_;">
-            intercept_: ndarray of shape (1,) or (n_classes,)<br><br>Intercept (a.k.a. bias) added to the decision function.<br><br>If `fit_intercept` is set to False, the intercept is set to zero.<br>`intercept_` is of shape (1,) when the given problem is binary.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">ndarray[float64](1,)</td>
-           <td>[0.69]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-n_features_in_;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=n_features_in_,-int">
-            n_features_in_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-n_features_in_;">
-            n_features_in_: int<br><br>Number of features seen during :term:`fit`.<br><br>.. versionadded:: 0.24</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">int</td>
-           <td>1</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-n_iter_;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.linear_model.LogisticRegression.html#:~:text=n_iter_,-ndarray%20of%20shape%20%281%2C%20%29">
-            n_iter_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-n_iter_;">
-            n_iter_: ndarray of shape (1, )<br><br>Actual number of iterations for all classes.<br><br>.. versionchanged:: 0.20<br><br>    In SciPy &lt;= 1.0.0 the number of lbfgs iterations may exceed<br>    ``max_iter``. ``n_iter_`` will now report at most ``max_iter``.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">ndarray[int32](1,)</td>
-           <td>[4]</td>
-
-
-       </tr>
-    
-                    </tbody>
-                </table>
-            </details>
-        </div>
-    </div></div></div></div></div><script>/*  Authors: The scikit-learn developers
- SPDX-License-Identifier: BSD-3-Clause
-*/
-
-function copyToClipboard(text, element) {
-    // Get the parameter prefix from the closest toggleable content
-    const toggleableContent = element.closest('.sk-toggleable__content');
-    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
-    const fullParamName = paramPrefix ? `${paramPrefix}${text}` : text;
-
-    const originalStyle = element.style;
-    const computedStyle = window.getComputedStyle(element);
-    const originalWidth = computedStyle.width;
-    const originalHTML = element.innerHTML.replace('Copied!', '');
-
-    navigator.clipboard.writeText(fullParamName)
-        .then(() => {
-            element.style.width = originalWidth;
-            element.style.color = 'green';
-            element.innerHTML = "Copied!";
-
-            setTimeout(() => {
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 2000);
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
-            element.style.color = 'red';
-            element.innerHTML = "Failed!";
-            setTimeout(() => {
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 2000);
-        });
-    return false;
-}
-
-document.querySelectorAll('.copy-paste-icon').forEach(function(element) {
-    const toggleableContent = element.closest('.sk-toggleable__content');
-    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
-
-    const parent = element.parentElement;
-    if (!parent || !parent.nextElementSibling) {
-        console.warn('Expected copy-paste icon is missing from the DOM structure');
-        return;
-    }
-
-    const paramName = element.parentElement.nextElementSibling
-        .textContent.trim().split(' ')[0];
-    const fullParamName = paramPrefix ? `${paramPrefix}${paramName}` : paramName;
-
-    element.setAttribute('title', fullParamName);
-});
-
-/**
- * Copy the list of feature names formatted as a Python list.
- *
- * @param {HTMLElement} element - The copy button inside a `.features` block; its siblings
- *   contain a `details` element and a table containing feature named.
- * @returns {boolean} Always returns `false` so callers can prevent the default click behavior.
- */
-function copyFeatureNamesToClipboard(element) {
-    var detailsElem = element.closest('.features').querySelector('details');
-    var wasOpen = detailsElem.open;
-    detailsElem.open = true;
-    var content = element.closest('.features').querySelector('tbody')
-                  .innerText.trim();
-    if (!wasOpen) detailsElem.open = false;
-    const rows = content.split('\n').map(row => `    "${row}"`);
-    const formattedText = `[\n${rows.join(',\n')},\n]`;
-    const originalHTML = element.innerHTML.replace('✔', '');
-    const originalStyle = element.style;
-    const copyMark = document.createElement('span');
-    copyMark.innerHTML = '✔';
-    copyMark.style.color = 'blue';
-    copyMark.style.fontSize = '1em';
-
-    navigator.clipboard.writeText(formattedText)
-        .then(() => {
-            element.style.display = 'none';
-            element.parentElement.appendChild(copyMark);
-
-            setTimeout(() => {
-                copyMark.remove();
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 1000);
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
-            element.style.color = 'orange';
-            element.innerHTML = "Failed!";
-            setTimeout(() => {
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 1000);
-        });
-    return false;
-}
-/**
- * Adapted from Skrub
- * https://github.com/skrub-data/skrub/blob/403466d1d5d4dc76a7ef569b3f8228db59a31dc3/skrub/_reporting/_data/templates/report.js#L789
- * @returns "light" or "dark"
- */
-function detectTheme(element) {
-    const body = document.querySelector('body');
-
-    // Check VSCode theme
-    const themeKindAttr = body.getAttribute('data-vscode-theme-kind');
-    const themeNameAttr = body.getAttribute('data-vscode-theme-name');
-
-    if (themeKindAttr && themeNameAttr) {
-        const themeKind = themeKindAttr.toLowerCase();
-        const themeName = themeNameAttr.toLowerCase();
-
-        if (themeKind.includes("dark") || themeName.includes("dark")) {
-            return "dark";
-        }
-        if (themeKind.includes("light") || themeName.includes("light")) {
-            return "light";
-        }
-    }
-
-    // Check Jupyter theme
-    if (body.getAttribute('data-jp-theme-light') === 'false') {
-        return 'dark';
-    } else if (body.getAttribute('data-jp-theme-light') === 'true') {
-        return 'light';
-    }
-
-    // Guess based on a parent element's color
-    const color = window.getComputedStyle(element.parentNode, null).getPropertyValue('color');
-    const match = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
-    if (match) {
-        const [r, g, b] = [
-            parseFloat(match[1]),
-            parseFloat(match[2]),
-            parseFloat(match[3])
-        ];
-
-        // https://en.wikipedia.org/wiki/HSL_and_HSV#Lightness
-        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-
-        if (luma > 180) {
-            // If the text is very bright we have a dark theme
-            return 'dark';
-        }
-        if (luma < 75) {
-            // If the text is very dark we have a light theme
-            return 'light';
-        }
-        // Otherwise fall back to the next heuristic.
-    }
-
-    // Fallback to system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-
-function forceTheme(elementId) {
-    const estimatorElement = document.querySelector(`#${elementId}`);
-    if (estimatorElement === null) {
-        console.error(`Element with id ${elementId} not found.`);
-    } else {
-        const theme = detectTheme(estimatorElement);
-        estimatorElement.classList.add(theme);
-    }
-}
-
-forceTheme('sk-container-id-9');</script></body>
-                    
                 </div>
-                
                 
                 
 
@@ -1983,8 +424,8 @@ forceTheme('sk-container-id-9');</script></body>
                     
                     <div>
                         
-<div id="report_f15b8452-wrapper" hidden>
-    <template id="report_f15b8452-template">
+<div id="report_61782ba4-wrapper" hidden>
+    <template id="report_61782ba4-template">
         <style>
          /*!
 Pure v3.0.0
@@ -3303,8 +1744,9 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
         </div>
         <div class="column-filter" data-manager="InvisibleInAssociationsTabPanel">
     <select data-manager="ColumnFilter"
-            data-all-filters-base64="eyJhbGwoKSI6IHsiZGlzcGxheV9uYW1lIjogIkFsbCBjb2x1bW5zIiwgImNvbHVtbnMiOiBbMF19LCAiaGFzX251bGxzKDAuMCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJXaXRoIG51bGxzIiwgImNvbHVtbnMiOiBbXX0sICIofmhhc19udWxscygwLjApKSI6IHsiZGlzcGxheV9uYW1lIjogIldpdGhvdXQgbnVsbHMiLCAiY29sdW1ucyI6IFswXX0sICJudW1lcmljKCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOdW1lcmljIiwgImNvbHVtbnMiOiBbMF19LCAiKH5udW1lcmljKCkpIjogeyJkaXNwbGF5X25hbWUiOiAiTm9uLW51bWVyaWMiLCAiY29sdW1ucyI6IFtdfSwgInN0cmluZygpIjogeyJkaXNwbGF5X25hbWUiOiAiU3RyaW5nIiwgImNvbHVtbnMiOiBbXX0sICIofnN0cmluZygpKSI6IHsiZGlzcGxheV9uYW1lIjogIk5vbi1zdHJpbmciLCAiY29sdW1ucyI6IFswXX0sICJjYXRlZ29yaWNhbCgpIjogeyJkaXNwbGF5X25hbWUiOiAiQ2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFtdfSwgIih+Y2F0ZWdvcmljYWwoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tY2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFswXX0sICJhbnlfZGF0ZSgpIjogeyJkaXNwbGF5X25hbWUiOiAiRGF0ZXRpbWUiLCAiY29sdW1ucyI6IFtdfSwgIih+YW55X2RhdGUoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tZGF0ZXRpbWUiLCAiY29sdW1ucyI6IFswXX19"
+            data-all-filters-base64="eyJhbGwoKSI6IHsiZGlzcGxheV9uYW1lIjogIkFsbCBjb2x1bW5zIiwgImNvbHVtbnMiOiBbMCwgMSwgMiwgMywgNCwgNSwgNl19LCAiaGFzX251bGxzKDAuMCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJXaXRoIG51bGxzIiwgImNvbHVtbnMiOiBbMywgNF19LCAiKH5oYXNfbnVsbHMoMC4wKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJXaXRob3V0IG51bGxzIiwgImNvbHVtbnMiOiBbMCwgMSwgMiwgNSwgNl19LCAibnVtZXJpYygpIjogeyJkaXNwbGF5X25hbWUiOiAiTnVtZXJpYyIsICJjb2x1bW5zIjogWzAsIDIsIDZdfSwgIih+bnVtZXJpYygpKSI6IHsiZGlzcGxheV9uYW1lIjogIk5vbi1udW1lcmljIiwgImNvbHVtbnMiOiBbMSwgMywgNCwgNV19LCAic3RyaW5nKCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJTdHJpbmciLCAiY29sdW1ucyI6IFsxLCAzLCA0LCA1XX0sICIofnN0cmluZygpKSI6IHsiZGlzcGxheV9uYW1lIjogIk5vbi1zdHJpbmciLCAiY29sdW1ucyI6IFswLCAyLCA2XX0sICJjYXRlZ29yaWNhbCgpIjogeyJkaXNwbGF5X25hbWUiOiAiQ2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFtdfSwgIih+Y2F0ZWdvcmljYWwoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tY2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFswLCAxLCAyLCAzLCA0LCA1LCA2XX0sICJhbnlfZGF0ZSgpIjogeyJkaXNwbGF5X25hbWUiOiAiRGF0ZXRpbWUiLCAiY29sdW1ucyI6IFtdfSwgIih+YW55X2RhdGUoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tZGF0ZXRpbWUiLCAiY29sdW1ucyI6IFswLCAxLCAyLCAzLCA0LCA1LCA2XX19"
             data-test="column-filter-select"
+            aria-label="Filter columns"
             autocomplete="off">
         <optgroup label="Select columns to show:">
         <option value="all()" selected disabled hidden>Filter columns</option>
@@ -3371,6 +1813,7 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
     class="copybutton copybutton-left"
     data-manager="CopyButton"
     type="button"
+    aria-label="Copy to clipboard"
     data-target-id="sample-table-bar-display">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
@@ -3397,9 +1840,9 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
         <table class="pure-table pure-table-striped table-with-selectable-cells"
                data-manager="SampleTable"
         data-start-i="-2"
-        data-stop-i="3"
+        data-stop-i="10"
         data-start-j="-1"
-        data-stop-j="1"
+        data-stop-j="7"
         >
             
             
@@ -3409,7 +1852,7 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
                 
                 
                 <th
-                id="b7c97d0c"
+                id="c1e7aa8a"
                 class="table-cell elided-short "
                 
                 data-role="padding"
@@ -3439,7 +1882,7 @@ data-spans__-1__-1
                 
                 
                 <th
-                id="bc06b114"
+                id="a5520d01"
                 class="table-cell elided-short clickable"
                 
                 data-role="columns-level-value"
@@ -3464,12 +1907,216 @@ data-spans__-1__0
 
                 rowspan="2"
                 colspan="1"
-                data-value-repr="&#39;target&#39;"
-                data-value-str="target"
+                data-value-repr="&#39;basket_ID&#39;"
+                data-value-str="basket_ID"
                 
                 data-column-idx="0"
                 
-                >target</th>
+                >basket_ID</th>
+                
+                
+                <th
+                id="51f899c2"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="1"
+                
+
+
+
+
+data-spans__-2__1
+
+
+
+data-spans__-1__1
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;item&#39;"
+                data-value-str="item"
+                
+                data-column-idx="1"
+                
+                >item</th>
+                
+                
+                <th
+                id="cb6075c5"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="2"
+                
+
+
+
+
+data-spans__-2__2
+
+
+
+data-spans__-1__2
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;cash_price&#39;"
+                data-value-str="cash_price"
+                
+                data-column-idx="2"
+                
+                >cash_price</th>
+                
+                
+                <th
+                id="1518028a"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="3"
+                
+
+
+
+
+data-spans__-2__3
+
+
+
+data-spans__-1__3
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;make&#39;"
+                data-value-str="make"
+                
+                data-column-idx="3"
+                
+                >make</th>
+                
+                
+                <th
+                id="bf57ee52"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="4"
+                
+
+
+
+
+data-spans__-2__4
+
+
+
+data-spans__-1__4
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;model&#39;"
+                data-value-str="model"
+                
+                data-column-idx="4"
+                
+                >model</th>
+                
+                
+                <th
+                id="9148f08b"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="5"
+                
+
+
+
+
+data-spans__-2__5
+
+
+
+data-spans__-1__5
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;goods_code&#39;"
+                data-value-str="goods_code"
+                
+                data-column-idx="5"
+                
+                >goods_code</th>
+                
+                
+                <th
+                id="c5ab1261"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="6"
+                
+
+
+
+
+data-spans__-2__6
+
+
+
+data-spans__-1__6
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;Nbr_of_prod_purchas&#39;"
+                data-value-str="Nbr_of_prod_purchas"
+                
+                data-column-idx="6"
+                
+                >Nbr_of_prod_purchas</th>
                 
             </tr>
             
@@ -3487,7 +2134,7 @@ data-spans__-1__0
                 
                 
                 <th
-                id="9e19790f"
+                id="a30a8f3d"
                 class="table-cell elided-short clickable"
                 
                 data-role="index-level-value"
@@ -3508,14 +2155,14 @@ data-spans__0__-1
 
                 rowspan="1"
                 colspan="1"
-                data-value-repr="0"
-                data-value-str="0"
+                data-value-repr="1"
+                data-value-str="1"
                 
-                >0</th>
+                >1</th>
                 
                 
                 <td
-                id="76746b61"
+                id="c667572d"
                 class="table-cell elided-short clickable"
                 
                 data-role="dataframe-data"
@@ -3536,10 +2183,190 @@ data-spans__0__0
 
                 rowspan="1"
                 colspan="1"
+                data-value-repr="51113"
+                data-value-str="51113"
+                
+                data-column-idx="0"
+                
+                >51,113</td>
+                
+                
+                <td
+                id="e3062bd3"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="1"
+                
+
+
+
+
+data-spans__0__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTER PERIPHERALS ACCESSORIES&#39;"
+                data-value-str="COMPUTER PERIPHERALS ACCESSORIES"
+                
+                data-column-idx="1"
+                
+                >COMPUTER PERIPHERALS ACCESSORIES</td>
+                
+                
+                <td
+                id="e3eaf8c3"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="2"
+                
+
+
+
+
+data-spans__0__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="409"
+                data-value-str="409"
+                
+                data-column-idx="2"
+                
+                >409</td>
+                
+                
+                <td
+                id="3672125a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="3"
+                
+
+
+
+
+data-spans__0__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="8de7af9a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="4"
+                
+
+
+
+
+data-spans__0__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE WATCH SERIES 6 GPS 44MM SPACE GREY ALUMINIUM&#39;"
+                data-value-str="APPLE WATCH SERIES 6 GPS 44MM SPACE GREY ALUMINIUM"
+                
+                data-column-idx="4"
+                
+                >APPLE WATCH SERIES 6 GPS 44MM SPACE GREY ALUMINIUM</td>
+                
+                
+                <td
+                id="891868fa"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="5"
+                
+
+
+
+
+data-spans__0__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;239001518&#39;"
+                data-value-str="239001518"
+                
+                data-column-idx="5"
+                
+                >239001518</td>
+                
+                
+                <td
+                id="f95b2b08"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="6"
+                
+
+
+
+
+data-spans__0__6
+
+
+
+                rowspan="1"
+                colspan="1"
                 data-value-repr="1"
                 data-value-str="1"
                 
-                data-column-idx="0"
+                data-column-idx="6"
                 
                 >1</td>
                 
@@ -3549,7 +2376,7 @@ data-spans__0__0
                 
                 
                 <th
-                id="adbaa077"
+                id="40a6929c"
                 class="table-cell elided-short clickable"
                 
                 data-role="index-level-value"
@@ -3570,14 +2397,14 @@ data-spans__1__-1
 
                 rowspan="1"
                 colspan="1"
-                data-value-repr="1"
-                data-value-str="1"
+                data-value-repr="9"
+                data-value-str="9"
                 
-                >1</th>
+                >9</th>
                 
                 
                 <td
-                id="b673ea74"
+                id="525fa1c7"
                 class="table-cell elided-short clickable"
                 
                 data-role="dataframe-data"
@@ -3598,10 +2425,190 @@ data-spans__1__0
 
                 rowspan="1"
                 colspan="1"
+                data-value-repr="41798"
+                data-value-str="41798"
+                
+                data-column-idx="0"
+                
+                >41,798</td>
+                
+                
+                <td
+                id="bc66b650"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="1"
+                
+
+
+
+
+data-spans__1__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTERS&#39;"
+                data-value-str="COMPUTERS"
+                
+                data-column-idx="1"
+                
+                >COMPUTERS</td>
+                
+                
+                <td
+                id="949a1ab9"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="2"
+                
+
+
+
+
+data-spans__1__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1187"
+                data-value-str="1187"
+                
+                data-column-idx="2"
+                
+                >1,187</td>
+                
+                
+                <td
+                id="b4fa1c2a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="3"
+                
+
+
+
+
+data-spans__1__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="78ae62f6"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="4"
+                
+
+
+
+
+data-spans__1__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;2020 APPLE MACBOOK PRO 13 TOUCH BAR M1 PROCESSOR 8&#39;"
+                data-value-str="2020 APPLE MACBOOK PRO 13 TOUCH BAR M1 PROCESSOR 8"
+                
+                data-column-idx="4"
+                
+                >2020 APPLE MACBOOK PRO 13 TOUCH BAR M1 PROCESSOR 8</td>
+                
+                
+                <td
+                id="55ff2ae0"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="5"
+                
+
+
+
+
+data-spans__1__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;239246780&#39;"
+                data-value-str="239246780"
+                
+                data-column-idx="5"
+                
+                >239246780</td>
+                
+                
+                <td
+                id="4b16b967"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="6"
+                
+
+
+
+
+data-spans__1__6
+
+
+
+                rowspan="1"
+                colspan="1"
                 data-value-repr="1"
                 data-value-str="1"
                 
-                data-column-idx="0"
+                data-column-idx="6"
                 
                 >1</td>
                 
@@ -3611,7 +2618,7 @@ data-spans__1__0
                 
                 
                 <th
-                id="67552764"
+                id="58618bc3"
                 class="table-cell elided-short clickable"
                 
                 data-role="index-level-value"
@@ -3632,14 +2639,14 @@ data-spans__2__-1
 
                 rowspan="1"
                 colspan="1"
-                data-value-repr="2"
-                data-value-str="2"
+                data-value-repr="11"
+                data-value-str="11"
                 
-                >2</th>
+                >11</th>
                 
                 
                 <td
-                id="5e739f20"
+                id="bb8df848"
                 class="table-cell elided-short clickable"
                 
                 data-role="dataframe-data"
@@ -3660,10 +2667,1974 @@ data-spans__2__0
 
                 rowspan="1"
                 colspan="1"
+                data-value-repr="39361"
+                data-value-str="39361"
+                
+                data-column-idx="0"
+                
+                >39,361</td>
+                
+                
+                <td
+                id="15af6d7c"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="1"
+                
+
+
+
+
+data-spans__2__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTERS&#39;"
+                data-value-str="COMPUTERS"
+                
+                data-column-idx="1"
+                
+                >COMPUTERS</td>
+                
+                
+                <td
+                id="91501eb2"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="2"
+                
+
+
+
+
+data-spans__2__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="898"
+                data-value-str="898"
+                
+                data-column-idx="2"
+                
+                >898</td>
+                
+                
+                <td
+                id="59ea0664"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="3"
+                
+
+
+
+
+data-spans__2__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="35859fc5"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="4"
+                
+
+
+
+
+data-spans__2__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;2020 APPLE MACBOOK AIR 13 3 RETINA DISPLAY M1 PROC&#39;"
+                data-value-str="2020 APPLE MACBOOK AIR 13 3 RETINA DISPLAY M1 PROC"
+                
+                data-column-idx="4"
+                
+                >2020 APPLE MACBOOK AIR 13 3 RETINA DISPLAY M1 PROC</td>
+                
+                
+                <td
+                id="bc656706"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="5"
+                
+
+
+
+
+data-spans__2__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;239246776&#39;"
+                data-value-str="239246776"
+                
+                data-column-idx="5"
+                
+                >239246776</td>
+                
+                
+                <td
+                id="a47389f3"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="6"
+                
+
+
+
+
+data-spans__2__6
+
+
+
+                rowspan="1"
+                colspan="1"
                 data-value-repr="1"
                 data-value-str="1"
                 
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="5043195b"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="3"
+                data-j="-1"
+                
+
+
+
+
+data-spans__3__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="15"
+                data-value-str="15"
+                
+                >15</th>
+                
+                
+                <td
+                id="e9672918"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="0"
+                
+
+
+
+
+data-spans__3__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="38615"
+                data-value-str="38615"
+                
                 data-column-idx="0"
+                
+                >38,615</td>
+                
+                
+                <td
+                id="a11e840c"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="1"
+                
+
+
+
+
+data-spans__3__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTER PERIPHERALS ACCESSORIES&#39;"
+                data-value-str="COMPUTER PERIPHERALS ACCESSORIES"
+                
+                data-column-idx="1"
+                
+                >COMPUTER PERIPHERALS ACCESSORIES</td>
+                
+                
+                <td
+                id="38d54e16"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="2"
+                
+
+
+
+
+data-spans__3__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="379"
+                data-value-str="379"
+                
+                data-column-idx="2"
+                
+                >379</td>
+                
+                
+                <td
+                id="a6e5eabe"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="3"
+                
+
+
+
+
+data-spans__3__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="c37aed3b"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="4"
+                
+
+
+
+
+data-spans__3__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE WATCH SERIES 6 GPS 40MM BLUE ALUMINIUM CASE&#39;"
+                data-value-str="APPLE WATCH SERIES 6 GPS 40MM BLUE ALUMINIUM CASE"
+                
+                data-column-idx="4"
+                
+                >APPLE WATCH SERIES 6 GPS 40MM BLUE ALUMINIUM CASE</td>
+                
+                
+                <td
+                id="f2d99385"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="5"
+                
+
+
+
+
+data-spans__3__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;239001540&#39;"
+                data-value-str="239001540"
+                
+                data-column-idx="5"
+                
+                >239001540</td>
+                
+                
+                <td
+                id="fee08e9c"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="6"
+                
+
+
+
+
+data-spans__3__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="fba66b3e"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="4"
+                data-j="-1"
+                
+
+
+
+
+data-spans__4__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="16"
+                data-value-str="16"
+                
+                >16</th>
+                
+                
+                <td
+                id="6a0b871b"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="0"
+                
+
+
+
+
+data-spans__4__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="70262"
+                data-value-str="70262"
+                
+                data-column-idx="0"
+                
+                >70,262</td>
+                
+                
+                <td
+                id="a8935d7b"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="1"
+                
+
+
+
+
+data-spans__4__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTERS&#39;"
+                data-value-str="COMPUTERS"
+                
+                data-column-idx="1"
+                
+                >COMPUTERS</td>
+                
+                
+                <td
+                id="27a6cfcb"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="2"
+                
+
+
+
+
+data-spans__4__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1899"
+                data-value-str="1899"
+                
+                data-column-idx="2"
+                
+                >1,899</td>
+                
+                
+                <td
+                id="18ca43fd"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="3"
+                
+
+
+
+
+data-spans__4__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="54fefa0a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="4"
+                
+
+
+
+
+data-spans__4__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;2021 APPLE MACBOOK PRO 14 M1 PRO PROCESSOR 16GB RA&#39;"
+                data-value-str="2021 APPLE MACBOOK PRO 14 M1 PRO PROCESSOR 16GB RA"
+                
+                data-column-idx="4"
+                
+                >2021 APPLE MACBOOK PRO 14 M1 PRO PROCESSOR 16GB RA</td>
+                
+                
+                <td
+                id="ae373ba6"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="5"
+                
+
+
+
+
+data-spans__4__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;240575990&#39;"
+                data-value-str="240575990"
+                
+                data-column-idx="5"
+                
+                >240575990</td>
+                
+                
+                <td
+                id="aab6e75d"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="6"
+                
+
+
+
+
+data-spans__4__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            </tbody>
+            
+            
+            
+            <tbody class="elided-table-part">
+                <tr>
+                    
+                    <td
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="0"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="1"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="2"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="3"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="4"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="5"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="6"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                </tr>
+            </tbody>
+            
+            
+            
+            <tbody>
+            
+            <tr>
+                
+                
+                <th
+                id="a62910cc"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="5"
+                data-j="-1"
+                
+
+
+
+
+data-spans__5__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="163352"
+                data-value-str="163352"
+                
+                >163,352</th>
+                
+                
+                <td
+                id="2cbaadf7"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="0"
+                
+
+
+
+
+data-spans__5__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="42613"
+                data-value-str="42613"
+                
+                data-column-idx="0"
+                
+                >42,613</td>
+                
+                
+                <td
+                id="fd493baf"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="1"
+                
+
+
+
+
+data-spans__5__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;BEDROOM FURNITURE&#39;"
+                data-value-str="BEDROOM FURNITURE"
+                
+                data-column-idx="1"
+                
+                >BEDROOM FURNITURE</td>
+                
+                
+                <td
+                id="4a8a75b7"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="2"
+                
+
+
+
+
+data-spans__5__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="259"
+                data-value-str="259"
+                
+                data-column-idx="2"
+                
+                >259</td>
+                
+                
+                <td
+                id="d686c342"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="3"
+                
+
+
+
+
+data-spans__5__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;SILENTNIGHT&#39;"
+                data-value-str="SILENTNIGHT"
+                
+                data-column-idx="3"
+                
+                >SILENTNIGHT</td>
+                
+                
+                <td
+                id="29977f90"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="4"
+                
+
+
+
+
+data-spans__5__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;SILENTNIGHT SLEEP GENIUS FULL HEIGHT HEADBOARD DOU&#39;"
+                data-value-str="SILENTNIGHT SLEEP GENIUS FULL HEIGHT HEADBOARD DOU"
+                
+                data-column-idx="4"
+                
+                >SILENTNIGHT SLEEP GENIUS FULL HEIGHT HEADBOARD DOU</td>
+                
+                
+                <td
+                id="16d211f4"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="5"
+                
+
+
+
+
+data-spans__5__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;236938439&#39;"
+                data-value-str="236938439"
+                
+                data-column-idx="5"
+                
+                >236938439</td>
+                
+                
+                <td
+                id="0c89372f"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="6"
+                
+
+
+
+
+data-spans__5__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="7e7f1161"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="6"
+                data-j="-1"
+                
+
+
+
+
+data-spans__6__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="163353"
+                data-value-str="163353"
+                
+                >163,353</th>
+                
+                
+                <td
+                id="9b73e05b"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="0"
+                
+
+
+
+
+data-spans__6__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="42613"
+                data-value-str="42613"
+                
+                data-column-idx="0"
+                
+                >42,613</td>
+                
+                
+                <td
+                id="846cade9"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="1"
+                
+
+
+
+
+data-spans__6__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;OUTDOOR FURNITURE&#39;"
+                data-value-str="OUTDOOR FURNITURE"
+                
+                data-column-idx="1"
+                
+                >OUTDOOR FURNITURE</td>
+                
+                
+                <td
+                id="191231e7"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="2"
+                
+
+
+
+
+data-spans__6__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="949"
+                data-value-str="949"
+                
+                data-column-idx="2"
+                
+                >949</td>
+                
+                
+                <td
+                id="ed580d98"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="3"
+                
+
+
+
+
+data-spans__6__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;LG OUTDOOR&#39;"
+                data-value-str="LG OUTDOOR"
+                
+                data-column-idx="3"
+                
+                >LG OUTDOOR</td>
+                
+                
+                <td
+                id="68467b46"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="4"
+                
+
+
+
+
+data-spans__6__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;LG OUTDOOR BERGEN 2-SEAT GARDEN SIDE TABLE RECLINI&#39;"
+                data-value-str="LG OUTDOOR BERGEN 2-SEAT GARDEN SIDE TABLE RECLINI"
+                
+                data-column-idx="4"
+                
+                >LG OUTDOOR BERGEN 2-SEAT GARDEN SIDE TABLE RECLINI</td>
+                
+                
+                <td
+                id="09c8f89d"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="5"
+                
+
+
+
+
+data-spans__6__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;239742814&#39;"
+                data-value-str="239742814"
+                
+                data-column-idx="5"
+                
+                >239742814</td>
+                
+                
+                <td
+                id="a068c092"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="6"
+                
+
+
+
+
+data-spans__6__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="5840ab7c"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="7"
+                data-j="-1"
+                
+
+
+
+
+data-spans__7__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="163354"
+                data-value-str="163354"
+                
+                >163,354</th>
+                
+                
+                <td
+                id="8ca666f5"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="0"
+                
+
+
+
+
+data-spans__7__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="43567"
+                data-value-str="43567"
+                
+                data-column-idx="0"
+                
+                >43,567</td>
+                
+                
+                <td
+                id="c65e8733"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="1"
+                
+
+
+
+
+data-spans__7__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTERS&#39;"
+                data-value-str="COMPUTERS"
+                
+                data-column-idx="1"
+                
+                >COMPUTERS</td>
+                
+                
+                <td
+                id="539599ce"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="2"
+                
+
+
+
+
+data-spans__7__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1099"
+                data-value-str="1099"
+                
+                data-column-idx="2"
+                
+                >1,099</td>
+                
+                
+                <td
+                id="d12b78c2"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="3"
+                
+
+
+
+
+data-spans__7__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="f2a4c1d6"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="4"
+                
+
+
+
+
+data-spans__7__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;2021 APPLE IPAD PRO 12 9 M1 PROCESSOR IOS WI-FI 25&#39;"
+                data-value-str="2021 APPLE IPAD PRO 12 9 M1 PROCESSOR IOS WI-FI 25"
+                
+                data-column-idx="4"
+                
+                >2021 APPLE IPAD PRO 12 9 M1 PROCESSOR IOS WI-FI 25</td>
+                
+                
+                <td
+                id="5d8f3889"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="5"
+                
+
+
+
+
+data-spans__7__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;240040978&#39;"
+                data-value-str="240040978"
+                
+                data-column-idx="5"
+                
+                >240040978</td>
+                
+                
+                <td
+                id="d3a8a3c5"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="6"
+                
+
+
+
+
+data-spans__7__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="8e76ac1f"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="8"
+                data-j="-1"
+                
+
+
+
+
+data-spans__8__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="163355"
+                data-value-str="163355"
+                
+                >163,355</th>
+                
+                
+                <td
+                id="d3c3d240"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="0"
+                
+
+
+
+
+data-spans__8__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="43567"
+                data-value-str="43567"
+                
+                data-column-idx="0"
+                
+                >43,567</td>
+                
+                
+                <td
+                id="78e71315"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="1"
+                
+
+
+
+
+data-spans__8__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;COMPUTERS&#39;"
+                data-value-str="COMPUTERS"
+                
+                data-column-idx="1"
+                
+                >COMPUTERS</td>
+                
+                
+                <td
+                id="25b24ca7"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="2"
+                
+
+
+
+
+data-spans__8__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="2099"
+                data-value-str="2099"
+                
+                data-column-idx="2"
+                
+                >2,099</td>
+                
+                
+                <td
+                id="efcb5b39"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="3"
+                
+
+
+
+
+data-spans__8__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;APPLE&#39;"
+                data-value-str="APPLE"
+                
+                data-column-idx="3"
+                
+                >APPLE</td>
+                
+                
+                <td
+                id="b91ba6ef"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="4"
+                
+
+
+
+
+data-spans__8__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;2020 APPLE IMAC 27 ALL-IN-ONE INTEL CORE I7 8GB RA&#39;"
+                data-value-str="2020 APPLE IMAC 27 ALL-IN-ONE INTEL CORE I7 8GB RA"
+                
+                data-column-idx="4"
+                
+                >2020 APPLE IMAC 27 ALL-IN-ONE INTEL CORE I7 8GB RA</td>
+                
+                
+                <td
+                id="cbd1d160"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="5"
+                
+
+
+
+
+data-spans__8__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;238923518&#39;"
+                data-value-str="238923518"
+                
+                data-column-idx="5"
+                
+                >238923518</td>
+                
+                
+                <td
+                id="7ba06669"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="6"
+                
+
+
+
+
+data-spans__8__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
+                
+                >1</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="256c2eff"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="9"
+                data-j="-1"
+                
+
+
+
+
+data-spans__9__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="163356"
+                data-value-str="163356"
+                
+                >163,356</th>
+                
+                
+                <td
+                id="4e40de5a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="0"
+                
+
+
+
+
+data-spans__9__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="68268"
+                data-value-str="68268"
+                
+                data-column-idx="0"
+                
+                >68,268</td>
+                
+                
+                <td
+                id="fb5f32a0"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="1"
+                
+
+
+
+
+data-spans__9__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;TELEVISIONS HOME CINEMA&#39;"
+                data-value-str="TELEVISIONS HOME CINEMA"
+                
+                data-column-idx="1"
+                
+                >TELEVISIONS HOME CINEMA</td>
+                
+                
+                <td
+                id="62ce424d"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="2"
+                
+
+
+
+
+data-spans__9__2
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="799"
+                data-value-str="799"
+                
+                data-column-idx="2"
+                
+                >799</td>
+                
+                
+                <td
+                id="4adffdd7"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="3"
+                
+
+
+
+
+data-spans__9__3
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;LG&#39;"
+                data-value-str="LG"
+                
+                data-column-idx="3"
+                
+                >LG</td>
+                
+                
+                <td
+                id="8b300dbe"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="4"
+                
+
+
+
+
+data-spans__9__4
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;LG OLED48A16LA 2021 OLED HDR 4K ULTRA HD SMART TV&#39;"
+                data-value-str="LG OLED48A16LA 2021 OLED HDR 4K ULTRA HD SMART TV"
+                
+                data-column-idx="4"
+                
+                >LG OLED48A16LA 2021 OLED HDR 4K ULTRA HD SMART TV</td>
+                
+                
+                <td
+                id="2c397faa"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="5"
+                
+
+
+
+
+data-spans__9__5
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="&#39;239866717&#39;"
+                data-value-str="239866717"
+                
+                data-column-idx="5"
+                
+                >239866717</td>
+                
+                
+                <td
+                id="fb81ff9a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="6"
+                
+
+
+
+
+data-spans__9__6
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="1"
+                data-value-str="1"
+                
+                data-column-idx="6"
                 
                 >1</td>
                 
@@ -3677,9 +4648,9 @@ data-spans__2__0
 
     <div class="table-footer">
     <div>
-        <strong>3</strong> rows ✕
+        <strong>109,380</strong> rows ✕
         <strong data-manager="ColumnFilterMatchCount"
-            data-test="n-columns-display">1</strong> columns
+            data-test="n-columns-display">7</strong> columns
         
     </div>
     <div class=" keyboard-hints">
@@ -3714,22 +4685,23 @@ data-spans__2__0
         
 
 <div class="card column-summary" id="col_0_in_sample_tab"
-    data-name-repr="&#39;target&#39;"
-    data-column-name="target"
+    data-name-repr="&#39;basket_ID&#39;"
+    data-column-name="basket_ID"
     data-column-idx="0"
      
      
     data-manager="FilterableColumn SampleColumnSummary"
-     data-constant-column 
+    
      data-role="sample-column" data-hidden >
     <div class="card-header">
         <h3>
             
-            <span class="select-all wrap-long-name">target</span>
+            <span class="select-all wrap-long-name">basket_ID</span>
         </h3>
         <span>Int64DType</span>
 <button class="close-card-button"
         type="button"
+        aria-label="Close"
         data-role="close-button">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
   <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -3742,37 +4714,487 @@ data-spans__2__0
                 <dt>Null values</dt>
                <dd class="ok">0 (0.0%)</dd>
                 
+                
+                <dt>Unique values</dt>
+                <dd>
+                    61,241 (56.0%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                <dt>Mean ± Std</dt>
+                <dd>3.59e+04 ±
+                    2.24e+04
+                    
+                </dd>
+                
+                
+                <dt>Median ± IQR</dt>
+                <dd>35,203 ±
+                    39,444
+                    
+                </dd>
+
+                <dt>Min | Max</dt>
+                <dd>
+                    <span class="min-value">0</span> |
+                    <span class="max-value">76,543</span>
+                    
+                </dd>
+                
+                
 
                 
             </dl>
         </div>
 
         
-        
-        <div class="margin-v-m">
-            <strong>Constant value:</strong>
-            <div class="copybutton-grid">
-                <div class="box">
-                    <pre id="col_0_in_sample_tab-constant-value"
-                        data-copy-text="1">1</pre>
-                    
-<button
-    class="copybutton copybutton-left"
-    data-manager="CopyButton"
-    type="button"
-    data-target-id="col_0_in_sample_tab-constant-value">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
-</svg>
-    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-  <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
-</svg>
-    <div class="copied-message">Copied!</div>
-</button>
 
-                </div>
-            </div>
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_1_in_sample_tab"
+    data-name-repr="&#39;item&#39;"
+    data-column-name="item"
+    data-column-idx="1"
+     
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">item</span>
+        </h3>
+        <span>StringDtype</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="ok">0 (0.0%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    166 (0.2%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                
+                
+
+                
+            </dl>
         </div>
+
+        
+
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_2_in_sample_tab"
+    data-name-repr="&#39;cash_price&#39;"
+    data-column-name="cash_price"
+    data-column-idx="2"
+     
+     
+     data-has-high-outliers
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">cash_price</span>
+        </h3>
+        <span>Int64DType</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="ok">0 (0.0%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    1,280 (1.2%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                <dt>Mean ± Std</dt>
+                <dd>672. ±
+                    714.
+                    
+                </dd>
+                
+                
+                <dt>Median ± IQR</dt>
+                <dd>499 ±
+                    1,049
+                    
+                </dd>
+
+                <dt>Min | Max</dt>
+                <dd>
+                    <span class="min-value">0</span> |
+                    <span class="max-value">18,349</span>
+                    
+                </dd>
+                
+                
+
+                
+            </dl>
+        </div>
+
+        
+
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_3_in_sample_tab"
+    data-name-repr="&#39;make&#39;"
+    data-column-name="make"
+    data-column-idx="3"
+     
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">make</span>
+        </h3>
+        <span>StringDtype</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="warning">1,273 (1.2%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    690 (0.6%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                
+                
+
+                
+            </dl>
+        </div>
+
+        
+
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_4_in_sample_tab"
+    data-name-repr="&#39;model&#39;"
+    data-column-name="model"
+    data-column-idx="4"
+     
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">model</span>
+        </h3>
+        <span>StringDtype</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="warning">1,273 (1.2%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    6,477 (5.9%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                
+                
+
+                
+            </dl>
+        </div>
+
+        
+
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_5_in_sample_tab"
+    data-name-repr="&#39;goods_code&#39;"
+    data-column-name="goods_code"
+    data-column-idx="5"
+     
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">goods_code</span>
+        </h3>
+        <span>StringDtype</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="ok">0 (0.0%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    10,738 (9.8%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                
+                
+
+                
+            </dl>
+        </div>
+
+        
+
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_6_in_sample_tab"
+    data-name-repr="&#39;Nbr_of_prod_purchas&#39;"
+    data-column-name="Nbr_of_prod_purchas"
+    data-column-idx="6"
+     
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">Nbr_of_prod_purchas</span>
+        </h3>
+        <span>Int64DType</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="ok">0 (0.0%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    19 (&lt; 0.1%)
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                <dt>Mean ± Std</dt>
+                <dd>1.05 ±
+                    0.426
+                    
+                </dd>
+                
+                
+                <dt>Median ± IQR</dt>
+                <dd>1 ±
+                    0
+                    
+                </dd>
+
+                <dt>Min | Max</dt>
+                <dd>
+                    <span class="min-value">1</span> |
+                    <span class="max-value">40</span>
+                    
+                </dd>
+                
+                
+
+                
+            </dl>
+        </div>
+
         
 
         
@@ -4135,34 +5557,227 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
             </thead>
             <tbody>
                 
-                <tr data-manager="FilterableColumn" data-column-name="target"
+                <tr data-manager="FilterableColumn" data-column-name="basket_ID"
                     data-column-idx="0" data-dataframe-column-idx="0">
                     <td data-value="0" data-numeric>0
                     </td>
-                    <td class="elided">target</td>
+                    <td class="elided">basket_ID</td>
                     <td>Int64DType</td>
-                    <td>True</td>
+                    <td>False</td>
                     <td class="ok" data-value="0" data-numeric>
                         0 (0.0%)
                     </td>
 
                     
-                    <td data-value="1" data-numeric>
-                        1 (33.3%)
+                    <td data-value="61241" data-numeric>
+                        61241 (56.0%)
                     </td>
                     
 
                     
-                    <td data-value="1.0" data-numeric>
-                        1.00</td>
-                    <td data-value="0.0" data-numeric>
-                        0.00</td>
+                    <td data-value="35851.390053026145" data-numeric>
+                        3.59e+04</td>
+                    <td data-value="22444.664547758646" data-numeric>
+                        2.24e+04</td>
+                    
+
+                    
+                    <td data-value="0" data-numeric>
+                        0</td>
+                    <td data-value="35203" data-numeric>
+                        35,203</td>
+                    <td data-value="76543" data-numeric>
+                        76,543</td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="item"
+                    data-column-idx="1" data-dataframe-column-idx="1">
+                    <td data-value="1" data-numeric>1
+                    </td>
+                    <td class="elided">item</td>
+                    <td>StringDtype</td>
+                    <td>False</td>
+                    <td class="ok" data-value="0" data-numeric>
+                        0 (0.0%)
+                    </td>
+
+                    
+                    <td data-value="166" data-numeric>
+                        166 (0.2%)
+                    </td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
                     
 
                     
                     <td data-value="nan" data-numeric></td>
                     <td data-value="nan" data-numeric></td>
                     <td data-value="nan" data-numeric></td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="cash_price"
+                    data-column-idx="2" data-dataframe-column-idx="2">
+                    <td data-value="2" data-numeric>2
+                    </td>
+                    <td class="elided">cash_price</td>
+                    <td>Int64DType</td>
+                    <td>False</td>
+                    <td class="ok" data-value="0" data-numeric>
+                        0 (0.0%)
+                    </td>
+
+                    
+                    <td data-value="1280" data-numeric>
+                        1280 (1.2%)
+                    </td>
+                    
+
+                    
+                    <td data-value="672.0542969464253" data-numeric>
+                        672.</td>
+                    <td data-value="714.2885254006238" data-numeric>
+                        714.</td>
+                    
+
+                    
+                    <td data-value="0" data-numeric>
+                        0</td>
+                    <td data-value="499" data-numeric>
+                        499</td>
+                    <td data-value="18349" data-numeric>
+                        18,349</td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="make"
+                    data-column-idx="3" data-dataframe-column-idx="3">
+                    <td data-value="3" data-numeric>3
+                    </td>
+                    <td class="elided">make</td>
+                    <td>StringDtype</td>
+                    <td>False</td>
+                    <td class="warning" data-value="1273" data-numeric>
+                        1273 (1.2%)
+                    </td>
+
+                    
+                    <td data-value="690" data-numeric>
+                        690 (0.6%)
+                    </td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="model"
+                    data-column-idx="4" data-dataframe-column-idx="4">
+                    <td data-value="4" data-numeric>4
+                    </td>
+                    <td class="elided">model</td>
+                    <td>StringDtype</td>
+                    <td>False</td>
+                    <td class="warning" data-value="1273" data-numeric>
+                        1273 (1.2%)
+                    </td>
+
+                    
+                    <td data-value="6477" data-numeric>
+                        6477 (5.9%)
+                    </td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="goods_code"
+                    data-column-idx="5" data-dataframe-column-idx="5">
+                    <td data-value="5" data-numeric>5
+                    </td>
+                    <td class="elided">goods_code</td>
+                    <td>StringDtype</td>
+                    <td>False</td>
+                    <td class="ok" data-value="0" data-numeric>
+                        0 (0.0%)
+                    </td>
+
+                    
+                    <td data-value="10738" data-numeric>
+                        10738 (9.8%)
+                    </td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    
+
+                    
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    <td data-value="nan" data-numeric></td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="Nbr_of_prod_purchas"
+                    data-column-idx="6" data-dataframe-column-idx="6">
+                    <td data-value="6" data-numeric>6
+                    </td>
+                    <td class="elided">Nbr_of_prod_purchas</td>
+                    <td>Int64DType</td>
+                    <td>False</td>
+                    <td class="ok" data-value="0" data-numeric>
+                        0 (0.0%)
+                    </td>
+
+                    
+                    <td data-value="19" data-numeric>
+                        19 (&lt; 0.1%)
+                    </td>
+                    
+
+                    
+                    <td data-value="1.0505851161089779" data-numeric>
+                        1.05</td>
+                    <td data-value="0.4257794186811816" data-numeric>
+                        0.426</td>
+                    
+
+                    
+                    <td data-value="1" data-numeric>
+                        1</td>
+                    <td data-value="1" data-numeric>
+                        1</td>
+                    <td data-value="40" data-numeric>
+                        40</td>
                     
 
                 </tr>
@@ -4195,7 +5810,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
         </div>
     </template>
 
-    <skrub-table-report class="report" id="report_f15b8452">
+    <skrub-table-report class="report" id="report_61782ba4">
     </skrub-table-report>
 
     <script type="module">
@@ -5299,7 +6914,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
     </script>
 </div>
 
-<div id="report_f15b8452-wrapper-fallback">
+<div id="report_61782ba4-wrapper-fallback">
     <h2>Please enable javascript</h2>
     <p>
         The skrub table reports need javascript to display correctly. If you are
@@ -5310,8 +6925,8 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 
 <script>
- document.getElementById("report_f15b8452-wrapper").removeAttribute("hidden");
- document.getElementById("report_f15b8452-wrapper-fallback").setAttribute("hidden", "");
+ document.getElementById("report_61782ba4-wrapper").removeAttribute("hidden");
+ document.getElementById("report_61782ba4-wrapper-fallback").setAttribute("hidden", "");
 </script>
                     </div>
                 </div>

@@ -1,11 +1,11 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DataOp report</title>
+    <title>Credit fraud prediction</title>
     <style>
      html {
     font-family: sans-serif;
@@ -46,6 +46,18 @@ pre, code {
     transform: translateY(2px);
 }
 
+.graph-hint {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 0 0.75rem;
+    padding: 10px 12px;
+    border-left: 4px solid #6b9bd2;
+    border-radius: 3px;
+    background: #eef4fb;
+    color: #1f3b5c;
+    font-size: 0.95rem;
+}
+
 .data_op-node-wrapper {
     overflow-x: auto;
 }
@@ -58,7 +70,7 @@ pre, code {
 
 .data_op-node {
     display: flex;
-    height: calc(100vh - 24px - 24px);
+    height: 100%;
 }
 
 .data_op-node > * {
@@ -68,18 +80,118 @@ pre, code {
 }
 
 .data_op-node > nav.main-nav {
-    padding-top: 24px;
     border-right: 2px solid #ccc;
     flex-shrink: 0;
-}
-
-.fixed-report-title ~ .data_op-node-wrapper > .data_op-node > nav.main-nav {
-    padding-top: 30px;
+    resize: horizontal;
+    min-width: 8rem;
+    box-sizing: border-box;
 }
 
 .node-details {
     flex-grow: 1;
     flex-shrink: 1;
+}
+
+/* Drawer displaying the selected node (or a source file) next to the graph. */
+.data_op-node > .drawer {
+    display: none;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0;
+    overflow: hidden;
+    border-left: 2px solid #ccc;
+}
+
+.drawer-open .data_op-node > .drawer {
+    display: flex;
+}
+
+/* The node page and the source page are stacked. The one not displayed is only
+   invisible, not display: none, so that the node page keeps its scroll position
+   and the source page can scroll to its highlighted line while it loads. The
+   keyboard does not reach an invisible iframe either. */
+.drawer-body {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.drawer-body > iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+}
+
+.drawer[data-mode="node"] #source-frame,
+.drawer[data-mode="source"] #node-frame {
+    visibility: hidden;
+}
+
+.drawer[data-mode="source"] #close-drawer,
+.drawer[data-mode="node"] #back-to-node {
+    display: none;
+}
+
+.drawer-toolbar {
+    display: flex;
+    flex: none;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    border-bottom: 1px solid #ddd;
+    background: #fafafa;
+}
+
+.header-button,
+.drawer-toolbar button {
+    padding: 4px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.header-button:hover:not(:disabled),
+.drawer-toolbar button:hover {
+    background: #f0f0f0;
+}
+
+.header-button:disabled {
+    color: #999;
+    cursor: default;
+}
+
+.header-button:focus-visible,
+.drawer-toolbar button:focus-visible {
+    outline: 2px solid #6b9bd2;
+    outline-offset: 1px;
+}
+
+/* Node pages are displayed inside the iframe of the index page: they fill it
+   and scroll as a whole. */
+.node-page {
+    margin: 0;
+}
+
+.node-page .data_op-node {
+    display: block;
+    height: auto;
+}
+
+.node-page .data_op-node > * {
+    max-height: none;
+    overflow-y: visible;
+}
+
+.node-page .node-details {
+    min-height: 100vh;
 }
 
 .node-details[data-has-error]{
@@ -117,10 +229,6 @@ pre, code {
     display: none;
 }
 
-.main-nav[data-is-open] + .node-details {
-    min-width: min(95%, 25rem);
-}
-
 .nav-legend-current-node {
     display: flex;
     background: var(--current-node-color);
@@ -133,32 +241,63 @@ pre, code {
     margin-top: 2rem;
 }
 
-.current-node polygon {
-
-    fill: var(--current-node-color);
-    stroke-width: 3;
+/* Layout of the index page: a header with the title and graph toggle, below it
+   the graph and the drawer displaying the selected node. */
+.report-index {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.icon-button {
-    position: absolute;
-    left: 5px;
-    top: 10px;
-    padding: 2px;
-    width: 24px;
-    height: 24px;
+.report-header {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    background: #fafafa;
 }
 
-.fixed-report-title {
-    position: absolute;
+.report-index > .data_op-node-wrapper {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.report-index .data_op-node {
+    flex: 1;
+    min-height: 0;
+}
+
+.report-index .data_op-node > nav.main-nav {
+    flex: 1 1 auto;
+}
+
+/* When the drawer is open the graph and the drawer share the width. */
+.report-index.drawer-open .data_op-node > nav.main-nav {
+    flex: 0 0 auto;
+    width: 50%;
+}
+
+.header-button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    margin-left: auto;
+}
+
+.report-title {
+    flex: 0 1 auto;
+    margin: 0;
+    min-width: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 90%;
-    left: 40px;
-    top: 5px;
-    padding: 2px;
-    padding-top: 0;
-    margin: 0;
 }
 
 .error-node polygon {
@@ -170,168 +309,42 @@ pre, code {
     stroke-dasharray: 4;
 }
     </style>
+    <script>
+     // Included in node pages. When a node page is displayed in the drawer of
+// index.html (see data_ops-report.js), clicks on links to other nodes or to
+// source files are not followed here: we ask the index page to display them,
+// so that it stays in charge of what is shown (and of the browser's history).
+// Nothing happens when the page is opened on its own.
+(function () {
+    if (window.parent === window) {
+        return;
+    }
+    document.addEventListener("click", (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey ||
+            event.shiftKey || event.altKey) {
+            return;
+        }
+        const link = event.target.closest('a[href^="node_"], a[href^="python/"]');
+        if (!link) {
+            return;
+        }
+        event.preventDefault();
+        // The target origin must be "*": for file:// URLs the origin is opaque,
+        // so it cannot be named.
+        window.parent.postMessage(
+            {type: "skrub-report-link", href: link.getAttribute("href")}, "*");
+    });
+})();
+    </script>
 </head>
 
-<body>
-    <button type="button" class="icon-button"
-        id="toggle-nav"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-</svg></button>
-    
+<body class="node-page">
     <div class="data_op-node-wrapper">
         <div class="data_op-node">
-            <nav class="main-nav" data-is-open>
-                <div id="graph-nav" data-current-node-id="node_2" data-node-status='{"0": "success", "1": "success", "2": "success", "3": "success", "4": "success"}'>
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
- "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generated by graphviz version 14.1.2 (0)
- -->
-<!-- Title: G Pages: 1 -->
-<svg width="232pt" height="183pt"
- viewBox="0.00 0.00 232.00 183.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 178.56)">
-
-<polygon fill="white" stroke="none" points="-4,4 -4,-178.56 228.02,-178.56 228.02,4 -4,4"/>
-<!-- node_0 -->
-<g id="node_0" class="node">
-
-<g id="a_node_0"><a xlink:href="node_0.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 8, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;data = skrub.var(&quot;data&quot;, df)">
-<polygon fill="none" stroke="black" points="143.89,-170.56 89.62,-170.56 89.62,-150.67 143.89,-150.67 143.89,-170.56"/>
-<polygon fill="none" stroke="black" points="147.89,-174.56 85.62,-174.56 85.62,-146.67 147.89,-146.67 147.89,-174.56"/>
-<text xml:space="preserve" text-anchor="start" x="95.38" y="-157.74" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">Var &#39;data&#39;</text>
-</a>
-</g>
-</g>
-<!-- node_1 -->
-<g id="node_1" class="node">
-
-<g id="a_node_1"><a xlink:href="node_1.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 9, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;X = data.drop(columns=&quot;target&quot;, errors=&quot;ignore&quot;).skb.mark_as_X()">
-<polygon fill="#c6d5f0" stroke="black" points="120.14,-117.67 13.38,-117.67 13.38,-97.78 120.14,-97.78 120.14,-117.67"/>
-<text xml:space="preserve" text-anchor="start" x="19.13" y="-104.85" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">X: CallMethod &#39;drop&#39;</text>
-</a>
-</g>
-</g>
-<!-- node_0&#45;&gt;node_1 -->
-<g id="edge4" class="edge">
-
-<path fill="none" stroke="black" d="M103.62,-146.24C96.98,-139.48 88.88,-131.23 81.96,-124.2"/>
-<polygon fill="black" stroke="black" points="83.74,-122.51 77.08,-119.23 80.24,-125.94 83.74,-122.51"/>
-</g>
-<!-- node_3 -->
-<g id="node_3" class="node">
-
-<g id="a_node_3"><a xlink:href="node_3.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 10, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;y = data[&quot;target&quot;].skb.mark_as_y()">
-<polygon fill="#fad9c6" stroke="black" points="224.02,-68.78 131.5,-68.78 131.5,-48.89 224.02,-48.89 224.02,-68.78"/>
-<text xml:space="preserve" text-anchor="start" x="137.26" y="-55.96" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">y: GetItem &#39;target&#39;</text>
-</a>
-</g>
-</g>
-<!-- node_0&#45;&gt;node_3 -->
-<g id="edge5" class="edge">
-
-<path fill="none" stroke="black" d="M124.73,-146.57C135.8,-128.48 155.79,-95.77 167.81,-76.1"/>
-<polygon fill="black" stroke="black" points="169.79,-77.57 171.35,-70.32 165.61,-75.01 169.79,-77.57"/>
-</g>
-<!-- node_2 -->
-<g id="node_2" class="node">
-
-<g id="a_node_2"><a xlink:href="node_2.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 11, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)">
-<polygon fill="none" stroke="black" points="113.52,-68.78 0,-68.78 0,-48.89 113.52,-48.89 113.52,-68.78"/>
-<text xml:space="preserve" text-anchor="start" x="5.76" y="-55.96" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">Apply StandardScaler</text>
-</a>
-</g>
-</g>
-<!-- node_1&#45;&gt;node_2 -->
-<g id="edge3" class="edge">
-
-<path fill="none" stroke="black" d="M64.83,-97.68C63.6,-91.92 61.97,-84.26 60.49,-77.34"/>
-<polygon fill="black" stroke="black" points="62.92,-76.98 59.07,-70.65 58.13,-78.01 62.92,-76.98"/>
-</g>
-<!-- node_4 -->
-<g id="node_4" class="node">
-
-<g id="a_node_4"><a xlink:href="node_4.html" xlink:title=" &#160;&#160;&#160;&#160;&#160;File &quot;/Users/rcap/scratch/gen&#45;report.py&quot;, line 11, in &lt;module&gt;&#10; &#160;&#160;&#160;&#160;&#160;&#160;&#160;pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)">
-<polygon fill="none" stroke="black" points="183.27,-19.89 50.25,-19.89 50.25,0 183.27,0 183.27,-19.89"/>
-<text xml:space="preserve" text-anchor="start" x="56.01" y="-7.07" font-family="sans-serif" font-weight="bold" font-size="10.00" fill="#1a0dab">Apply LogisticRegression</text>
-</a>
-</g>
-</g>
-<!-- node_2&#45;&gt;node_4 -->
-<g id="edge1" class="edge">
-
-<path fill="none" stroke="black" d="M68.61,-48.57C77.08,-41.96 88.63,-32.93 98.3,-25.37"/>
-<polygon fill="black" stroke="black" points="99.73,-27.36 103.74,-21.12 96.71,-23.5 99.73,-27.36"/>
-</g>
-<!-- node_3&#45;&gt;node_4 -->
-<g id="edge2" class="edge">
-
-<path fill="none" stroke="black" d="M165.71,-48.57C157.1,-41.96 145.36,-32.93 135.53,-25.37"/>
-<polygon fill="black" stroke="black" points="137.03,-23.44 129.99,-21.11 134.04,-27.32 137.03,-23.44"/>
-</g>
-</g>
-</svg>
-
-</div>
-<script>
- (function() {
-
-    function highlightCurrentNode() {
-        const graphDiv = document.getElementById('graph-nav');
-        const currentNode = graphDiv.dataset.currentNodeId;
-        const nodeElem = document.getElementById(currentNode);
-        if (nodeElem === null){
-            return;
-        }
-        nodeElem.classList.add('current-node');
-    }
-    highlightCurrentNode();
-
-    function toggleNav() {
-        const nav = document.querySelector("nav");
-        if (nav === null){
-            return;
-        }
-        if (nav.hasAttribute("data-is-open")) {
-            nav.removeAttribute("data-is-open");
-        } else {
-            nav.setAttribute("data-is-open", "");
-        }
-    }
-    const toggleNavButton = document.getElementById('toggle-nav');
-    if (toggleNavButton !== null){
-        toggleNavButton.addEventListener("click", toggleNav);
-    }
-
-    function showNodeStatus() {
-        const graphDiv = document.getElementById('graph-nav');
-        const nodeStatus = JSON.parse(graphDiv.dataset.nodeStatus);
-        for (const nodeId in nodeStatus) {
-            const nodeElem = document.getElementById(`node_${nodeId}`);
-            switch (nodeStatus[nodeId]) {
-            case 'success':
-                nodeElem.classList.add('success-node');
-                break;
-            case 'error':
-                nodeElem.classList.add('error-node');
-                break;
-            case 'skipped':
-                nodeElem.classList.add('skipped-node');
-                break;
-            default:
-                // eval=False was passed to .skb.report(), no particular styling
-                // needed on any nodes.
-                break;
-            }
-        }
-    }
-    showNodeStatus();
-})();
-</script>
-            </nav>
             <div class="node-details" 
                 >
-                <h1>2: Apply StandardScaler</h1>
+                <h1>Call &#39;load_orders&#39;</h1>
+                <div><pre><code></code></pre></div>
                 <nav class="mini-nav">
                     <ul>
                         <li>
@@ -344,12 +357,9 @@ pre, code {
                             <a href="node_3.html">next</a>
                             
                         </li>
-                        <li>
-                            <a href='index.html'>top</a>
-                        </li>
                     </ul>
                 </nav>
-                <samp>ID:</samp> <samp>140422618450945623912247869606743053012</samp>
+                <samp>ID:</samp> <samp>144123871892451673341047756968108074751</samp>
                 
                 <div>
                     
@@ -357,8 +367,11 @@ pre, code {
                     <h3>This step uses:</h3>
                     <ul>
                         
+                        <li><a href="node_0.html">0:
+                                Var &#39;data_source&#39;</a></li>
+                        
                         <li><a href="node_1.html">1:
-                                CallMethod &#39;drop&#39;</a></li>
+                                Var &#39;order_IDs&#39;</a></li>
                         
                     </ul>
                 </div>
@@ -367,1418 +380,43 @@ pre, code {
                     <h3>This step is used by:</h3>
                     <ul>
                         
-                        <li><a href="node_4.html">4:
-                                Apply LogisticRegression</a></li>
+                        <li><a href="node_3.html">3:
+                                GetItem [&#39;ID&#39;]</a></li>
+                        
+                        <li><a href="node_7.html">7:
+                                GetItem &#39;fraud_flag&#39;</a></li>
                         
                     </ul>
                 </div>
 
                 <div>
                     <h3>Where was this step created?</h3>
-                    <pre><code class="node-creation-stack">File <a href="python/0d374c52e8a159e08ad2fdaf742c3a950692871e8743e85ca5232fe35c462ed0.html#L11">/Users/rcap/scratch/gen-report.py, line 11</a>, in &lt;module&gt;
-<span class="node-creation-stack-line">pred = X.skb.apply(StandardScaler()).skb.apply(LogisticRegression(), y=y)</span></code></pre>
+                    <pre><code class="node-creation-stack">File <a href="python/beb2d207ff50631f597c649be44870249dd47ecd2ea44feae49a89abb0b48dc9.html#L28">/Users/rcap/work/skrub-tutorials/data/credit_fraud_report.py, line 28</a>, in &lt;module&gt;
+<span class="node-creation-stack-line">orders = data_source.skb.apply_func(load_orders, query)</span></code></pre>
                 </div>
                 
 
                 
                 <div>
                     <h3>Computation time</h3>
-                    <code>0h 0m 0.0023s</code>
+                    <code>0h 0m 0.0021s</code>
                 </div>
                 
 
                 
-                <h3>Estimator applied in this step:</h3>
+                
                 <div>
-                    <p>
-                        <code>StandardScaler</code>
-                        
-                        : <a href="python/d393a660e626424006be0c7a57b751d43f9b713c3d006d0d9c97007cc73b56f3.html#L742">source code</a>
-                        
-                    </p>
+                    <h3>Function applied in this step:</h3>
+                    <code>load_orders</code>
+                    
+                    : <a href="python/beb2d207ff50631f597c649be44870249dd47ecd2ea44feae49a89abb0b48dc9.html#L21">source code</a>
+                    
 
                     
 
 
-<details class="docstring-details">
-    <summary>
-        <strong>docstring:</strong>
-        <code>Standardize features by removing the mean and scaling to unit variance.</code>
-    </summary>
-    <pre><code>Standardize features by removing the mean and scaling to unit variance.
 
-The standard score of a sample `x` is calculated as:
-
-.. code-block:: text
-
-    z = (x - u) / s
-
-where `u` is the mean of the training samples or zero if `with_mean=False`,
-and `s` is the standard deviation of the training samples or one if
-`with_std=False`.
-
-Centering and scaling happen independently on each feature by computing
-the relevant statistics on the samples in the training set. Mean and
-standard deviation are then stored to be used on later data using
-:meth:`transform`.
-
-Standardization of a dataset is a common requirement for many
-machine learning estimators: they might behave badly if the
-individual features do not more or less look like standard normally
-distributed data (e.g. Gaussian with 0 mean and unit variance).
-
-For instance many elements used in the objective function of
-a learning algorithm (such as the RBF kernel of Support Vector
-Machines or the L1 and L2 regularizers of linear models) assume that
-all features are centered around 0 and have variance in the same
-order. If a feature has a variance that is orders of magnitude larger
-than others, it might dominate the objective function and make the
-estimator unable to learn from other features correctly as expected.
-
-`StandardScaler` is sensitive to outliers, and the features may scale
-differently from each other in the presence of outliers. For an example
-visualization, refer to :ref:`Compare StandardScaler with other scalers
-&lt;plot_all_scaling_standard_scaler_section&gt;`.
-
-This scaler can also be applied to sparse CSR or CSC matrices by passing
-`with_mean=False` to avoid breaking the sparsity structure of the data.
-
-Read more in the :ref:`User Guide &lt;preprocessing_scaler&gt;`.
-
-Parameters
-----------
-copy : bool, default=True
-    If False, try to avoid a copy and do inplace scaling instead.
-    This is not guaranteed to always work inplace; e.g. if the data is
-    not a NumPy array or scipy.sparse CSR matrix, a copy may still be
-    returned.
-
-with_mean : bool, default=True
-    If True, center the data before scaling.
-    This does not work (and will raise an exception) when attempted on
-    sparse matrices, because centering them entails building a dense
-    matrix which in common use cases is likely to be too large to fit in
-    memory.
-
-with_std : bool, default=True
-    If True, scale the data to unit variance (or equivalently,
-    unit standard deviation).
-
-Attributes
-----------
-scale_ : ndarray of shape (n_features,) or None
-    Per feature relative scaling of the data to achieve zero mean and unit
-    variance. Generally this is calculated using `np.sqrt(var_)`. If a
-    variance is zero, we can&#39;t achieve unit variance, and the data is left
-    as-is, giving a scaling factor of 1. `scale_` is equal to `None`
-    when `with_std=False`.
-
-    .. versionadded:: 0.17
-       *scale_*
-
-mean_ : ndarray of shape (n_features,) or None
-    The mean value for each feature in the training set.
-    Equal to ``None`` when ``with_mean=False`` and ``with_std=False``.
-
-var_ : ndarray of shape (n_features,) or None
-    The variance for each feature in the training set. Used to compute
-    `scale_`. Equal to ``None`` when ``with_mean=False`` and
-    ``with_std=False``.
-
-n_features_in_ : int
-    Number of features seen during :term:`fit`.
-
-    .. versionadded:: 0.24
-
-feature_names_in_ : ndarray of shape (`n_features_in_`,)
-    Names of features seen during :term:`fit`. Defined only when `X`
-    has feature names that are all strings.
-
-    .. versionadded:: 1.0
-
-n_samples_seen_ : int or ndarray of shape (n_features,)
-    The number of samples processed by the estimator for each feature.
-    If there are no missing samples, the ``n_samples_seen`` will be an
-    integer, otherwise it will be an array of dtype int. If
-    `sample_weights` are used it will be a float (if no missing data)
-    or an array of dtype float that sums the weights seen so far.
-    Will be reset on new calls to fit, but increments across
-    ``partial_fit`` calls.
-
-See Also
---------
-scale : Equivalent function without the estimator API.
-
-:class:`~sklearn.decomposition.PCA` : Further removes the linear
-    correlation across features with &#39;whiten=True&#39;.
-
-Notes
------
-NaNs are treated as missing values: disregarded in fit, and maintained in
-transform.
-
-We use a biased estimator for the standard deviation, equivalent to
-`numpy.std(x, ddof=0)`. Note that the choice of `ddof` is unlikely to
-affect model performance.
-
-Examples
---------
-&gt;&gt;&gt; from sklearn.preprocessing import StandardScaler
-&gt;&gt;&gt; data = [[0, 0], [0, 0], [1, 1], [1, 1]]
-&gt;&gt;&gt; scaler = StandardScaler()
-&gt;&gt;&gt; print(scaler.fit(data))
-StandardScaler()
-&gt;&gt;&gt; print(scaler.mean_)
-[0.5 0.5]
-&gt;&gt;&gt; print(scaler.transform(data))
-[[-1. -1.]
- [-1. -1.]
- [ 1.  1.]
- [ 1.  1.]]
-&gt;&gt;&gt; print(scaler.transform([[2, 2]]))
-[[3. 3.]]</code></pre>
-</details>
-
-
-
-
-                    
-                    <style>.sk-global {
-  /* Definition of color scheme common for light and dark mode */
-  --sklearn-color-text: #000;
-  --sklearn-color-text-muted: #666;
-  --sklearn-color-line: gray;
-  /* Definition of color scheme for unfitted estimators */
-  --sklearn-color-unfitted-level-0: #fff5e6;
-  --sklearn-color-unfitted-level-1: #f6e4d2;
-  --sklearn-color-unfitted-level-2: #ffe0b3;
-  --sklearn-color-unfitted-level-3: chocolate;
-  /* Definition of color scheme for fitted estimators */
-  --sklearn-color-fitted-level-0: #f0f8ff;
-  --sklearn-color-fitted-level-1: #d4ebff;
-  --sklearn-color-fitted-level-2: #b3dbfd;
-  --sklearn-color-fitted-level-3: cornflowerblue;
-}
-
-.sk-global.light {
-  /* Specific color for light theme */
-  --sklearn-color-text-on-default-background: black;
-  --sklearn-color-background: white;
-  --sklearn-color-border-box: black;
-  --sklearn-color-icon: #696969;
-}
-
-.sk-global.dark {
-  --sklearn-color-text-on-default-background: white;
-  --sklearn-color-background: #111;
-  --sklearn-color-border-box: white;
-  --sklearn-color-icon: #878787;
-}
-
-.sk-global {
-  color: var(--sklearn-color-text);
-}
-
-.sk-global pre {
-  padding: 0;
-}
-
-.sk-global input.sk-hidden--visually {
-  border: 0;
-  clip-path: inset(100%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-.sk-global div.sk-dashed-wrapped {
-  border: 1px dashed var(--sklearn-color-line);
-  margin: 0 0.4em 0.5em 0.4em;
-  box-sizing: border-box;
-  padding-bottom: 0.4em;
-  background-color: var(--sklearn-color-background);
-}
-
-.sk-global div.sk-container {
-  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
-     but bootstrap.min.css set `[hidden] { display: none !important; }`
-     so we also need the `!important` here to be able to override the
-     default hidden behavior on the sphinx rendered scikit-learn.org.
-     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
-  display: inline-block !important;
-  position: relative;
-}
-
-.sk-global div.sk-text-repr-fallback {
-  display: none;
-}
-
-div.sk-parallel-item,
-div.sk-serial,
-div.sk-item {
-  /* draw centered vertical line to link estimators */
-  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
-  background-size: 2px 100%;
-  background-repeat: no-repeat;
-  background-position: center center;
-}
-
-/* Parallel-specific style estimator block */
-
-.sk-global div.sk-parallel-item::after {
-  content: "";
-  width: 100%;
-  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
-  flex-grow: 1;
-}
-
-.sk-global div.sk-parallel {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background-color: var(--sklearn-color-background);
-  position: relative;
-}
-
-.sk-global div.sk-parallel-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.sk-global div.sk-parallel-item:first-child::after {
-  align-self: flex-end;
-  width: 50%;
-}
-
-.sk-global div.sk-parallel-item:last-child::after {
-  align-self: flex-start;
-  width: 50%;
-}
-
-.sk-global div.sk-parallel-item:only-child::after {
-  width: 0;
-}
-
-/* Serial-specific style estimator block */
-
-.sk-global div.sk-serial {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--sklearn-color-background);
-  padding-right: 1em;
-  padding-left: 1em;
-}
-
-
-/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
-clickable and can be expanded/collapsed.
-- Pipeline and ColumnTransformer use this feature and define the default style
-- Estimators will overwrite some part of the style using the `sk-estimator` class
-*/
-
-/* Pipeline and ColumnTransformer style (default) */
-
-.sk-global div.sk-toggleable {
-  /* Default theme specific background. It is overwritten whether we have a
-  specific estimator or a Pipeline/ColumnTransformer */
-  background-color: var(--sklearn-color-background);
-}
-
-/* Toggleable label */
-.sk-global label.sk-toggleable__label {
-  cursor: pointer;
-  display: flex;
-  width: 100%;
-  margin-bottom: 0;
-  padding: 0.5em;
-  box-sizing: border-box;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-}
-
-.sk-global label.sk-toggleable__label .caption {
-  font-size: 0.6rem;
-  font-weight: lighter;
-  color: var(--sklearn-color-text-muted);
-}
-
-.sk-global label.sk-toggleable__label-arrow:before {
-  /* Arrow on the left of the label */
-  content: "▸";
-  float: left;
-  margin-right: 0.25em;
-  color: var(--sklearn-color-icon);
-}
-
-.sk-global label.sk-toggleable__label-arrow:hover:before {
-  color: var(--sklearn-color-text);
-}
-
-/* Toggleable content - dropdown */
-
-.sk-global div.sk-toggleable__content {
-  display: none;
-  text-align: left;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-.sk-global div.sk-toggleable__content.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.sk-global div.sk-toggleable__content pre {
-  margin: 0.2em;
-  border-radius: 0.25em;
-  color: var(--sklearn-color-text);
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-.sk-global div.sk-toggleable__content.fitted pre {
-  /* unfitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.sk-global input.sk-toggleable__control:checked~div.sk-toggleable__content {
-  /* Expand drop-down */
-  display: block;
-  width: 100%;
-  overflow: visible;
-}
-
-.sk-global input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
-  content: "▾";
-}
-
-/* Pipeline/ColumnTransformer-specific style */
-
-.sk-global div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.sk-global div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator-specific style */
-
-/* Colorize estimator box */
-.sk-global div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.sk-global div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-.sk-global div.sk-label label.sk-toggleable__label,
-.sk-global div.sk-label label {
-  /* The background is the default theme color */
-  color: var(--sklearn-color-text-on-default-background);
-}
-
-/* On hover, darken the color of the background */
-.sk-global div.sk-label:hover label.sk-toggleable__label {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-/* Label box, darken color on hover, fitted */
-.sk-global div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Estimator label */
-
-.sk-global div.sk-label label {
-  font-family: monospace;
-  font-weight: bold;
-  line-height: 1.2em;
-}
-
-.sk-global div.sk-label-container {
-  text-align: center;
-}
-
-/* Estimator-specific */
-.sk-global div.sk-estimator {
-  font-family: monospace;
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  margin-bottom: 0.5em;
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-0);
-}
-
-.sk-global div.sk-estimator.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-/* on hover */
-.sk-global div.sk-estimator:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.sk-global div.sk-estimator.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-/* Specification for estimator info (e.g. "i" and "?") */
-
-/* Common style for "i" and "?" */
-
-.sk-estimator-doc-link,
-a:link.sk-estimator-doc-link,
-a:visited.sk-estimator-doc-link {
-  float: right;
-  font-size: smaller;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border-radius: 1em;
-  height: 1em;
-  width: 1em;
-  text-decoration: none !important;
-  margin-left: 0.5em;
-  text-align: center;
-  /* unfitted */
-  border: var(--sklearn-color-unfitted-level-3) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted,
-a:link.sk-estimator-doc-link.fitted,
-a:visited.sk-estimator-doc-link.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3) 1pt solid;
-  color: var(--sklearn-color-fitted-level-3);
-}
-
-/* On hover */
-div.sk-estimator:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover,
-div.sk-label-container:hover .sk-estimator-doc-link:hover,
-.sk-estimator-doc-link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  border: var(--sklearn-color-fitted-level-0) 1pt solid;
-  color: var(--sklearn-color-unfitted-level-0);
-  text-decoration: none;
-}
-
-div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover,
-div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
-.sk-estimator-doc-link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-  border: var(--sklearn-color-fitted-level-0) 1pt solid;
-  color: var(--sklearn-color-fitted-level-0);
-  text-decoration: none;
-}
-
-/* Span, style for the box shown on hovering the info icon */
-.sk-estimator-doc-link span {
-  display: none;
-  z-index: 9999;
-  position: relative;
-  font-weight: normal;
-  right: .2ex;
-  padding: .5ex;
-  margin: .5ex;
-  width: min-content;
-  min-width: 20ex;
-  max-width: 50ex;
-  color: var(--sklearn-color-text);
-  box-shadow: 2pt 2pt 4pt #999;
-  /* unfitted */
-  background: var(--sklearn-color-unfitted-level-0);
-  border: .5pt solid var(--sklearn-color-unfitted-level-3);
-}
-
-.sk-estimator-doc-link.fitted span {
-  /* fitted */
-  background: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-estimator-doc-link:hover span {
-  display: block;
-}
-
-/* "?"-specific style due to the `<a>` HTML tag */
-
-.sk-global a.estimator_doc_link {
-  float: right;
-  font-size: 1rem;
-  line-height: 1em;
-  font-family: monospace;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border-radius: 1rem;
-  height: 1rem;
-  width: 1rem;
-  text-decoration: none;
-  /* unfitted */
-  color: var(--sklearn-color-unfitted-level-1);
-  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
-}
-
-.sk-global a.estimator_doc_link.fitted {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-0);
-  border: var(--sklearn-color-fitted-level-1) 1pt solid;
-  color: var(--sklearn-color-fitted-level-1);
-}
-
-/* On hover */
-.sk-global a.estimator_doc_link:hover {
-  /* unfitted */
-  background-color: var(--sklearn-color-unfitted-level-3);
-  color: var(--sklearn-color-background);
-  text-decoration: none;
-}
-
-.sk-global a.estimator_doc_link.fitted:hover {
-  /* fitted */
-  background-color: var(--sklearn-color-fitted-level-3);
-}
-
-.sk-top-container.sk-global {
-  /* pydata-sphinx-theme hides overflow, so scrolling is disabled.
-   We need to set it to !important and add tabindex="0" in the HTML
-   to allow keyboard-only users to navigate the display. */
-  overflow-x: scroll !important;
-  max-width: 100%;
-}
-
-.estimator-table {
-    font-family: monospace;
-}
-
-.estimator-table summary {
-    padding: .5rem;
-    cursor: pointer;
-}
-
-.estimator-table summary::marker {
-    font-size: 0.7rem;
-}
-
-.estimator-table details[open] {
-    padding-left: 0.1rem;
-    padding-right: 0.1rem;
-    padding-bottom: 0.3rem;
-}
-
-.estimator-table .parameters-table {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    margin-top: 0;
-}
-
-.estimator-table .parameters-table tr:nth-child(odd) {
-    background-color: #fff;
-}
-
-.estimator-table .parameters-table tr:nth-child(even) {
-    background-color: #f6f6f6;
-}
-
-.estimator-table .parameters-table tr:hover td {
-    background-color: #e0e0e0;
-}
-
-.estimator-table table :is(td, th) {
-    border: 1px solid rgba(106, 105, 104, 0.232);
-}
-
-/*
-    `table td`is set in notebook with right text-align.
-    We need to overwrite it.
-*/
-.estimator-table table td.param {
-    text-align: left;
-    position: relative;
-    padding: 0;
-}
-
-.user-set td {
-    color:rgb(255, 94, 0);
-    text-align: left !important;
-}
-
-.user-set td.value {
-    color:rgb(255, 94, 0);
-    background-color: transparent;
-}
-
-.default td, .estimator-table th {
-    color: black;
-    text-align: left !important;
-}
-
-.user-set td i,
-.default td i {
-    color: black;
-}
-
-td.fitted-att-type {
-    white-space: preserve nowrap;
-}
-
-/*
-    Styles for parameter documentation links
-    We need styling for visited so jupyter doesn't overwrite it
-*/
-a.param-doc-link,
-a.param-doc-link:link,
-a.param-doc-link:visited {
-    text-decoration: underline dashed;
-    text-underline-offset: .3em;
-    color: inherit;
-    display: block;
-    padding: .5em;
-}
-
-@supports(anchor-name: --doc-link) {
-    a.param-doc-link,
-    a.param-doc-link:link,
-    a.param-doc-link:visited {
-    anchor-name: --doc-link;
-    }
-}
-
-/* "hack" to make the entire area of the cell containing the link clickable */
-a.param-doc-link::before {
-    position: absolute;
-    content: "";
-    inset: 0;
-}
-
-.param-doc-description {
-    display: none;
-    position: absolute;
-    z-index: 9999;
-    left: 0;
-    padding: .5ex;
-    margin-left: 1.5em;
-    color: var(--sklearn-color-text);
-    box-shadow: .3em .3em .4em #999;
-    width: max-content;
-    text-align: left;
-    max-height: 10em;
-    overflow-y: auto;
-
-    /* unfitted */
-    background: var(--sklearn-color-unfitted-level-0);
-    border: thin solid var(--sklearn-color-unfitted-level-3);
-}
-
-@supports(position-area: center right) {
-    .param-doc-description {
-    position-area: center right;
-    position: fixed;
-    margin-left: 0;
-    }
-}
-
-/* Fitted state for parameter tooltips */
-.fitted .param-doc-description {
-    /* fitted */
-    background: var(--sklearn-color-fitted-level-0);
-    border: thin solid var(--sklearn-color-fitted-level-3);
-}
-
-.param-doc-link:hover .param-doc-description {
-    display: block;
-}
-
-.copy-paste-icon {
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTIwOCAwTDMzMi4xIDBjMTIuNyAwIDI0LjkgNS4xIDMzLjkgMTQuMWw2Ny45IDY3LjljOSA5IDE0LjEgMjEuMiAxNC4xIDMzLjlMNDQ4IDMzNmMwIDI2LjUtMjEuNSA0OC00OCA0OGwtMTkyIDBjLTI2LjUgMC00OC0yMS41LTQ4LTQ4bDAtMjg4YzAtMjYuNSAyMS41LTQ4IDQ4LTQ4ek00OCAxMjhsODAgMCAwIDY0LTY0IDAgMCAyNTYgMTkyIDAgMC0zMiA2NCAwIDAgNDhjMCAyNi41LTIxLjUgNDgtNDggNDhMNDggNTEyYy0yNi41IDAtNDgtMjEuNS00OC00OEwwIDE3NmMwLTI2LjUgMjEuNS00OCA0OC00OHoiLz48L3N2Zz4=);
-    background-repeat: no-repeat;
-    background-size: 14px 14px;
-    background-position: 0;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    cursor: pointer;
-}
-
-.features {
-  font-family: monospace;
-  cursor: pointer;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border: 1px dotted var(--sklearn-color-border-box);
-  border-radius: .20em;
-  margin-bottom: 0.5em;
-  font-size: inherit; /* Needed for jupyter */
-}
-
-.features.fitted {
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.features summary {
-  cursor: pointer;
-  display: flex;
-  margin-bottom: 0;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em;
-  padding: .25em;
-}
-
-.features details[open] > summary {
-  color: var(--sklearn-color-text);
-  background-color: var(--sklearn-color-unfitted-level-2);
-  border-radius: .20em 0 0 0;
-}
-
-.features.fitted details[open] > summary {
-  background-color: var(--sklearn-color-fitted-level-2);
-  border-radius: .20em 0 0 0;
-}
-
-.features details > summary .arrow::before {
-  content: "▸";
-  color: grey;
-}
-
-.features details[open] > summary .arrow::before {
-  content: "▾";
-}
-
-.features details:hover > summary {
-  margin: 0;
-  background-color: var(--sklearn-color-unfitted-level-2);
-}
-
-.features.fitted details:hover > summary {
-  margin: 0;
-  background-color: var(--sklearn-color-fitted-level-2);
-}
-
-.features .features-container {
-  max-width: 15em;
-  max-height: 10em;
-  overflow: auto;
-  scrollbar-width: thin;
-  padding: .25em 0.1rem;
-  background-color: var(--sklearn-color-unfitted-level-0);
-  border-radius: 0 0 .5em .5em;
-}
-
-.features.fitted .features-container {
-  background-color: var(--sklearn-color-fitted-level-0);
-}
-
-.features .image-container {
-  block-size: 1em;
-  inline-size: 1em;
-  padding: 0;
-  margin: 0%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.features .copy-paste-icon {
-  background-size: 1em 1em;
-  width: 1em;
-  height: 1em;
-  filter: grayscale(100%) opacity(60%);
-}
-
-.features .features-container table {
-  width: 100%;
-  margin: 0.01em;
-}
-
-.features .features-container table tr:nth-child(odd) {
-  background-color: #fff;
-}
-
-.features .features-container table tr:nth-child(even) {
-  background-color: #f6f6f6;
-}
-
-.features .features-container table tr:hover {
-  background-color: #e0e0e0;
-}
-
-.features .features-container table {
-  table-layout: inherit;
-}
-
-.features .features-container table td {
-  text-align: left;
-  padding: 0 0.5em;
-  border: 1px solid rgba(106, 105, 104, 0.232);
-  white-space: nowrap;
-  color: var(--sklearn-color-text);
-}
-
-.total_features {
-  display: flex;
-  justify-content: center;
-  margin-top: 0.5em;
-}
-</style><body><div id="sk-container-id-8" tabindex="0" class="sk-top-container sk-global"><div class="sk-text-repr-fallback"><pre>ApplyToCols(transformer=StandardScaler())</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually sk-global" id="sk-estimator-id-9" type="checkbox" ><label for="sk-estimator-id-9" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>ApplyToCols</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html">?<span>Documentation for ApplyToCols</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted" data-param-prefix="">
-        <div class="estimator-table">
-            <details>
-                <summary>Parameters</summary>
-                <table class="parameters-table">
-                  <tbody>
-                    
-        <tr class="user-set">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('transformer',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-transformer;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=transformer,-transformer%20instance">
-            transformer
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-transformer;">
-            transformer: transformer instance<br><br>The transformer to apply to the selected columns.</span>
-        </a>
-    </td>
-            <td class="value">StandardScaler()</td>
-        </tr>
-    
-
-        <tr class="user-set">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('cols',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-cols;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=cols,-str%2C%20sequence%20of%20str%2C%20or%20skrub%20selector%2C%20optional">
-            cols
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-cols;">
-            cols: str, sequence of str, or skrub selector, optional<br><br>The columns to attempt to transform. The transformer is applied to the<br>columns matched by ``cols`` and not matched by ``exclude_cols``.<br>Columns outside this selection are passed through unchanged<br>(``fit_transform`` is not called on them) and remain unmodified in the<br>output. The default is to attempt transforming all columns.</span>
-        </a>
-    </td>
-            <td class="value">all()</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('exclude_cols',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-exclude_cols;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=exclude_cols,-str%2C%20sequence%20of%20str%2C%20or%20skrub%20selector%2C%20optional">
-            exclude_cols
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-exclude_cols;">
-            exclude_cols: str, sequence of str, or skrub selector, optional<br><br>Columns to exclude from transformation. The transformed columns are the<br>ones matched by ``cols`` and not matched by ``exclude_cols``.</span>
-        </a>
-    </td>
-            <td class="value">None</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('allow_reject',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-allow_reject;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=allow_reject,-bool%2C%20default%3DFalse">
-            allow_reject
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-allow_reject;">
-            allow_reject: bool, default=False<br><br>Whether to allow refusing to transform columns for which the provided<br>transformer is not suited, for example rejecting non-datetime columns if<br>transformer is a DatetimeEncoder. Only relevant if the transformer is a<br>:class:`~core.SingleColumnTransformer`. Rejected columns are passed through<br>unchanged.</span>
-        </a>
-    </td>
-            <td class="value">False</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('keep_original',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-keep_original;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=keep_original,-bool%2C%20default%3DFalse">
-            keep_original
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-keep_original;">
-            keep_original: bool, default=False<br><br>If ``True``, the original columns are preserved in the output. If the<br>transformer produces a column with the same name, the transformation<br>result is renamed so that both columns can appear in the output. If<br>``False``, when the transformer accepts a column, only the<br>transformer&#x27;s output is included in the result, not the original<br>column. In all cases rejected columns (or columns not selected by<br>``cols``) are passed through.</span>
-        </a>
-    </td>
-            <td class="value">False</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('rename_columns',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-rename_columns;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=rename_columns,-str%2C%20default%3D%27%7B%7D%27">
-            rename_columns
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-rename_columns;">
-            rename_columns: str, default=&#x27;{}&#x27;<br><br>Format string applied to all transformation output column names. For<br>example pass ``&#x27;transformed_{}&#x27;`` to prepend ``&#x27;transformed_&#x27;`` to all<br>output column names. The default value does not modify the names.<br>Renaming is not applied to columns not selected by ``cols``.</span>
-        </a>
-    </td>
-            <td class="value">&#x27;{}&#x27;</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('n_jobs',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-n_jobs;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=n_jobs,-int%2C%20default%3DNone">
-            n_jobs
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-n_jobs;">
-            n_jobs: int, default=None<br><br>Number of jobs to run in parallel.<br>``None`` means 1 unless in a joblib ``parallel_backend`` context.<br>``-1`` means using all processors.<br>Note that this parameter is only used when the transformer<br>is a :class:`~core.SingleColumnTransformer`.</span>
-        </a>
-    </td>
-            <td class="value">None</td>
-        </tr>
-    
-                  </tbody>
-                </table>
-            </details>
-        </div>
-    
-        <div class="estimator-table">
-            <details>
-                <summary>Fitted attributes</summary>
-                <table class="parameters-table">
-                    <tbody>
-                        <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Value</th>
-                        </tr>
-                        
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-all_inputs_;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=all_inputs_,-list%20of%20str">
-            all_inputs_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-all_inputs_;">
-            all_inputs_: list of str<br><br>All column names in the input dataframe.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">list</td>
-           <td>[&#x27;value&#x27;]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-all_outputs_;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=all_outputs_,-list%20of%20str">
-            all_outputs_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-all_outputs_;">
-            all_outputs_: list of str<br><br>All column names in the output dataframe.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">list</td>
-           <td>[&#x27;value&#x27;]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-created_outputs_;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=created_outputs_,-list%20of%20str">
-            created_outputs_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-created_outputs_;">
-            created_outputs_: list of str<br><br>The names of columns in the output dataframe that were created by one<br>of the fitted transformers.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">list</td>
-           <td>[&#x27;value&#x27;]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param"><a class="param-doc-link" style="text-decoration:none;">feature_names_in_</a></td>
-           <td class="fitted-att-type">list</td>
-           <td>[&#x27;value&#x27;]</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param"><a class="param-doc-link" style="text-decoration:none;">n_features_in_</a></td>
-           <td class="fitted-att-type">int</td>
-           <td>1</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-transformer_;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=transformer_,-Transformer">
-            transformer_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-transformer_;">
-            transformer_: Transformer<br><br>The fitted transformer. Only available when the transformer is **not** a<br>:class:`~core.SingleColumnTransformer`.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">StandardScaler</td>
-           <td>StandardScaler()</td>
-
-
-       </tr>
-    
-
-       <tr class="default">
-           <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-used_inputs_;"
-            rel="noreferrer" target="_blank" href="https://skrub-data.org/stable/reference/generated/skrub.ApplyToCols.html#:~:text=used_inputs_,-list%20of%20str">
-            used_inputs_
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-used_inputs_;">
-            used_inputs_: list of str<br><br>The names of columns that were transformed.</span>
-        </a>
-    </td>
-           <td class="fitted-att-type">list</td>
-           <td>[&#x27;value&#x27;]</td>
-
-
-       </tr>
-    
-                    </tbody>
-                </table>
-            </details>
-        </div>
-    </div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually sk-global" id="sk-estimator-id-10" type="checkbox" ><label for="sk-estimator-id-10" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>StandardScaler</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.preprocessing.StandardScaler.html">?<span>Documentation for StandardScaler</span></a></div></label><div class="sk-toggleable__content fitted" data-param-prefix="StandardScaler__">
-        <div class="estimator-table">
-            <details>
-                <summary>Parameters</summary>
-                <table class="parameters-table">
-                  <tbody>
-                    
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('copy',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-copy;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.preprocessing.StandardScaler.html#:~:text=copy,-bool%2C%20default%3DTrue">
-            copy
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-copy;">
-            copy: bool, default=True<br><br>If False, try to avoid a copy and do inplace scaling instead.<br>This is not guaranteed to always work inplace; e.g. if the data is<br>not a NumPy array or scipy.sparse CSR matrix, a copy may still be<br>returned.</span>
-        </a>
-    </td>
-            <td class="value">True</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('with_mean',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-with_mean;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.preprocessing.StandardScaler.html#:~:text=with_mean,-bool%2C%20default%3DTrue">
-            with_mean
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-with_mean;">
-            with_mean: bool, default=True<br><br>If True, center the data before scaling.<br>This does not work (and will raise an exception) when attempted on<br>sparse matrices, because centering them entails building a dense<br>matrix which in common use cases is likely to be too large to fit in<br>memory.</span>
-        </a>
-    </td>
-            <td class="value">True</td>
-        </tr>
-    
-
-        <tr class="default">
-            <td><i class="copy-paste-icon"
-                 onclick="copyToClipboard('with_std',
-                          this.parentElement.nextElementSibling)"
-            ></i></td>
-            <td class="param">
-        <a class="param-doc-link"
-            style="anchor-name: --doc-link-with_std;"
-            rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.9/modules/generated/sklearn.preprocessing.StandardScaler.html#:~:text=with_std,-bool%2C%20default%3DTrue">
-            with_std
-            <span class="param-doc-description"
-            style="position-anchor: --doc-link-with_std;">
-            with_std: bool, default=True<br><br>If True, scale the data to unit variance (or equivalently,<br>unit standard deviation).</span>
-        </a>
-    </td>
-            <td class="value">True</td>
-        </tr>
-    
-                  </tbody>
-                </table>
-            </details>
-        </div>
-    </div></div></div></div><div class='total_features'>
-        <div class="features fitted">
-          <details>
-            <summary>
-              <div class="arrow"></div>
-              <div>1 feature</div>
-              <div class="image-container" title="Copy all output features">
-                <i class="copy-paste-icon"
-                  onclick="
-                  event.stopPropagation();
-                  event.preventDefault();
-                  copyFeatureNamesToClipboard(this);
-                  "
-                >
-                </i>
-              </div>
-            </summary>
-            <div class="features-container">
-                <table class="features-table">
-                  <tbody>
-                    
-        <tr>
-          <td>value</td>
-        </tr>
-
-    
-                  </tbody>
-                </table>
-            </div>
-          </details>
-        </div>
-    </div></div></div></div><script>/*  Authors: The scikit-learn developers
- SPDX-License-Identifier: BSD-3-Clause
-*/
-
-function copyToClipboard(text, element) {
-    // Get the parameter prefix from the closest toggleable content
-    const toggleableContent = element.closest('.sk-toggleable__content');
-    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
-    const fullParamName = paramPrefix ? `${paramPrefix}${text}` : text;
-
-    const originalStyle = element.style;
-    const computedStyle = window.getComputedStyle(element);
-    const originalWidth = computedStyle.width;
-    const originalHTML = element.innerHTML.replace('Copied!', '');
-
-    navigator.clipboard.writeText(fullParamName)
-        .then(() => {
-            element.style.width = originalWidth;
-            element.style.color = 'green';
-            element.innerHTML = "Copied!";
-
-            setTimeout(() => {
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 2000);
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
-            element.style.color = 'red';
-            element.innerHTML = "Failed!";
-            setTimeout(() => {
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 2000);
-        });
-    return false;
-}
-
-document.querySelectorAll('.copy-paste-icon').forEach(function(element) {
-    const toggleableContent = element.closest('.sk-toggleable__content');
-    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
-
-    const parent = element.parentElement;
-    if (!parent || !parent.nextElementSibling) {
-        console.warn('Expected copy-paste icon is missing from the DOM structure');
-        return;
-    }
-
-    const paramName = element.parentElement.nextElementSibling
-        .textContent.trim().split(' ')[0];
-    const fullParamName = paramPrefix ? `${paramPrefix}${paramName}` : paramName;
-
-    element.setAttribute('title', fullParamName);
-});
-
-/**
- * Copy the list of feature names formatted as a Python list.
- *
- * @param {HTMLElement} element - The copy button inside a `.features` block; its siblings
- *   contain a `details` element and a table containing feature named.
- * @returns {boolean} Always returns `false` so callers can prevent the default click behavior.
- */
-function copyFeatureNamesToClipboard(element) {
-    var detailsElem = element.closest('.features').querySelector('details');
-    var wasOpen = detailsElem.open;
-    detailsElem.open = true;
-    var content = element.closest('.features').querySelector('tbody')
-                  .innerText.trim();
-    if (!wasOpen) detailsElem.open = false;
-    const rows = content.split('\n').map(row => `    "${row}"`);
-    const formattedText = `[\n${rows.join(',\n')},\n]`;
-    const originalHTML = element.innerHTML.replace('✔', '');
-    const originalStyle = element.style;
-    const copyMark = document.createElement('span');
-    copyMark.innerHTML = '✔';
-    copyMark.style.color = 'blue';
-    copyMark.style.fontSize = '1em';
-
-    navigator.clipboard.writeText(formattedText)
-        .then(() => {
-            element.style.display = 'none';
-            element.parentElement.appendChild(copyMark);
-
-            setTimeout(() => {
-                copyMark.remove();
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 1000);
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
-            element.style.color = 'orange';
-            element.innerHTML = "Failed!";
-            setTimeout(() => {
-                element.innerHTML = originalHTML;
-                element.style = originalStyle;
-            }, 1000);
-        });
-    return false;
-}
-/**
- * Adapted from Skrub
- * https://github.com/skrub-data/skrub/blob/403466d1d5d4dc76a7ef569b3f8228db59a31dc3/skrub/_reporting/_data/templates/report.js#L789
- * @returns "light" or "dark"
- */
-function detectTheme(element) {
-    const body = document.querySelector('body');
-
-    // Check VSCode theme
-    const themeKindAttr = body.getAttribute('data-vscode-theme-kind');
-    const themeNameAttr = body.getAttribute('data-vscode-theme-name');
-
-    if (themeKindAttr && themeNameAttr) {
-        const themeKind = themeKindAttr.toLowerCase();
-        const themeName = themeNameAttr.toLowerCase();
-
-        if (themeKind.includes("dark") || themeName.includes("dark")) {
-            return "dark";
-        }
-        if (themeKind.includes("light") || themeName.includes("light")) {
-            return "light";
-        }
-    }
-
-    // Check Jupyter theme
-    if (body.getAttribute('data-jp-theme-light') === 'false') {
-        return 'dark';
-    } else if (body.getAttribute('data-jp-theme-light') === 'true') {
-        return 'light';
-    }
-
-    // Guess based on a parent element's color
-    const color = window.getComputedStyle(element.parentNode, null).getPropertyValue('color');
-    const match = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
-    if (match) {
-        const [r, g, b] = [
-            parseFloat(match[1]),
-            parseFloat(match[2]),
-            parseFloat(match[3])
-        ];
-
-        // https://en.wikipedia.org/wiki/HSL_and_HSV#Lightness
-        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-
-        if (luma > 180) {
-            // If the text is very bright we have a dark theme
-            return 'dark';
-        }
-        if (luma < 75) {
-            // If the text is very dark we have a light theme
-            return 'light';
-        }
-        // Otherwise fall back to the next heuristic.
-    }
-
-    // Fallback to system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-
-function forceTheme(elementId) {
-    const estimatorElement = document.querySelector(`#${elementId}`);
-    if (estimatorElement === null) {
-        console.error(`Element with id ${elementId} not found.`);
-    } else {
-        const theme = detectTheme(estimatorElement);
-        estimatorElement.classList.add(theme);
-    }
-}
-
-forceTheme('sk-container-id-8');</script></body>
-                    
                 </div>
-                
                 
                 
 
@@ -1789,8 +427,8 @@ forceTheme('sk-container-id-8');</script></body>
                     
                     <div>
                         
-<div id="report_d4528e69-wrapper" hidden>
-    <template id="report_d4528e69-template">
+<div id="report_e86fea89-wrapper" hidden>
+    <template id="report_e86fea89-template">
         <style>
          /*!
 Pure v3.0.0
@@ -3109,8 +1747,9 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
         </div>
         <div class="column-filter" data-manager="InvisibleInAssociationsTabPanel">
     <select data-manager="ColumnFilter"
-            data-all-filters-base64="eyJhbGwoKSI6IHsiZGlzcGxheV9uYW1lIjogIkFsbCBjb2x1bW5zIiwgImNvbHVtbnMiOiBbMF19LCAiaGFzX251bGxzKDAuMCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJXaXRoIG51bGxzIiwgImNvbHVtbnMiOiBbXX0sICIofmhhc19udWxscygwLjApKSI6IHsiZGlzcGxheV9uYW1lIjogIldpdGhvdXQgbnVsbHMiLCAiY29sdW1ucyI6IFswXX0sICJudW1lcmljKCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOdW1lcmljIiwgImNvbHVtbnMiOiBbMF19LCAiKH5udW1lcmljKCkpIjogeyJkaXNwbGF5X25hbWUiOiAiTm9uLW51bWVyaWMiLCAiY29sdW1ucyI6IFtdfSwgInN0cmluZygpIjogeyJkaXNwbGF5X25hbWUiOiAiU3RyaW5nIiwgImNvbHVtbnMiOiBbXX0sICIofnN0cmluZygpKSI6IHsiZGlzcGxheV9uYW1lIjogIk5vbi1zdHJpbmciLCAiY29sdW1ucyI6IFswXX0sICJjYXRlZ29yaWNhbCgpIjogeyJkaXNwbGF5X25hbWUiOiAiQ2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFtdfSwgIih+Y2F0ZWdvcmljYWwoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tY2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFswXX0sICJhbnlfZGF0ZSgpIjogeyJkaXNwbGF5X25hbWUiOiAiRGF0ZXRpbWUiLCAiY29sdW1ucyI6IFtdfSwgIih+YW55X2RhdGUoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tZGF0ZXRpbWUiLCAiY29sdW1ucyI6IFswXX19"
+            data-all-filters-base64="eyJhbGwoKSI6IHsiZGlzcGxheV9uYW1lIjogIkFsbCBjb2x1bW5zIiwgImNvbHVtbnMiOiBbMCwgMV19LCAiaGFzX251bGxzKDAuMCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJXaXRoIG51bGxzIiwgImNvbHVtbnMiOiBbXX0sICIofmhhc19udWxscygwLjApKSI6IHsiZGlzcGxheV9uYW1lIjogIldpdGhvdXQgbnVsbHMiLCAiY29sdW1ucyI6IFswLCAxXX0sICJudW1lcmljKCkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOdW1lcmljIiwgImNvbHVtbnMiOiBbMCwgMV19LCAiKH5udW1lcmljKCkpIjogeyJkaXNwbGF5X25hbWUiOiAiTm9uLW51bWVyaWMiLCAiY29sdW1ucyI6IFtdfSwgInN0cmluZygpIjogeyJkaXNwbGF5X25hbWUiOiAiU3RyaW5nIiwgImNvbHVtbnMiOiBbXX0sICIofnN0cmluZygpKSI6IHsiZGlzcGxheV9uYW1lIjogIk5vbi1zdHJpbmciLCAiY29sdW1ucyI6IFswLCAxXX0sICJjYXRlZ29yaWNhbCgpIjogeyJkaXNwbGF5X25hbWUiOiAiQ2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFtdfSwgIih+Y2F0ZWdvcmljYWwoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tY2F0ZWdvcmljYWwiLCAiY29sdW1ucyI6IFswLCAxXX0sICJhbnlfZGF0ZSgpIjogeyJkaXNwbGF5X25hbWUiOiAiRGF0ZXRpbWUiLCAiY29sdW1ucyI6IFtdfSwgIih+YW55X2RhdGUoKSkiOiB7ImRpc3BsYXlfbmFtZSI6ICJOb24tZGF0ZXRpbWUiLCAiY29sdW1ucyI6IFswLCAxXX19"
             data-test="column-filter-select"
+            aria-label="Filter columns"
             autocomplete="off">
         <optgroup label="Select columns to show:">
         <option value="all()" selected disabled hidden>Filter columns</option>
@@ -3177,6 +1816,7 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
     class="copybutton copybutton-left"
     data-manager="CopyButton"
     type="button"
+    aria-label="Copy to clipboard"
     data-target-id="sample-table-bar-display">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
@@ -3203,9 +1843,9 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
         <table class="pure-table pure-table-striped table-with-selectable-cells"
                data-manager="SampleTable"
         data-start-i="-2"
-        data-stop-i="3"
+        data-stop-i="10"
         data-start-j="-1"
-        data-stop-j="1"
+        data-stop-j="2"
         >
             
             
@@ -3215,7 +1855,7 @@ button.tab[data-has-warning]:not(:hover):not([data-is-selected]) {
                 
                 
                 <th
-                id="565fddfd"
+                id="98ea0ae1"
                 class="table-cell elided-short "
                 
                 data-role="padding"
@@ -3245,7 +1885,7 @@ data-spans__-1__-1
                 
                 
                 <th
-                id="73aede91"
+                id="7445ab1e"
                 class="table-cell elided-short clickable"
                 
                 data-role="columns-level-value"
@@ -3270,12 +1910,46 @@ data-spans__-1__0
 
                 rowspan="2"
                 colspan="1"
-                data-value-repr="&#39;value&#39;"
-                data-value-str="value"
+                data-value-repr="&#39;ID&#39;"
+                data-value-str="ID"
                 
                 data-column-idx="0"
                 
-                >value</th>
+                >ID</th>
+                
+                
+                <th
+                id="2d9e3084"
+                class="table-cell elided-short clickable"
+                
+                data-role="columns-level-value"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="-2"
+                data-j="1"
+                
+
+
+
+
+data-spans__-2__1
+
+
+
+data-spans__-1__1
+
+
+
+                rowspan="2"
+                colspan="1"
+                data-value-repr="&#39;fraud_flag&#39;"
+                data-value-str="fraud_flag"
+                
+                data-column-idx="1"
+                
+                >fraud_flag</th>
                 
             </tr>
             
@@ -3293,7 +1967,7 @@ data-spans__-1__0
                 
                 
                 <th
-                id="aa337982"
+                id="c19d04aa"
                 class="table-cell elided-short clickable"
                 
                 data-role="index-level-value"
@@ -3321,7 +1995,7 @@ data-spans__0__-1
                 
                 
                 <td
-                id="60ef94df"
+                id="369f836e"
                 class="table-cell elided-short clickable"
                 
                 data-role="dataframe-data"
@@ -3342,12 +2016,42 @@ data-spans__0__0
 
                 rowspan="1"
                 colspan="1"
-                data-value-repr="-1.224744871391589"
-                data-value-str="-1.224744871391589"
+                data-value-repr="51113"
+                data-value-str="51113"
                 
                 data-column-idx="0"
                 
-                >-1.22</td>
+                >51,113</td>
+                
+                
+                <td
+                id="3d7919dc"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="0"
+                data-j="1"
+                
+
+
+
+
+data-spans__0__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
                 
             </tr>
             
@@ -3355,7 +2059,7 @@ data-spans__0__0
                 
                 
                 <th
-                id="d9a9b3da"
+                id="2cf6ef6e"
                 class="table-cell elided-short clickable"
                 
                 data-role="index-level-value"
@@ -3383,7 +2087,7 @@ data-spans__1__-1
                 
                 
                 <td
-                id="50635dc8"
+                id="dc953e10"
                 class="table-cell elided-short clickable"
                 
                 data-role="dataframe-data"
@@ -3404,12 +2108,42 @@ data-spans__1__0
 
                 rowspan="1"
                 colspan="1"
-                data-value-repr="0.0"
-                data-value-str="0.0"
+                data-value-repr="41798"
+                data-value-str="41798"
                 
                 data-column-idx="0"
                 
-                >0.00</td>
+                >41,798</td>
+                
+                
+                <td
+                id="b1fc2796"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="1"
+                data-j="1"
+                
+
+
+
+
+data-spans__1__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
                 
             </tr>
             
@@ -3417,7 +2151,7 @@ data-spans__1__0
                 
                 
                 <th
-                id="1a03bf8a"
+                id="26b68d8b"
                 class="table-cell elided-short clickable"
                 
                 data-role="index-level-value"
@@ -3445,7 +2179,7 @@ data-spans__2__-1
                 
                 
                 <td
-                id="c2e1afc2"
+                id="1aec9440"
                 class="table-cell elided-short clickable"
                 
                 data-role="dataframe-data"
@@ -3466,12 +2200,726 @@ data-spans__2__0
 
                 rowspan="1"
                 colspan="1"
-                data-value-repr="1.224744871391589"
-                data-value-str="1.224744871391589"
+                data-value-repr="39361"
+                data-value-str="39361"
                 
                 data-column-idx="0"
                 
-                >1.22</td>
+                >39,361</td>
+                
+                
+                <td
+                id="863c0d05"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="2"
+                data-j="1"
+                
+
+
+
+
+data-spans__2__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="93076ed3"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="3"
+                data-j="-1"
+                
+
+
+
+
+data-spans__3__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="3"
+                data-value-str="3"
+                
+                >3</th>
+                
+                
+                <td
+                id="38a1fc11"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="0"
+                
+
+
+
+
+data-spans__3__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="38615"
+                data-value-str="38615"
+                
+                data-column-idx="0"
+                
+                >38,615</td>
+                
+                
+                <td
+                id="00179fc8"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="3"
+                data-j="1"
+                
+
+
+
+
+data-spans__3__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="5d8335a7"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="4"
+                data-j="-1"
+                
+
+
+
+
+data-spans__4__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="4"
+                data-value-str="4"
+                
+                >4</th>
+                
+                
+                <td
+                id="c0b3c7aa"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="0"
+                
+
+
+
+
+data-spans__4__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="70262"
+                data-value-str="70262"
+                
+                data-column-idx="0"
+                
+                >70,262</td>
+                
+                
+                <td
+                id="4185e00b"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="4"
+                data-j="1"
+                
+
+
+
+
+data-spans__4__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            </tbody>
+            
+            
+            
+            <tbody class="elided-table-part">
+                <tr>
+                    
+                    <td
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="0"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                    <td
+                        
+                        data-manager="FilterableColumn"
+                        data-column-idx="1"
+                        data-role="ellipsis"
+                        
+                        ><div class="ellipsis-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+</svg></div></td>
+                    
+                </tr>
+            </tbody>
+            
+            
+            
+            <tbody>
+            
+            <tr>
+                
+                
+                <th
+                id="5637e667"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="5"
+                data-j="-1"
+                
+
+
+
+
+data-spans__5__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="61236"
+                data-value-str="61236"
+                
+                >61,236</th>
+                
+                
+                <td
+                id="49750e12"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="0"
+                
+
+
+
+
+data-spans__5__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="21243"
+                data-value-str="21243"
+                
+                data-column-idx="0"
+                
+                >21,243</td>
+                
+                
+                <td
+                id="230c425a"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="5"
+                data-j="1"
+                
+
+
+
+
+data-spans__5__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="d0fbdfa1"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="6"
+                data-j="-1"
+                
+
+
+
+
+data-spans__6__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="61237"
+                data-value-str="61237"
+                
+                >61,237</th>
+                
+                
+                <td
+                id="34ad4b7c"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="0"
+                
+
+
+
+
+data-spans__6__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="45891"
+                data-value-str="45891"
+                
+                data-column-idx="0"
+                
+                >45,891</td>
+                
+                
+                <td
+                id="cf0649f2"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="6"
+                data-j="1"
+                
+
+
+
+
+data-spans__6__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="e9b77f15"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="7"
+                data-j="-1"
+                
+
+
+
+
+data-spans__7__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="61238"
+                data-value-str="61238"
+                
+                >61,238</th>
+                
+                
+                <td
+                id="b4c43579"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="0"
+                
+
+
+
+
+data-spans__7__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="42613"
+                data-value-str="42613"
+                
+                data-column-idx="0"
+                
+                >42,613</td>
+                
+                
+                <td
+                id="a16491e3"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="7"
+                data-j="1"
+                
+
+
+
+
+data-spans__7__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="41366513"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="8"
+                data-j="-1"
+                
+
+
+
+
+data-spans__8__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="61239"
+                data-value-str="61239"
+                
+                >61,239</th>
+                
+                
+                <td
+                id="c956bea3"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="0"
+                
+
+
+
+
+data-spans__8__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="43567"
+                data-value-str="43567"
+                
+                data-column-idx="0"
+                
+                >43,567</td>
+                
+                
+                <td
+                id="f5813418"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="8"
+                data-j="1"
+                
+
+
+
+
+data-spans__8__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
+                
+            </tr>
+            
+            <tr>
+                
+                
+                <th
+                id="44ffdb47"
+                class="table-cell elided-short clickable"
+                
+                data-role="index-level-value"
+                
+                
+                data-manager="SampleTableCell "
+                
+                data-i="9"
+                data-j="-1"
+                
+
+
+
+
+data-spans__9__-1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="61240"
+                data-value-str="61240"
+                
+                >61,240</th>
+                
+                
+                <td
+                id="48acbdca"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="0"
+                
+
+
+
+
+data-spans__9__0
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="68268"
+                data-value-str="68268"
+                
+                data-column-idx="0"
+                
+                >68,268</td>
+                
+                
+                <td
+                id="2ea2596b"
+                class="table-cell elided-short clickable"
+                
+                data-role="dataframe-data"
+                
+                
+                data-manager="SampleTableCell FilterableColumn"
+                
+                data-i="9"
+                data-j="1"
+                
+
+
+
+
+data-spans__9__1
+
+
+
+                rowspan="1"
+                colspan="1"
+                data-value-repr="0"
+                data-value-str="0"
+                
+                data-column-idx="1"
+                
+                >0</td>
                 
             </tr>
             
@@ -3483,9 +2931,9 @@ data-spans__2__0
 
     <div class="table-footer">
     <div>
-        <strong>3</strong> rows ✕
+        <strong>61,241</strong> rows ✕
         <strong data-manager="ColumnFilterMatchCount"
-            data-test="n-columns-display">1</strong> columns
+            data-test="n-columns-display">2</strong> columns
         
     </div>
     <div class=" keyboard-hints">
@@ -3520,8 +2968,8 @@ data-spans__2__0
         
 
 <div class="card column-summary" id="col_0_in_sample_tab"
-    data-name-repr="&#39;value&#39;"
-    data-column-name="value"
+    data-name-repr="&#39;ID&#39;"
+    data-column-name="ID"
     data-column-idx="0"
      
      
@@ -3531,11 +2979,12 @@ data-spans__2__0
     <div class="card-header">
         <h3>
             
-            <span class="select-all wrap-long-name">value</span>
+            <span class="select-all wrap-long-name">ID</span>
         </h3>
-        <span>Float64DType</span>
+        <span>Int64DType</span>
 <button class="close-card-button"
         type="button"
+        aria-label="Close"
         data-role="close-button">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
   <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -3551,7 +3000,15 @@ data-spans__2__0
                 
                 <dt>Unique values</dt>
                 <dd>
-                    3 (100.0%)
+                    61,241 (100.0%)
+                    
+                    <span class="toggletip-wrapper">
+                        <div class="toggletip" data-manager="Toggletip">
+                        <button type="button"><span>i</span></button>
+                        <div class="toggletip-info box-shadow">
+                            This column has a high cardinality (> 40).
+                        </div>
+                    </span>
                     
                 </dd>
                 
@@ -3562,22 +3019,100 @@ data-spans__2__0
 
                 
                 <dt>Mean ± Std</dt>
-                <dd>0.00 ±
-                    1.22
+                <dd>3.82e+04 ±
+                    2.21e+04
                     
                 </dd>
                 
                 
                 <dt>Median ± IQR</dt>
-                <dd>0.00 ±
-                    2.45
+                <dd>38,158 ±
+                    38,196
                     
                 </dd>
 
                 <dt>Min | Max</dt>
                 <dd>
-                    <span class="min-value">-1.22</span> |
-                    <span class="max-value">1.22</span>
+                    <span class="min-value">0</span> |
+                    <span class="max-value">76,543</span>
+                    
+                </dd>
+                
+                
+
+                
+            </dl>
+        </div>
+
+        
+
+        
+    </div>
+</div>
+        
+        
+        
+
+<div class="card column-summary" id="col_1_in_sample_tab"
+    data-name-repr="&#39;fraud_flag&#39;"
+    data-column-name="fraud_flag"
+    data-column-idx="1"
+     
+     
+    data-manager="FilterableColumn SampleColumnSummary"
+    
+     data-role="sample-column" data-hidden >
+    <div class="card-header">
+        <h3>
+            
+            <span class="select-all wrap-long-name">fraud_flag</span>
+        </h3>
+        <span>Int64DType</span>
+<button class="close-card-button"
+        type="button"
+        aria-label="Close"
+        data-role="close-button">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>
+</button>
+</div>
+    <div class="column-summary-content wrapper">
+        <div>
+            <dl>
+                <dt>Null values</dt>
+               <dd class="ok">0 (0.0%)</dd>
+                
+                
+                <dt>Unique values</dt>
+                <dd>
+                    2 (&lt; 0.1%)
+                    
+                </dd>
+                
+
+                
+                
+                
+
+                
+                <dt>Mean ± Std</dt>
+                <dd>0.0130 ±
+                    0.113
+                    
+                </dd>
+                
+                
+                <dt>Median ± IQR</dt>
+                <dd>0 ±
+                    0
+                    
+                </dd>
+
+                <dt>Min | Max</dt>
+                <dd>
+                    <span class="min-value">0</span> |
+                    <span class="max-value">1</span>
                     
                 </dd>
                 
@@ -3949,37 +3484,72 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
             </thead>
             <tbody>
                 
-                <tr data-manager="FilterableColumn" data-column-name="value"
+                <tr data-manager="FilterableColumn" data-column-name="ID"
                     data-column-idx="0" data-dataframe-column-idx="0">
                     <td data-value="0" data-numeric>0
                     </td>
-                    <td class="elided">value</td>
-                    <td>Float64DType</td>
-                    <td>True</td>
+                    <td class="elided">ID</td>
+                    <td>Int64DType</td>
+                    <td>False</td>
                     <td class="ok" data-value="0" data-numeric>
                         0 (0.0%)
                     </td>
 
                     
-                    <td data-value="3" data-numeric>
-                        3 (100.0%)
+                    <td data-value="61241" data-numeric>
+                        61241 (100.0%)
                     </td>
                     
 
                     
-                    <td data-value="0.0" data-numeric>
-                        0.00</td>
-                    <td data-value="1.224744871391589" data-numeric>
-                        1.22</td>
+                    <td data-value="38242.54811319214" data-numeric>
+                        3.82e+04</td>
+                    <td data-value="22087.113440933965" data-numeric>
+                        2.21e+04</td>
                     
 
                     
-                    <td data-value="-1.224744871391589" data-numeric>
-                        -1.22</td>
-                    <td data-value="0.0" data-numeric>
-                        0.00</td>
-                    <td data-value="1.224744871391589" data-numeric>
-                        1.22</td>
+                    <td data-value="0" data-numeric>
+                        0</td>
+                    <td data-value="38158" data-numeric>
+                        38,158</td>
+                    <td data-value="76543" data-numeric>
+                        76,543</td>
+                    
+
+                </tr>
+                
+                <tr data-manager="FilterableColumn" data-column-name="fraud_flag"
+                    data-column-idx="1" data-dataframe-column-idx="1">
+                    <td data-value="1" data-numeric>1
+                    </td>
+                    <td class="elided">fraud_flag</td>
+                    <td>Int64DType</td>
+                    <td>False</td>
+                    <td class="ok" data-value="0" data-numeric>
+                        0 (0.0%)
+                    </td>
+
+                    
+                    <td data-value="2" data-numeric>
+                        2 (&lt; 0.1%)
+                    </td>
+                    
+
+                    
+                    <td data-value="0.013014157182279846" data-numeric>
+                        0.0130</td>
+                    <td data-value="0.11333577828822618" data-numeric>
+                        0.113</td>
+                    
+
+                    
+                    <td data-value="0" data-numeric>
+                        0</td>
+                    <td data-value="0" data-numeric>
+                        0</td>
+                    <td data-value="1" data-numeric>
+                        1</td>
                     
 
                 </tr>
@@ -4012,7 +3582,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
         </div>
     </template>
 
-    <skrub-table-report class="report" id="report_d4528e69">
+    <skrub-table-report class="report" id="report_e86fea89">
     </skrub-table-report>
 
     <script type="module">
@@ -5116,7 +4686,7 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
     </script>
 </div>
 
-<div id="report_d4528e69-wrapper-fallback">
+<div id="report_e86fea89-wrapper-fallback">
     <h2>Please enable javascript</h2>
     <p>
         The skrub table reports need javascript to display correctly. If you are
@@ -5127,8 +4697,8 @@ No columns match the selected filter: <strong data-manager="ColumnFilterName"></
 </div>
 
 <script>
- document.getElementById("report_d4528e69-wrapper").removeAttribute("hidden");
- document.getElementById("report_d4528e69-wrapper-fallback").setAttribute("hidden", "");
+ document.getElementById("report_e86fea89-wrapper").removeAttribute("hidden");
+ document.getElementById("report_e86fea89-wrapper-fallback").setAttribute("hidden", "");
 </script>
                     </div>
                 </div>

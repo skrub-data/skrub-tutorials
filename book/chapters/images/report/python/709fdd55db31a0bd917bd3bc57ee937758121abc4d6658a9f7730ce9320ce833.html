@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<title>gradient_boosting</title>
+
+<!-- Prism.js (v1.29.0, MIT license) is vendored in prism-1.29.0/ so that this
+     page is fully standalone and does not require a network connection.
+     See prism-1.29.0/README.md and prism-1.29.0/LICENSE. -->
+<style>
+code[class*=language-],pre[class*=language-]{color:#000;background:0 0;text-shadow:0 1px #fff;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code[class*=language-] ::-moz-selection,code[class*=language-]::-moz-selection,pre[class*=language-] ::-moz-selection,pre[class*=language-]::-moz-selection{text-shadow:none;background:#b3d4fc}code[class*=language-] ::selection,code[class*=language-]::selection,pre[class*=language-] ::selection,pre[class*=language-]::selection{text-shadow:none;background:#b3d4fc}@media print{code[class*=language-],pre[class*=language-]{text-shadow:none}}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#f5f2f0}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#708090}.token.punctuation{color:#999}.token.namespace{opacity:.7}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:#905}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:#690}.language-css .token.string,.style .token.string,.token.entity,.token.operator,.token.url{color:#9a6e3a;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.class-name,.token.function{color:#dd4a68}.token.important,.token.regex,.token.variable{color:#e90}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}
+pre[class*=language-].line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}pre[class*=language-].line-numbers>code{position:relative;white-space:inherit}.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:0;font-size:100%;left:-3.8em;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.line-numbers-rows>span{display:block;counter-increment:linenumber}.line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}
+pre[data-line]{position:relative;padding:1em 0 1em 3em}.line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}@media print{.line-highlight{-webkit-print-color-adjust:exact;color-adjust:exact}}.line-highlight:before,.line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}.line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}.line-numbers .line-highlight:after,.line-numbers .line-highlight:before{content:none}pre[id].linkable-line-numbers span.line-numbers-rows{pointer-events:all}pre[id].linkable-line-numbers span.line-numbers-rows>span:before{cursor:pointer}pre[id].linkable-line-numbers span.line-numbers-rows>span:hover:before{background-color:rgba(128,128,128,.2)}
+</style>
+
+<style>
+  /* compact layout: this page is displayed in the drawer of the index page */
+  html, body { height: 100%; }
+  body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 1em 1.5em;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* The file name stays visible and the code scrolls on its own, so that the
+     horizontal scrollbar is always at the bottom of the view. */
+  h1 {
+    flex: none;
+    margin: 0 0 0.75em;
+    font-size: 1.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .code-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+  /* Let .code-scroll do the scrolling (instead of the <pre> from prism) so that
+     the horizontal scrollbar sits at the bottom of the view. */
+  pre[class*="language-"] {
+    font-size: 0.95em;
+    margin: 0;
+    box-sizing: border-box;
+    width: max-content;
+    min-width: 100%;
+    overflow: visible;
+  }
+  /* Prism sets a pixel width on the highlight when a line is selected; that
+     width goes stale when the drawer is resized and then makes the page scroll
+     horizontally. Let it span the code block instead (it is positioned with
+     left: 0 and right: 0). */
+  .line-highlight { width: auto !important; }
+</style>
+</head>
+<body>
+
+    <h1><code>/Users/rcap/venvs/dev/lib/python3.13/site-packages/sklearn/ensemble/_hist_gradient_boosting/gradient_boosting.py</code></h1>
+
+<div class="code-scroll">
+<pre id="code-container" class="line-numbers" data-line=""><code class="language-python" id="code">&#34;&#34;&#34;Fast Gradient Boosting decision trees for classification and regression.&#34;&#34;&#34;
+
+# Authors: The scikit-learn developers
+# SPDX-License-Identifier: BSD-3-Clause
+
+import itertools
+from abc import ABC, abstractmethod
+from contextlib import contextmanager, nullcontext, suppress
+from functools import partial
+from numbers import Integral, Real
+from time import time
+
+import numpy as np
+
+from sklearn._loss.loss import (
+    _LOSSES,
+    BaseLoss,
+    HalfBinomialLoss,
+    HalfGammaLoss,
+    HalfMultinomialLoss,
+    HalfPoissonLoss,
+    PinballLoss,
+)
+from sklearn.base import (
+    BaseEstimator,
+    ClassifierMixin,
+    RegressorMixin,
+    _fit_context,
+    is_classifier,
+)
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble._hist_gradient_boosting._gradient_boosting import (
+    _update_raw_predictions,
+)
+from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
+from sklearn.ensemble._hist_gradient_boosting.common import G_H_DTYPE, X_DTYPE, Y_DTYPE
+from sklearn.ensemble._hist_gradient_boosting.grower import TreeGrower
+from sklearn.metrics import check_scoring
+from sklearn.metrics._scorer import _SCORERS
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import FunctionTransformer, LabelEncoder, OrdinalEncoder
+from sklearn.utils import check_random_state, compute_sample_weight, resample
+from sklearn.utils._missing import is_scalar_nan
+from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn.utils._param_validation import Interval, RealNotInt, StrOptions
+from sklearn.utils.multiclass import check_classification_targets
+from sklearn.utils.validation import (
+    _check_categorical_features,
+    _check_monotonic_cst,
+    _check_sample_weight,
+    _check_y,
+    check_array,
+    check_consistent_length,
+    check_is_fitted,
+    validate_data,
+)
+
+_LOSSES = _LOSSES.copy()
+_LOSSES.update(
+    {
+        &#34;poisson&#34;: HalfPoissonLoss,
+        &#34;gamma&#34;: HalfGammaLoss,
+        &#34;quantile&#34;: PinballLoss,
+    }
+)
+
+
+def _update_leaves_values(loss, grower, y_true, raw_prediction, sample_weight):
+    &#34;&#34;&#34;Update the leaf values to be predicted by the tree.
+
+    Update equals:
+        loss.fit_intercept_only(y_true - raw_prediction)
+
+    This is only applied if loss.differentiable is False.
+    Note: It only works, if the loss is a function of the residual, as is the
+    case for AbsoluteError and PinballLoss. Otherwise, one would need to get
+    the minimum of loss(y_true, raw_prediction + x) in x. A few examples:
+      - AbsoluteError: median(y_true - raw_prediction).
+      - PinballLoss: quantile(y_true - raw_prediction).
+
+    More background:
+    For the standard gradient descent method according to &#34;Greedy Function
+    Approximation: A Gradient Boosting Machine&#34; by Friedman, all loss functions but the
+    squared loss need a line search step. BaseHistGradientBoosting, however, implements
+    a so called Newton boosting where the trees are fitted to a 2nd order
+    approximations of the loss in terms of gradients and hessians. In this case, the
+    line search step is only necessary if the loss is not smooth, i.e. not
+    differentiable, which renders the 2nd order approximation invalid. In fact,
+    non-smooth losses arbitrarily set hessians to 1 and effectively use the standard
+    gradient descent method with line search.
+    &#34;&#34;&#34;
+    # TODO: Ideally this should be computed in parallel over the leaves using something
+    # similar to _update_raw_predictions(), but this requires a cython version of
+    # median().
+    for leaf in grower.finalized_leaves:
+        indices = leaf.sample_indices
+        if sample_weight is None:
+            sw = None
+        else:
+            sw = sample_weight[indices]
+        update = loss.fit_intercept_only(
+            y_true=y_true[indices] - raw_prediction[indices],
+            sample_weight=sw,
+        )
+        leaf.value = grower.shrinkage * update
+        # Note that the regularization is ignored here
+
+
+@contextmanager
+def _patch_raw_predict(estimator, raw_predictions):
+    &#34;&#34;&#34;Context manager that patches _raw_predict to return raw_predictions.
+
+    `raw_predictions` is typically a precomputed array to avoid redundant
+    state-wise computations fitting with early stopping enabled: in this case
+    `raw_predictions` is incrementally updated whenever we add a tree to the
+    boosted ensemble.
+
+    Note: this makes fitting HistGradientBoosting* models inherently non thread
+    safe at fit time. However thread-safety at fit time was never guaranteed nor
+    enforced for scikit-learn estimators in general.
+
+    Thread-safety at prediction/transform time is another matter as those
+    operations are typically side-effect free and therefore often thread-safe by
+    default for most scikit-learn models and would like to keep it that way.
+    Therefore this context manager should only be used at fit time.
+
+    TODO: in the future, we could explore the possibility to extend the scorer
+    public API to expose a way to compute vales from raw predictions. That would
+    probably require also making the scorer aware of the inverse link function
+    used by the estimator which is typically private API for now, hence the need
+    for this patching mechanism.
+    &#34;&#34;&#34;
+    orig_raw_predict = estimator._raw_predict
+
+    def _patched_raw_predicts(*args, **kwargs):
+        return raw_predictions
+
+    estimator._raw_predict = _patched_raw_predicts
+    yield estimator
+    estimator._raw_predict = orig_raw_predict
+
+
+class BaseHistGradientBoosting(BaseEstimator, ABC):
+    &#34;&#34;&#34;Base class for histogram-based gradient boosting estimators.&#34;&#34;&#34;
+
+    _parameter_constraints: dict = {
+        &#34;loss&#34;: [BaseLoss],
+        &#34;learning_rate&#34;: [Interval(Real, 0, None, closed=&#34;neither&#34;)],
+        &#34;max_iter&#34;: [Interval(Integral, 1, None, closed=&#34;left&#34;)],
+        &#34;max_leaf_nodes&#34;: [Interval(Integral, 2, None, closed=&#34;left&#34;), None],
+        &#34;max_depth&#34;: [Interval(Integral, 1, None, closed=&#34;left&#34;), None],
+        &#34;min_samples_leaf&#34;: [Interval(Integral, 1, None, closed=&#34;left&#34;)],
+        &#34;l2_regularization&#34;: [Interval(Real, 0, None, closed=&#34;left&#34;)],
+        &#34;max_features&#34;: [Interval(RealNotInt, 0, 1, closed=&#34;right&#34;)],
+        &#34;monotonic_cst&#34;: [&#34;array-like&#34;, dict, None],
+        &#34;interaction_cst&#34;: [
+            list,
+            tuple,
+            StrOptions({&#34;pairwise&#34;, &#34;no_interactions&#34;}),
+            None,
+        ],
+        &#34;n_iter_no_change&#34;: [Interval(Integral, 1, None, closed=&#34;left&#34;)],
+        &#34;validation_fraction&#34;: [
+            Interval(RealNotInt, 0, 1, closed=&#34;neither&#34;),
+            Interval(Integral, 1, None, closed=&#34;left&#34;),
+            None,
+        ],
+        &#34;tol&#34;: [Interval(Real, 0, None, closed=&#34;left&#34;)],
+        &#34;max_bins&#34;: [Interval(Integral, 2, 255, closed=&#34;both&#34;)],
+        &#34;categorical_features&#34;: [&#34;array-like&#34;, StrOptions({&#34;from_dtype&#34;}), None],
+        &#34;warm_start&#34;: [&#34;boolean&#34;],
+        &#34;early_stopping&#34;: [StrOptions({&#34;auto&#34;}), &#34;boolean&#34;],
+        &#34;scoring&#34;: [str, callable, None],
+        &#34;verbose&#34;: [&#34;verbose&#34;],
+        &#34;random_state&#34;: [&#34;random_state&#34;],
+    }
+
+    @abstractmethod
+    def __init__(
+        self,
+        loss,
+        *,
+        learning_rate,
+        max_iter,
+        max_leaf_nodes,
+        max_depth,
+        min_samples_leaf,
+        l2_regularization,
+        max_features,
+        max_bins,
+        categorical_features,
+        monotonic_cst,
+        interaction_cst,
+        warm_start,
+        early_stopping,
+        scoring,
+        validation_fraction,
+        n_iter_no_change,
+        tol,
+        verbose,
+        random_state,
+    ):
+        self.loss = loss
+        self.learning_rate = learning_rate
+        self.max_iter = max_iter
+        self.max_leaf_nodes = max_leaf_nodes
+        self.max_depth = max_depth
+        self.min_samples_leaf = min_samples_leaf
+        self.l2_regularization = l2_regularization
+        self.max_features = max_features
+        self.max_bins = max_bins
+        self.monotonic_cst = monotonic_cst
+        self.interaction_cst = interaction_cst
+        self.categorical_features = categorical_features
+        self.warm_start = warm_start
+        self.early_stopping = early_stopping
+        self.scoring = scoring
+        self.validation_fraction = validation_fraction
+        self.n_iter_no_change = n_iter_no_change
+        self.tol = tol
+        self.verbose = verbose
+        self.random_state = random_state
+
+    def _validate_parameters(self):
+        &#34;&#34;&#34;Validate parameters passed to __init__.
+
+        The parameters that are directly passed to the grower are checked in
+        TreeGrower.&#34;&#34;&#34;
+        if self.monotonic_cst is not None and self.n_trees_per_iteration_ != 1:
+            raise ValueError(
+                &#34;monotonic constraints are not supported for multiclass classification.&#34;
+            )
+
+    def _finalize_sample_weight(self, sample_weight, y):
+        &#34;&#34;&#34;Finalize sample weight.
+
+        Used by subclasses to adjust sample_weights. This is useful for implementing
+        class weights.
+        &#34;&#34;&#34;
+        return sample_weight
+
+    def _preprocess_X(self, X, *, reset):
+        &#34;&#34;&#34;Preprocess and validate X.
+
+        Parameters
+        ----------
+        X : {array-like, pandas DataFrame} of shape (n_samples, n_features)
+            Input data.
+
+        reset : bool
+            Whether to reset the `n_features_in_` and `feature_names_in_ attributes.
+
+        Returns
+        -------
+        X : ndarray of shape (n_samples, n_features)
+            Validated input data.
+
+        known_categories : list of ndarray of shape (n_categories,)
+            List of known categories for each categorical feature.
+        &#34;&#34;&#34;
+        # If there is a preprocessor, we let the preprocessor handle the validation.
+        # Otherwise, we validate the data ourselves.
+        check_X_kwargs = dict(dtype=[X_DTYPE], ensure_all_finite=False)
+        if not reset:
+            if self._preprocessor is None:
+                return validate_data(self, X, reset=False, **check_X_kwargs)
+            return self._preprocessor.transform(X)
+
+        # At this point, reset is False, which runs during `fit`.
+        self.is_categorical_ = _check_categorical_features(X, self.categorical_features)
+
+        if self.is_categorical_ is None:
+            self._preprocessor = None
+            self._is_categorical_remapped = None
+
+            X = validate_data(self, X, **check_X_kwargs)
+            return X, None
+
+        n_features = X.shape[1]
+        ordinal_encoder = OrdinalEncoder(
+            categories=&#34;auto&#34;,
+            handle_unknown=&#34;use_encoded_value&#34;,
+            unknown_value=np.nan,
+            encoded_missing_value=np.nan,
+            dtype=X_DTYPE,
+        )
+
+        check_X = partial(check_array, **check_X_kwargs)
+        numerical_preprocessor = FunctionTransformer(check_X)
+        self._preprocessor = ColumnTransformer(
+            [
+                (&#34;encoder&#34;, ordinal_encoder, self.is_categorical_),
+                (&#34;numerical&#34;, numerical_preprocessor, ~self.is_categorical_),
+            ]
+        )
+        self._preprocessor.set_output(transform=&#34;default&#34;)
+        X = self._preprocessor.fit_transform(X)
+        # check categories found by the OrdinalEncoder and get their encoded values
+        known_categories = self._check_categories()
+        self.n_features_in_ = self._preprocessor.n_features_in_
+        with suppress(AttributeError):
+            self.feature_names_in_ = self._preprocessor.feature_names_in_
+
+        # The ColumnTransformer&#39;s output places the categorical features at the
+        # beginning
+        categorical_remapped = np.zeros(n_features, dtype=bool)
+        categorical_remapped[self._preprocessor.output_indices_[&#34;encoder&#34;]] = True
+        self._is_categorical_remapped = categorical_remapped
+
+        return X, known_categories
+
+    def _check_categories(self):
+        &#34;&#34;&#34;Check categories found by the preprocessor and return their encoded values.
+
+        Returns a list of length ``self.n_features_in_``, with one entry per
+        input feature.
+
+        For non-categorical features, the corresponding entry is ``None``.
+
+        For categorical features, the corresponding entry is an array
+        containing the categories as encoded by the preprocessor (an
+        ``OrdinalEncoder``), excluding missing values. The entry is therefore
+        ``np.arange(n_categories)`` where ``n_categories`` is the number of
+        unique values in the considered feature column, after removing missing
+        values.
+
+        If ``n_categories &gt; self.max_bins`` for any feature, a ``ValueError``
+        is raised.
+        &#34;&#34;&#34;
+        encoder = self._preprocessor.named_transformers_[&#34;encoder&#34;]
+        known_categories = [None] * self._preprocessor.n_features_in_
+        categorical_column_indices = np.arange(self._preprocessor.n_features_in_)[
+            self._preprocessor.output_indices_[&#34;encoder&#34;]
+        ]
+        for feature_idx, categories in zip(
+            categorical_column_indices, encoder.categories_
+        ):
+            # OrdinalEncoder always puts np.nan as the last category if the
+            # training data has missing values. Here we remove it because it is
+            # already added by the _BinMapper.
+            if len(categories) and is_scalar_nan(categories[-1]):
+                categories = categories[:-1]
+            if categories.size &gt; self.max_bins:
+                try:
+                    feature_name = repr(encoder.feature_names_in_[feature_idx])
+                except AttributeError:
+                    feature_name = f&#34;at index {feature_idx}&#34;
+                raise ValueError(
+                    f&#34;Categorical feature {feature_name} is expected to &#34;
+                    f&#34;have a cardinality &lt;= {self.max_bins} but actually &#34;
+                    f&#34;has a cardinality of {categories.size}.&#34;
+                )
+            known_categories[feature_idx] = np.arange(len(categories), dtype=X_DTYPE)
+        return known_categories
+
+    def _check_interaction_cst(self, n_features):
+        &#34;&#34;&#34;Check and validation for interaction constraints.&#34;&#34;&#34;
+        if self.interaction_cst is None:
+            return None
+
+        if self.interaction_cst == &#34;no_interactions&#34;:
+            interaction_cst = [[i] for i in range(n_features)]
+        elif self.interaction_cst == &#34;pairwise&#34;:
+            interaction_cst = itertools.combinations(range(n_features), 2)
+        else:
+            interaction_cst = self.interaction_cst
+
+        try:
+            constraints = [set(group) for group in interaction_cst]
+        except TypeError:
+            raise ValueError(
+                &#34;Interaction constraints must be a sequence of tuples or lists, got:&#34;
+                f&#34; {self.interaction_cst!r}.&#34;
+            )
+
+        for group in constraints:
+            for x in group:
+                if not (isinstance(x, Integral) and 0 &lt;= x &lt; n_features):
+                    raise ValueError(
+                        &#34;Interaction constraints must consist of integer indices in&#34;
+                        f&#34; [0, n_features - 1] = [0, {n_features - 1}], specifying the&#34;
+                        &#34; position of features, got invalid indices:&#34;
+                        f&#34; {group!r}&#34;
+                    )
+
+        # Add all not listed features as own group by default.
+        rest = set(range(n_features)) - set().union(*constraints)
+        if len(rest) &gt; 0:
+            constraints.append(rest)
+
+        return constraints
+
+    @_fit_context(prefer_skip_nested_validation=True)
+    def fit(
+        self,
+        X,
+        y,
+        sample_weight=None,
+        *,
+        X_val=None,
+        y_val=None,
+        sample_weight_val=None,
+    ):
+        &#34;&#34;&#34;Fit the gradient boosting model.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+
+        y : array-like of shape (n_samples,)
+            Target values.
+
+        sample_weight : array-like of shape (n_samples,) default=None
+            Weights of training data.
+
+            .. versionadded:: 0.23
+
+        X_val : array-like of shape (n_val, n_features)
+            Additional sample of features for validation used in early stopping.
+            In a `Pipeline`, `X_val` can be transformed the same way as `X` with
+            `Pipeline(..., transform_input=[&#34;X_val&#34;])`.
+
+            .. versionadded:: 1.7
+
+        y_val : array-like of shape (n_samples,)
+            Additional sample of target values for validation used in early stopping.
+
+            .. versionadded:: 1.7
+
+        sample_weight_val : array-like of shape (n_samples,) default=None
+            Additional weights for validation used in early stopping.
+
+            .. versionadded:: 1.7
+
+        Returns
+        -------
+        self : object
+            Fitted estimator.
+        &#34;&#34;&#34;
+        fit_start_time = time()
+        acc_find_split_time = 0.0  # time spent finding the best splits
+        acc_apply_split_time = 0.0  # time spent splitting nodes
+        acc_compute_hist_time = 0.0  # time spent computing histograms
+        # time spent predicting X for gradient and hessians update
+        acc_prediction_time = 0.0
+        X, known_categories = self._preprocess_X(X, reset=True)
+        y = _check_y(y, estimator=self)
+        y = self._encode_y(y)
+        check_consistent_length(X, y)
+        # Do not create unit sample weights by default to later skip some
+        # computation
+        if sample_weight is not None:
+            sample_weight = _check_sample_weight(sample_weight, X, dtype=np.float64)
+            # TODO: remove when PDP supports sample weights
+            self._fitted_with_sw = True
+
+        sample_weight = self._finalize_sample_weight(sample_weight, y)
+
+        validation_data_provided = X_val is not None or y_val is not None
+        if validation_data_provided:
+            if y_val is None:
+                raise ValueError(&#34;X_val is provided, but y_val was not provided.&#34;)
+            if X_val is None:
+                raise ValueError(&#34;y_val is provided, but X_val was not provided.&#34;)
+            X_val = self._preprocess_X(X_val, reset=False)
+            y_val = _check_y(y_val, estimator=self)
+            y_val = self._encode_y_val(y_val)
+            check_consistent_length(X_val, y_val)
+            if sample_weight_val is not None:
+                sample_weight_val = _check_sample_weight(
+                    sample_weight_val, X_val, dtype=np.float64
+                )
+            if self.early_stopping is False:
+                raise ValueError(
+                    &#34;X_val and y_val are passed to fit while at the same time &#34;
+                    &#34;early_stopping is False. When passing X_val and y_val to fit,&#34;
+                    &#34;early_stopping should be set to either &#39;auto&#39; or True.&#34;
+                )
+
+        # Note: At this point, we could delete self._label_encoder if it exists.
+        # But we don&#39;t to keep the code even simpler.
+
+        rng = check_random_state(self.random_state)
+
+        # When warm starting, we want to reuse the same seed that was used
+        # the first time fit was called (e.g. train/val split).
+        # For feature subsampling, we want to continue with the rng we started with.
+        if not self.warm_start or not self._is_fitted():
+            self._random_seed = rng.randint(np.iinfo(np.uint32).max, dtype=&#34;u8&#34;)
+            feature_subsample_seed = rng.randint(np.iinfo(np.uint32).max, dtype=&#34;u8&#34;)
+            self._feature_subsample_rng = np.random.default_rng(feature_subsample_seed)
+
+        self._validate_parameters()
+        monotonic_cst = _check_monotonic_cst(self, self.monotonic_cst)
+        # _preprocess_X places the categorical features at the beginning,
+        # change the order of monotonic_cst accordingly
+        if self.is_categorical_ is not None:
+            monotonic_cst_remapped = np.concatenate(
+                (
+                    monotonic_cst[self.is_categorical_],
+                    monotonic_cst[~self.is_categorical_],
+                )
+            )
+        else:
+            monotonic_cst_remapped = monotonic_cst
+
+        # used for validation in predict
+        n_samples, self._n_features = X.shape
+
+        # Encode constraints into a list of sets of features indices (integers).
+        interaction_cst = self._check_interaction_cst(self._n_features)
+
+        # we need this stateful variable to tell raw_predict() that it was
+        # called from fit() (this current method), and that the data it has
+        # received is pre-binned.
+        # predicting is faster on pre-binned data, so we want early stopping
+        # predictions to be made on pre-binned data. Unfortunately the _scorer
+        # can only call predict() or predict_proba(), not raw_predict(), and
+        # there&#39;s no way to tell the scorer that it needs to predict binned
+        # data.
+        self._in_fit = True
+
+        # `_openmp_effective_n_threads` is used to take cgroups CPU quotes
+        # into account when determine the maximum number of threads to use.
+        n_threads = _openmp_effective_n_threads()
+
+        if isinstance(self.loss, str):
+            self._loss = self._get_loss(sample_weight=sample_weight)
+        elif isinstance(self.loss, BaseLoss):
+            self._loss = self.loss
+
+        if self.early_stopping == &#34;auto&#34;:
+            self.do_early_stopping_ = n_samples &gt; 10_000
+        else:
+            self.do_early_stopping_ = self.early_stopping
+
+        # create validation data if needed
+        self._use_validation_data = (
+            self.validation_fraction is not None or validation_data_provided
+        )
+        if (
+            self.do_early_stopping_
+            and self._use_validation_data
+            and not validation_data_provided
+        ):
+            # stratify for classification
+            # instead of checking predict_proba, loss.n_classes &gt;= 2 would also work
+            stratify = y if hasattr(self._loss, &#34;predict_proba&#34;) else None
+
+            # Save the state of the RNG for the training and validation split.
+            # This is needed in order to have the same split when using
+            # warm starting.
+
+            if sample_weight is None:
+                X_train, X_val, y_train, y_val = train_test_split(
+                    X,
+                    y,
+                    test_size=self.validation_fraction,
+                    stratify=stratify,
+                    random_state=self._random_seed,
+                )
+                sample_weight_train = sample_weight_val = None
+            else:
+                # TODO: incorporate sample_weight in sampling here, as well as
+                # stratify
+                (
+                    X_train,
+                    X_val,
+                    y_train,
+                    y_val,
+                    sample_weight_train,
+                    sample_weight_val,
+                ) = train_test_split(
+                    X,
+                    y,
+                    sample_weight,
+                    test_size=self.validation_fraction,
+                    stratify=stratify,
+                    random_state=self._random_seed,
+                )
+        else:
+            X_train, y_train, sample_weight_train = X, y, sample_weight
+            if not validation_data_provided:
+                X_val = y_val = sample_weight_val = None
+
+        # Bin the data
+        # For ease of use of the API, the user-facing GBDT classes accept the
+        # parameter max_bins, which doesn&#39;t take into account the bin for
+        # missing values (which is always allocated). However, since max_bins
+        # isn&#39;t the true maximal number of bins, all other private classes
+        # (binmapper, histbuilder...) accept n_bins instead, which is the
+        # actual total number of bins. Everywhere in the code, the
+        # convention is that n_bins == max_bins + 1
+        n_bins = self.max_bins + 1  # + 1 for missing values
+        self._bin_mapper = _BinMapper(
+            n_bins=n_bins,
+            is_categorical=self._is_categorical_remapped,
+            known_categories=known_categories,
+            random_state=self._random_seed,
+            n_threads=n_threads,
+        )
+        X_binned_train = self._bin_data(
+            X_train, sample_weight_train, is_training_data=True
+        )
+        if X_val is not None:
+            X_binned_val = self._bin_data(
+                X_val, sample_weight_val, is_training_data=False
+            )
+        else:
+            X_binned_val = None
+
+        # Uses binned data to check for missing values
+        has_missing_values = (
+            (X_binned_train == self._bin_mapper.missing_values_bin_idx_)
+            .any(axis=0)
+            .astype(np.uint8)
+        )
+
+        if self.verbose:
+            print(&#34;Fitting gradient boosted rounds:&#34;)
+
+        n_samples = X_binned_train.shape[0]
+        scoring_is_predefined_string = self.scoring in _SCORERS
+        need_raw_predictions_val = X_binned_val is not None and (
+            scoring_is_predefined_string or self.scoring == &#34;loss&#34;
+        )
+        # First time calling fit, or no warm start
+        if not (self._is_fitted() and self.warm_start):
+            # Clear random state and score attributes
+            self._clear_state()
+
+            # initialize raw_predictions: those are the accumulated values
+            # predicted by the trees for the training data. raw_predictions has
+            # shape (n_samples, n_trees_per_iteration) where
+            # n_trees_per_iterations is n_classes in multiclass classification,
+            # else 1.
+            # self._baseline_prediction has shape (1, n_trees_per_iteration)
+            self._baseline_prediction = self._loss.fit_intercept_only(
+                y_true=y_train, sample_weight=sample_weight_train
+            ).reshape((1, -1))
+            raw_predictions = np.zeros(
+                shape=(n_samples, self.n_trees_per_iteration_),
+                dtype=self._baseline_prediction.dtype,
+                order=&#34;F&#34;,
+            )
+            raw_predictions += self._baseline_prediction
+
+            # predictors is a matrix (list of lists) of TreePredictor objects
+            # with shape (n_iter_, n_trees_per_iteration)
+            self._predictors = predictors = []
+
+            # Initialize structures and attributes related to early stopping
+            self._scorer = None  # set if scoring != loss
+            raw_predictions_val = None  # set if use val and scoring is a string
+            self.train_score_ = []
+            self.validation_score_ = []
+
+            if self.do_early_stopping_:
+                # populate train_score and validation_score with the
+                # predictions of the initial model (before the first tree)
+
+                # Create raw_predictions_val for storing the raw predictions of
+                # the validation data.
+                if need_raw_predictions_val:
+                    raw_predictions_val = np.zeros(
+                        shape=(X_binned_val.shape[0], self.n_trees_per_iteration_),
+                        dtype=self._baseline_prediction.dtype,
+                        order=&#34;F&#34;,
+                    )
+
+                    raw_predictions_val += self._baseline_prediction
+
+                if self.scoring == &#34;loss&#34;:
+                    # we&#39;re going to compute scoring w.r.t the loss. As losses
+                    # take raw predictions as input (unlike the scorers), we
+                    # can optimize a bit and avoid repeating computing the
+                    # predictions of the previous trees. We&#39;ll reuse
+                    # raw_predictions (as it&#39;s needed for training anyway) for
+                    # evaluating the training loss.
+
+                    self._check_early_stopping_loss(
+                        raw_predictions=raw_predictions,
+                        y_train=y_train,
+                        sample_weight_train=sample_weight_train,
+                        raw_predictions_val=raw_predictions_val,
+                        y_val=y_val,
+                        sample_weight_val=sample_weight_val,
+                        n_threads=n_threads,
+                    )
+                else:
+                    self._scorer = check_scoring(self, self.scoring)
+                    # _scorer is a callable with signature (est, X, y) and
+                    # calls est.predict() or est.predict_proba() depending on
+                    # its nature.
+                    # Unfortunately, each call to _scorer() will compute
+                    # the predictions of all the trees. So we use a subset of
+                    # the training set to compute train scores.
+
+                    # Compute the subsample set
+                    (
+                        X_binned_small_train,
+                        y_small_train,
+                        sample_weight_small_train,
+                        indices_small_train,
+                    ) = self._get_small_trainset(
+                        X_binned_train,
+                        y_train,
+                        sample_weight_train,
+                        self._random_seed,
+                    )
+
+                    # If the scorer is a predefined string, then we optimize
+                    # the evaluation by reusing the incrementally updated raw
+                    # predictions.
+                    if scoring_is_predefined_string:
+                        raw_predictions_small_train = raw_predictions[
+                            indices_small_train
+                        ]
+                    else:
+                        raw_predictions_small_train = None
+
+                    self._check_early_stopping_scorer(
+                        X_binned_small_train,
+                        y_small_train,
+                        sample_weight_small_train,
+                        X_binned_val,
+                        y_val,
+                        sample_weight_val,
+                        raw_predictions_small_train=raw_predictions_small_train,
+                        raw_predictions_val=raw_predictions_val,
+                    )
+            begin_at_stage = 0
+
+        # warm start: this is not the first time fit was called
+        else:
+            # Check that the maximum number of iterations is not smaller
+            # than the number of iterations from the previous fit
+            if self.max_iter &lt; self.n_iter_:
+                raise ValueError(
+                    &#34;max_iter=%d must be larger than or equal to &#34;
+                    &#34;n_iter_=%d when warm_start==True&#34; % (self.max_iter, self.n_iter_)
+                )
+
+            # Convert array attributes to lists
+            self.train_score_ = self.train_score_.tolist()
+            self.validation_score_ = self.validation_score_.tolist()
+
+            # Compute raw predictions
+            raw_predictions = self._raw_predict(X_binned_train, n_threads=n_threads)
+            if self.do_early_stopping_ and need_raw_predictions_val:
+                raw_predictions_val = self._raw_predict(
+                    X_binned_val, n_threads=n_threads
+                )
+            else:
+                raw_predictions_val = None
+
+            if self.do_early_stopping_ and self.scoring != &#34;loss&#34;:
+                # Compute the subsample set
+                (
+                    X_binned_small_train,
+                    y_small_train,
+                    sample_weight_small_train,
+                    indices_small_train,
+                ) = self._get_small_trainset(
+                    X_binned_train, y_train, sample_weight_train, self._random_seed
+                )
+
+            # Get the predictors from the previous fit
+            predictors = self._predictors
+
+            begin_at_stage = self.n_iter_
+
+        # initialize gradients and hessians (empty arrays).
+        # shape = (n_samples, n_trees_per_iteration).
+        gradient, hessian = self._loss.init_gradient_and_hessian(
+            n_samples=n_samples, dtype=G_H_DTYPE, order=&#34;F&#34;
+        )
+
+        for iteration in range(begin_at_stage, self.max_iter):
+            if self.verbose &gt;= 2:
+                iteration_start_time = time()
+                print(
+                    &#34;[{}/{}] &#34;.format(iteration + 1, self.max_iter), end=&#34;&#34;, flush=True
+                )
+
+            # Update gradients and hessians, inplace
+            # Note that self._loss expects shape (n_samples,) for
+            # n_trees_per_iteration = 1 else shape (n_samples, n_trees_per_iteration).
+            if self._loss.constant_hessian:
+                self._loss.gradient(
+                    y_true=y_train,
+                    raw_prediction=raw_predictions,
+                    sample_weight=sample_weight_train,
+                    gradient_out=gradient,
+                    n_threads=n_threads,
+                )
+            else:
+                self._loss.gradient_hessian(
+                    y_true=y_train,
+                    raw_prediction=raw_predictions,
+                    sample_weight=sample_weight_train,
+                    gradient_out=gradient,
+                    hessian_out=hessian,
+                    n_threads=n_threads,
+                )
+
+            # Append a list since there may be more than 1 predictor per iter
+            predictors.append([])
+
+            # 2-d views of shape (n_samples, n_trees_per_iteration_) or (n_samples, 1)
+            # on gradient and hessian to simplify the loop over n_trees_per_iteration_.
+            if gradient.ndim == 1:
+                g_view = gradient.reshape((-1, 1))
+                h_view = hessian.reshape((-1, 1))
+            else:
+                g_view = gradient
+                h_view = hessian
+
+            # Build `n_trees_per_iteration` trees.
+            for k in range(self.n_trees_per_iteration_):
+                grower = TreeGrower(
+                    X_binned=X_binned_train,
+                    gradients=g_view[:, k],
+                    hessians=h_view[:, k],
+                    n_bins=n_bins,
+                    n_bins_non_missing=self._bin_mapper.n_bins_non_missing_,
+                    has_missing_values=has_missing_values,
+                    is_categorical=self._is_categorical_remapped,
+                    monotonic_cst=monotonic_cst_remapped,
+                    interaction_cst=interaction_cst,
+                    max_leaf_nodes=self.max_leaf_nodes,
+                    max_depth=self.max_depth,
+                    min_samples_leaf=self.min_samples_leaf,
+                    l2_regularization=self.l2_regularization,
+                    feature_fraction_per_split=self.max_features,
+                    rng=self._feature_subsample_rng,
+                    shrinkage=self.learning_rate,
+                    n_threads=n_threads,
+                )
+                grower.grow()
+
+                acc_apply_split_time += grower.total_apply_split_time
+                acc_find_split_time += grower.total_find_split_time
+                acc_compute_hist_time += grower.total_compute_hist_time
+
+                if not self._loss.differentiable:
+                    _update_leaves_values(
+                        loss=self._loss,
+                        grower=grower,
+                        y_true=y_train,
+                        raw_prediction=raw_predictions[:, k],
+                        sample_weight=sample_weight_train,
+                    )
+
+                predictor = grower.make_predictor(
+                    binning_thresholds=self._bin_mapper.bin_thresholds_
+                )
+                predictors[-1].append(predictor)
+
+                # Update raw_predictions with the predictions of the newly
+                # created tree.
+                tic_pred = time()
+                _update_raw_predictions(raw_predictions[:, k], grower, n_threads)
+                toc_pred = time()
+                acc_prediction_time += toc_pred - tic_pred
+
+            should_early_stop = False
+            if self.do_early_stopping_:
+                # Update raw_predictions_val with the newest tree(s)
+                if need_raw_predictions_val:
+                    for k, pred in enumerate(self._predictors[-1]):
+                        raw_predictions_val[:, k] += pred.predict_binned(
+                            X_binned_val,
+                            self._bin_mapper.missing_values_bin_idx_,
+                            n_threads,
+                        )
+
+                if self.scoring == &#34;loss&#34;:
+                    should_early_stop = self._check_early_stopping_loss(
+                        raw_predictions=raw_predictions,
+                        y_train=y_train,
+                        sample_weight_train=sample_weight_train,
+                        raw_predictions_val=raw_predictions_val,
+                        y_val=y_val,
+                        sample_weight_val=sample_weight_val,
+                        n_threads=n_threads,
+                    )
+
+                else:
+                    # If the scorer is a predefined string, then we optimize the
+                    # evaluation by reusing the incrementally computed raw predictions.
+                    if scoring_is_predefined_string:
+                        raw_predictions_small_train = raw_predictions[
+                            indices_small_train
+                        ]
+                    else:
+                        raw_predictions_small_train = None
+
+                    should_early_stop = self._check_early_stopping_scorer(
+                        X_binned_small_train,
+                        y_small_train,
+                        sample_weight_small_train,
+                        X_binned_val,
+                        y_val,
+                        sample_weight_val,
+                        raw_predictions_small_train=raw_predictions_small_train,
+                        raw_predictions_val=raw_predictions_val,
+                    )
+
+            if self.verbose &gt;= 2:
+                self._print_iteration_stats(iteration_start_time)
+
+            # maybe we could also early stop if all the trees are stumps?
+            if should_early_stop:
+                break
+
+        if self.verbose:
+            duration = time() - fit_start_time
+            n_total_leaves = sum(
+                predictor.get_n_leaf_nodes()
+                for predictors_at_ith_iteration in self._predictors
+                for predictor in predictors_at_ith_iteration
+            )
+            n_predictors = sum(
+                len(predictors_at_ith_iteration)
+                for predictors_at_ith_iteration in self._predictors
+            )
+            print(
+                &#34;Fit {} trees in {:.3f} s, ({} total leaves)&#34;.format(
+                    n_predictors, duration, n_total_leaves
+                )
+            )
+            print(
+                &#34;{:&lt;32} {:.3f}s&#34;.format(
+                    &#34;Time spent computing histograms:&#34;, acc_compute_hist_time
+                )
+            )
+            print(
+                &#34;{:&lt;32} {:.3f}s&#34;.format(
+                    &#34;Time spent finding best splits:&#34;, acc_find_split_time
+                )
+            )
+            print(
+                &#34;{:&lt;32} {:.3f}s&#34;.format(
+                    &#34;Time spent applying splits:&#34;, acc_apply_split_time
+                )
+            )
+            print(
+                &#34;{:&lt;32} {:.3f}s&#34;.format(&#34;Time spent predicting:&#34;, acc_prediction_time)
+            )
+
+        self.train_score_ = np.asarray(self.train_score_)
+        self.validation_score_ = np.asarray(self.validation_score_)
+        del self._in_fit  # hard delete so we&#39;re sure it can&#39;t be used anymore
+        return self
+
+    def _is_fitted(self):
+        return len(getattr(self, &#34;_predictors&#34;, [])) &gt; 0
+
+    def _clear_state(self):
+        &#34;&#34;&#34;Clear the state of the gradient boosting model.&#34;&#34;&#34;
+        for var in (&#34;train_score_&#34;, &#34;validation_score_&#34;):
+            if hasattr(self, var):
+                delattr(self, var)
+
+    def _get_small_trainset(self, X_binned_train, y_train, sample_weight_train, seed):
+        &#34;&#34;&#34;Compute the indices of the subsample set and return this set.
+
+        For efficiency, we need to subsample the training set to compute scores
+        with scorers.
+        &#34;&#34;&#34;
+        # TODO: incorporate sample_weights here in `resample`
+        subsample_size = 10000
+        if X_binned_train.shape[0] &gt; subsample_size:
+            indices = np.arange(X_binned_train.shape[0])
+            stratify = y_train if is_classifier(self) else None
+            indices = resample(
+                indices,
+                n_samples=subsample_size,
+                replace=False,
+                random_state=seed,
+                stratify=stratify,
+            )
+            X_binned_small_train = X_binned_train[indices]
+            y_small_train = y_train[indices]
+            if sample_weight_train is not None:
+                sample_weight_small_train = sample_weight_train[indices]
+            else:
+                sample_weight_small_train = None
+            X_binned_small_train = np.ascontiguousarray(X_binned_small_train)
+            return (
+                X_binned_small_train,
+                y_small_train,
+                sample_weight_small_train,
+                indices,
+            )
+        else:
+            return X_binned_train, y_train, sample_weight_train, slice(None)
+
+    def _check_early_stopping_scorer(
+        self,
+        X_binned_small_train,
+        y_small_train,
+        sample_weight_small_train,
+        X_binned_val,
+        y_val,
+        sample_weight_val,
+        raw_predictions_small_train=None,
+        raw_predictions_val=None,
+    ):
+        &#34;&#34;&#34;Check if fitting should be early-stopped based on scorer.
+
+        Scores are computed on validation data or on training data.
+        &#34;&#34;&#34;
+        if is_classifier(self):
+            y_small_train = self.classes_[y_small_train.astype(int)]
+
+        self.train_score_.append(
+            self._score_with_raw_predictions(
+                X_binned_small_train,
+                y_small_train,
+                sample_weight_small_train,
+                raw_predictions_small_train,
+            )
+        )
+
+        if self._use_validation_data:
+            if is_classifier(self):
+                y_val = self.classes_[y_val.astype(int)]
+            self.validation_score_.append(
+                self._score_with_raw_predictions(
+                    X_binned_val, y_val, sample_weight_val, raw_predictions_val
+                )
+            )
+            return self._should_stop(self.validation_score_)
+        else:
+            return self._should_stop(self.train_score_)
+
+    def _score_with_raw_predictions(self, X, y, sample_weight, raw_predictions=None):
+        if raw_predictions is None:
+            patcher_raw_predict = nullcontext()
+        else:
+            patcher_raw_predict = _patch_raw_predict(self, raw_predictions)
+
+        with patcher_raw_predict:
+            if sample_weight is None:
+                return self._scorer(self, X, y)
+            else:
+                return self._scorer(self, X, y, sample_weight=sample_weight)
+
+    def _check_early_stopping_loss(
+        self,
+        raw_predictions,
+        y_train,
+        sample_weight_train,
+        raw_predictions_val,
+        y_val,
+        sample_weight_val,
+        n_threads=1,
+    ):
+        &#34;&#34;&#34;Check if fitting should be early-stopped based on loss.
+
+        Scores are computed on validation data or on training data.
+        &#34;&#34;&#34;
+        self.train_score_.append(
+            -self._loss(
+                y_true=y_train,
+                raw_prediction=raw_predictions,
+                sample_weight=sample_weight_train,
+                n_threads=n_threads,
+            )
+        )
+
+        if self._use_validation_data:
+            self.validation_score_.append(
+                -self._loss(
+                    y_true=y_val,
+                    raw_prediction=raw_predictions_val,
+                    sample_weight=sample_weight_val,
+                    n_threads=n_threads,
+                )
+            )
+            return self._should_stop(self.validation_score_)
+        else:
+            return self._should_stop(self.train_score_)
+
+    def _should_stop(self, scores):
+        &#34;&#34;&#34;
+        Return True (do early stopping) if the last n scores aren&#39;t better
+        than the (n-1)th-to-last score, up to some tolerance.
+        &#34;&#34;&#34;
+        reference_position = self.n_iter_no_change + 1
+        if len(scores) &lt; reference_position:
+            return False
+
+        # A higher score is always better. Higher tol means that it will be
+        # harder for subsequent iteration to be considered an improvement upon
+        # the reference score, and therefore it is more likely to early stop
+        # because of the lack of significant improvement.
+        reference_score = scores[-reference_position] + self.tol
+        recent_scores = scores[-reference_position + 1 :]
+        recent_improvements = [score &gt; reference_score for score in recent_scores]
+        return not any(recent_improvements)
+
+    def _bin_data(self, X, sample_weight, is_training_data):
+        &#34;&#34;&#34;Bin data X.
+
+        If is_training_data, then fit the _bin_mapper attribute.
+        Else, the binned data is converted to a C-contiguous array.
+        &#34;&#34;&#34;
+
+        description = &#34;training&#34; if is_training_data else &#34;validation&#34;
+        if self.verbose:
+            print(
+                &#34;Binning {:.3f} GB of {} data: &#34;.format(X.nbytes / 1e9, description),
+                end=&#34;&#34;,
+                flush=True,
+            )
+        tic = time()
+        if is_training_data:
+            X_binned = self._bin_mapper.fit_transform(
+                X, sample_weight=sample_weight
+            )  # F-aligned array
+        else:
+            X_binned = self._bin_mapper.transform(X)  # F-aligned array
+            # We convert the array to C-contiguous since predicting is faster
+            # with this layout (training is faster on F-arrays though)
+            X_binned = np.ascontiguousarray(X_binned)
+        toc = time()
+        if self.verbose:
+            duration = toc - tic
+            print(&#34;{:.3f} s&#34;.format(duration))
+
+        return X_binned
+
+    def _print_iteration_stats(self, iteration_start_time):
+        &#34;&#34;&#34;Print info about the current fitting iteration.&#34;&#34;&#34;
+        log_msg = &#34;&#34;
+
+        predictors_of_ith_iteration = [
+            predictors_list
+            for predictors_list in self._predictors[-1]
+            if predictors_list
+        ]
+        n_trees = len(predictors_of_ith_iteration)
+        max_depth = max(
+            predictor.get_max_depth() for predictor in predictors_of_ith_iteration
+        )
+        n_leaves = sum(
+            predictor.get_n_leaf_nodes() for predictor in predictors_of_ith_iteration
+        )
+
+        if n_trees == 1:
+            log_msg += &#34;{} tree, {} leaves, &#34;.format(n_trees, n_leaves)
+        else:
+            log_msg += &#34;{} trees, {} leaves &#34;.format(n_trees, n_leaves)
+            log_msg += &#34;({} on avg), &#34;.format(int(n_leaves / n_trees))
+
+        log_msg += &#34;max depth = {}, &#34;.format(max_depth)
+
+        if self.do_early_stopping_:
+            if self.scoring == &#34;loss&#34;:
+                factor = -1  # score_ arrays contain the negative loss
+                name = &#34;loss&#34;
+            else:
+                factor = 1
+                name = &#34;score&#34;
+            log_msg += &#34;train {}: {:.5f}, &#34;.format(name, factor * self.train_score_[-1])
+            if self._use_validation_data:
+                log_msg += &#34;val {}: {:.5f}, &#34;.format(
+                    name, factor * self.validation_score_[-1]
+                )
+
+        iteration_time = time() - iteration_start_time
+        log_msg += &#34;in {:0.3f}s&#34;.format(iteration_time)
+
+        print(log_msg)
+
+    def _raw_predict(self, X, n_threads=None):
+        &#34;&#34;&#34;Return the sum of the leaves values over all predictors.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+        n_threads : int, default=None
+            Number of OpenMP threads to use. `_openmp_effective_n_threads` is called
+            to determine the effective number of threads use, which takes cgroups CPU
+            quotes into account. See the docstring of `_openmp_effective_n_threads`
+            for details.
+
+        Returns
+        -------
+        raw_predictions : array, shape (n_samples, n_trees_per_iteration)
+            The raw predicted values.
+        &#34;&#34;&#34;
+        check_is_fitted(self)
+        is_binned = getattr(self, &#34;_in_fit&#34;, False)
+        if not is_binned:
+            X = self._preprocess_X(X, reset=False)
+
+        n_samples = X.shape[0]
+        raw_predictions = np.zeros(
+            shape=(n_samples, self.n_trees_per_iteration_),
+            dtype=self._baseline_prediction.dtype,
+            order=&#34;F&#34;,
+        )
+        raw_predictions += self._baseline_prediction
+
+        # We intentionally decouple the number of threads used at prediction
+        # time from the number of threads used at fit time because the model
+        # can be deployed on a different machine for prediction purposes.
+        n_threads = _openmp_effective_n_threads(n_threads)
+        self._predict_iterations(
+            X, self._predictors, raw_predictions, is_binned, n_threads
+        )
+        return raw_predictions
+
+    def _predict_iterations(self, X, predictors, raw_predictions, is_binned, n_threads):
+        &#34;&#34;&#34;Add the predictions of the predictors to raw_predictions.&#34;&#34;&#34;
+        if not is_binned:
+            (
+                known_cat_bitsets,
+                f_idx_map,
+            ) = self._bin_mapper.make_known_categories_bitsets()
+
+        for predictors_of_ith_iteration in predictors:
+            for k, predictor in enumerate(predictors_of_ith_iteration):
+                if is_binned:
+                    predict = partial(
+                        predictor.predict_binned,
+                        missing_values_bin_idx=self._bin_mapper.missing_values_bin_idx_,
+                        n_threads=n_threads,
+                    )
+                else:
+                    predict = partial(
+                        predictor.predict,
+                        known_cat_bitsets=known_cat_bitsets,
+                        f_idx_map=f_idx_map,
+                        n_threads=n_threads,
+                    )
+                raw_predictions[:, k] += predict(X)
+
+    def _staged_raw_predict(self, X):
+        &#34;&#34;&#34;Compute raw predictions of ``X`` for each iteration.
+
+        This method allows monitoring (i.e. determine error on testing set)
+        after each stage.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+
+        Yields
+        ------
+        raw_predictions : generator of ndarray of shape \
+            (n_samples, n_trees_per_iteration)
+            The raw predictions of the input samples. The order of the
+            classes corresponds to that in the attribute :term:`classes_`.
+        &#34;&#34;&#34;
+        check_is_fitted(self)
+        X = self._preprocess_X(X, reset=False)
+        if X.shape[1] != self._n_features:
+            raise ValueError(
+                &#34;X has {} features but this estimator was trained with &#34;
+                &#34;{} features.&#34;.format(X.shape[1], self._n_features)
+            )
+        n_samples = X.shape[0]
+        raw_predictions = np.zeros(
+            shape=(n_samples, self.n_trees_per_iteration_),
+            dtype=self._baseline_prediction.dtype,
+            order=&#34;F&#34;,
+        )
+        raw_predictions += self._baseline_prediction
+
+        # We intentionally decouple the number of threads used at prediction
+        # time from the number of threads used at fit time because the model
+        # can be deployed on a different machine for prediction purposes.
+        n_threads = _openmp_effective_n_threads()
+        for iteration in range(len(self._predictors)):
+            self._predict_iterations(
+                X,
+                self._predictors[iteration : iteration + 1],
+                raw_predictions,
+                is_binned=False,
+                n_threads=n_threads,
+            )
+            yield raw_predictions.copy()
+
+    def _compute_partial_dependence_recursion(self, grid, target_features):
+        &#34;&#34;&#34;Fast partial dependence computation.
+
+        Parameters
+        ----------
+        grid : ndarray, shape (n_samples, n_target_features), dtype=np.float32
+            The grid points on which the partial dependence should be
+            evaluated.
+        target_features : ndarray, shape (n_target_features), dtype=np.intp
+            The set of target features for which the partial dependence
+            should be evaluated.
+
+        Returns
+        -------
+        averaged_predictions : ndarray, shape \
+                (n_trees_per_iteration, n_samples)
+            The value of the partial dependence function on each grid point.
+        &#34;&#34;&#34;
+
+        if getattr(self, &#34;_fitted_with_sw&#34;, False):
+            raise NotImplementedError(
+                &#34;{} does not support partial dependence &#34;
+                &#34;plots with the &#39;recursion&#39; method when &#34;
+                &#34;sample weights were given during fit &#34;
+                &#34;time.&#34;.format(self.__class__.__name__)
+            )
+
+        grid = np.asarray(grid, dtype=X_DTYPE, order=&#34;C&#34;)
+        averaged_predictions = np.zeros(
+            (self.n_trees_per_iteration_, grid.shape[0]), dtype=Y_DTYPE
+        )
+        target_features = np.asarray(target_features, dtype=np.intp, order=&#34;C&#34;)
+
+        for predictors_of_ith_iteration in self._predictors:
+            for k, predictor in enumerate(predictors_of_ith_iteration):
+                predictor.compute_partial_dependence(
+                    grid, target_features, averaged_predictions[k]
+                )
+        # Note that the learning rate is already accounted for in the leaves
+        # values.
+
+        return averaged_predictions
+
+    def __sklearn_tags__(self):
+        tags = super().__sklearn_tags__()
+        tags.input_tags.allow_nan = True
+        return tags
+
+    @abstractmethod
+    def _get_loss(self, sample_weight):
+        pass
+
+    @abstractmethod
+    def _encode_y(self, y=None):
+        pass  # pragma: no cover
+
+    @abstractmethod
+    def _encode_y_val(self, y=None):
+        pass  # pragma: no cover
+
+    @property
+    def n_iter_(self):
+        &#34;&#34;&#34;Number of iterations of the boosting process.&#34;&#34;&#34;
+        check_is_fitted(self)
+        return len(self._predictors)
+
+
+class HistGradientBoostingRegressor(RegressorMixin, BaseHistGradientBoosting):
+    &#34;&#34;&#34;Histogram-based Gradient Boosting Regression Tree.
+
+    This estimator is much faster than
+    :class:`GradientBoostingRegressor&lt;sklearn.ensemble.GradientBoostingRegressor&gt;`
+    for big datasets (n_samples &gt;= 10 000).
+
+    This estimator has native support for missing values (NaNs). During
+    training, the tree grower learns at each split point whether samples
+    with missing values should go to the left or right child, based on the
+    potential gain. When predicting, samples with missing values are
+    assigned to the left or right child consequently. If no missing values
+    were encountered for a given feature during training, then samples with
+    missing values are mapped to whichever child has the most samples.
+    See :ref:`sphx_glr_auto_examples_ensemble_plot_hgbt_regression.py` for a
+    usecase example of this feature.
+
+    This implementation is inspired by
+    `LightGBM &lt;https://github.com/lightgbm-org/LightGBM&gt;`_.
+
+    Read more in the :ref:`User Guide &lt;histogram_based_gradient_boosting&gt;`.
+
+    .. versionadded:: 0.21
+
+    Parameters
+    ----------
+    loss : {&#39;squared_error&#39;, &#39;absolute_error&#39;, &#39;gamma&#39;, &#39;poisson&#39;, &#39;quantile&#39;}, \
+            default=&#39;squared_error&#39;
+        The loss function to use in the boosting process. Note that the
+        &#34;squared error&#34;, &#34;gamma&#34; and &#34;poisson&#34; losses actually implement
+        &#34;half least squares loss&#34;, &#34;half gamma deviance&#34; and &#34;half poisson
+        deviance&#34; to simplify the computation of the gradient. Furthermore,
+        &#34;gamma&#34; and &#34;poisson&#34; losses internally use a log-link, &#34;gamma&#34;
+        requires ``y &gt; 0`` and &#34;poisson&#34; requires ``y &gt;= 0``.
+        &#34;quantile&#34; uses the pinball loss.
+
+        .. versionchanged:: 0.23
+           Added option &#39;poisson&#39;.
+
+        .. versionchanged:: 1.1
+           Added option &#39;quantile&#39;.
+
+        .. versionchanged:: 1.3
+           Added option &#39;gamma&#39;.
+
+    quantile : float, default=None
+        If loss is &#34;quantile&#34;, this parameter specifies which quantile to be estimated
+        and must be between 0 and 1.
+    learning_rate : float, default=0.1
+        The learning rate, also known as *shrinkage*. This is used as a
+        multiplicative factor for the leaves values. Use ``1`` for no
+        shrinkage.
+    max_iter : int, default=100
+        The maximum number of iterations of the boosting process, i.e. the
+        maximum number of trees.
+    max_leaf_nodes : int or None, default=31
+        The maximum number of leaves for each tree. Must be strictly greater
+        than 1. If None, there is no maximum limit.
+    max_depth : int or None, default=None
+        The maximum depth of each tree. The depth of a tree is the number of
+        edges to go from the root to the deepest leaf.
+        Depth isn&#39;t constrained by default.
+    min_samples_leaf : int, default=20
+        The minimum number of samples per leaf. For small datasets with less
+        than a few hundred samples, it is recommended to lower this value
+        since only very shallow trees would be built.
+    l2_regularization : float, default=0
+        The L2 regularization parameter penalizing leaves with small hessians.
+        Use ``0`` for no regularization (default).
+    max_features : float, default=1.0
+        Proportion of randomly chosen features in each and every node split.
+        This is a form of regularization, smaller values make the trees weaker
+        learners and might prevent overfitting.
+        If interaction constraints from `interaction_cst` are present, only allowed
+        features are taken into account for the subsampling.
+
+        .. versionadded:: 1.4
+
+    max_bins : int, default=255
+        The maximum number of bins to use for non-missing values. Before
+        training, each feature of the input array `X` is binned into
+        integer-valued bins, which allows for a much faster training stage.
+        Features with a small number of unique values may use less than
+        ``max_bins`` bins. In addition to the ``max_bins`` bins, one more bin
+        is always reserved for missing values. Must be no larger than 255.
+    categorical_features : array-like of {bool, int, str} of shape (n_features) \
+            or shape (n_categorical_features,), default=&#39;from_dtype&#39;
+        Indicates the categorical features.
+
+        - None : no feature will be considered categorical.
+        - boolean array-like : boolean mask indicating categorical features.
+        - integer array-like : integer indices indicating categorical
+          features.
+        - str array-like: names of categorical features (assuming the training
+          data has feature names).
+        - `&#34;from_dtype&#34;`: dataframe columns with dtype &#34;Categorical&#34; and &#34;Enum&#34; are
+          considered to be categorical features. The input must be a dataframe that
+          is supported by narwhals (or supports it): :func:`narwhals.from_native` must
+          work. This is the case, for instance, for pandas and polars DataFrames.
+
+        For each categorical feature, there must be at most `max_bins` unique
+        categories. Negative values for categorical features encoded as numeric
+        dtypes are treated as missing values. All categorical values are
+        converted to floating point numbers. This means that categorical values
+        of 1.0 and 1 are treated as the same category.
+
+        Read more in the :ref:`User Guide &lt;categorical_support_gbdt&gt;` and
+        :ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_categorical.py`.
+
+        .. versionadded:: 0.24
+
+        .. versionchanged:: 1.2
+           Added support for feature names.
+
+        .. versionchanged:: 1.4
+           Added `&#34;from_dtype&#34;` option.
+
+        .. versionchanged:: 1.6
+           The default value changed from `None` to `&#34;from_dtype&#34;`.
+
+    monotonic_cst : array-like of int of shape (n_features) or dict, default=None
+        Monotonic constraint to enforce on each feature are specified using the
+        following integer values:
+
+        - 1: monotonic increase
+        - 0: no constraint
+        - -1: monotonic decrease
+
+        If a dict with str keys, map feature to monotonic constraints by name.
+        If an array, the features are mapped to constraints by position. See
+        :ref:`monotonic_cst_features_names` for a usage example.
+
+        Read more in the :ref:`User Guide &lt;monotonic_cst_gbdt&gt;`.
+
+        .. versionadded:: 0.23
+
+        .. versionchanged:: 1.2
+           Accept dict of constraints with feature names as keys.
+
+    interaction_cst : {&#34;pairwise&#34;, &#34;no_interactions&#34;} or sequence of lists/tuples/sets \
+            of int, default=None
+        Specify interaction constraints, the sets of features which can
+        interact with each other in child node splits.
+
+        Each item specifies the set of feature indices that are allowed
+        to interact with each other. If there are more features than
+        specified in these constraints, they are treated as if they were
+        specified as an additional set.
+
+        The strings &#34;pairwise&#34; and &#34;no_interactions&#34; are shorthands for
+        allowing only pairwise or no interactions, respectively.
+
+        For instance, with 5 features in total, `interaction_cst=[{0, 1}]`
+        is equivalent to `interaction_cst=[{0, 1}, {2, 3, 4}]`,
+        and specifies that each branch of a tree will either only split
+        on features 0 and 1 or only split on features 2, 3 and 4.
+
+        See :ref:`this example&lt;ice-vs-pdp&gt;` on how to use `interaction_cst`.
+
+        .. versionadded:: 1.2
+
+    warm_start : bool, default=False
+        When set to ``True``, reuse the solution of the previous call to fit
+        and add more estimators to the ensemble. For results to be valid, the
+        estimator should be re-trained on the same data only.
+        See :term:`the Glossary &lt;warm_start&gt;`.
+    early_stopping : &#39;auto&#39; or bool, default=&#39;auto&#39;
+        If &#39;auto&#39;, early stopping is enabled if the sample size is larger than
+        10000 or if `X_val` and `y_val` are passed to `fit`. If True, early stopping
+        is enabled, otherwise early stopping is disabled.
+
+        .. versionadded:: 0.23
+
+    scoring : str or callable or None, default=&#39;loss&#39;
+        Scoring method to use for early stopping. Only used if `early_stopping`
+        is enabled. Options:
+
+        - str: see :ref:`scoring_string_names` for options.
+        - callable: a scorer callable object (e.g., function) with signature
+          ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.
+        - `None`: the :ref:`coefficient of determination &lt;r2_score&gt;`
+          (:math:`R^2`) is used.
+        - &#39;loss&#39;: early stopping is checked w.r.t the loss value.
+
+    validation_fraction : int or float or None, default=0.1
+        Proportion (or absolute size) of training data to set aside as
+        validation data for early stopping. If None, early stopping is done on
+        the training data.
+        The value is ignored if either early stopping is not performed, e.g.
+        `early_stopping=False`, or if `X_val` and `y_val` are passed to fit.
+    n_iter_no_change : int, default=10
+        Used to determine when to &#34;early stop&#34;. The fitting process is
+        stopped when none of the last ``n_iter_no_change`` scores are better
+        than the ``n_iter_no_change - 1`` -th-to-last one, up to some
+        tolerance. Only used if early stopping is performed.
+    tol : float, default=1e-7
+        The absolute tolerance to use when comparing scores during early
+        stopping. The higher the tolerance, the more likely we are to early
+        stop: higher tolerance means that it will be harder for subsequent
+        iterations to be considered an improvement upon the reference score.
+    verbose : int, default=0
+        The verbosity level. If not zero, print some information about the
+        fitting process. ``1`` prints only summary info, ``2`` prints info per
+        iteration.
+    random_state : int, RandomState instance or None, default=None
+        Pseudo-random number generator to control the subsampling in the
+        binning process, and the train/validation data split if early stopping
+        is enabled.
+        Pass an int for reproducible output across multiple function calls.
+        See :term:`Glossary &lt;random_state&gt;`.
+
+    Attributes
+    ----------
+    do_early_stopping_ : bool
+        Indicates whether early stopping is used during training.
+    n_iter_ : int
+        The number of iterations as selected by early stopping, depending on
+        the `early_stopping` parameter. Otherwise it corresponds to max_iter.
+    n_trees_per_iteration_ : int
+        The number of tree that are built at each iteration. For regressors,
+        this is always 1.
+    train_score_ : ndarray, shape (n_iter_+1,)
+        The scores at each iteration on the training data. The first entry
+        is the score of the ensemble before the first iteration. Scores are
+        computed according to the ``scoring`` parameter. If ``scoring`` is
+        not &#39;loss&#39;, scores are computed on a subset of at most 10 000
+        samples. Empty if no early stopping.
+    validation_score_ : ndarray, shape (n_iter_+1,)
+        The scores at each iteration on the held-out validation data. The
+        first entry is the score of the ensemble before the first iteration.
+        Scores are computed according to the ``scoring`` parameter. Empty if
+        no early stopping or if ``validation_fraction`` is None.
+    is_categorical_ : ndarray, shape (n_features, ) or None
+        Boolean mask for the categorical features. ``None`` if there are no
+        categorical features.
+    n_features_in_ : int
+        Number of features seen during :term:`fit`.
+
+        .. versionadded:: 0.24
+    feature_names_in_ : ndarray of shape (`n_features_in_`,)
+        Names of features seen during :term:`fit`. Defined only when `X`
+        has feature names that are all strings.
+
+        .. versionadded:: 1.0
+
+    See Also
+    --------
+    GradientBoostingRegressor : Exact gradient boosting method that does not
+        scale as good on datasets with a large number of samples.
+    sklearn.tree.DecisionTreeRegressor : A decision tree regressor.
+    RandomForestRegressor : A meta-estimator that fits a number of decision
+        tree regressors on various sub-samples of the dataset and uses
+        averaging to improve the statistical performance and control
+        over-fitting.
+    AdaBoostRegressor : A meta-estimator that begins by fitting a regressor
+        on the original dataset and then fits additional copies of the
+        regressor on the same dataset but where the weights of instances are
+        adjusted according to the error of the current prediction. As such,
+        subsequent regressors focus more on difficult cases.
+
+    Examples
+    --------
+    &gt;&gt;&gt; from sklearn.ensemble import HistGradientBoostingRegressor
+    &gt;&gt;&gt; from sklearn.datasets import load_diabetes
+    &gt;&gt;&gt; X, y = load_diabetes(return_X_y=True)
+    &gt;&gt;&gt; est = HistGradientBoostingRegressor().fit(X, y)
+    &gt;&gt;&gt; est.score(X, y)
+    0.93...
+    &#34;&#34;&#34;
+
+    _parameter_constraints: dict = {
+        **BaseHistGradientBoosting._parameter_constraints,
+        &#34;loss&#34;: [
+            StrOptions(
+                {
+                    &#34;squared_error&#34;,
+                    &#34;absolute_error&#34;,
+                    &#34;poisson&#34;,
+                    &#34;gamma&#34;,
+                    &#34;quantile&#34;,
+                }
+            ),
+            BaseLoss,
+        ],
+        &#34;quantile&#34;: [Interval(Real, 0, 1, closed=&#34;both&#34;), None],
+    }
+
+    def __init__(
+        self,
+        loss=&#34;squared_error&#34;,
+        *,
+        quantile=None,
+        learning_rate=0.1,
+        max_iter=100,
+        max_leaf_nodes=31,
+        max_depth=None,
+        min_samples_leaf=20,
+        l2_regularization=0.0,
+        max_features=1.0,
+        max_bins=255,
+        categorical_features=&#34;from_dtype&#34;,
+        monotonic_cst=None,
+        interaction_cst=None,
+        warm_start=False,
+        early_stopping=&#34;auto&#34;,
+        scoring=&#34;loss&#34;,
+        validation_fraction=0.1,
+        n_iter_no_change=10,
+        tol=1e-7,
+        verbose=0,
+        random_state=None,
+    ):
+        super().__init__(
+            loss=loss,
+            learning_rate=learning_rate,
+            max_iter=max_iter,
+            max_leaf_nodes=max_leaf_nodes,
+            max_depth=max_depth,
+            min_samples_leaf=min_samples_leaf,
+            l2_regularization=l2_regularization,
+            max_features=max_features,
+            max_bins=max_bins,
+            monotonic_cst=monotonic_cst,
+            interaction_cst=interaction_cst,
+            categorical_features=categorical_features,
+            early_stopping=early_stopping,
+            warm_start=warm_start,
+            scoring=scoring,
+            validation_fraction=validation_fraction,
+            n_iter_no_change=n_iter_no_change,
+            tol=tol,
+            verbose=verbose,
+            random_state=random_state,
+        )
+        self.quantile = quantile
+
+    def predict(self, X):
+        &#34;&#34;&#34;Predict values for X.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        y : ndarray, shape (n_samples,)
+            The predicted values.
+        &#34;&#34;&#34;
+        check_is_fitted(self)
+        # Return inverse link of raw predictions after converting
+        # shape (n_samples, 1) to (n_samples,)
+        return self._loss.link.inverse(self._raw_predict(X).ravel())
+
+    def staged_predict(self, X):
+        &#34;&#34;&#34;Predict regression target for each iteration.
+
+        This method allows monitoring (i.e. determine error on testing set)
+        after each stage.
+
+        .. versionadded:: 0.24
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+
+        Yields
+        ------
+        y : generator of ndarray of shape (n_samples,)
+            The predicted values of the input samples, for each iteration.
+        &#34;&#34;&#34;
+        for raw_predictions in self._staged_raw_predict(X):
+            yield self._loss.link.inverse(raw_predictions.ravel())
+
+    def _encode_y(self, y):
+        # Just convert y to the expected dtype
+        self.n_trees_per_iteration_ = 1
+        y = y.astype(Y_DTYPE, copy=False)
+        if self.loss == &#34;gamma&#34;:
+            # Ensure y &gt; 0
+            if not np.all(y &gt; 0):
+                raise ValueError(&#34;loss=&#39;gamma&#39; requires strictly positive y.&#34;)
+        elif self.loss == &#34;poisson&#34;:
+            # Ensure y &gt;= 0 and sum(y) &gt; 0
+            if not (np.all(y &gt;= 0) and np.sum(y) &gt; 0):
+                raise ValueError(
+                    &#34;loss=&#39;poisson&#39; requires non-negative y and sum(y) &gt; 0.&#34;
+                )
+        return y
+
+    def _encode_y_val(self, y=None):
+        return self._encode_y(y)
+
+    def _get_loss(self, sample_weight):
+        if self.loss == &#34;quantile&#34;:
+            return _LOSSES[self.loss](
+                sample_weight=sample_weight, quantile=self.quantile
+            )
+        else:
+            return _LOSSES[self.loss](sample_weight=sample_weight)
+
+
+class HistGradientBoostingClassifier(ClassifierMixin, BaseHistGradientBoosting):
+    &#34;&#34;&#34;Histogram-based Gradient Boosting Classification Tree.
+
+    This estimator is much faster than
+    :class:`GradientBoostingClassifier&lt;sklearn.ensemble.GradientBoostingClassifier&gt;`
+    for big datasets (n_samples &gt;= 10 000).
+
+    This estimator has native support for missing values (NaNs). During
+    training, the tree grower learns at each split point whether samples
+    with missing values should go to the left or right child, based on the
+    potential gain. When predicting, samples with missing values are
+    assigned to the left or right child consequently. If no missing values
+    were encountered for a given feature during training, then samples with
+    missing values are mapped to whichever child has the most samples.
+
+    This implementation is inspired by
+    `LightGBM &lt;https://github.com/lightgbm-org/LightGBM&gt;`_.
+
+    Read more in the :ref:`User Guide &lt;histogram_based_gradient_boosting&gt;`.
+
+    .. versionadded:: 0.21
+
+    Parameters
+    ----------
+    loss : {&#39;log_loss&#39;}, default=&#39;log_loss&#39;
+        The loss function to use in the boosting process.
+
+        For binary classification problems, &#39;log_loss&#39; is also known as logistic loss,
+        binomial deviance or binary crossentropy. Internally, the model fits one tree
+        per boosting iteration and uses the logistic sigmoid function (expit) as
+        inverse link function to compute the predicted positive class probability.
+
+        For multiclass classification problems, &#39;log_loss&#39; is also known as multinomial
+        deviance or categorical crossentropy. Internally, the model fits one tree per
+        boosting iteration and per class and uses the softmax function as inverse link
+        function to compute the predicted probabilities of the classes.
+
+    learning_rate : float, default=0.1
+        The learning rate, also known as *shrinkage*. This is used as a
+        multiplicative factor for the leaves values. Use ``1`` for no
+        shrinkage.
+    max_iter : int, default=100
+        The maximum number of iterations of the boosting process, i.e. the
+        maximum number of trees for binary classification. For multiclass
+        classification, `n_classes` trees per iteration are built.
+    max_leaf_nodes : int or None, default=31
+        The maximum number of leaves for each tree. Must be strictly greater
+        than 1. If None, there is no maximum limit.
+    max_depth : int or None, default=None
+        The maximum depth of each tree. The depth of a tree is the number of
+        edges to go from the root to the deepest leaf.
+        Depth isn&#39;t constrained by default.
+    min_samples_leaf : int, default=20
+        The minimum number of samples per leaf. For small datasets with less
+        than a few hundred samples, it is recommended to lower this value
+        since only very shallow trees would be built.
+    l2_regularization : float, default=0
+        The L2 regularization parameter penalizing leaves with small hessians.
+        Use ``0`` for no regularization (default).
+    max_features : float, default=1.0
+        Proportion of randomly chosen features in each and every node split.
+        This is a form of regularization, smaller values make the trees weaker
+        learners and might prevent overfitting.
+        If interaction constraints from `interaction_cst` are present, only allowed
+        features are taken into account for the subsampling.
+
+        .. versionadded:: 1.4
+
+    max_bins : int, default=255
+        The maximum number of bins to use for non-missing values. Before
+        training, each feature of the input array `X` is binned into
+        integer-valued bins, which allows for a much faster training stage.
+        Features with a small number of unique values may use less than
+        ``max_bins`` bins. In addition to the ``max_bins`` bins, one more bin
+        is always reserved for missing values. Must be no larger than 255.
+    categorical_features : array-like of {bool, int, str} of shape (n_features) \
+            or shape (n_categorical_features,), default=&#39;from_dtype&#39;
+        Indicates the categorical features.
+
+        - None : no feature will be considered categorical.
+        - boolean array-like : boolean mask indicating categorical features.
+        - integer array-like : integer indices indicating categorical
+          features.
+        - str array-like: names of categorical features (assuming the training
+          data has feature names).
+        - `&#34;from_dtype&#34;`: dataframe columns with dtype &#34;Categorical&#34; and &#34;Enum&#34; are
+          considered to be categorical features. The input must be a dataframe that
+          is supported by narwhals (or supports it): :func:`narwhals.from_native` must
+          work. This is the case, for instance, for pandas and polars DataFrames.
+
+        For each categorical feature, there must be at most `max_bins` unique
+        categories. Negative values for categorical features encoded as numeric
+        dtypes are treated as missing values. All categorical values are
+        converted to floating point numbers. This means that categorical values
+        of 1.0 and 1 are treated as the same category.
+
+        Read more in the :ref:`User Guide &lt;categorical_support_gbdt&gt;`.
+
+        .. versionadded:: 0.24
+
+        .. versionchanged:: 1.2
+           Added support for feature names.
+
+        .. versionchanged:: 1.4
+           Added `&#34;from_dtype&#34;` option.
+
+        .. versionchanged:: 1.6
+           The default value changed from `None` to `&#34;from_dtype&#34;`.
+
+    monotonic_cst : array-like of int of shape (n_features) or dict, default=None
+        Monotonic constraint to enforce on each feature are specified using the
+        following integer values:
+
+        - 1: monotonic increase
+        - 0: no constraint
+        - -1: monotonic decrease
+
+        If a dict with str keys, map feature to monotonic constraints by name.
+        If an array, the features are mapped to constraints by position. See
+        :ref:`monotonic_cst_features_names` for a usage example.
+
+        The constraints are only valid for binary classifications and hold
+        over the probability of the positive class.
+        Read more in the :ref:`User Guide &lt;monotonic_cst_gbdt&gt;`.
+
+        .. versionadded:: 0.23
+
+        .. versionchanged:: 1.2
+           Accept dict of constraints with feature names as keys.
+
+    interaction_cst : {&#34;pairwise&#34;, &#34;no_interactions&#34;} or sequence of lists/tuples/sets \
+            of int, default=None
+        Specify interaction constraints, the sets of features which can
+        interact with each other in child node splits.
+
+        Each item specifies the set of feature indices that are allowed
+        to interact with each other. If there are more features than
+        specified in these constraints, they are treated as if they were
+        specified as an additional set.
+
+        The strings &#34;pairwise&#34; and &#34;no_interactions&#34; are shorthands for
+        allowing only pairwise or no interactions, respectively.
+
+        For instance, with 5 features in total, `interaction_cst=[{0, 1}]`
+        is equivalent to `interaction_cst=[{0, 1}, {2, 3, 4}]`,
+        and specifies that each branch of a tree will either only split
+        on features 0 and 1 or only split on features 2, 3 and 4.
+
+        See :ref:`this example&lt;ice-vs-pdp&gt;` on how to use `interaction_cst`.
+
+        .. versionadded:: 1.2
+
+    warm_start : bool, default=False
+        When set to ``True``, reuse the solution of the previous call to fit
+        and add more estimators to the ensemble. For results to be valid, the
+        estimator should be re-trained on the same data only.
+        See :term:`the Glossary &lt;warm_start&gt;`.
+    early_stopping : &#39;auto&#39; or bool, default=&#39;auto&#39;
+        If &#39;auto&#39;, early stopping is enabled if the sample size is larger than
+        10000 or if `X_val` and `y_val` are passed to `fit`. If True, early stopping
+        is enabled, otherwise early stopping is disabled.
+
+        .. versionadded:: 0.23
+
+    scoring : str or callable or None, default=&#39;loss&#39;
+        Scoring method to use for early stopping. Only used if `early_stopping`
+        is enabled. Options:
+
+        - str: see :ref:`scoring_string_names` for options.
+        - callable: a scorer callable object (e.g., function) with signature
+          ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.
+        - `None`: :ref:`accuracy &lt;accuracy_score&gt;` is used.
+        - &#39;loss&#39;: early stopping is checked w.r.t the loss value.
+
+    validation_fraction : int or float or None, default=0.1
+        Proportion (or absolute size) of training data to set aside as
+        validation data for early stopping. If None, early stopping is done on
+        the training data.
+        The value is ignored if either early stopping is not performed, e.g.
+        `early_stopping=False`, or if `X_val` and `y_val` are passed to fit.
+    n_iter_no_change : int, default=10
+        Used to determine when to &#34;early stop&#34;. The fitting process is
+        stopped when none of the last ``n_iter_no_change`` scores are better
+        than the ``n_iter_no_change - 1`` -th-to-last one, up to some
+        tolerance. Only used if early stopping is performed.
+    tol : float, default=1e-7
+        The absolute tolerance to use when comparing scores. The higher the
+        tolerance, the more likely we are to early stop: higher tolerance
+        means that it will be harder for subsequent iterations to be
+        considered an improvement upon the reference score.
+    verbose : int, default=0
+        The verbosity level. If not zero, print some information about the
+        fitting process. ``1`` prints only summary info, ``2`` prints info per
+        iteration.
+    random_state : int, RandomState instance or None, default=None
+        Pseudo-random number generator to control the subsampling in the
+        binning process, and the train/validation data split if early stopping
+        is enabled.
+        Pass an int for reproducible output across multiple function calls.
+        See :term:`Glossary &lt;random_state&gt;`.
+    class_weight : dict or &#39;balanced&#39;, default=None
+        Weights associated with classes in the form `{class_label: weight}`.
+        If not given, all classes are supposed to have weight one.
+        The &#34;balanced&#34; mode uses the values of y to automatically adjust
+        weights inversely proportional to class frequencies in the input data
+        as `n_samples / (n_classes * np.bincount(y))`.
+        Note that these weights will be multiplied with sample_weight (passed
+        through the fit method) if `sample_weight` is specified.
+
+        .. versionadded:: 1.2
+
+    Attributes
+    ----------
+    classes_ : array, shape = (n_classes,)
+        Class labels.
+    do_early_stopping_ : bool
+        Indicates whether early stopping is used during training.
+    n_iter_ : int
+        The number of iterations as selected by early stopping, depending on
+        the `early_stopping` parameter. Otherwise it corresponds to max_iter.
+    n_trees_per_iteration_ : int
+        The number of tree that are built at each iteration. This is equal to 1
+        for binary classification, and to ``n_classes`` for multiclass
+        classification.
+    train_score_ : ndarray, shape (n_iter_+1,)
+        The scores at each iteration on the training data. The first entry
+        is the score of the ensemble before the first iteration. Scores are
+        computed according to the ``scoring`` parameter. If ``scoring`` is
+        not &#39;loss&#39;, scores are computed on a subset of at most 10 000
+        samples. Empty if no early stopping.
+    validation_score_ : ndarray, shape (n_iter_+1,)
+        The scores at each iteration on the held-out validation data. The
+        first entry is the score of the ensemble before the first iteration.
+        Scores are computed according to the ``scoring`` parameter. Empty if
+        no early stopping or if ``validation_fraction`` is None.
+    is_categorical_ : ndarray, shape (n_features, ) or None
+        Boolean mask for the categorical features. ``None`` if there are no
+        categorical features.
+    n_features_in_ : int
+        Number of features seen during :term:`fit`.
+
+        .. versionadded:: 0.24
+    feature_names_in_ : ndarray of shape (`n_features_in_`,)
+        Names of features seen during :term:`fit`. Defined only when `X`
+        has feature names that are all strings.
+
+        .. versionadded:: 1.0
+
+    See Also
+    --------
+    GradientBoostingClassifier : Exact gradient boosting method that does not
+        scale as good on datasets with a large number of samples.
+    sklearn.tree.DecisionTreeClassifier : A decision tree classifier.
+    RandomForestClassifier : A meta-estimator that fits a number of decision
+        tree classifiers on various sub-samples of the dataset and uses
+        averaging to improve the predictive accuracy and control over-fitting.
+    AdaBoostClassifier : A meta-estimator that begins by fitting a classifier
+        on the original dataset and then fits additional copies of the
+        classifier on the same dataset where the weights of incorrectly
+        classified instances are adjusted such that subsequent classifiers
+        focus more on difficult cases.
+
+    Examples
+    --------
+    &gt;&gt;&gt; from sklearn.ensemble import HistGradientBoostingClassifier
+    &gt;&gt;&gt; from sklearn.datasets import load_iris
+    &gt;&gt;&gt; X, y = load_iris(return_X_y=True)
+    &gt;&gt;&gt; clf = HistGradientBoostingClassifier().fit(X, y)
+    &gt;&gt;&gt; clf.score(X, y)
+    1.0
+    &#34;&#34;&#34;
+
+    _parameter_constraints: dict = {
+        **BaseHistGradientBoosting._parameter_constraints,
+        &#34;loss&#34;: [StrOptions({&#34;log_loss&#34;}), BaseLoss],
+        &#34;class_weight&#34;: [dict, StrOptions({&#34;balanced&#34;}), None],
+    }
+
+    def __init__(
+        self,
+        loss=&#34;log_loss&#34;,
+        *,
+        learning_rate=0.1,
+        max_iter=100,
+        max_leaf_nodes=31,
+        max_depth=None,
+        min_samples_leaf=20,
+        l2_regularization=0.0,
+        max_features=1.0,
+        max_bins=255,
+        categorical_features=&#34;from_dtype&#34;,
+        monotonic_cst=None,
+        interaction_cst=None,
+        warm_start=False,
+        early_stopping=&#34;auto&#34;,
+        scoring=&#34;loss&#34;,
+        validation_fraction=0.1,
+        n_iter_no_change=10,
+        tol=1e-7,
+        verbose=0,
+        random_state=None,
+        class_weight=None,
+    ):
+        super().__init__(
+            loss=loss,
+            learning_rate=learning_rate,
+            max_iter=max_iter,
+            max_leaf_nodes=max_leaf_nodes,
+            max_depth=max_depth,
+            min_samples_leaf=min_samples_leaf,
+            l2_regularization=l2_regularization,
+            max_features=max_features,
+            max_bins=max_bins,
+            categorical_features=categorical_features,
+            monotonic_cst=monotonic_cst,
+            interaction_cst=interaction_cst,
+            warm_start=warm_start,
+            early_stopping=early_stopping,
+            scoring=scoring,
+            validation_fraction=validation_fraction,
+            n_iter_no_change=n_iter_no_change,
+            tol=tol,
+            verbose=verbose,
+            random_state=random_state,
+        )
+        self.class_weight = class_weight
+
+    def _finalize_sample_weight(self, sample_weight, y):
+        &#34;&#34;&#34;Adjust sample_weights with class_weights.&#34;&#34;&#34;
+        if self.class_weight is None:
+            return sample_weight
+
+        expanded_class_weight = compute_sample_weight(self.class_weight, y)
+
+        if sample_weight is not None:
+            return sample_weight * expanded_class_weight
+        else:
+            return expanded_class_weight
+
+    def predict(self, X):
+        &#34;&#34;&#34;Predict classes for X.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        y : ndarray, shape (n_samples,)
+            The predicted classes.
+        &#34;&#34;&#34;
+        # TODO: This could be done in parallel
+        raw_predictions = self._raw_predict(X)
+        if raw_predictions.shape[1] == 1:
+            # np.argmax([0.5, 0.5]) is 0, not 1. Therefore &#34;&gt; 0&#34; not &#34;&gt;= 0&#34; to be
+            # consistent with the multiclass case.
+            encoded_classes = (raw_predictions.ravel() &gt; 0).astype(int)
+        else:
+            encoded_classes = np.argmax(raw_predictions, axis=1)
+        return self.classes_[encoded_classes]
+
+    def staged_predict(self, X):
+        &#34;&#34;&#34;Predict classes at each iteration.
+
+        This method allows monitoring (i.e. determine error on testing set)
+        after each stage.
+
+        .. versionadded:: 0.24
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+
+        Yields
+        ------
+        y : generator of ndarray of shape (n_samples,)
+            The predicted classes of the input samples, for each iteration.
+        &#34;&#34;&#34;
+        for raw_predictions in self._staged_raw_predict(X):
+            if raw_predictions.shape[1] == 1:
+                # np.argmax([0, 0]) is 0, not 1, therefore &#34;&gt; 0&#34; not &#34;&gt;= 0&#34;
+                encoded_classes = (raw_predictions.ravel() &gt; 0).astype(int)
+            else:
+                encoded_classes = np.argmax(raw_predictions, axis=1)
+            yield self.classes_.take(encoded_classes, axis=0)
+
+    def predict_proba(self, X):
+        &#34;&#34;&#34;Predict class probabilities for X.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        p : ndarray, shape (n_samples, n_classes)
+            The class probabilities of the input samples.
+        &#34;&#34;&#34;
+        raw_predictions = self._raw_predict(X)
+        return self._loss.predict_proba(raw_predictions)
+
+    def staged_predict_proba(self, X):
+        &#34;&#34;&#34;Predict class probabilities at each iteration.
+
+        This method allows monitoring (i.e. determine error on testing set)
+        after each stage.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+
+        Yields
+        ------
+        y : generator of ndarray of shape (n_samples,)
+            The predicted class probabilities of the input samples,
+            for each iteration.
+        &#34;&#34;&#34;
+        for raw_predictions in self._staged_raw_predict(X):
+            yield self._loss.predict_proba(raw_predictions)
+
+    def decision_function(self, X):
+        &#34;&#34;&#34;Compute the decision function of ``X``.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        decision : ndarray, shape (n_samples,) or \
+                (n_samples, n_trees_per_iteration)
+            The raw predicted values (i.e. the sum of the trees leaves) for
+            each sample. n_trees_per_iteration is equal to the number of
+            classes in multiclass classification.
+        &#34;&#34;&#34;
+        decision = self._raw_predict(X)
+        if decision.shape[1] == 1:
+            decision = decision.ravel()
+        return decision
+
+    def staged_decision_function(self, X):
+        &#34;&#34;&#34;Compute decision function of ``X`` for each iteration.
+
+        This method allows monitoring (i.e. determine error on testing set)
+        after each stage.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+
+        Yields
+        ------
+        decision : generator of ndarray of shape (n_samples,) or \
+                (n_samples, n_trees_per_iteration)
+            The decision function of the input samples, which corresponds to
+            the raw values predicted from the trees of the ensemble . The
+            classes corresponds to that in the attribute :term:`classes_`.
+        &#34;&#34;&#34;
+        for staged_decision in self._staged_raw_predict(X):
+            if staged_decision.shape[1] == 1:
+                staged_decision = staged_decision.ravel()
+            yield staged_decision
+
+    def _encode_y(self, y):
+        &#34;&#34;&#34;Create self._label_encoder and encode y correspondingly.&#34;&#34;&#34;
+        # encode classes into 0 ... n_classes - 1 and sets attributes classes_
+        # and n_trees_per_iteration_
+        check_classification_targets(y)
+
+        # We need to store the label encoder in case y_val needs to be label encoded,
+        # too.
+        self._label_encoder = LabelEncoder()
+        encoded_y = self._label_encoder.fit_transform(y)
+        self.classes_ = self._label_encoder.classes_
+        n_classes = self.classes_.shape[0]
+        # only 1 tree for binary classification. For multiclass classification,
+        # we build 1 tree per class.
+        self.n_trees_per_iteration_ = 1 if n_classes &lt;= 2 else n_classes
+        encoded_y = encoded_y.astype(Y_DTYPE, copy=False)
+        return encoded_y
+
+    def _encode_y_val(self, y):
+        encoded_y = self._label_encoder.transform(y)
+        return encoded_y.astype(Y_DTYPE, copy=False)
+
+    def _get_loss(self, sample_weight):
+        # At this point self.loss == &#34;log_loss&#34;
+        if self.n_trees_per_iteration_ == 1:
+            return HalfBinomialLoss(sample_weight=sample_weight)
+        else:
+            return HalfMultinomialLoss(
+                sample_weight=sample_weight, n_classes=self.n_trees_per_iteration_
+            )
+</code></pre>
+</div>
+
+<script>
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var n=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,t=0,r={},a={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(n){return n instanceof i?new i(n.type,e(n.content),n.alias):Array.isArray(n)?n.map(e):n.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function e(n,t){var r,i;switch(t=t||{},a.util.type(n)){case"Object":if(i=a.util.objId(n),t[i])return t[i];for(var l in r={},t[i]=r,n)n.hasOwnProperty(l)&&(r[l]=e(n[l],t));return r;case"Array":return i=a.util.objId(n),t[i]?t[i]:(r=[],t[i]=r,n.forEach((function(n,a){r[a]=e(n,t)})),r);default:return n}},getLanguage:function(e){for(;e;){var t=n.exec(e.className);if(t)return t[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,t){e.className=e.className.replace(RegExp(n,"gi"),""),e.classList.add("language-"+t)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(r){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(r.stack)||[])[1];if(e){var n=document.getElementsByTagName("script");for(var t in n)if(n[t].src==e)return n[t]}return null}},isActive:function(e,n,t){for(var r="no-"+n;e;){var a=e.classList;if(a.contains(n))return!0;if(a.contains(r))return!1;e=e.parentElement}return!!t}},languages:{plain:r,plaintext:r,text:r,txt:r,extend:function(e,n){var t=a.util.clone(a.languages[e]);for(var r in n)t[r]=n[r];return t},insertBefore:function(e,n,t,r){var i=(r=r||a.languages)[e],l={};for(var o in i)if(i.hasOwnProperty(o)){if(o==n)for(var s in t)t.hasOwnProperty(s)&&(l[s]=t[s]);t.hasOwnProperty(o)||(l[o]=i[o])}var u=r[e];return r[e]=l,a.languages.DFS(a.languages,(function(n,t){t===u&&n!=e&&(this[n]=l)})),l},DFS:function e(n,t,r,i){i=i||{};var l=a.util.objId;for(var o in n)if(n.hasOwnProperty(o)){t.call(n,o,n[o],r||o);var s=n[o],u=a.util.type(s);"Object"!==u||i[l(s)]?"Array"!==u||i[l(s)]||(i[l(s)]=!0,e(s,t,o,i)):(i[l(s)]=!0,e(s,t,null,i))}}},plugins:{},highlightAll:function(e,n){a.highlightAllUnder(document,e,n)},highlightAllUnder:function(e,n,t){var r={callback:t,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};a.hooks.run("before-highlightall",r),r.elements=Array.prototype.slice.apply(r.container.querySelectorAll(r.selector)),a.hooks.run("before-all-elements-highlight",r);for(var i,l=0;i=r.elements[l++];)a.highlightElement(i,!0===n,r.callback)},highlightElement:function(n,t,r){var i=a.util.getLanguage(n),l=a.languages[i];a.util.setLanguage(n,i);var o=n.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&a.util.setLanguage(o,i);var s={element:n,language:i,grammar:l,code:n.textContent};function u(e){s.highlightedCode=e,a.hooks.run("before-insert",s),s.element.innerHTML=s.highlightedCode,a.hooks.run("after-highlight",s),a.hooks.run("complete",s),r&&r.call(s.element)}if(a.hooks.run("before-sanity-check",s),(o=s.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!s.code)return a.hooks.run("complete",s),void(r&&r.call(s.element));if(a.hooks.run("before-highlight",s),s.grammar)if(t&&e.Worker){var c=new Worker(a.filename);c.onmessage=function(e){u(e.data)},c.postMessage(JSON.stringify({language:s.language,code:s.code,immediateClose:!0}))}else u(a.highlight(s.code,s.grammar,s.language));else u(a.util.encode(s.code))},highlight:function(e,n,t){var r={code:e,grammar:n,language:t};if(a.hooks.run("before-tokenize",r),!r.grammar)throw new Error('The language "'+r.language+'" has no grammar.');return r.tokens=a.tokenize(r.code,r.grammar),a.hooks.run("after-tokenize",r),i.stringify(a.util.encode(r.tokens),r.language)},tokenize:function(e,n){var t=n.rest;if(t){for(var r in t)n[r]=t[r];delete n.rest}var a=new s;return u(a,a.head,e),o(e,a,n,a.head,0),function(e){for(var n=[],t=e.head.next;t!==e.tail;)n.push(t.value),t=t.next;return n}(a)},hooks:{all:{},add:function(e,n){var t=a.hooks.all;t[e]=t[e]||[],t[e].push(n)},run:function(e,n){var t=a.hooks.all[e];if(t&&t.length)for(var r,i=0;r=t[i++];)r(n)}},Token:i};function i(e,n,t,r){this.type=e,this.content=n,this.alias=t,this.length=0|(r||"").length}function l(e,n,t,r){e.lastIndex=n;var a=e.exec(t);if(a&&r&&a[1]){var i=a[1].length;a.index+=i,a[0]=a[0].slice(i)}return a}function o(e,n,t,r,s,g){for(var f in t)if(t.hasOwnProperty(f)&&t[f]){var h=t[f];h=Array.isArray(h)?h:[h];for(var d=0;d<h.length;++d){if(g&&g.cause==f+","+d)return;var v=h[d],p=v.inside,m=!!v.lookbehind,y=!!v.greedy,k=v.alias;if(y&&!v.pattern.global){var x=v.pattern.toString().match(/[imsuy]*$/)[0];v.pattern=RegExp(v.pattern.source,x+"g")}for(var b=v.pattern||v,w=r.next,A=s;w!==n.tail&&!(g&&A>=g.reach);A+=w.value.length,w=w.next){var E=w.value;if(n.length>e.length)return;if(!(E instanceof i)){var P,L=1;if(y){if(!(P=l(b,A,e,m))||P.index>=e.length)break;var S=P.index,O=P.index+P[0].length,j=A;for(j+=w.value.length;S>=j;)j+=(w=w.next).value.length;if(A=j-=w.value.length,w.value instanceof i)continue;for(var C=w;C!==n.tail&&(j<O||"string"==typeof C.value);C=C.next)L++,j+=C.value.length;L--,E=e.slice(A,j),P.index-=A}else if(!(P=l(b,0,E,m)))continue;S=P.index;var N=P[0],_=E.slice(0,S),M=E.slice(S+N.length),W=A+E.length;g&&W>g.reach&&(g.reach=W);var z=w.prev;if(_&&(z=u(n,z,_),A+=_.length),c(n,z,L),w=u(n,z,new i(f,p?a.tokenize(N,p):N,k,N)),M&&u(n,w,M),L>1){var I={cause:f+","+d,reach:W};o(e,n,t,w.prev,A,I),g&&I.reach>g.reach&&(g.reach=I.reach)}}}}}}function s(){var e={value:null,prev:null,next:null},n={value:null,prev:e,next:null};e.next=n,this.head=e,this.tail=n,this.length=0}function u(e,n,t){var r=n.next,a={value:t,prev:n,next:r};return n.next=a,r.prev=a,e.length++,a}function c(e,n,t){for(var r=n.next,a=0;a<t&&r!==e.tail;a++)r=r.next;n.next=r,r.prev=n,e.length-=a}if(e.Prism=a,i.stringify=function e(n,t){if("string"==typeof n)return n;if(Array.isArray(n)){var r="";return n.forEach((function(n){r+=e(n,t)})),r}var i={type:n.type,content:e(n.content,t),tag:"span",classes:["token",n.type],attributes:{},language:t},l=n.alias;l&&(Array.isArray(l)?Array.prototype.push.apply(i.classes,l):i.classes.push(l)),a.hooks.run("wrap",i);var o="";for(var s in i.attributes)o+=" "+s+'="'+(i.attributes[s]||"").replace(/"/g,"&quot;")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'"'+o+">"+i.content+"</"+i.tag+">"},!e.document)return e.addEventListener?(a.disableWorkerMessageHandler||e.addEventListener("message",(function(n){var t=JSON.parse(n.data),r=t.language,i=t.code,l=t.immediateClose;e.postMessage(a.highlight(i,a.languages[r],r)),l&&e.close()}),!1),a):a;var g=a.util.currentScript();function f(){a.manual||a.highlightAll()}if(g&&(a.filename=g.src,g.hasAttribute("data-manual")&&(a.manual=!0)),!a.manual){var h=document.readyState;"loading"===h||"interactive"===h&&g&&g.defer?document.addEventListener("DOMContentLoaded",f):window.requestAnimationFrame?window.requestAnimationFrame(f):window.setTimeout(f,16)}return a}(_self);"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
+Prism.languages.python={comment:{pattern:/(^|[^\\])#.*/,lookbehind:!0,greedy:!0},"string-interpolation":{pattern:/(?:f|fr|rf)(?:("""|''')[\s\S]*?\1|("|')(?:\\.|(?!\2)[^\\\r\n])*\2)/i,greedy:!0,inside:{interpolation:{pattern:/((?:^|[^{])(?:\{\{)*)\{(?!\{)(?:[^{}]|\{(?!\{)(?:[^{}]|\{(?!\{)(?:[^{}])+\})+\})+\}/,lookbehind:!0,inside:{"format-spec":{pattern:/(:)[^:(){}]+(?=\}$)/,lookbehind:!0},"conversion-option":{pattern:/![sra](?=[:}]$)/,alias:"punctuation"},rest:null}},string:/[\s\S]+/}},"triple-quoted-string":{pattern:/(?:[rub]|br|rb)?("""|''')[\s\S]*?\1/i,greedy:!0,alias:"string"},string:{pattern:/(?:[rub]|br|rb)?("|')(?:\\.|(?!\1)[^\\\r\n])*\1/i,greedy:!0},function:{pattern:/((?:^|\s)def[ \t]+)[a-zA-Z_]\w*(?=\s*\()/g,lookbehind:!0},"class-name":{pattern:/(\bclass\s+)\w+/i,lookbehind:!0},decorator:{pattern:/(^[\t ]*)@\w+(?:\.\w+)*/m,lookbehind:!0,alias:["annotation","punctuation"],inside:{punctuation:/\./}},keyword:/\b(?:_(?=\s*:)|and|as|assert|async|await|break|case|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|match|nonlocal|not|or|pass|print|raise|return|try|while|with|yield)\b/,builtin:/\b(?:__import__|abs|all|any|apply|ascii|basestring|bin|bool|buffer|bytearray|bytes|callable|chr|classmethod|cmp|coerce|compile|complex|delattr|dict|dir|divmod|enumerate|eval|execfile|file|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|intern|isinstance|issubclass|iter|len|list|locals|long|map|max|memoryview|min|next|object|oct|open|ord|pow|property|range|raw_input|reduce|reload|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|unichr|unicode|vars|xrange|zip)\b/,boolean:/\b(?:False|None|True)\b/,number:/\b0(?:b(?:_?[01])+|o(?:_?[0-7])+|x(?:_?[a-f0-9])+)\b|(?:\b\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\B\.\d+(?:_\d+)*)(?:e[+-]?\d+(?:_\d+)*)?j?(?!\w)/i,operator:/[-+%=]=?|!=|:=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]/,punctuation:/[{}[\];(),.:]/},Prism.languages.python["string-interpolation"].inside.interpolation.inside.rest=Prism.languages.python,Prism.languages.py=Prism.languages.python;
+!function(){if("undefined"!=typeof Prism&&"undefined"!=typeof document){var e="line-numbers",n=/\n(?!$)/g,t=Prism.plugins.lineNumbers={getLine:function(n,t){if("PRE"===n.tagName&&n.classList.contains(e)){var i=n.querySelector(".line-numbers-rows");if(i){var r=parseInt(n.getAttribute("data-start"),10)||1,s=r+(i.children.length-1);t<r&&(t=r),t>s&&(t=s);var l=t-r;return i.children[l]}}},resize:function(e){r([e])},assumeViewportIndependence:!0},i=void 0;window.addEventListener("resize",(function(){t.assumeViewportIndependence&&i===window.innerWidth||(i=window.innerWidth,r(Array.prototype.slice.call(document.querySelectorAll("pre.line-numbers"))))})),Prism.hooks.add("complete",(function(t){if(t.code){var i=t.element,s=i.parentNode;if(s&&/pre/i.test(s.nodeName)&&!i.querySelector(".line-numbers-rows")&&Prism.util.isActive(i,e)){i.classList.remove(e),s.classList.add(e);var l,o=t.code.match(n),a=o?o.length+1:1,u=new Array(a+1).join("<span></span>");(l=document.createElement("span")).setAttribute("aria-hidden","true"),l.className="line-numbers-rows",l.innerHTML=u,s.hasAttribute("data-start")&&(s.style.counterReset="linenumber "+(parseInt(s.getAttribute("data-start"),10)-1)),t.element.appendChild(l),r([s]),Prism.hooks.run("line-numbers",t)}}})),Prism.hooks.add("line-numbers",(function(e){e.plugins=e.plugins||{},e.plugins.lineNumbers=!0}))}function r(e){if(0!=(e=e.filter((function(e){var n,t=(n=e,n?window.getComputedStyle?getComputedStyle(n):n.currentStyle||null:null)["white-space"];return"pre-wrap"===t||"pre-line"===t}))).length){var t=e.map((function(e){var t=e.querySelector("code"),i=e.querySelector(".line-numbers-rows");if(t&&i){var r=e.querySelector(".line-numbers-sizer"),s=t.textContent.split(n);r||((r=document.createElement("span")).className="line-numbers-sizer",t.appendChild(r)),r.innerHTML="0",r.style.display="block";var l=r.getBoundingClientRect().height;return r.innerHTML="",{element:e,lines:s,lineHeights:[],oneLinerHeight:l,sizer:r}}})).filter(Boolean);t.forEach((function(e){var n=e.sizer,t=e.lines,i=e.lineHeights,r=e.oneLinerHeight;i[t.length-1]=void 0,t.forEach((function(e,t){if(e&&e.length>1){var s=n.appendChild(document.createElement("span"));s.style.display="block",s.textContent=e}else i[t]=r}))})),t.forEach((function(e){for(var n=e.sizer,t=e.lineHeights,i=0,r=0;r<t.length;r++)void 0===t[r]&&(t[r]=n.children[i++].getBoundingClientRect().height)})),t.forEach((function(e){var n=e.sizer,t=e.element.querySelector(".line-numbers-rows");n.style.display="none",n.innerHTML="",e.lineHeights.forEach((function(e,n){t.children[n].style.height=e+"px"}))}))}}}();
+!function(){if("undefined"!=typeof Prism&&"undefined"!=typeof document&&document.querySelector){var e,t="line-numbers",i="linkable-line-numbers",n=/\n(?!$)/g,r=!0;Prism.plugins.lineHighlight={highlightLines:function(o,u,c){var h=(u="string"==typeof u?u:o.getAttribute("data-line")||"").replace(/\s+/g,"").split(",").filter(Boolean),d=+o.getAttribute("data-line-offset")||0,f=(function(){if(void 0===e){var t=document.createElement("div");t.style.fontSize="13px",t.style.lineHeight="1.5",t.style.padding="0",t.style.border="0",t.innerHTML="&nbsp;<br />&nbsp;",document.body.appendChild(t),e=38===t.offsetHeight,document.body.removeChild(t)}return e}()?parseInt:parseFloat)(getComputedStyle(o).lineHeight),p=Prism.util.isActive(o,t),g=o.querySelector("code"),m=p?o:g||o,v=[],y=g.textContent.match(n),b=y?y.length+1:1,A=g&&m!=g?function(e,t){var i=getComputedStyle(e),n=getComputedStyle(t);function r(e){return+e.substr(0,e.length-2)}return t.offsetTop+r(n.borderTopWidth)+r(n.paddingTop)-r(i.paddingTop)}(o,g):0;h.forEach((function(e){var t=e.split("-"),i=+t[0],n=+t[1]||i;if(!((n=Math.min(b+d,n))<i)){var r=o.querySelector('.line-highlight[data-range="'+e+'"]')||document.createElement("div");if(v.push((function(){r.setAttribute("aria-hidden","true"),r.setAttribute("data-range",e),r.className=(c||"")+" line-highlight"})),p&&Prism.plugins.lineNumbers){var s=Prism.plugins.lineNumbers.getLine(o,i),l=Prism.plugins.lineNumbers.getLine(o,n);if(s){var a=s.offsetTop+A+"px";v.push((function(){r.style.top=a}))}if(l){var u=l.offsetTop-s.offsetTop+l.offsetHeight+"px";v.push((function(){r.style.height=u}))}}else v.push((function(){r.setAttribute("data-start",String(i)),n>i&&r.setAttribute("data-end",String(n)),r.style.top=(i-d-1)*f+A+"px",r.textContent=new Array(n-i+2).join(" \n")}));v.push((function(){r.style.width=o.scrollWidth+"px"})),v.push((function(){m.appendChild(r)}))}}));var P=o.id;if(p&&Prism.util.isActive(o,i)&&P){l(o,i)||v.push((function(){o.classList.add(i)}));var E=parseInt(o.getAttribute("data-start")||"1");s(".line-numbers-rows > span",o).forEach((function(e,t){var i=t+E;e.onclick=function(){var e=P+"."+i;r=!1,location.hash=e,setTimeout((function(){r=!0}),1)}}))}return function(){v.forEach(a)}}};var o=0;Prism.hooks.add("before-sanity-check",(function(e){var t=e.element.parentElement;if(u(t)){var i=0;s(".line-highlight",t).forEach((function(e){i+=e.textContent.length,e.parentNode.removeChild(e)})),i&&/^(?: \n)+$/.test(e.code.slice(-i))&&(e.code=e.code.slice(0,-i))}})),Prism.hooks.add("complete",(function e(i){var n=i.element.parentElement;if(u(n)){clearTimeout(o);var r=Prism.plugins.lineNumbers,s=i.plugins&&i.plugins.lineNumbers;l(n,t)&&r&&!s?Prism.hooks.add("line-numbers",e):(Prism.plugins.lineHighlight.highlightLines(n)(),o=setTimeout(c,1))}})),window.addEventListener("hashchange",c),window.addEventListener("resize",(function(){s("pre").filter(u).map((function(e){return Prism.plugins.lineHighlight.highlightLines(e)})).forEach(a)}))}function s(e,t){return Array.prototype.slice.call((t||document).querySelectorAll(e))}function l(e,t){return e.classList.contains(t)}function a(e){e()}function u(e){return!!(e&&/pre/i.test(e.nodeName)&&(e.hasAttribute("data-line")||e.id&&Prism.util.isActive(e,i)))}function c(){var e=location.hash.slice(1);s(".temporary.line-highlight").forEach((function(e){e.parentNode.removeChild(e)}));var t=(e.match(/\.([\d,-]+)$/)||[,""])[1];if(t&&!document.getElementById(e)){var i=e.slice(0,e.lastIndexOf(".")),n=document.getElementById(i);n&&(n.hasAttribute("data-line")||n.setAttribute("data-line",""),Prism.plugins.lineHighlight.highlightLines(n,t,"temporary ")(),r&&document.querySelector(".temporary.line-highlight").scrollIntoView())}}}();
+</script>
+
+<script>
+  // Parse "#L5" (GitHub/GitLab style) from the URL hash and return the line number, or null.
+  function lineFromHash() {
+    var m = /^#?L(\d+)$/.exec(location.hash);
+    return m ? m[1] : null;
+  }
+
+  var codeEl = document.getElementById('code');
+  var containerEl = document.getElementById('code-container');
+
+  // Tell the line-highlight plugin which line to highlight (if any).
+  var line = lineFromHash();
+  if (line) containerEl.setAttribute('data-line', line);
+
+  // Highlight + render line numbers / line highlight. The Python source is
+  // already embedded in the <code> element above, so no fetch() is needed.
+  Prism.highlightElement(codeEl);
+
+  // Scroll the highlighted line into view once Prism has rendered the highlight overlay.
+  if (line) {
+    setTimeout(function () {
+      var highlightEl = containerEl.querySelector('.line-highlight');
+      if (highlightEl) highlightEl.scrollIntoView({ block: 'center' });
+    }, 0);
+  }
+
+  // Support changing the hash while the page is open (e.g. user edits #L2 -> #L3).
+  window.addEventListener('hashchange', function () {
+    location.reload();
+  });
+</script>
+
+</body>
+</html>
