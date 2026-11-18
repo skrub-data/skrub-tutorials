@@ -256,7 +256,6 @@ pred = X_join.skb.apply(
 ::: {.columns}
 
 ::: {.column width=60%}
-::: {.fragment}
 
 Cross-validate
 
@@ -265,8 +264,6 @@ pred.skb.cross_validate(
     environment={"data_path": "historical_data.csv", "hist_path": "archive.csv"}
 )
 ```
-
-:::
 
 
 ::: {.fragment}
@@ -291,15 +288,11 @@ learner.predict(
 
 :::
 
+
 ::: {.column width=40%}
 
 
-::: {.fragment fragment-index=2}
-
 ![](images/model_graph.svg)
-
-:::
-
 
 :::
 
